@@ -1,0 +1,230 @@
+body {
+    font-family: 'Inter', sans-serif;
+    background-color: #f8fafc; /* bg-slate-50 */
+}
+
+#game-container {
+    background: linear-gradient(145deg, #ffffff, #e6e9f0);
+}
+
+.font-poppins {
+    font-family: 'Poppins', sans-serif;
+}
+
+.option-btn, .belongs-option-container {
+    transition: all 0.2s ease-in-out;
+}
+
+.correct-step, .correct-choice {
+    background-color: #dcfce7 !important; /* green-100 */
+    border-color: #22c55e !important; /* green-500 */
+    color: #15803d !important; /* green-700 */
+}
+
+.incorrect-step, .incorrect-choice {
+    background-color: #fee2e2 !important; /* red-100 */
+    border-color: #ef4444 !important; /* red-500 */
+    color: #b91c1c !important; /* red-700 */
+    animation: shake 0.5s;
+}
+
+.order-selected {
+    background-color: #3b82f6; /* blue-500 */
+    color: white;
+    border-color: #2563eb; /* blue-600 */
+    transform: scale(0.95);
+}
+
+#progress-bar {
+    transition: width 0.5s ease-in-out;
+}
+
+@keyframes shake {
+    0%, 100% { transform: translateX(0); }
+    25% { transform: translateX(-5px); }
+    75% { transform: translateX(5px); }
+}
+
+/* --- STYLES for "Hör till" questions --- */
+.belongs-option-container {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.choice-made .decision-buttons {
+    border-color: #7dd3fc; /* sky-300 */
+}
+
+.decision-buttons {
+    border: 2px solid #e5e7eb; /* gray-200 */
+    border-radius: 0.5rem; /* rounded-lg */
+    overflow: hidden;
+    display: flex;
+    flex-shrink: 0;
+}
+
+/* Mobile-first button size */
+.decision-buttons button {
+    width: 2.25rem; /* 36px */
+    height: 2.25rem; /* 36px */
+    transition: all 0.2s ease;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background-color: #f9fafb; /* gray-50 */
+}
+
+/* Larger size for bigger screens */
+@media (min-width: 640px) {
+     .decision-buttons button {
+        width: 2.5rem; /* 40px */
+        height: 2.5rem; /* 40px */
+    }
+}
+
+.decision-buttons button:first-child {
+    border-right: 1px solid #e5e7eb; /* gray-200 */
+}
+
+.decision-buttons button:hover:not(:disabled) {
+    background-color: #f3f4f6; /* gray-100 */
+}
+
+.decision-buttons button.selected {
+    background-color: #4b5563; /* gray-600 */
+}
+
+.decision-buttons button.selected .icon {
+    stroke: white;
+}
+
+.decision-buttons button:disabled {
+    cursor: not-allowed;
+    background-color: #f9fafb;
+}
+
+#stop-btn:disabled {
+    background-color: #fcd34d; /* amber-300 */
+    cursor: not-allowed;
+    opacity: 0.7;
+}
+
+.decision-buttons button .icon {
+    width: 1.125rem; /* 18px */
+    height: 1.125rem; /* 18px */
+    stroke-width: 2.5;
+    color: #8E99A5; /* Custom gray */
+    stroke: #8E99A5; /* Custom gray */
+    transition: color 0.2s, stroke 0.2s;
+}
+
+.decision-buttons button.correct-selection {
+    background-color: #dcfce7; /* green-100 */
+    border-color: #86efac; /* green-300 */
+}
+
+.decision-buttons button.correct-selection .icon {
+    stroke: #166534; /* green-800 */
+    color: #166534; /* green-800 */
+}
+
+.decision-buttons button.deselected {
+    opacity: 0.2;
+    transform: scale(0.8);
+}
+
+.correct-answer-highlight {
+    box-shadow: 0 0 0 4px #22c55e; /* green-500 */
+    opacity: 1 !important;
+    transform: scale(1) !important;
+}
+
+/* --- STYLES for Question Pack Shop --- */
+#pack-shop-modal {
+    transition: opacity 0.3s ease-in-out;
+}
+
+#pack-shop-modal.hidden {
+    pointer-events: none;
+    opacity: 0;
+}
+
+.pack-card {
+    transition: all 0.2s ease-in-out;
+    position: relative;
+}
+
+.pack-card.selected {
+    transform: translateY(-4px);
+    box-shadow: 0 0 0 3px #3b82f6; /* blue-500 */
+    border-color: #3b82f6;
+}
+
+.pack-card .selected-check {
+    display: none;
+    position: absolute;
+    top: 0.75rem;
+    right: 0.75rem;
+    background-color: #3b82f6;
+    color: white;
+    border-radius: 9999px;
+    width: 1.75rem;
+    height: 1.75rem;
+    align-items: center;
+    justify-content: center;
+}
+
+.pack-card.selected .selected-check {
+    display: flex;
+}
+
+/* --- MULTIPLAYER STYLES --- */
+.player-score-card {
+    transition: all 0.3s ease-in-out;
+    background-color: #ffffff;
+    border-color: #d1d5db; /* gray-300 */
+    position: relative; /* Needed for animations and labels */
+}
+
+.player-score-card.active-player {
+    background-color: #bfdbfe; /* blue-200 */
+    border-color: #3b82f6; /* blue-500 */
+    transform: scale(1.05);
+    box-shadow: 0 4px 14px 0 rgba(59, 130, 246, 0.25);
+}
+
+.player-score-card.eliminated {
+    opacity: 0.6;
+    background-color: #f3f4f6; /* gray-100 */
+    transform: scale(1);
+}
+
+/* --- NEW: POINT ANIMATION --- */
+@keyframes float-up {
+    from {
+        opacity: 1;
+        transform: translateY(0) scale(1);
+    }
+    to {
+        opacity: 0;
+        transform: translateY(-30px) scale(0.8);
+    }
+}
+
+.point-float {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    font-size: 1.25rem; /* text-xl */
+    font-weight: bold;
+    color: #16a34a; /* green-600 */
+    pointer-events: none;
+    animation: float-up 1s ease-out forwards;
+    text-shadow: 0 1px 2px rgba(0,0,0,0.1);
+}
+
+.point-float.banked {
+     color: #ca8a04; /* amber-600 */
+}
