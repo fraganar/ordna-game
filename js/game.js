@@ -93,6 +93,16 @@ const closePackShopBtn = document.getElementById('close-pack-shop-btn');
 const confirmPacksBtn = document.getElementById('confirm-packs-btn');
 const packGrid = document.getElementById('pack-grid');
 
+// Single Player Elements
+const singlePlayerScore = document.getElementById('single-player-score');
+const singlePlayerProgress = document.getElementById('single-player-progress');
+const progressBar = document.getElementById('progress-bar');
+const singlePlayerStars = document.getElementById('single-player-stars');
+const currentScoreContainer = document.getElementById('current-score-container');
+const singlePlayerFinal = document.getElementById('single-player-final');
+const singleFinalScore = document.getElementById('single-final-score');
+const endScreenSubtitle = document.getElementById('end-screen-subtitle');
+
 // --- Game State ---
 let players = [];
 let currentPlayerIndex = 0;
@@ -101,6 +111,12 @@ let currentQuestionIndex = 0;
 let questionsToPlay = [];
 let userOrder = []; 
 let selectedPacks = questionPacks.map(p => p.name);
+
+// Single Player State
+let isSinglePlayer = false;
+let totalScore = 0;
+let currentQuestionScore = 0;
+let mistakeMade = false;
 
 // --- Functions ---
 
@@ -152,9 +168,71 @@ function showPlayerSetup() {
     createPlayerInputs();
 }
 
+// Single Player Functions
+function renderStars(count, filled = 0) {
+    currentScoreContainer.innerHTML = '';
+    for (let i = 0; i < count; i++) {
+        const star = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
+        star.setAttribute('class', `star-icon ${i < filled ? 'filled' : 'empty'}`);
+        star.setAttribute('viewBox', '0 0 24 24');
+        star.innerHTML = `<path d=\"M12 17.27L18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21z\"/>`;
+        currentScoreContainer.appendChild(star);
+    }
+}
+
+function updateStars(filledCount) {
+    const stars = currentScoreContainer.querySelectorAll('.star-icon');
+    stars.forEach((star, index) => {
+        star.classList.toggle('filled', index < filledCount);
+        star.classList.toggle('empty', index >= filledCount);
+    });
+}
+
+function updateSinglePlayerDisplay() {
+    singlePlayerScore.textContent = `Totalpoäng: ${totalScore}`;
+    const progressPercentage = (currentQuestionIndex / questionsToPlay.length) * 100;
+    progressBar.style.width = `${progressPercentage}%`;
+}
+
+function endSinglePlayerQuestion(pointsToAdd) {
+    totalScore += pointsToAdd;
+    mistakeMade = true; // Lock all interactions
+    
+    updateSinglePlayerDisplay();
+    stopBtn.classList.add('hidden');
+    nextQuestionBtn.classList.remove('hidden');
+    
+    const question = questionsToPlay[currentQuestionIndex];
+
+    if (question.typ === 'ordna') {
+        feedbackOrder();
+    } else {
+        feedbackBelongsTo();
+    }
+}
+
+function endSinglePlayerGame() {
+    gameScreen.classList.add('hidden');
+    endScreen.classList.remove('hidden');
+    
+    // Show single player final score
+    endScreenSubtitle.textContent = 'Bra kämpat!';
+    singlePlayerFinal.classList.remove('hidden');
+    finalScoreboard.classList.add('hidden');
+    singleFinalScore.textContent = `${totalScore}`;
+    progressBar.style.width = '100%';
+}
+
 function createPlayerInputs() {
     const count = playerCountSelect.value;
     playerNamesContainer.innerHTML = '';
+    
+    // Skip name inputs for single player
+    if (count == 1) {
+        return;
+    }
+    
+    // Create name inputs for multiplayer
     for (let i = 0; i < count; i++) {
         const input = document.createElement('input');
         input.type = 'text';
@@ -166,20 +244,36 @@ function createPlayerInputs() {
 
 function initializeGame() {
     const nameInputs = document.querySelectorAll('.player-name-input');
+    const playerCount = parseInt(playerCountSelect.value);
     players = [];
-    nameInputs.forEach((input, index) => {
+    
+    // Handle single player (no name inputs)
+    if (playerCount === 1) {
         players.push({
-            name: input.value || `Spelare ${index + 1}`,
+            name: 'Spelare 1',
             score: 0,
             roundPot: 0,
             eliminatedInRound: false,
             eliminationReason: null
         });
-    });
-
-    if (players.length < 2) {
-        console.error("Minst två spelare behövs!");
-        return;
+        isSinglePlayer = true;
+        totalScore = 0;
+    } else {
+        // Handle multiplayer (with name inputs)
+        nameInputs.forEach((input, index) => {
+            players.push({
+                name: input.value || `Spelare ${index + 1}`,
+                score: 0,
+                roundPot: 0,
+                eliminatedInRound: false,
+                eliminationReason: null
+            });
+        });
+        isSinglePlayer = false;
+        if (players.length < 2) {
+            console.error("Minst två spelare behövs!");
+            return;
+        }
     }
 
     if (selectedPacks.length === 0) {
@@ -195,6 +289,21 @@ function initializeGame() {
     startScreen.classList.add('hidden');
     endScreen.classList.add('hidden');
     gameScreen.classList.remove('hidden');
+    
+    // Setup UI based on game mode
+    if (isSinglePlayer) {
+        // Show single player UI
+        singlePlayerScore.classList.remove('hidden');
+        singlePlayerProgress.classList.remove('hidden');
+        singlePlayerStars.classList.remove('hidden');
+        scoreboard.classList.add('hidden');
+    } else {
+        // Show multiplayer UI
+        singlePlayerScore.classList.add('hidden');
+        singlePlayerProgress.classList.add('hidden');
+        singlePlayerStars.classList.add('hidden');
+        scoreboard.classList.remove('hidden');
+    }
     
     currentQuestionIndex = 0;
     questionStarterIndex = 0;
@@ -243,21 +352,27 @@ function updateScoreboard() {
 }
 
 function updateGameControls() {
-    const player = players[currentPlayerIndex];
-    const activePlayers = players.filter(p => !p.eliminatedInRound);
-
-    if (activePlayers.length === 0) {
-        stopBtn.classList.add('hidden');
-        nextQuestionBtn.classList.remove('hidden');
+    if (isSinglePlayer) {
+        stopBtn.textContent = 'Stanna & Säkra Poäng';
+        stopBtn.classList.remove('hidden');
+        stopBtn.disabled = false;
     } else {
-        nextQuestionBtn.classList.add('hidden');
-        if (player && player.roundPot > 0 && !player.eliminatedInRound) {
-            stopBtn.textContent = `(${player.name}) Stanna på +${player.roundPot}`;
-            stopBtn.disabled = false;
-            stopBtn.classList.remove('hidden');
-        } else {
+        const player = players[currentPlayerIndex];
+        const activePlayers = players.filter(p => !p.eliminatedInRound);
+
+        if (activePlayers.length === 0) {
             stopBtn.classList.add('hidden');
-            stopBtn.disabled = true;
+            nextQuestionBtn.classList.remove('hidden');
+        } else {
+            nextQuestionBtn.classList.add('hidden');
+            if (player && player.roundPot > 0 && !player.eliminatedInRound) {
+                stopBtn.textContent = `(${player.name}) Stanna på +${player.roundPot}`;
+                stopBtn.disabled = false;
+                stopBtn.classList.remove('hidden');
+            } else {
+                stopBtn.classList.add('hidden');
+                stopBtn.disabled = true;
+            }
         }
     }
 }
@@ -274,21 +389,38 @@ function setDifficultyBadge(difficulty) {
 
 function loadQuestion() {
     userOrder = [];
-    players.forEach(p => {
-        p.roundPot = 0;
-        p.eliminatedInRound = false;
-        p.eliminationReason = null;
-    });
+    mistakeMade = false;
+    currentQuestionScore = 0;
+    
+    if (!isSinglePlayer) {
+        players.forEach(p => {
+            p.roundPot = 0;
+            p.eliminatedInRound = false;
+            p.eliminationReason = null;
+        });
+    }
     
     optionsGrid.innerHTML = '';
+    nextQuestionBtn.classList.add('hidden');
+    stopBtn.classList.remove('hidden');
+    stopBtn.disabled = false;
     
     if (currentQuestionIndex >= questionsToPlay.length) {
-        endGame();
+        if (isSinglePlayer) {
+            endSinglePlayerGame();
+        } else {
+            endGame();
+        }
         return;
     }
 
-    currentPlayerIndex = questionStarterIndex;
-    updateScoreboard();
+    if (!isSinglePlayer) {
+        currentPlayerIndex = questionStarterIndex;
+        updateScoreboard();
+    } else {
+        renderStars(4); // Render 4 empty stars for single player
+        updateSinglePlayerDisplay();
+    }
     updateGameControls();
 
     const question = questionsToPlay[currentQuestionIndex];
@@ -303,10 +435,14 @@ function loadQuestion() {
     optionsGrid.className = 'grid grid-cols-1 gap-3 sm:gap-4 my-4 sm:my-6';
 
     if (question.typ === 'ordna') {
-        questionInstruction.textContent = 'Klicka på alternativen i rätt ordning.';
+        questionInstruction.textContent = isSinglePlayer ? 
+            'Klicka på alternativen i rätt ordning. Ett fel och du förlorar frågans poäng.' :
+            'Klicka på alternativen i rätt ordning.';
         shuffledOptions.forEach(optionText => createOrderButton(optionText));
     } else { // 'hör_till'
-        questionInstruction.textContent = 'Bedöm varje alternativ.';
+        questionInstruction.textContent = isSinglePlayer ?
+            'Bedöm varje alternativ. Ett fel och du förlorar frågans poäng.' :
+            'Bedöm varje alternativ.';
         shuffledOptions.forEach(optionText => createBelongsToOption(optionText));
     }
 }
@@ -395,38 +531,65 @@ function createBelongsToOption(optionText) {
 }
 
 function handleOrderClick(button, optionText) {
+    if (isSinglePlayer && mistakeMade) return;
+    
     const question = questionsToPlay[currentQuestionIndex];
     const isCorrectStep = question.rätt_ordning[userOrder.length] === optionText;
 
-    setAllOptionsDisabled(true);
+    if (isSinglePlayer) {
+        if (isCorrectStep) {
+            userOrder.push(optionText);
+            currentQuestionScore++;
+            updateStars(currentQuestionScore);
+            
+            button.className = 'option-btn w-full text-left p-4 rounded-lg border-2 order-selected';
+            button.innerHTML = `<span class="inline-flex items-center justify-center w-6 h-6 mr-3 bg-white text-blue-600 rounded-full font-bold">${userOrder.length}</span> ${optionText}`;
+            button.disabled = true;
 
-    if (isCorrectStep) {
-        userOrder.push(optionText);
-        players[currentPlayerIndex].roundPot++;
-        showPointAnimation(currentPlayerIndex, "+1"); // ANIMATION
-        updateScoreboard();
-        
-        button.className = 'option-btn w-full text-left p-3 sm:p-4 rounded-lg border-2 order-selected text-sm sm:text-base';
-        button.innerHTML = `<span class="inline-flex items-center justify-center w-6 h-6 mr-3 bg-white text-blue-600 rounded-full font-bold">${userOrder.length}</span> ${optionText}`;
-        button.disabled = true;
-
-        if (userOrder.length === question.alternativ.length) {
-            concludeQuestionRound();
+            if (userOrder.length === 4) {
+                endSinglePlayerQuestion(currentQuestionScore);
+            }
         } else {
-            setTimeout(nextTurn, 500);
+            mistakeMade = true;
+            currentQuestionScore = 0;
+            updateStars(0);
+            button.classList.add('incorrect-step');
+            endSinglePlayerQuestion(0);
         }
     } else {
-        players[currentPlayerIndex].roundPot = 0;
-        players[currentPlayerIndex].eliminatedInRound = true;
-        players[currentPlayerIndex].eliminationReason = 'wrong';
-        button.classList.add('incorrect-step');
-        updateScoreboard();
+        // Multiplayer logic
+        setAllOptionsDisabled(true);
         
-        setTimeout(nextTurn, 1000);
+        if (isCorrectStep) {
+            userOrder.push(optionText);
+            players[currentPlayerIndex].roundPot++;
+            showPointAnimation(currentPlayerIndex, "+1");
+            updateScoreboard();
+            
+            button.className = 'option-btn w-full text-left p-3 sm:p-4 rounded-lg border-2 order-selected text-sm sm:text-base';
+            button.innerHTML = `<span class="inline-flex items-center justify-center w-6 h-6 mr-3 bg-white text-blue-600 rounded-full font-bold">${userOrder.length}</span> ${optionText}`;
+            button.disabled = true;
+
+            if (userOrder.length === question.alternativ.length) {
+                concludeQuestionRound();
+            } else {
+                setTimeout(nextTurn, 500);
+            }
+        } else {
+            players[currentPlayerIndex].roundPot = 0;
+            players[currentPlayerIndex].eliminatedInRound = true;
+            players[currentPlayerIndex].eliminationReason = 'wrong';
+            button.classList.add('incorrect-step');
+            updateScoreboard();
+            
+            setTimeout(nextTurn, 1000);
+        }
     }
 }
 
 function handleBelongsDecision(userDecision, container, yesBtn, noBtn) {
+    if (isSinglePlayer && mistakeMade) return;
+    
     const question = questionsToPlay[currentQuestionIndex];
     const optionText = container.querySelector('span').textContent;
     const correctOptions = question.tillhör_index.map(i => question.alternativ[i]);
@@ -435,49 +598,70 @@ function handleBelongsDecision(userDecision, container, yesBtn, noBtn) {
 
     yesBtn.disabled = true;
     noBtn.disabled = true;
-    setAllOptionsDisabled(true);
     container.dataset.decided = 'true';
 
     const clickedBtn = userDecision ? yesBtn : noBtn;
     const otherBtn = userDecision ? noBtn : yesBtn;
     otherBtn.classList.add('deselected');
 
-    let timeout = 1000;
-
-    if (isCorrect) {
-        players[currentPlayerIndex].roundPot++;
-        showPointAnimation(currentPlayerIndex, "+1"); // ANIMATION
-        container.classList.add('choice-made');
-        clickedBtn.classList.add('correct-selection');
+    if (isSinglePlayer) {
+        if (isCorrect) {
+            currentQuestionScore++;
+            updateStars(currentQuestionScore);
+            container.classList.add('choice-made');
+            clickedBtn.classList.add('correct-selection');
+        } else {
+            clickedBtn.classList.add('selected'); 
+            mistakeMade = true;
+            currentQuestionScore = 0;
+            updateStars(0);
+            container.classList.add('incorrect-choice');
+            endSinglePlayerQuestion(0);
+        }
     } else {
-        players[currentPlayerIndex].roundPot = 0;
-        players[currentPlayerIndex].eliminatedInRound = true;
-        players[currentPlayerIndex].eliminationReason = 'wrong';
-        container.classList.add('incorrect-choice');
-    }
-    updateScoreboard();
-    
-    const allDecided = Array.from(optionsGrid.querySelectorAll('.belongs-option-container'))
-                                     .every(c => c.dataset.decided === 'true');
+        // Multiplayer logic
+        setAllOptionsDisabled(true);
+        let timeout = 1000;
 
-    if (allDecided) {
-        setTimeout(concludeQuestionRound, timeout);
-    } else {
-        setTimeout(nextTurn, timeout);
+        if (isCorrect) {
+            players[currentPlayerIndex].roundPot++;
+            showPointAnimation(currentPlayerIndex, "+1");
+            container.classList.add('choice-made');
+            clickedBtn.classList.add('correct-selection');
+        } else {
+            players[currentPlayerIndex].roundPot = 0;
+            players[currentPlayerIndex].eliminatedInRound = true;
+            players[currentPlayerIndex].eliminationReason = 'wrong';
+            container.classList.add('incorrect-choice');
+        }
+        updateScoreboard();
+        
+        const allDecided = Array.from(optionsGrid.querySelectorAll('.belongs-option-container'))
+                                         .every(c => c.dataset.decided === 'true');
+
+        if (allDecided) {
+            setTimeout(concludeQuestionRound, timeout);
+        } else {
+            setTimeout(nextTurn, timeout);
+        }
     }
 }
 
 function playerStops() {
-    const player = players[currentPlayerIndex];
-    if (player.roundPot > 0) {
-         showPointAnimation(currentPlayerIndex, `+${player.roundPot}p`, true); // ANIMATION for banking points
+    if (isSinglePlayer) {
+        endSinglePlayerQuestion(currentQuestionScore);
+    } else {
+        const player = players[currentPlayerIndex];
+        if (player.roundPot > 0) {
+             showPointAnimation(currentPlayerIndex, `+${player.roundPot}p`, true);
+        }
+        player.score += player.roundPot;
+        player.roundPot = 0;
+        player.eliminatedInRound = true;
+        player.eliminationReason = 'stopped';
+        updateScoreboard();
+        nextTurn();
     }
-    player.score += player.roundPot;
-    player.roundPot = 0;
-    player.eliminatedInRound = true;
-    player.eliminationReason = 'stopped';
-    updateScoreboard();
-    nextTurn();
 }
 
 function feedbackOrder() {
@@ -560,6 +744,16 @@ function restartGame() {
     startScreen.classList.remove('hidden');
     startMain.classList.remove('hidden');
     playerSetup.classList.add('hidden');
+    
+    // Reset single player display
+    singlePlayerFinal.classList.add('hidden');
+    finalScoreboard.classList.remove('hidden');
+    
+    // Reset game state
+    isSinglePlayer = false;
+    totalScore = 0;
+    currentQuestionScore = 0;
+    mistakeMade = false;
 }
 
 // --- Pack Shop Functions ---

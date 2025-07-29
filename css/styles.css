@@ -15,6 +15,20 @@ body {
     transition: all 0.2s ease-in-out;
 }
 
+.star-icon {
+    width: 2rem;
+    height: 2rem;
+    transition: all 0.3s ease;
+}
+
+.star-icon.filled path {
+    fill: #f59e0b; /* amber-500 */
+}
+
+.star-icon.empty path {
+    fill: #d1d5db; /* gray-300 */
+}
+
 .correct-step, .correct-choice {
     background-color: #dcfce7 !important; /* green-100 */
     border-color: #22c55e !important; /* green-500 */
