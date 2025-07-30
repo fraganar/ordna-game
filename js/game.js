@@ -120,22 +120,41 @@ let mistakeMade = false;
 
 // --- Functions ---
 
-// NEW: Function to show point animation
+// Point animation for both single and multiplayer
 function showPointAnimation(playerIndex, text, isBanked = false) {
-    const cards = scoreboard.querySelectorAll('.player-score-card');
-    if (cards.length > playerIndex) {
-        const card = cards[playerIndex];
-        const animationEl = document.createElement('span');
-        animationEl.className = 'point-float';
-        if (isBanked) {
-            animationEl.classList.add('banked');
+    if (isSinglePlayer) {
+        // Show animation on star container for single player
+        const starContainer = document.getElementById('current-score-container');
+        if (starContainer) {
+            const animationEl = document.createElement('span');
+            animationEl.className = 'point-float';
+            if (isBanked) {
+                animationEl.classList.add('banked');
+            }
+            animationEl.textContent = text;
+            starContainer.appendChild(animationEl);
+            
+            setTimeout(() => {
+                animationEl.remove();
+            }, 1000);
         }
-        animationEl.textContent = text;
-        card.appendChild(animationEl);
-        
-        setTimeout(() => {
-            animationEl.remove();
-        }, 1000); // Remove after animation ends
+    } else {
+        // Show animation on player card for multiplayer
+        const cards = scoreboard.querySelectorAll('.player-score-card');
+        if (cards.length > playerIndex) {
+            const card = cards[playerIndex];
+            const animationEl = document.createElement('span');
+            animationEl.className = 'point-float';
+            if (isBanked) {
+                animationEl.classList.add('banked');
+            }
+            animationEl.textContent = text;
+            card.appendChild(animationEl);
+            
+            setTimeout(() => {
+                animationEl.remove();
+            }, 1000);
+        }
     }
 }
 
@@ -541,6 +560,7 @@ function handleOrderClick(button, optionText) {
             userOrder.push(optionText);
             currentQuestionScore++;
             updateStars(currentQuestionScore);
+            showPointAnimation(0, "+1");
             
             button.className = 'option-btn w-full text-left p-4 rounded-lg border-2 order-selected';
             button.innerHTML = `<span class="inline-flex items-center justify-center w-6 h-6 mr-3 bg-white text-blue-600 rounded-full font-bold">${userOrder.length}</span> ${optionText}`;
@@ -608,6 +628,7 @@ function handleBelongsDecision(userDecision, container, yesBtn, noBtn) {
         if (isCorrect) {
             currentQuestionScore++;
             updateStars(currentQuestionScore);
+            showPointAnimation(0, "+1");
             container.classList.add('choice-made');
             clickedBtn.classList.add('correct-selection');
         } else {
@@ -649,6 +670,9 @@ function handleBelongsDecision(userDecision, container, yesBtn, noBtn) {
 
 function playerStops() {
     if (isSinglePlayer) {
+        if (currentQuestionScore > 0) {
+            showPointAnimation(0, `+${currentQuestionScore}p`, true);
+        }
         endSinglePlayerQuestion(currentQuestionScore);
     } else {
         const player = players[currentPlayerIndex];
