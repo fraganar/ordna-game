@@ -71,11 +71,12 @@ body {
 }
 
 .decision-buttons {
-    border: 2px solid #e5e7eb; /* gray-200 */
+    border: none; /* REMOVE ALL BORDERS - was causing green lines */
     border-radius: 0.5rem; /* rounded-lg */
     overflow: hidden;
     display: flex;
     flex-shrink: 0;
+    background-color: #f3f4f6; /* Add subtle background instead */
 }
 
 /* Mobile-first button size */
@@ -149,9 +150,13 @@ body {
 }
 
 .correct-answer-highlight {
-    box-shadow: 0 0 0 4px #22c55e; /* green-500 */
+    background-color: #dcfce7 !important; /* green-100 - subtle highlight instead of box-shadow */
     opacity: 1 !important;
     transform: scale(1) !important;
+}
+
+.decision-buttons button:first-child {
+    border-right: none; /* Remove middle line completely - was causing green lines */
 }
 
 /* --- STYLES for Question Pack Shop --- */
