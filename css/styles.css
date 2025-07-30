@@ -88,6 +88,7 @@ body {
     align-items: center;
     justify-content: center;
     background-color: #f9fafb; /* gray-50 */
+    border: 1px solid #d1d5db; /* Add subtle gray border for clarity */
 }
 
 /* Larger size for bigger screens */
