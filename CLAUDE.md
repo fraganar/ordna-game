@@ -1,5 +1,8 @@
 # Ordna Game - Project Documentation
 
+## About the Game
+Ett klurigt frågespel där spelare tävlar om vem som vågar chansa mest. Inom varje fråga bygger du upp poäng steg för steg, men ett fel svar ger noll poäng för hela frågan (tidigare intjänade poäng påverkas ej). Två spellägen: singelspelare (visar stjärnor) och multiplayer (spelare turas om). Frågetyper: "Ordna" (sortera alternativ i rätt ordning) och "Hör till" (bedöm vilka alternativ tillhör kategorin).
+
 ## Tech Stack
 - Frontend: Vanilla JavaScript (ES6+), HTML5, CSS3
 - Data: JSON files in `/data/` directory
