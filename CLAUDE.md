@@ -44,6 +44,19 @@ Ett klurigt frågespel där spelare tävlar om vem som vågar chansa mest. Inom 
 - CSS includes fixes for green line bug in decision buttons
 - Game supports both single player and multiplayer modes
 
+## Features
+- **Single Player Mode**: Play solo with star-based scoring system
+- **Multiplayer Mode**: 2-6 players taking turns with risk/reward mechanics
+- **Question Pack Shop**: Select which question categories to include
+- **Challenge Friend**: EmailJS-powered system to challenge friends via email
+  - Automatic challenge invitation emails
+  - URL-based challenge acceptance
+  - Automatic result notification emails
+  - Fallback to manual link sharing if EmailJS not configured
+
+## Challenge System Setup
+The challenge feature requires EmailJS configuration for automatic emails. See `EMAILJS_SETUP.md` for detailed setup instructions. Without EmailJS, the system falls back to manual link sharing.
+
 ## Code Style
 - Use ES6+ features (const/let, arrow functions, async/await)
 - Keep functions focused and well-named

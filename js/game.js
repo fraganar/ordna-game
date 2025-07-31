@@ -1,6 +1,20 @@
 // --- DATA ---
 let allQuestions = [];
 
+// --- EmailJS Configuration ---
+// These would normally be environment variables, but for demo purposes they're here
+const EMAILJS_CONFIG = {
+    serviceId: 'YOUR_SERVICE_ID', // User needs to replace this
+    templateId: 'YOUR_TEMPLATE_ID', // User needs to replace this
+    publicKey: 'YOUR_PUBLIC_KEY' // User needs to replace this
+};
+
+// --- Challenge System ---
+let ischallengeMode = false;
+let challengeId = null;
+let challengerName = null;
+let challengedFriendEmail = null;
+
 // Load questions from JSON file
 async function loadQuestions() {
     try {
@@ -50,6 +64,16 @@ const showChallengeFormBtn = document.getElementById('show-challenge-form-btn');
 const sendChallengeBtn = document.getElementById('send-challenge-btn');
 const backToStartBtn = document.getElementById('back-to-start-btn');
 const challengeConfirmation = document.getElementById('challenge-confirmation');
+const challengeError = document.getElementById('challenge-error');
+const challengerNameInput = document.getElementById('challenger-name');
+const challengeMessageInput = document.getElementById('challenge-message');
+
+// Challenge Accept Elements
+const challengeAccept = document.getElementById('challenge-accept');
+const challengerDisplayName = document.getElementById('challenger-display-name');
+const challengeDisplayMessage = document.getElementById('challenge-display-message');
+const acceptChallengeBtn = document.getElementById('accept-challenge-btn');
+const declineChallengeBtn = document.getElementById('decline-challenge-btn');
 
 const gameScreen = document.getElementById('game-screen');
 const endScreen = document.getElementById('end-screen');
@@ -95,6 +119,153 @@ let isSinglePlayer = false;
 let totalScore = 0;
 let currentQuestionScore = 0;
 let mistakeMade = false;
+
+// --- Challenge Functions ---
+
+// Initialize EmailJS
+function initEmailJS() {
+    if (typeof emailjs !== 'undefined' && EMAILJS_CONFIG.publicKey !== 'YOUR_PUBLIC_KEY') {
+        emailjs.init(EMAILJS_CONFIG.publicKey);
+        return true;
+    }
+    return false;
+}
+
+// Generate unique challenge ID
+function generateChallengeId() {
+    return 'challenge_' + Date.now() + '_' + Math.random().toString(36).substr(2, 9);
+}
+
+// Create challenge URL
+function createChallengeUrl(challengeId, challengerName, message) {
+    const baseUrl = window.location.origin + window.location.pathname;
+    const params = new URLSearchParams({
+        challenge: challengeId,
+        challenger: encodeURIComponent(challengerName),
+        message: encodeURIComponent(message || '')
+    });
+    return baseUrl + '?' + params.toString();
+}
+
+// Send challenge email
+async function sendChallengeEmail(challengerName, friendEmail, challengeUrl, message) {
+    if (!initEmailJS()) {
+        console.log('EmailJS not configured - showing demo mode');
+        return false;
+    }
+
+    const templateParams = {
+        challenger_name: challengerName,
+        friend_email: friendEmail,
+        challenge_url: challengeUrl,
+        personal_message: message || 'Jag utmanar dig till en runda Ordna!',
+        game_name: 'Ordna - Frågesport'
+    };
+
+    try {
+        await emailjs.send(EMAILJS_CONFIG.serviceId, EMAILJS_CONFIG.templateId, templateParams);
+        return true;
+    } catch (error) {
+        console.error('EmailJS error:', error);
+        return false;
+    }
+}
+
+// Check for challenge parameters in URL
+function checkForChallenge() {
+    const urlParams = new URLSearchParams(window.location.search);
+    const challengeParam = urlParams.get('challenge');
+    const challengerParam = urlParams.get('challenger');
+    const messageParam = urlParams.get('message');
+
+    if (challengeParam && challengerParam) {
+        challengeId = challengeParam;
+        challengerName = decodeURIComponent(challengerParam);
+        const message = messageParam ? decodeURIComponent(messageParam) : '';
+        
+        showChallengeAcceptScreen(challengerName, message);
+        return true;
+    }
+    return false;
+}
+
+// Show challenge accept screen
+function showChallengeAcceptScreen(challengerName, message) {
+    startMain.classList.add('hidden');
+    playerSetup.classList.add('hidden');
+    challengeForm.classList.add('hidden');
+    challengeAccept.classList.remove('hidden');
+    
+    challengerDisplayName.textContent = challengerName;
+    challengeDisplayMessage.textContent = message || 'Redo för en runda Ordna?';
+}
+
+// Handle challenge creation
+async function handleSendChallenge() {
+    const challengerName = challengerNameInput.value.trim();
+    const friendEmail = document.getElementById('friend-email').value.trim();
+    const message = challengeMessageInput.value.trim();
+
+    // Validate inputs
+    if (!challengerName || !friendEmail) {
+        showChallengeError('Fyll i både ditt namn och vännens e-postadress.');
+        return;
+    }
+
+    if (!friendEmail.includes('@')) {
+        showChallengeError('Ange en giltig e-postadress.');
+        return;
+    }
+
+    // Generate challenge
+    const newChallengeId = generateChallengeId();
+    const challengeUrl = createChallengeUrl(newChallengeId, challengerName, message);
+
+    // Store challenge data
+    const challengeData = {
+        id: newChallengeId,
+        challengerName: challengerName,
+        friendEmail: friendEmail,
+        message: message,
+        created: new Date().toISOString()
+    };
+    localStorage.setItem('challenge_' + newChallengeId, JSON.stringify(challengeData));
+
+    // Try to send email
+    const emailSent = await sendChallengeEmail(challengerName, friendEmail, challengeUrl, message);
+
+    if (emailSent) {
+        showChallengeSuccess('Utmaning skickad via e-post!');
+    } else {
+        // Fallback to manual sharing
+        showChallengeSuccess('Kopiera denna länk och skicka till din vän:\n' + challengeUrl);
+    }
+
+    // Clear form
+    challengerNameInput.value = '';
+    document.getElementById('friend-email').value = '';
+    challengeMessageInput.value = '';
+}
+
+function showChallengeSuccess(message) {
+    challengeConfirmation.textContent = message;
+    challengeConfirmation.classList.remove('hidden');
+    challengeError.classList.add('hidden');
+    
+    setTimeout(() => {
+        challengeConfirmation.classList.add('hidden');
+    }, 5000);
+}
+
+function showChallengeError(message) {
+    challengeError.textContent = message;
+    challengeError.classList.remove('hidden');
+    challengeConfirmation.classList.add('hidden');
+    
+    setTimeout(() => {
+        challengeError.classList.add('hidden');
+    }, 5000);
+}
 
 // --- Functions ---
 
@@ -216,6 +387,42 @@ function endSinglePlayerGame() {
     finalScoreboard.classList.add('hidden');
     singleFinalScore.textContent = `${totalScore}`;
     progressBar.style.width = '100%';
+    
+    // If this is a challenge mode, send result notification
+    if (ischallengeMode && challengeId && challengerName) {
+        sendChallengeResult(totalScore);
+    }
+}
+
+// Send challenge result notification
+async function sendChallengeResult(finalScore) {
+    if (!initEmailJS()) {
+        console.log('Challenge completed in demo mode - result would be sent to challenger');
+        return;
+    }
+
+    // Get challenger's email from stored challenge data
+    const challengeData = localStorage.getItem('challenge_' + challengeId);
+    if (!challengeData) return;
+
+    const challenge = JSON.parse(challengeData);
+    const challengerEmail = challenge.friendEmail; // This would be the original challenger's email
+    
+    const resultParams = {
+        challenger_name: challengerName,
+        friend_score: finalScore,
+        challenge_id: challengeId,
+        game_name: 'Ordna - Frågesport',
+        total_questions: questionsToPlay.length
+    };
+
+    try {
+        // This would use a different email template for results
+        await emailjs.send(EMAILJS_CONFIG.serviceId, 'result_template_id', resultParams);
+        console.log('Challenge result sent to challenger');
+    } catch (error) {
+        console.error('Failed to send challenge result:', error);
+    }
 }
 
 function createPlayerInputs() {
@@ -840,18 +1047,33 @@ backToStartBtn.addEventListener('click', () => {
     challengeConfirmation.classList.add('hidden');
 });
 
-sendChallengeBtn.addEventListener('click', () => {
-     const emailInput = document.getElementById('friend-email');
-     if (emailInput.value && emailInput.checkValidity()) {
-         console.log(`Mockup: Skickar utmaning till ${emailInput.value}`);
-         challengeConfirmation.classList.remove('hidden');
-         emailInput.value = '';
-         setTimeout(() => {
-             challengeConfirmation.classList.add('hidden');
-         }, 3000);
-     } else {
-         console.log("Invalid email for challenge.");
-     }
+sendChallengeBtn.addEventListener('click', handleSendChallenge);
+
+// Challenge acceptance listeners
+acceptChallengeBtn.addEventListener('click', () => {
+    ischallengeMode = true;
+    challengeAccept.classList.add('hidden');
+    playerSetup.classList.remove('hidden');
+    
+    // Set to single player mode for challenges
+    playerCountSelect.value = '1';
+    createPlayerInputs();
+});
+
+declineChallengeBtn.addEventListener('click', () => {
+    // Clear challenge data and show normal start screen
+    ischallengeMode = false;
+    challengeId = null;
+    challengerName = null;
+    challengedFriendEmail = null;
+    
+    challengeAccept.classList.add('hidden');
+    startMain.classList.remove('hidden');
+    
+    // Clear URL parameters
+    if (window.history.replaceState) {
+        window.history.replaceState({}, document.title, window.location.pathname);
+    }
 });
 
 
@@ -859,3 +1081,6 @@ sendChallengeBtn.addEventListener('click', () => {
 populatePackShop();
 createPlayerInputs();
 updateScoreboard();
+
+// Check for challenge in URL on page load
+checkForChallenge();

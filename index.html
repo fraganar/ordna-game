@@ -9,6 +9,7 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&family=Poppins:wght@700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="css/styles.css">
+    <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/@emailjs/browser@4/dist/email.min.js"></script>
 </head>
 <body class="bg-slate-100 text-slate-800 flex items-center justify-center min-h-screen p-2 sm:p-4">
 
@@ -80,9 +81,17 @@
             <!-- Challenge a Friend Form (Hidden by default) -->
             <div id="challenge-form" class="hidden">
                 <h2 class="text-2xl sm:text-3xl font-bold text-slate-900 mb-6 text-center">Utmana en vän</h2>
-                <div class="mb-6">
+                <div class="mb-4">
+                    <label for="challenger-name" class="block text-base sm:text-lg font-medium text-slate-700 mb-2">Ditt namn</label>
+                    <input type="text" id="challenger-name" placeholder="Ditt namn" class="w-full p-3 border border-slate-300 rounded-lg text-base sm:text-lg" required>
+                </div>
+                <div class="mb-4">
                     <label for="friend-email" class="block text-base sm:text-lg font-medium text-slate-700 mb-2">Vännens e-postadress</label>
-                    <input type="email" id="friend-email" placeholder="namn@exempel.com" class="w-full p-3 border border-slate-300 rounded-lg text-base sm:text-lg">
+                    <input type="email" id="friend-email" placeholder="namn@exempel.com" class="w-full p-3 border border-slate-300 rounded-lg text-base sm:text-lg" required>
+                </div>
+                <div class="mb-6">
+                    <label for="challenge-message" class="block text-base sm:text-lg font-medium text-slate-700 mb-2">Personligt meddelande (valfritt)</label>
+                    <textarea id="challenge-message" placeholder="Hej! Jag utmanar dig till en runda Ordna..." class="w-full p-3 border border-slate-300 rounded-lg text-base sm:text-lg h-24 resize-none"></textarea>
                 </div>
                 <div class="space-y-4">
                     <button id="send-challenge-btn" class="w-full bg-blue-600 text-white font-bold py-3 sm:py-4 px-6 rounded-lg text-lg sm:text-xl hover:bg-blue-700 transition-colors">
@@ -93,6 +102,24 @@
                     </button>
                 </div>
                 <p id="challenge-confirmation" class="hidden text-center mt-4 text-green-600 font-semibold">Utmaning skickad!</p>
+                <p id="challenge-error" class="hidden text-center mt-4 text-red-600 font-semibold">Något gick fel. Försök igen.</p>
+            </div>
+            
+            <!-- Challenge Acceptance Screen (Hidden by default) -->
+            <div id="challenge-accept" class="hidden">
+                <h2 class="text-2xl sm:text-3xl font-bold text-slate-900 mb-6 text-center">Du har fått en utmaning!</h2>
+                <div class="bg-blue-50 border border-blue-200 rounded-lg p-4 mb-6">
+                    <p class="text-lg text-center mb-2"><strong id="challenger-display-name">Någon</strong> har utmanat dig till Ordna!</p>
+                    <p id="challenge-display-message" class="text-slate-600 text-center italic"></p>
+                </div>
+                <div class="space-y-4">
+                    <button id="accept-challenge-btn" class="w-full bg-green-600 text-white font-bold py-3 sm:py-4 px-6 rounded-lg text-lg sm:text-xl hover:bg-green-700 transition-colors">
+                        Acceptera utmaning
+                    </button>
+                    <button id="decline-challenge-btn" class="w-full bg-slate-200 text-slate-800 font-bold py-3 sm:py-4 px-6 rounded-lg text-lg sm:text-xl hover:bg-slate-300 transition-colors">
+                        Spela vanligt spel istället
+                    </button>
+                </div>
             </div>
         </div>
 
