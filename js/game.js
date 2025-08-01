@@ -1,6 +1,39 @@
 // --- DATA ---
 let allQuestions = [];
 
+// --- Player Identity System ---
+let currentPlayer = null;
+
+// Initialize or get player identity
+function initializePlayer() {
+    let playerId = localStorage.getItem('playerId');
+    let playerName = localStorage.getItem('playerName');
+    
+    if (!playerId) {
+        playerId = 'player_' + Date.now() + '_' + Math.random().toString(36).substr(2, 9);
+        localStorage.setItem('playerId', playerId);
+    }
+    
+    currentPlayer = {
+        id: playerId,
+        name: playerName || null
+    };
+    
+    return currentPlayer;
+}
+
+// Set player name (first time setup)
+function setPlayerName(name) {
+    localStorage.setItem('playerName', name);
+    currentPlayer.name = name;
+    console.log('Player identity set:', currentPlayer);
+}
+
+// Challenge System State
+let ischallengeMode = false;
+let challengeId = null;
+let challengeData = null;
+
 // Load questions from JSON file
 async function loadQuestions() {
     try {
@@ -45,11 +78,31 @@ const showPlayerSetupBtn = document.getElementById('show-player-setup-btn');
 const playerCountSelect = document.getElementById('player-count');
 const playerNamesContainer = document.getElementById('player-names-container');
 const startGameBtn = document.getElementById('start-game-btn');
+// Player Name Setup Elements
+const playerNameSetup = document.getElementById('player-name-setup');
+const playerNameInput = document.getElementById('player-name-input');
+const savePlayerNameBtn = document.getElementById('save-player-name-btn');
+
+// Challenge Form Elements
 const challengeForm = document.getElementById('challenge-form');
 const showChallengeFormBtn = document.getElementById('show-challenge-form-btn');
-const sendChallengeBtn = document.getElementById('send-challenge-btn');
+const challengerNameDisplay = document.getElementById('challenger-name-display');
+const createChallengeBtn = document.getElementById('create-challenge-btn');
 const backToStartBtn = document.getElementById('back-to-start-btn');
-const challengeConfirmation = document.getElementById('challenge-confirmation');
+const challengeSuccess = document.getElementById('challenge-success');
+const challengeError = document.getElementById('challenge-error');
+const challengeLink = document.getElementById('challenge-link');
+const copyLinkBtn = document.getElementById('copy-link-btn');
+const shareWhatsappBtn = document.getElementById('share-whatsapp-btn');
+
+// Challenge Accept Elements
+const challengeAccept = document.getElementById('challenge-accept');
+const challengerDisplayName = document.getElementById('challenger-display-name');
+const acceptChallengeBtn = document.getElementById('accept-challenge-btn');
+const declineChallengeBtn = document.getElementById('decline-challenge-btn');
+
+// Notifications
+const notificationsArea = document.getElementById('notifications-area');
 
 const gameScreen = document.getElementById('game-screen');
 const endScreen = document.getElementById('end-screen');
@@ -95,6 +148,142 @@ let isSinglePlayer = false;
 let totalScore = 0;
 let currentQuestionScore = 0;
 let mistakeMade = false;
+
+// --- Challenge Functions ---
+
+// Check if there's a challenge in URL
+function checkForChallenge() {
+    const urlParams = new URLSearchParams(window.location.search);
+    const challengeParam = urlParams.get('challenge');
+    
+    if (challengeParam) {
+        challengeId = challengeParam;
+        return true;
+    }
+    return false;
+}
+
+// Show challenge acceptance screen
+async function showChallengeAcceptScreen() {
+    try {
+        // Get challenge details from Firebase
+        challengeData = await FirebaseAPI.getChallenge(challengeId);
+        
+        challengerDisplayName.textContent = challengeData.challengerName;
+        
+        startMain.classList.add('hidden');
+        playerSetup.classList.add('hidden');
+        challengeForm.classList.add('hidden');
+        challengeAccept.classList.remove('hidden');
+    } catch (error) {
+        console.error('Failed to load challenge:', error);
+        showError('Utmaningen kunde inte laddas. Kontrollera länken.');
+        challengeAccept.classList.add('hidden');
+        startMain.classList.remove('hidden');
+    }
+}
+
+// Create a new challenge
+async function createChallenge() {
+    if (!currentPlayer || !currentPlayer.name) {
+        console.error('Player not set up');
+        return;
+    }
+    
+    try {
+        showLoading('Skapar utmaning...');
+        
+        const newChallengeId = await FirebaseAPI.createChallenge(
+            currentPlayer.name,
+            currentPlayer.id
+        );
+        
+        const challengeUrl = window.location.origin + window.location.pathname + 
+            '?challenge=' + newChallengeId;
+        
+        // Show success state
+        challengeLink.value = challengeUrl;
+        challengeSuccess.classList.remove('hidden');
+        createChallengeBtn.classList.add('hidden');
+        
+        hideLoading();
+        
+        return newChallengeId;
+    } catch (error) {
+        hideLoading();
+        console.error('Failed to create challenge:', error);
+        showError('Kunde inte skapa utmaning. Försök igen.');
+    }
+}
+
+// Check for new challenge results
+async function checkForNotifications() {
+    if (!currentPlayer || !currentPlayer.id) return;
+    
+    try {
+        const lastCheck = localStorage.getItem('lastNotificationCheck');
+        const lastCheckTime = lastCheck ? new Date(lastCheck) : null;
+        
+        const newResults = await FirebaseAPI.getNewCompletedChallenges(
+            currentPlayer.id,
+            lastCheckTime
+        );
+        
+        if (newResults.length > 0) {
+            showNotifications(newResults);
+        }
+        
+        // Update last check time
+        localStorage.setItem('lastNotificationCheck', new Date().toISOString());
+    } catch (error) {
+        console.error('Failed to check notifications:', error);
+    }
+}
+
+// Show notifications for completed challenges
+function showNotifications(results) {
+    notificationsArea.innerHTML = '';
+    notificationsArea.classList.remove('hidden');
+    
+    results.forEach(challenge => {
+        const notification = document.createElement('div');
+        notification.className = 'bg-green-50 border border-green-200 rounded-lg p-3 mb-2';
+        notification.innerHTML = `
+            <div class="flex items-center justify-between">
+                <div>
+                    <p class="font-semibold text-green-800">🔔 ${challenge.result.playerName} slutförde din utmaning!</p>
+                    <p class="text-sm text-green-600">Resultat: ${challenge.result.score} poäng av ${challenge.result.totalQuestions} frågor</p>
+                </div>
+                <button onclick="this.parentElement.parentElement.remove()" class="text-green-400 hover:text-green-600 text-xl">×</button>
+            </div>
+        `;
+        notificationsArea.appendChild(notification);
+    });
+    
+    // Auto-hide after 10 seconds
+    setTimeout(() => {
+        notificationsArea.classList.add('hidden');
+    }, 10000);
+}
+
+// Utility functions
+function showLoading(message) {
+    createChallengeBtn.disabled = true;
+    createChallengeBtn.textContent = message;
+}
+
+function hideLoading() {
+    createChallengeBtn.disabled = false;
+    createChallengeBtn.textContent = 'Skapa utmaning';
+}
+
+function showError(message) {
+    challengeError.textContent = message;
+    challengeError.classList.remove('hidden');
+    setTimeout(() => {
+        challengeError.classList.add('hidden');
+    }, 5000);
+}
 
 // --- Functions ---
 
@@ -206,16 +395,33 @@ function endSinglePlayerQuestion(pointsToAdd) {
     }
 }
 
-function endSinglePlayerGame() {
+async function endSinglePlayerGame() {
     gameScreen.classList.add('hidden');
     endScreen.classList.remove('hidden');
     
     // Show single player final score
-    endScreenSubtitle.textContent = 'Bra kämpat!';
+    endScreenSubtitle.textContent = ischallengeMode ? 
+        'Bra kämpat! Ditt resultat skickas automatiskt.' : 'Bra kämpat!';
     singlePlayerFinal.classList.remove('hidden');
     finalScoreboard.classList.add('hidden');
     singleFinalScore.textContent = `${totalScore}`;
     progressBar.style.width = '100%';
+    
+    // If this is a challenge mode, complete the challenge
+    if (ischallengeMode && challengeId && currentPlayer) {
+        try {
+            await FirebaseAPI.completeChallenge(
+                challengeId,
+                currentPlayer.name,
+                currentPlayer.id,
+                totalScore,
+                questionsToPlay.length
+            );
+            console.log('Challenge completed successfully');
+        } catch (error) {
+            console.error('Failed to complete challenge:', error);
+        }
+    }
 }
 
 function createPlayerInputs() {
@@ -828,34 +1034,125 @@ openPackShopBtn.addEventListener('click', openPackShop);
 closePackShopBtn.addEventListener('click', closePackShop);
 confirmPacksBtn.addEventListener('click', closePackShop);
 
+// Player Name Setup Listeners
+savePlayerNameBtn.addEventListener('click', () => {
+    const name = playerNameInput.value.trim();
+    if (name) {
+        setPlayerName(name);
+        playerNameSetup.classList.add('hidden');
+        startMain.classList.remove('hidden');
+        
+        // Update challenger name display
+        challengerNameDisplay.textContent = name;
+    }
+});
+
 // Challenge form listeners
 showChallengeFormBtn.addEventListener('click', () => {
+    if (!currentPlayer.name) {
+        // Show name setup first
+        startMain.classList.add('hidden');
+        playerNameSetup.classList.remove('hidden');
+        return;
+    }
+    
+    challengerNameDisplay.textContent = currentPlayer.name;
     startMain.classList.add('hidden');
     challengeForm.classList.remove('hidden');
+    
+    // Reset form state
+    challengeSuccess.classList.add('hidden');
+    createChallengeBtn.classList.remove('hidden');
 });
 
 backToStartBtn.addEventListener('click', () => {
     challengeForm.classList.add('hidden');
     startMain.classList.remove('hidden');
-    challengeConfirmation.classList.add('hidden');
+    challengeError.classList.add('hidden');
+    challengeSuccess.classList.add('hidden');
 });
 
-sendChallengeBtn.addEventListener('click', () => {
-     const emailInput = document.getElementById('friend-email');
-     if (emailInput.value && emailInput.checkValidity()) {
-         console.log(`Mockup: Skickar utmaning till ${emailInput.value}`);
-         challengeConfirmation.classList.remove('hidden');
-         emailInput.value = '';
-         setTimeout(() => {
-             challengeConfirmation.classList.add('hidden');
-         }, 3000);
-     } else {
-         console.log("Invalid email for challenge.");
-     }
+createChallengeBtn.addEventListener('click', createChallenge);
+
+// Copy link functionality
+copyLinkBtn.addEventListener('click', async () => {
+    try {
+        await navigator.clipboard.writeText(challengeLink.value);
+        copyLinkBtn.textContent = 'Kopierad!';
+        setTimeout(() => {
+            copyLinkBtn.textContent = 'Kopiera länk';
+        }, 2000);
+    } catch (err) {
+        // Fallback for older browsers
+        challengeLink.select();
+        document.execCommand('copy');
+        copyLinkBtn.textContent = 'Kopierad!';
+        setTimeout(() => {
+            copyLinkBtn.textContent = 'Kopiera länk';
+        }, 2000);
+    }
+});
+
+// WhatsApp sharing
+shareWhatsappBtn.addEventListener('click', () => {
+    const message = encodeURIComponent(`${currentPlayer.name} utmanar dig till Ordna! ${challengeLink.value}`);
+    window.open(`https://wa.me/?text=${message}`, '_blank');
+});
+
+// Challenge acceptance listeners
+acceptChallengeBtn.addEventListener('click', () => {
+    ischallengeMode = true;
+    challengeAccept.classList.add('hidden');
+    
+    // Check if user needs to set name
+    if (!currentPlayer.name) {
+        playerNameSetup.classList.remove('hidden');
+    } else {
+        playerSetup.classList.remove('hidden');
+        // Set to single player mode for challenges
+        playerCountSelect.value = '1';
+        createPlayerInputs();
+    }
+});
+
+declineChallengeBtn.addEventListener('click', () => {
+    // Clear challenge data and show normal start screen
+    ischallengeMode = false;
+    challengeId = null;
+    challengeData = null;
+    
+    challengeAccept.classList.add('hidden');
+    startMain.classList.remove('hidden');
+    
+    // Clear URL parameters
+    if (window.history.replaceState) {
+        window.history.replaceState({}, document.title, window.location.pathname);
+    }
 });
 
 
 // --- Initial Setup ---
-populatePackShop();
-createPlayerInputs();
-updateScoreboard();
+async function initializeApp() {
+    // Initialize player identity
+    initializePlayer();
+    
+    // Setup UI
+    populatePackShop();
+    createPlayerInputs();
+    updateScoreboard();
+    
+    // Check if there's a challenge in URL
+    if (checkForChallenge()) {
+        // Show challenge acceptance screen
+        await showChallengeAcceptScreen();
+    } else {
+        // Check for notifications if user is returning
+        if (currentPlayer.name) {
+            await checkForNotifications();
+            challengerNameDisplay.textContent = currentPlayer.name;
+        }
+    }
+}
+
+// Initialize the app
+initializeApp();
