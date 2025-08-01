@@ -2,14 +2,12 @@
 // Note: Replace with actual config values from Firebase Console
 
 const firebaseConfig = {
-    // TODO: Replace these with your actual Firebase config
-    // Get these from: Firebase Console > Project Settings > General > Your apps
-    apiKey: "REPLACE_WITH_YOUR_API_KEY",
-    authDomain: "REPLACE_WITH_YOUR_AUTH_DOMAIN", 
-    projectId: "REPLACE_WITH_YOUR_PROJECT_ID",
-    storageBucket: "REPLACE_WITH_YOUR_STORAGE_BUCKET",
-    messagingSenderId: "REPLACE_WITH_YOUR_MESSAGING_SENDER_ID",
-    appId: "REPLACE_WITH_YOUR_APP_ID"
+    apiKey: "AIzaSyArJzldXQqiFLgxCpJrI1PaoqJ9SYYnoLo",
+    authDomain: "ordna-game.firebaseapp.com",
+    projectId: "ordna-game",
+    storageBucket: "ordna-game.firebasestorage.app",
+    messagingSenderId: "495272269343",
+    appId: "1:495272269343:web:3ff7bbf932c14bbcf4e72a"
 };
 
 // Initialize Firebase
