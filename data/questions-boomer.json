@@ -3,16 +3,16 @@
   "packs": ["Boomer", "Boomer", "Boomer", "Boomer", "Boomer"],
   "questions": [
     {
-      "fråga": "När lanserades dessa musikformat för konsumenter?",
+      "fråga": "Ordna dessa musikformat efter lansering (äldst först).",
       "typ": "ordna",
       "alternativ": [
-        "Kassettband (för hemmabruk)",
+        "Kassettband",
         "Sony Walkman",
         "CD-spelare",
         "MiniDisc"
       ],
       "rätt_ordning": [
-        "Kassettband (för hemmabruk)",
+        "Kassettband",
         "Sony Walkman",
         "CD-spelare",
         "MiniDisc"
@@ -20,36 +20,36 @@
       "svårighetsgrad": "medel"
     },
     {
-      "fråga": "När fick dessa svenska musikakter sitt internationella genombrott?",
+      "fråga": "Ordna dessa svenska musikakter efter internationellt genombrott (tidigast först).",
       "typ": "ordna",
       "alternativ": [
-        "ABBA (Waterloo-vinsten)",
-        "Europe (The Final Countdown)",
-        "Roxette (The Look etta i USA)",
-        "Ace of Base (All That She Wants)"
+        "ABBA",
+        "Europe",
+        "Roxette",
+        "Ace of Base"
       ],
       "rätt_ordning": [
-        "ABBA (Waterloo-vinsten)",
-        "Europe (The Final Countdown)",
-        "Roxette (The Look etta i USA)",
-        "Ace of Base (All That She Wants)"
+        "ABBA",
+        "Europe",
+        "Roxette",
+        "Ace of Base"
       ],
       "svårighetsgrad": "medel"
     },
     {
-      "fråga": "När släpptes dessa nostalgiska prylar som blev folkfavoriter?",
+      "fråga": "Ordna dessa nostalgiska prylar efter lansering (äldst först).",
       "typ": "ordna",
       "alternativ": [
         "Commodore 64",
-        "VHS vann formatkrig mot Betamax",
-        "Game Boy kom till Sverige",
-        "Tamagotchi-febern"
+        "VHS-format",
+        "Game Boy",
+        "Tamagotchi"
       ],
       "rätt_ordning": [
         "Commodore 64",
-        "VHS vann formatkrig mot Betamax",
-        "Game Boy kom till Sverige",
-        "Tamagotchi-febern"
+        "VHS-format",
+        "Game Boy",
+        "Tamagotchi"
       ],
       "svårighetsgrad": "medel"
     },
@@ -71,7 +71,7 @@
       "alternativ": [
         "Rubiks kub-febern",
         "Tamagotchi",
-        "Lösgodis (Pick & Mix) i Sverige",
+        "Lösgodis i Sverige",
         "MiniDisc-spelaren"
       ],
       "tillhör_index": [0, 2],
