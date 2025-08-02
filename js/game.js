@@ -211,8 +211,7 @@ const challengeSuccess = document.getElementById('challenge-success');
 const challengeError = document.getElementById('challenge-error');
 const challengeLink = document.getElementById('challenge-link');
 const copyLinkBtn = document.getElementById('copy-link-btn');
-const shareWhatsappBtn = document.getElementById('share-whatsapp-btn');
-const shareMessengerBtn = document.getElementById('share-messenger-btn');
+const shareBtn = document.getElementById('share-btn');
 
 // Challenge Accept Elements
 const challengeAccept = document.getElementById('challenge-accept');
@@ -587,11 +586,8 @@ function showWaitingForOpponentView(challengeId) {
                     <button id="copy-link-waiting" class="flex-1 bg-blue-600 text-white py-2 px-3 rounded text-sm hover:bg-blue-700">
                         Kopiera länk
                     </button>
-                    <button id="share-whatsapp-waiting" class="flex-1 bg-green-500 text-white py-2 px-3 rounded text-sm hover:bg-green-600">
-                        WhatsApp
-                    </button>
-                    <button id="share-messenger-waiting" class="flex-1 bg-blue-500 text-white py-2 px-3 rounded text-sm hover:bg-blue-600">
-                        Messenger
+                    <button id="share-waiting" class="flex-1 bg-slate-600 text-white py-2 px-3 rounded text-sm hover:bg-slate-700">
+                        Dela
                     </button>
                 </div>
             </div>
@@ -624,34 +620,42 @@ function showWaitingForOpponentView(challengeId) {
         }
     });
     
-    document.getElementById('share-whatsapp-waiting').addEventListener('click', () => {
-        const message = encodeURIComponent(`${currentPlayer.name} utmanar dig till Ordna! ${challengeUrl}`);
-        window.open(`https://wa.me/?text=${message}`, '_blank');
-    });
-    
-    document.getElementById('share-messenger-waiting').addEventListener('click', async () => {
-        const message = `${currentPlayer.name} utmanar dig till Ordna! ${challengeUrl}`;
+    document.getElementById('share-waiting').addEventListener('click', async () => {
+        const shareText = `${currentPlayer.name} utmanar dig till Ordna!`;
         
-        // Kopiera först till clipboard
-        try {
-            await navigator.clipboard.writeText(message);
-        } catch (err) {
-            // Fallback för äldre browsers
-            const input = document.getElementById('challenge-link-waiting');
-            input.select();
-            document.execCommand('copy');
+        // Kolla om Web Share API finns (mobil och vissa desktop-browsers)
+        if (navigator.share) {
+            try {
+                await navigator.share({
+                    title: `${currentPlayer.name} utmanar dig till Ordna!`,
+                    text: `${shareText} ${challengeUrl}`  // Slå ihop text och URL
+                });
+            } catch (err) {
+                // Användaren avbröt delningen - gör inget
+                console.log('Delning avbruten');
+            }
+        } else {
+            // Desktop fallback - kopiera länken med meddelande
+            const fullMessage = `${shareText} ${challengeUrl}`;
+            try {
+                await navigator.clipboard.writeText(fullMessage);
+                const btn = document.getElementById('share-waiting');
+                btn.innerHTML = '✓ Länk kopierad!';
+                setTimeout(() => {
+                    btn.textContent = 'Dela';
+                }, 2000);
+            } catch (err) {
+                // Fallback för äldre browsers
+                const input = document.getElementById('challenge-link-waiting');
+                input.select();
+                document.execCommand('copy');
+                const btn = document.getElementById('share-waiting');
+                btn.innerHTML = '✓ Länk kopierad!';
+                setTimeout(() => {
+                    btn.textContent = 'Dela';
+                }, 2000);
+            }
         }
-        
-        // Försök öppna Messenger
-        const messengerUrl = `https://m.me/?text=${encodeURIComponent(message)}`;
-        window.open(messengerUrl, '_blank');
-        
-        // Visa feedback
-        const btn = document.getElementById('share-messenger-waiting');
-        btn.innerHTML = '✓ Kopierad';
-        setTimeout(() => {
-            btn.textContent = 'Messenger';
-        }, 2000);
     });
     
     document.getElementById('check-status-btn').addEventListener('click', async () => {
@@ -1953,34 +1957,41 @@ copyLinkBtn.addEventListener('click', async () => {
     }
 });
 
-// WhatsApp sharing
-shareWhatsappBtn.addEventListener('click', () => {
-    const message = encodeURIComponent(`${currentPlayer.name} utmanar dig till Ordna! ${challengeLink.value}`);
-    window.open(`https://wa.me/?text=${message}`, '_blank');
-});
-
-// Messenger sharing
-shareMessengerBtn.addEventListener('click', async () => {
-    const message = `${currentPlayer.name} utmanar dig till Ordna! ${challengeLink.value}`;
+// Web Share API - Dela knapp
+shareBtn.addEventListener('click', async () => {
+    const challengeUrl = challengeLink.value;
+    const shareText = `${currentPlayer.name} utmanar dig till Ordna!`;
     
-    // Kopiera först till clipboard
-    try {
-        await navigator.clipboard.writeText(message);
-    } catch (err) {
-        // Fallback för äldre browsers
-        challengeLink.select();
-        document.execCommand('copy');
+    // Kolla om Web Share API finns (mobil och vissa desktop-browsers)
+    if (navigator.share) {
+        try {
+            await navigator.share({
+                title: `${currentPlayer.name} utmanar dig till Ordna!`,
+                text: `${shareText} ${challengeUrl}`  // Slå ihop text och URL
+            });
+        } catch (err) {
+            // Användaren avbröt delningen - gör inget
+            console.log('Delning avbruten');
+        }
+    } else {
+        // Desktop fallback - kopiera länken med meddelande
+        const fullMessage = `${shareText} ${challengeUrl}`;
+        try {
+            await navigator.clipboard.writeText(fullMessage);
+            shareBtn.innerHTML = '✓ Länk kopierad!';
+            setTimeout(() => {
+                shareBtn.textContent = 'Dela';
+            }, 2000);
+        } catch (err) {
+            // Fallback för äldre browsers
+            challengeLink.select();
+            document.execCommand('copy');
+            shareBtn.innerHTML = '✓ Länk kopierad!';
+            setTimeout(() => {
+                shareBtn.textContent = 'Dela';
+            }, 2000);
+        }
     }
-    
-    // Försök öppna Messenger
-    const messengerUrl = `https://m.me/?text=${encodeURIComponent(message)}`;
-    window.open(messengerUrl, '_blank');
-    
-    // Visa feedback
-    shareMessengerBtn.innerHTML = '✓ Kopierad';
-    setTimeout(() => {
-        shareMessengerBtn.textContent = 'Messenger';
-    }, 2000);
 });
 
 // Challenge acceptance listeners
