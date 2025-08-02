@@ -38,6 +38,13 @@ Ett klurigt frågespel där spelare tävlar om vem som vågar chansa mest. Inom 
 - `data/questions-grund.json`: Game questions with pack assignments
 - `data/`: Directory for additional question files
 
+## Challenge System
+- **Blind Challenge**: Players compete on same 5 questions without seeing opponent's score
+- **Flow**: Challenger plays → Gets shareable link → Opponent plays same questions → Results compared
+- **Data**: Firebase stores questions + scores, localStorage tracks user's challenges
+- **Views**: Waiting screen (with polling), Result comparison, "My Challenges" list
+- **Features**: WhatsApp sharing, 7-day expiration, duplicate play prevention
+
 ## Important Notes
 - App requires HTTP server (not file://) for JSON loading
 - Questions are loaded asynchronously via fetch API
