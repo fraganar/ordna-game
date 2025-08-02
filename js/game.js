@@ -35,6 +35,7 @@ let challengeId = null;
 let challengeData = null;
 let challengeQuestions = [];
 let challengeQuestionScores = [];
+let pendingChallengeCreation = false;
 
 // Load questions from a specific pack
 async function loadPackQuestions(packName) {
@@ -1896,14 +1897,25 @@ savePlayerNameBtn.addEventListener('click', async () => {
         setPlayerName(name);
         playerNameSetup.classList.add('hidden');
         
-        // Check if there's a pending challenge
-        const pendingChallenge = localStorage.getItem('pendingChallenge');
-        if (pendingChallenge) {
+        // Check if user was trying to create a challenge
+        if (pendingChallengeCreation) {
+            pendingChallengeCreation = false;
+            challengeForm.classList.remove('hidden');
+            challengerNameDisplay.textContent = name;
+            // Reset form state
+            challengeSuccess.classList.add('hidden');
+            createChallengeBtn.classList.remove('hidden');
+        }
+        // Check if there's a pending challenge to accept
+        else if (localStorage.getItem('pendingChallenge')) {
+            const pendingChallenge = localStorage.getItem('pendingChallenge');
             localStorage.removeItem('pendingChallenge');
             challengeId = pendingChallenge;
             ischallengeMode = true;
             await startChallengeGame();
-        } else {
+        } 
+        // Normal return to start screen
+        else {
             startMain.classList.remove('hidden');
             // Update challenger name display
             challengerNameDisplay.textContent = name;
@@ -1915,6 +1927,7 @@ savePlayerNameBtn.addEventListener('click', async () => {
 showChallengeFormBtn.addEventListener('click', () => {
     if (!currentPlayer.name) {
         // Show name setup first
+        pendingChallengeCreation = true;  // Markera att vi vill skapa utmaning efter namnupplägg
         startMain.classList.add('hidden');
         playerNameSetup.classList.remove('hidden');
         return;
