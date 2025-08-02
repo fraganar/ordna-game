@@ -104,6 +104,13 @@ async function loadQuestionsForGame() {
 
 const questionPacks = [
     { 
+        name: "Grund", 
+        description: "Grundläggande frågor för Ordna-spelet", 
+        status: "available", 
+        file: "questions-grund.json",
+        price: "INKLUDERAT"
+    },
+    { 
         name: "Boomer", 
         description: "Frågor om en tid då allt var bättre. Eller var det?", 
         status: "available", 
@@ -1204,13 +1211,13 @@ function populatePackSelect() {
     
     selects.forEach(select => {
         if (select) {
-            select.innerHTML = '<option value="">Alla frågor (standard)</option>';
+            select.innerHTML = '';
             
             questionPacks.forEach(pack => {
                 if (pack.status === 'available') {
                     const option = document.createElement('option');
                     option.value = pack.name;
-                    option.textContent = `${pack.name} (${pack.price})`;
+                    option.textContent = pack.name;
                     select.appendChild(option);
                 }
             });
