@@ -33,6 +33,8 @@ function setPlayerName(name) {
 let ischallengeMode = false;
 let challengeId = null;
 let challengeData = null;
+let challengeQuestions = [];
+let challengeQuestionScores = [];
 
 // Load questions from JSON file
 async function loadQuestions() {
@@ -183,7 +185,7 @@ async function showChallengeAcceptScreen() {
     }
 }
 
-// Create a new challenge
+// Create a new challenge - starts the game immediately
 async function createChallenge() {
     if (!currentPlayer || !currentPlayer.name) {
         console.error('Player not set up');
@@ -191,26 +193,55 @@ async function createChallenge() {
     }
     
     try {
-        showLoading('Skapar utmaning...');
+        // Load questions if not already loaded
+        if (allQuestions.length === 0) {
+            await loadQuestions();
+        }
         
-        const newChallengeId = await FirebaseAPI.createChallenge(
-            currentPlayer.name,
-            currentPlayer.id
-        );
+        // Select 5 random questions
+        const processedQuestions = processQuestions(allQuestions);
+        const availableQuestions = selectedPacks.length > 0 ? 
+            processedQuestions.filter(q => selectedPacks.includes(q.pack)) : 
+            processedQuestions;
         
-        const challengeUrl = window.location.origin + window.location.pathname + 
-            '?challenge=' + newChallengeId;
+        // Shuffle and take first 5
+        const shuffled = [...availableQuestions];
+        shuffleArray(shuffled);
+        challengeQuestions = shuffled.slice(0, 5);
         
-        // Show success state
-        challengeLink.value = challengeUrl;
-        challengeSuccess.classList.remove('hidden');
-        createChallengeBtn.classList.add('hidden');
+        // Set up challenge mode
+        ischallengeMode = true;
+        challengeId = null; // Will be set after game completion
+        challengeQuestionScores = [];
         
-        hideLoading();
+        // Start the game directly as single player
+        players = [{
+            name: currentPlayer.name,
+            score: 0,
+            roundPot: 0,
+            eliminatedInRound: false,
+            eliminationReason: null
+        }];
+        isSinglePlayer = true;
+        totalScore = 0;
+        questionsToPlay = challengeQuestions;
         
-        return newChallengeId;
+        // Hide challenge form and show game
+        challengeForm.classList.add('hidden');
+        startScreen.classList.add('hidden');
+        endScreen.classList.add('hidden');
+        gameScreen.classList.remove('hidden');
+        
+        // Setup UI for single player
+        singlePlayerScore.classList.remove('hidden');
+        singlePlayerProgress.classList.remove('hidden');
+        singlePlayerStars.classList.remove('hidden');
+        scoreboard.classList.add('hidden');
+        
+        currentQuestionIndex = 0;
+        loadQuestion();
+        
     } catch (error) {
-        hideLoading();
         console.error('Failed to create challenge:', error);
         showError('Kunde inte skapa utmaning. Försök igen.');
     }
@@ -218,14 +249,14 @@ async function createChallenge() {
 
 // Check for new challenge results
 async function checkForNotifications() {
-    if (!currentPlayer || !currentPlayer.id) return;
+    if (!currentPlayer || !currentPlayer.name) return;
     
     try {
         const lastCheck = localStorage.getItem('lastNotificationCheck');
         const lastCheckTime = lastCheck ? new Date(lastCheck) : null;
         
         const newResults = await FirebaseAPI.getNewCompletedChallenges(
-            currentPlayer.id,
+            currentPlayer.name,
             lastCheckTime
         );
         
@@ -240,6 +271,128 @@ async function checkForNotifications() {
     }
 }
 
+// Load and display my challenges
+async function loadMyChallenges() {
+    const myChallengesSection = document.getElementById('my-challenges-section');
+    const myChallengesList = document.getElementById('my-challenges-list');
+    
+    if (!currentPlayer || !currentPlayer.name) {
+        myChallengesSection.classList.add('hidden');
+        return;
+    }
+    
+    // Get all challenges from localStorage
+    const allChallenges = [];
+    for (let i = 0; i < localStorage.length; i++) {
+        const key = localStorage.key(i);
+        if (key.startsWith('challenge_')) {
+            try {
+                const challenge = JSON.parse(localStorage.getItem(key));
+                allChallenges.push(challenge);
+            } catch (e) {
+                // Invalid data, skip
+            }
+        }
+    }
+    
+    if (allChallenges.length === 0) {
+        myChallengesSection.classList.add('hidden');
+        return;
+    }
+    
+    // Sort by most recent
+    allChallenges.sort((a, b) => {
+        const aTime = a.createdAt || a.completedAt;
+        const bTime = b.createdAt || b.completedAt;
+        return new Date(bTime) - new Date(aTime);
+    });
+    
+    // Display challenges
+    myChallengesList.innerHTML = '';
+    allChallenges.slice(0, 5).forEach(challenge => {
+        const item = document.createElement('div');
+        item.className = 'bg-slate-50 border border-slate-200 rounded-lg p-3 cursor-pointer hover:bg-slate-100 transition-colors';
+        
+        let statusBadge = '';
+        let statusText = '';
+        
+        if (challenge.role === 'challenger') {
+            if (!challenge.hasSeenResult) {
+                // Check if completed
+                checkChallengeCompletionStatus(challenge.id).then(isComplete => {
+                    if (isComplete) {
+                        item.querySelector('.status-badge').innerHTML = 
+                            '<span class="bg-green-100 text-green-800 text-xs font-semibold px-2 py-1 rounded">Klar!</span>';
+                    }
+                });
+            }
+            statusBadge = challenge.hasSeenResult ? 
+                '<span class="bg-gray-100 text-gray-600 text-xs font-semibold px-2 py-1 rounded">Sedd</span>' :
+                '<span class="bg-blue-100 text-blue-800 text-xs font-semibold px-2 py-1 rounded">Väntar</span>';
+            statusText = `Du: ${challenge.totalScore}p`;
+        } else {
+            statusBadge = '<span class="bg-green-100 text-green-800 text-xs font-semibold px-2 py-1 rounded">Spelad</span>';
+            statusText = `Du: ${challenge.totalScore}p`;
+        }
+        
+        const timeAgo = getTimeAgo(challenge.createdAt || challenge.completedAt);
+        
+        item.innerHTML = `
+            <div class="flex justify-between items-start">
+                <div class="flex-1">
+                    <p class="font-semibold text-slate-800">${challenge.role === 'challenger' ? 'Utmanade' : 'Utmanad av'} någon</p>
+                    <p class="text-sm text-slate-500">${timeAgo} • ${statusText}</p>
+                </div>
+                <div class="status-badge">${statusBadge}</div>
+            </div>
+        `;
+        
+        item.addEventListener('click', async () => {
+            if (challenge.role === 'challenger') {
+                const isComplete = await checkChallengeCompletionStatus(challenge.id);
+                if (isComplete) {
+                    showChallengeResultView(challenge.id);
+                } else {
+                    challengeId = challenge.id;
+                    showWaitingForOpponentView(challenge.id);
+                }
+            } else {
+                showChallengeResultView(challenge.id);
+            }
+        });
+        
+        myChallengesList.appendChild(item);
+    });
+    
+    myChallengesSection.classList.remove('hidden');
+}
+
+// Helper function to check if challenge is complete
+async function checkChallengeCompletionStatus(challengeId) {
+    try {
+        const challenge = await FirebaseAPI.getChallenge(challengeId);
+        return challenge && challenge.status === 'complete';
+    } catch (error) {
+        return false;
+    }
+}
+
+// Helper function to get time ago text
+function getTimeAgo(dateString) {
+    const date = new Date(dateString);
+    const now = new Date();
+    const diffMs = now - date;
+    const diffMins = Math.floor(diffMs / 60000);
+    const diffHours = Math.floor(diffMs / 3600000);
+    const diffDays = Math.floor(diffMs / 86400000);
+    
+    if (diffMins < 1) return 'Nyss';
+    if (diffMins < 60) return `${diffMins} min sedan`;
+    if (diffHours < 24) return `${diffHours} tim sedan`;
+    if (diffDays < 7) return `${diffDays} dagar sedan`;
+    return date.toLocaleDateString('sv-SE');
+}
+
 // Show notifications for completed challenges
 function showNotifications(results) {
     notificationsArea.innerHTML = '';
@@ -247,16 +400,21 @@ function showNotifications(results) {
     
     results.forEach(challenge => {
         const notification = document.createElement('div');
-        notification.className = 'bg-green-50 border border-green-200 rounded-lg p-3 mb-2';
+        notification.className = 'bg-green-50 border border-green-200 rounded-lg p-3 mb-2 cursor-pointer';
+        const winner = challenge.opponent.totalScore > challenge.challenger.totalScore ? challenge.opponent.name : 
+                       challenge.opponent.totalScore < challenge.challenger.totalScore ? 'Du' : 'Oavgjort';
         notification.innerHTML = `
             <div class="flex items-center justify-between">
                 <div>
-                    <p class="font-semibold text-green-800">🔔 ${challenge.result.playerName} slutförde din utmaning!</p>
-                    <p class="text-sm text-green-600">Resultat: ${challenge.result.score} poäng av ${challenge.result.totalQuestions} frågor</p>
+                    <p class="font-semibold text-green-800">🔔 ${challenge.opponent.name} har spelat klart!</p>
+                    <p class="text-sm text-green-600">Vinnare: ${winner} (${challenge.opponent.totalScore} vs ${challenge.challenger.totalScore} poäng)</p>
                 </div>
-                <button onclick="this.parentElement.parentElement.remove()" class="text-green-400 hover:text-green-600 text-xl">×</button>
+                <button onclick="event.stopPropagation(); this.parentElement.parentElement.remove()" class="text-green-400 hover:text-green-600 text-xl">×</button>
             </div>
         `;
+        notification.addEventListener('click', () => {
+            showChallengeResultView(challenge.id);
+        });
         notificationsArea.appendChild(notification);
     });
     
@@ -283,6 +441,293 @@ function showError(message) {
     setTimeout(() => {
         challengeError.classList.add('hidden');
     }, 5000);
+}
+
+// Show waiting for opponent view
+function showWaitingForOpponentView(challengeId) {
+    const challengeUrl = window.location.origin + window.location.pathname + 
+        '?challenge=' + challengeId;
+    
+    // Create waiting view HTML
+    const waitingHTML = `
+        <div class="p-6 sm:p-8 lg:p-12 text-center">
+            <h2 class="text-2xl sm:text-3xl font-bold text-slate-900 mb-6">Utmaning skapad!</h2>
+            <div class="bg-blue-50 border border-blue-200 rounded-lg p-4 mb-6">
+                <p class="text-lg font-semibold text-blue-800 mb-2">Ditt resultat: ${totalScore} poäng</p>
+                <p class="text-sm text-blue-600">Väntar på att din vän ska spela...</p>
+            </div>
+            
+            <div class="bg-slate-50 border border-slate-200 rounded-lg p-4 mb-6">
+                <p class="text-sm text-slate-600 mb-3">Dela denna länk:</p>
+                <div class="bg-white border border-slate-300 rounded p-2 mb-3">
+                    <input type="text" id="challenge-link-waiting" value="${challengeUrl}" readonly class="w-full text-xs text-gray-600 bg-transparent border-none outline-none">
+                </div>
+                <div class="flex space-x-2">
+                    <button id="copy-link-waiting" class="flex-1 bg-blue-600 text-white py-2 px-3 rounded text-sm hover:bg-blue-700">
+                        Kopiera länk
+                    </button>
+                    <button id="share-whatsapp-waiting" class="flex-1 bg-green-500 text-white py-2 px-3 rounded text-sm hover:bg-green-600">
+                        WhatsApp
+                    </button>
+                </div>
+            </div>
+            
+            <button id="check-status-btn" class="w-full bg-slate-600 text-white font-bold py-3 px-6 rounded-lg text-lg hover:bg-slate-700 transition-colors mb-4">
+                Kolla status
+            </button>
+            
+            <button id="back-to-start-waiting" class="w-full bg-slate-200 text-slate-800 font-bold py-3 px-6 rounded-lg text-lg hover:bg-slate-300 transition-colors">
+                Tillbaka till start
+            </button>
+        </div>
+    `;
+    
+    endScreen.innerHTML = waitingHTML;
+    endScreen.classList.remove('hidden');
+    
+    // Add event listeners
+    document.getElementById('copy-link-waiting').addEventListener('click', async () => {
+        const input = document.getElementById('challenge-link-waiting');
+        try {
+            await navigator.clipboard.writeText(input.value);
+            document.getElementById('copy-link-waiting').textContent = 'Kopierad!';
+            setTimeout(() => {
+                document.getElementById('copy-link-waiting').textContent = 'Kopiera länk';
+            }, 2000);
+        } catch (err) {
+            input.select();
+            document.execCommand('copy');
+        }
+    });
+    
+    document.getElementById('share-whatsapp-waiting').addEventListener('click', () => {
+        const message = encodeURIComponent(`${currentPlayer.name} utmanar dig till Ordna! ${challengeUrl}`);
+        window.open(`https://wa.me/?text=${message}`, '_blank');
+    });
+    
+    document.getElementById('check-status-btn').addEventListener('click', async () => {
+        await checkChallengeStatus(challengeId);
+    });
+    
+    document.getElementById('back-to-start-waiting').addEventListener('click', () => {
+        restartGame();
+    });
+    
+    // Start polling
+    startChallengePolling(challengeId);
+}
+
+// Show challenge result comparison view
+async function showChallengeResultView(challengeId) {
+    try {
+        // Get challenge data from Firebase
+        const challenge = await FirebaseAPI.getChallenge(challengeId);
+        
+        if (!challenge) {
+            throw new Error('Challenge not found');
+        }
+        
+        const isChallenger = challenge.challenger.name === currentPlayer.name;
+        const myData = isChallenger ? challenge.challenger : challenge.opponent;
+        const opponentData = isChallenger ? challenge.opponent : challenge.challenger;
+        
+        // Create result view HTML
+        const resultHTML = `
+            <div class="p-6 sm:p-8 lg:p-12">
+                <h2 class="text-2xl sm:text-3xl font-bold text-slate-900 mb-6 text-center">Utmaning avslutad!</h2>
+                
+                <div class="grid grid-cols-2 gap-4 mb-6">
+                    <div class="text-center">
+                        <h3 class="font-bold text-lg mb-2">${myData.name}</h3>
+                        <p class="text-3xl font-bold ${myData.totalScore > opponentData.totalScore ? 'text-green-600' : 'text-slate-600'}">${myData.totalScore} p</p>
+                        <div class="mt-2 text-sm text-slate-500">
+                            ${myData.questionScores.map((score, i) => `F${i+1}: ${score}p`).join(' | ')}
+                        </div>
+                    </div>
+                    <div class="text-center">
+                        <h3 class="font-bold text-lg mb-2">${opponentData.name}</h3>
+                        <p class="text-3xl font-bold ${opponentData.totalScore > myData.totalScore ? 'text-green-600' : 'text-slate-600'}">${opponentData.totalScore} p</p>
+                        <div class="mt-2 text-sm text-slate-500">
+                            ${opponentData.questionScores.map((score, i) => `F${i+1}: ${score}p`).join(' | ')}
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="bg-slate-100 rounded-lg p-4 mb-6 text-center">
+                    ${myData.totalScore > opponentData.totalScore ? 
+                        '<p class="text-xl font-bold text-green-600">🎉 Du vann!</p>' :
+                        myData.totalScore < opponentData.totalScore ?
+                        '<p class="text-xl font-bold text-red-600">Du förlorade!</p>' :
+                        '<p class="text-xl font-bold text-blue-600">Oavgjort!</p>'
+                    }
+                </div>
+                
+                <button id="new-challenge-btn" class="w-full bg-blue-600 text-white font-bold py-3 px-6 rounded-lg text-lg hover:bg-blue-700 transition-colors mb-3">
+                    Revansch!
+                </button>
+                
+                <button id="back-to-start-result" class="w-full bg-slate-200 text-slate-800 font-bold py-3 px-6 rounded-lg text-lg hover:bg-slate-300 transition-colors">
+                    Tillbaka till start
+                </button>
+            </div>
+        `;
+        
+        endScreen.innerHTML = resultHTML;
+        endScreen.classList.remove('hidden');
+        
+        // Update localStorage to mark as seen
+        const storedChallenge = localStorage.getItem(`challenge_${challengeId}`);
+        if (storedChallenge) {
+            const challengeInfo = JSON.parse(storedChallenge);
+            challengeInfo.hasSeenResult = true;
+            localStorage.setItem(`challenge_${challengeId}`, JSON.stringify(challengeInfo));
+        }
+        
+        // Add event listeners
+        document.getElementById('new-challenge-btn').addEventListener('click', () => {
+            restartGame();
+            showChallengeFormBtn.click();
+        });
+        
+        document.getElementById('back-to-start-result').addEventListener('click', () => {
+            restartGame();
+        });
+        
+    } catch (error) {
+        console.error('Failed to show challenge result:', error);
+        showError('Kunde inte ladda resultat');
+        restartGame();
+    }
+}
+
+// Check challenge status
+async function checkChallengeStatus(challengeId) {
+    try {
+        const challenge = await FirebaseAPI.getChallenge(challengeId);
+        
+        if (challenge && challenge.status === 'complete') {
+            // Stop polling
+            stopChallengePolling();
+            // Show result view
+            showChallengeResultView(challengeId);
+        } else {
+            // Show status message
+            const statusBtn = document.getElementById('check-status-btn');
+            if (statusBtn) {
+                statusBtn.textContent = 'Väntar fortfarande...';
+                setTimeout(() => {
+                    statusBtn.textContent = 'Kolla status';
+                }, 2000);
+            }
+        }
+    } catch (error) {
+        console.error('Failed to check challenge status:', error);
+    }
+}
+
+// Start challenge game for opponent
+async function startChallengeGame() {
+    try {
+        // Get challenge data
+        challengeData = await FirebaseAPI.getChallenge(challengeId);
+        
+        if (!challengeData) {
+            throw new Error('Challenge not found');
+        }
+        
+        // Check if challenge is expired
+        const expiresDate = challengeData.expires.toDate ? challengeData.expires.toDate() : new Date(challengeData.expires);
+        if (expiresDate < new Date()) {
+            throw new Error('Challenge has expired');
+        }
+        
+        // Check if already completed by this player
+        const storedChallenge = localStorage.getItem(`challenge_${challengeId}`);
+        if (storedChallenge) {
+            const info = JSON.parse(storedChallenge);
+            if (info.role === 'opponent') {
+                showError('Du har redan spelat denna utmaning');
+                showChallengeResultView(challengeId);
+                return;
+            }
+        }
+        
+        // Set up game with the same questions
+        challengeQuestions = challengeData.questions;
+        challengeQuestionScores = [];
+        
+        // Start the game as single player
+        players = [{
+            name: currentPlayer.name,
+            score: 0,
+            roundPot: 0,
+            eliminatedInRound: false,
+            eliminationReason: null
+        }];
+        isSinglePlayer = true;
+        totalScore = 0;
+        questionsToPlay = challengeQuestions;
+        
+        // Hide all screens and show game
+        startScreen.classList.add('hidden');
+        playerSetup.classList.add('hidden');
+        endScreen.classList.add('hidden');
+        gameScreen.classList.remove('hidden');
+        
+        // Setup UI for single player
+        singlePlayerScore.classList.remove('hidden');
+        singlePlayerProgress.classList.remove('hidden');
+        singlePlayerStars.classList.remove('hidden');
+        scoreboard.classList.add('hidden');
+        
+        currentQuestionIndex = 0;
+        loadQuestion();
+        
+    } catch (error) {
+        console.error('Failed to start challenge:', error);
+        showError(error.message || 'Kunde inte starta utmaning');
+        challengeAccept.classList.add('hidden');
+        startMain.classList.remove('hidden');
+    }
+}
+
+// Polling mechanism
+let pollingInterval = null;
+let pollingCount = 0;
+
+function startChallengePolling(challengeId) {
+    // Stop any existing polling
+    stopChallengePolling();
+    
+    // Start with 10 second interval
+    let currentInterval = 10000;
+    
+    const poll = async () => {
+        pollingCount++;
+        
+        // Increase interval after 5 minutes (30 polls at 10s)
+        if (pollingCount > 30) {
+            currentInterval = 60000; // 60 seconds
+            stopChallengePolling();
+            pollingInterval = setInterval(poll, currentInterval);
+        }
+        
+        await checkChallengeStatus(challengeId);
+    };
+    
+    // Start polling
+    pollingInterval = setInterval(poll, currentInterval);
+    
+    // Also check immediately
+    checkChallengeStatus(challengeId);
+}
+
+function stopChallengePolling() {
+    if (pollingInterval) {
+        clearInterval(pollingInterval);
+        pollingInterval = null;
+    }
+    pollingCount = 0;
 }
 
 // --- Functions ---
@@ -382,6 +827,11 @@ function endSinglePlayerQuestion(pointsToAdd) {
     totalScore += pointsToAdd;
     mistakeMade = true; // Lock all interactions
     
+    // Save score for this question if in challenge mode
+    if (ischallengeMode) {
+        challengeQuestionScores.push(pointsToAdd);
+    }
+    
     updateSinglePlayerDisplay();
     stopBtn.classList.add('hidden');
     nextQuestionBtn.classList.remove('hidden');
@@ -397,30 +847,87 @@ function endSinglePlayerQuestion(pointsToAdd) {
 
 async function endSinglePlayerGame() {
     gameScreen.classList.add('hidden');
-    endScreen.classList.remove('hidden');
     
-    // Show single player final score
-    endScreenSubtitle.textContent = ischallengeMode ? 
-        'Bra kämpat! Ditt resultat skickas automatiskt.' : 'Bra kämpat!';
-    singlePlayerFinal.classList.remove('hidden');
-    finalScoreboard.classList.add('hidden');
-    singleFinalScore.textContent = `${totalScore}`;
-    progressBar.style.width = '100%';
-    
-    // If this is a challenge mode, complete the challenge
-    if (ischallengeMode && challengeId && currentPlayer) {
+    // If this is challenge creation mode
+    if (ischallengeMode && !challengeId) {
+        try {
+            // Create the challenge in Firebase with the results
+            const newChallengeId = await FirebaseAPI.createChallenge(
+                currentPlayer.name,
+                currentPlayer.id,
+                challengeQuestions,
+                totalScore,
+                challengeQuestionScores
+            );
+            
+            challengeId = newChallengeId;
+            
+            // Save to localStorage
+            const challengeInfo = {
+                id: newChallengeId,
+                role: 'challenger',
+                playerName: currentPlayer.name,
+                createdAt: new Date().toISOString(),
+                hasSeenResult: false,
+                totalScore: totalScore,
+                questionScores: challengeQuestionScores
+            };
+            localStorage.setItem(`challenge_${newChallengeId}`, JSON.stringify(challengeInfo));
+            
+            // Show waiting for opponent view
+            showWaitingForOpponentView(newChallengeId);
+            
+        } catch (error) {
+            console.error('Failed to create challenge:', error);
+            showError('Kunde inte skapa utmaning. Försök igen.');
+            endScreen.classList.remove('hidden');
+            singlePlayerFinal.classList.remove('hidden');
+            finalScoreboard.classList.add('hidden');
+            singleFinalScore.textContent = `${totalScore}`;
+        }
+    }
+    // If this is accepting a challenge
+    else if (ischallengeMode && challengeId) {
         try {
             await FirebaseAPI.completeChallenge(
                 challengeId,
                 currentPlayer.name,
-                currentPlayer.id,
                 totalScore,
-                questionsToPlay.length
+                challengeQuestionScores
             );
-            console.log('Challenge completed successfully');
+            
+            // Save to localStorage
+            const challengeInfo = {
+                id: challengeId,
+                role: 'opponent',
+                playerName: currentPlayer.name,
+                completedAt: new Date().toISOString(),
+                hasSeenResult: true,
+                totalScore: totalScore,
+                questionScores: challengeQuestionScores
+            };
+            localStorage.setItem(`challenge_${challengeId}`, JSON.stringify(challengeInfo));
+            
+            // Show result comparison view
+            showChallengeResultView(challengeId);
+            
         } catch (error) {
             console.error('Failed to complete challenge:', error);
+            showError('Kunde inte spara resultat. Försök igen.');
+            endScreen.classList.remove('hidden');
+            singlePlayerFinal.classList.remove('hidden');
+            finalScoreboard.classList.add('hidden');
+            singleFinalScore.textContent = `${totalScore}`;
         }
+    }
+    // Normal single player mode
+    else {
+        endScreen.classList.remove('hidden');
+        endScreenSubtitle.textContent = 'Bra kämpat!';
+        singlePlayerFinal.classList.remove('hidden');
+        finalScoreboard.classList.add('hidden');
+        singleFinalScore.textContent = `${totalScore}`;
+        progressBar.style.width = '100%';
     }
 }
 
@@ -958,10 +1465,44 @@ function endGame() {
 }
 
 function restartGame() {
+    // Stop any ongoing polling
+    stopChallengePolling();
+    
+    // Restore endScreen HTML
+    endScreen.innerHTML = `
+        <h2 class="text-3xl sm:text-4xl font-bold text-slate-900 mb-2">Spelet är slut!</h2>
+        <p id="end-screen-subtitle" class="text-slate-600 mb-6 text-base sm:text-lg">Bra kämpat allihopa!</p>
+        
+        <!-- Single Player Final Score -->
+        <div id="single-player-final" class="hidden bg-blue-100 text-blue-800 rounded-lg p-6 mb-8">
+            <p class="text-xl">Din slutpoäng:</p>
+            <p id="single-final-score" class="text-6xl font-bold"></p>
+        </div>
+        
+        <!-- Multiplayer Final Scoreboard -->
+        <div id="final-scoreboard" class="space-y-3 sm:space-y-4 mb-8">
+            <!-- Final player scores will be listed here -->
+        </div>
+        
+        <button id="restart-btn" class="w-full bg-blue-600 text-white font-bold py-3 px-6 rounded-lg text-lg sm:text-xl hover:bg-blue-700 transition-colors shadow-md">
+            Spela igen
+        </button>
+    `;
+    
+    // Re-attach restart button listener
+    document.getElementById('restart-btn').addEventListener('click', restartGame);
+    
+    // Update element references
+    endScreenSubtitle = document.getElementById('end-screen-subtitle');
+    singlePlayerFinal = document.getElementById('single-player-final');
+    singleFinalScore = document.getElementById('single-final-score');
+    finalScoreboard = document.getElementById('final-scoreboard');
+    
     endScreen.classList.add('hidden');
     startScreen.classList.remove('hidden');
     startMain.classList.remove('hidden');
     playerSetup.classList.add('hidden');
+    challengeForm.classList.add('hidden');
     
     // Reset single player display
     singlePlayerFinal.classList.add('hidden');
@@ -972,6 +1513,14 @@ function restartGame() {
     totalScore = 0;
     currentQuestionScore = 0;
     mistakeMade = false;
+    ischallengeMode = false;
+    challengeId = null;
+    challengeData = null;
+    challengeQuestions = [];
+    challengeQuestionScores = [];
+    
+    // Reload my challenges
+    loadMyChallenges();
 }
 
 // --- Pack Shop Functions ---
@@ -1035,15 +1584,24 @@ closePackShopBtn.addEventListener('click', closePackShop);
 confirmPacksBtn.addEventListener('click', closePackShop);
 
 // Player Name Setup Listeners
-savePlayerNameBtn.addEventListener('click', () => {
+savePlayerNameBtn.addEventListener('click', async () => {
     const name = playerNameInput.value.trim();
     if (name) {
         setPlayerName(name);
         playerNameSetup.classList.add('hidden');
-        startMain.classList.remove('hidden');
         
-        // Update challenger name display
-        challengerNameDisplay.textContent = name;
+        // Check if there's a pending challenge
+        const pendingChallenge = localStorage.getItem('pendingChallenge');
+        if (pendingChallenge) {
+            localStorage.removeItem('pendingChallenge');
+            challengeId = pendingChallenge;
+            ischallengeMode = true;
+            await startChallengeGame();
+        } else {
+            startMain.classList.remove('hidden');
+            // Update challenger name display
+            challengerNameDisplay.textContent = name;
+        }
     }
 });
 
@@ -1100,18 +1658,18 @@ shareWhatsappBtn.addEventListener('click', () => {
 });
 
 // Challenge acceptance listeners
-acceptChallengeBtn.addEventListener('click', () => {
+acceptChallengeBtn.addEventListener('click', async () => {
     ischallengeMode = true;
     challengeAccept.classList.add('hidden');
     
     // Check if user needs to set name
     if (!currentPlayer.name) {
         playerNameSetup.classList.remove('hidden');
+        // Store that we need to start challenge after name setup
+        localStorage.setItem('pendingChallenge', challengeId);
     } else {
-        playerSetup.classList.remove('hidden');
-        // Set to single player mode for challenges
-        playerCountSelect.value = '1';
-        createPlayerInputs();
+        // Start the challenge directly
+        await startChallengeGame();
     }
 });
 
@@ -1149,6 +1707,7 @@ async function initializeApp() {
         // Check for notifications if user is returning
         if (currentPlayer.name) {
             await checkForNotifications();
+            await loadMyChallenges();
             challengerNameDisplay.textContent = currentPlayer.name;
         }
     }

@@ -44,8 +44,8 @@ function initializeFirebase() {
 
 // Firebase helper functions
 const FirebaseAPI = {
-    // Create a new challenge
-    async createChallenge(challengerName, challengerId) {
+    // Create a new challenge with questions
+    async createChallenge(challengerName, challengerId, questions, challengerScore, questionScores) {
         if (!firebaseInitialized) {
             console.log('Demo mode: Challenge would be created in Firebase');
             return 'demo_challenge_' + Date.now();
@@ -53,13 +53,22 @@ const FirebaseAPI = {
 
         try {
             const challengeId = 'challenge_' + Date.now() + '_' + Math.random().toString(36).substr(2, 9);
+            const created = new Date();
+            const expires = new Date(created.getTime() + 7 * 24 * 60 * 60 * 1000); // 7 days
             
             await db.collection('challenges').doc(challengeId).set({
                 id: challengeId,
-                challengerName: challengerName,
-                challengerId: challengerId,
-                createdAt: new Date(),
-                status: 'waiting'
+                created: created,
+                expires: expires,
+                status: 'pending',
+                questions: questions,
+                challenger: {
+                    name: challengerName,
+                    completedAt: created,
+                    totalScore: challengerScore,
+                    questionScores: questionScores
+                },
+                opponent: null
             });
 
             console.log('Challenge created:', challengeId);
@@ -96,22 +105,21 @@ const FirebaseAPI = {
         }
     },
 
-    // Complete a challenge with result
-    async completeChallenge(challengeId, playerName, playerId, score, totalQuestions) {
+    // Complete a challenge as opponent
+    async completeChallenge(challengeId, playerName, playerScore, questionScores) {
         if (!firebaseInitialized) {
-            console.log('Demo mode: Challenge completed', {challengeId, playerName, score});
+            console.log('Demo mode: Challenge completed', {challengeId, playerName, playerScore});
             return;
         }
 
         try {
             await db.collection('challenges').doc(challengeId).update({
-                status: 'completed',
-                result: {
-                    playerName: playerName,
-                    playerId: playerId,
-                    score: score,
-                    totalQuestions: totalQuestions,
-                    completedAt: new Date()
+                status: 'complete',
+                opponent: {
+                    name: playerName,
+                    completedAt: new Date(),
+                    totalScore: playerScore,
+                    questionScores: questionScores
                 }
             });
 
@@ -143,7 +151,7 @@ const FirebaseAPI = {
     },
 
     // Get new completed challenges (for notifications)
-    async getNewCompletedChallenges(playerId, lastCheckTime) {
+    async getNewCompletedChallenges(playerName, lastCheckTime) {
         if (!firebaseInitialized) {
             console.log('Demo mode: Would check for new results');
             return [];
@@ -151,17 +159,58 @@ const FirebaseAPI = {
 
         try {
             let query = db.collection('challenges')
-                .where('challengerId', '==', playerId)
-                .where('status', '==', 'completed');
+                .where('challenger.name', '==', playerName)
+                .where('status', '==', 'complete');
 
             if (lastCheckTime) {
-                query = query.where('result.completedAt', '>', lastCheckTime);
+                query = query.where('opponent.completedAt', '>', lastCheckTime);
             }
 
             const snapshot = await query.get();
             return snapshot.docs.map(doc => doc.data());
         } catch (error) {
             console.error('Error checking for new results:', error);
+            return [];
+        }
+    },
+
+    // Get all challenges for a player (both as challenger and opponent)
+    async getMyChallenges(playerName) {
+        if (!firebaseInitialized) {
+            console.log('Demo mode: Would fetch my challenges');
+            return [];
+        }
+
+        try {
+            // Get challenges where player is challenger
+            const asChallenger = await db.collection('challenges')
+                .where('challenger.name', '==', playerName)
+                .orderBy('created', 'desc')
+                .limit(20)
+                .get();
+
+            // Get challenges where player is opponent (completed)
+            const asOpponent = await db.collection('challenges')
+                .where('opponent.name', '==', playerName)
+                .orderBy('opponent.completedAt', 'desc')
+                .limit(20)
+                .get();
+
+            const challenges = [
+                ...asChallenger.docs.map(doc => ({ ...doc.data(), role: 'challenger' })),
+                ...asOpponent.docs.map(doc => ({ ...doc.data(), role: 'opponent' }))
+            ];
+
+            // Sort by most recent activity
+            challenges.sort((a, b) => {
+                const aTime = a.role === 'challenger' ? a.created : a.opponent.completedAt;
+                const bTime = b.role === 'challenger' ? b.created : b.opponent.completedAt;
+                return bTime - aTime;
+            });
+
+            return challenges;
+        } catch (error) {
+            console.error('Error getting my challenges:', error);
             return [];
         }
     }
