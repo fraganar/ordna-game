@@ -904,6 +904,58 @@ function stopChallengePolling() {
     pollingCount = 0;
 }
 
+// Show result screen for regular games (pack and standard)
+function showGameResultScreen(score, gameType, totalQuestions) {
+    console.log('Showing game result screen for:', gameType);
+    
+    const gameTypeName = gameType || 'Allmänna frågor';
+    
+    // Create result screen HTML
+    const resultHTML = `
+        <div class="text-center p-6 sm:p-8 lg:p-12">
+            <h2 class="text-3xl sm:text-4xl font-bold text-slate-900 mb-2">Spelet är slut!</h2>
+            <p class="text-slate-600 mb-6 text-base sm:text-lg">Bra kämpat!</p>
+            
+            <!-- Game Result -->
+            <div class="bg-blue-100 text-blue-800 rounded-lg p-6 mb-8">
+                <h3 class="text-xl font-semibold mb-2">${gameTypeName}</h3>
+                <p class="text-sm text-blue-600 mb-3">${totalQuestions} frågor</p>
+                <p class="text-6xl font-bold">${score}</p>
+                <p class="text-lg">poäng</p>
+            </div>
+            
+            <button id="back-to-start-final" class="w-full bg-blue-600 text-white font-bold py-3 px-6 rounded-lg text-lg sm:text-xl hover:bg-blue-700 transition-colors shadow-md">
+                Tillbaka till start
+            </button>
+        </div>
+    `;
+    
+    endScreen.innerHTML = resultHTML;
+    endScreen.classList.remove('hidden');
+    
+    // Add event listener for back button
+    document.getElementById('back-to-start-final').addEventListener('click', () => {
+        console.log('Back to start clicked from game result');
+        
+        // Go back to start screen
+        endScreen.classList.add('hidden');
+        startScreen.classList.remove('hidden');
+        startMain.classList.remove('hidden');
+        playerSetup.classList.add('hidden');
+        challengeForm.classList.add('hidden');
+        
+        // Reset game state
+        isSinglePlayer = false;
+        totalScore = 0;
+        currentQuestionScore = 0;
+        mistakeMade = false;
+        selectedPack = null;
+        
+        // Reload my challenges
+        loadMyChallenges();
+    });
+}
+
 // --- Functions ---
 
 // Point animation for both single and multiplayer
@@ -1020,19 +1072,10 @@ function endSinglePlayerQuestion(pointsToAdd) {
 }
 
 async function endSinglePlayerGame() {
-    console.log('=== END SINGLE PLAYER GAME DEBUG ===');
-    console.log('ischallengeMode:', ischallengeMode);
-    console.log('challengeId:', challengeId);
-    console.log('selectedPack:', selectedPack);
-    console.log('totalScore:', totalScore);
-    console.log('questionsToPlay.length:', questionsToPlay.length);
-    console.log('=======================================');
-    
     gameScreen.classList.add('hidden');
     
     // If this is challenge creation mode
     if (ischallengeMode && !challengeId) {
-        console.log('-> Taking CHALLENGE CREATION path');
         try {
             // Create the challenge in Firebase with the results
             const newChallengeId = await FirebaseAPI.createChallenge(
@@ -1072,7 +1115,6 @@ async function endSinglePlayerGame() {
     }
     // If this is accepting a challenge
     else if (ischallengeMode && challengeId) {
-        console.log('-> Taking CHALLENGE ACCEPTANCE path');
         try {
             await FirebaseAPI.completeChallenge(
                 challengeId,
@@ -1107,42 +1149,17 @@ async function endSinglePlayerGame() {
     }
     // Normal single player mode
     else {
-        console.log('-> Taking NORMAL GAME path');
         
+        // Hide game screen first
+        gameScreen.classList.add('hidden');
+        
+        // Show unified result screen for all regular games
         if (selectedPack) {
-            // Pack-based game - go back to start screen instead of replaying
-            console.log('Pack game finished, going back to start');
-            
-            // Go directly back to start screen
-            gameScreen.classList.add('hidden');
-            endScreen.classList.add('hidden');
-            startScreen.classList.remove('hidden');
-            startMain.classList.remove('hidden');
-            playerSetup.classList.add('hidden');
-            challengeForm.classList.add('hidden');
-            
-            // Reset game state
-            isSinglePlayer = false;
-            totalScore = 0;
-            currentQuestionScore = 0;
-            mistakeMade = false;
-            selectedPack = null;
-            
-            // Show a brief success message
-            setTimeout(() => {
-                alert(`Bra kämpat! Du fick ${totalScore} poäng på Boomer-paketet!`);
-            }, 500);
-            
-            // Reload my challenges
-            loadMyChallenges();
+            // Pack-based game
+            showGameResultScreen(totalScore, selectedPack, questionsToPlay.length);
         } else {
-            // Regular game with all questions - show normal end screen
-            endScreen.classList.remove('hidden');
-            endScreenSubtitle.textContent = 'Bra kämpat!';
-            singlePlayerFinal.classList.remove('hidden');
-            finalScoreboard.classList.add('hidden');
-            singleFinalScore.textContent = `${totalScore}`;
-            progressBar.style.width = '100%';
+            // Standard game with all questions
+            showGameResultScreen(totalScore, 'Allmänna frågor', questionsToPlay.length);
         }
     }
 }
@@ -1705,9 +1722,6 @@ function endGame() {
 }
 
 function restartGame() {
-    console.log('=== RESTART GAME CALLED ===');
-    console.log('selectedPack before reset:', selectedPack);
-    
     // Stop any ongoing polling
     stopChallengePolling();
     
