@@ -510,7 +510,32 @@ function showWaitingForOpponentView(challengeId) {
     });
     
     document.getElementById('back-to-start-waiting').addEventListener('click', () => {
-        restartGame();
+        // Go directly to start screen without showing end screen
+        stopChallengePolling();
+        
+        // Hide all screens first
+        gameScreen.classList.add('hidden');
+        endScreen.classList.add('hidden');
+        playerSetup.classList.add('hidden');
+        challengeForm.classList.add('hidden');
+        
+        // Show start screen
+        startScreen.classList.remove('hidden');
+        startMain.classList.remove('hidden');
+        
+        // Reset game state
+        isSinglePlayer = false;
+        totalScore = 0;
+        currentQuestionScore = 0;
+        mistakeMade = false;
+        ischallengeMode = false;
+        challengeId = null;
+        challengeData = null;
+        challengeQuestions = [];
+        challengeQuestionScores = [];
+        
+        // Reload my challenges
+        loadMyChallenges();
     });
     
     // Start polling
@@ -590,7 +615,32 @@ async function showChallengeResultView(challengeId) {
         });
         
         document.getElementById('back-to-start-result').addEventListener('click', () => {
-            restartGame();
+            // Go directly to start screen without showing end screen
+            stopChallengePolling();
+            
+            // Hide all screens first
+            gameScreen.classList.add('hidden');
+            endScreen.classList.add('hidden');
+            playerSetup.classList.add('hidden');
+            challengeForm.classList.add('hidden');
+            
+            // Show start screen
+            startScreen.classList.remove('hidden');
+            startMain.classList.remove('hidden');
+            
+            // Reset game state
+            isSinglePlayer = false;
+            totalScore = 0;
+            currentQuestionScore = 0;
+            mistakeMade = false;
+            ischallengeMode = false;
+            challengeId = null;
+            challengeData = null;
+            challengeQuestions = [];
+            challengeQuestionScores = [];
+            
+            // Reload my challenges
+            loadMyChallenges();
         });
         
     } catch (error) {
@@ -1490,7 +1540,10 @@ function restartGame() {
     `;
     
     // Re-attach restart button listener
-    document.getElementById('restart-btn').addEventListener('click', restartGame);
+    const restartBtn = document.getElementById('restart-btn');
+    if (restartBtn) {
+        restartBtn.addEventListener('click', restartGame);
+    }
     
     // Update element references
     endScreenSubtitle = document.getElementById('end-screen-subtitle');
