@@ -1108,17 +1108,42 @@ async function endSinglePlayerGame() {
     // Normal single player mode
     else {
         console.log('-> Taking NORMAL GAME path');
-        endScreen.classList.remove('hidden');
-        endScreenSubtitle.textContent = 'Bra kämpat!';
-        singlePlayerFinal.classList.remove('hidden');
-        finalScoreboard.classList.add('hidden');
-        singleFinalScore.textContent = `${totalScore}`;
-        progressBar.style.width = '100%';
         
-        // Debug: Check if restart button exists and has listeners
-        const restartBtnCheck = document.getElementById('restart-btn');
-        console.log('Restart button found:', !!restartBtnCheck);
-        console.log('Restart button innerHTML:', restartBtnCheck?.innerHTML);
+        if (selectedPack) {
+            // Pack-based game - go back to start screen instead of replaying
+            console.log('Pack game finished, going back to start');
+            
+            // Go directly back to start screen
+            gameScreen.classList.add('hidden');
+            endScreen.classList.add('hidden');
+            startScreen.classList.remove('hidden');
+            startMain.classList.remove('hidden');
+            playerSetup.classList.add('hidden');
+            challengeForm.classList.add('hidden');
+            
+            // Reset game state
+            isSinglePlayer = false;
+            totalScore = 0;
+            currentQuestionScore = 0;
+            mistakeMade = false;
+            selectedPack = null;
+            
+            // Show a brief success message
+            setTimeout(() => {
+                alert(`Bra kämpat! Du fick ${totalScore} poäng på Boomer-paketet!`);
+            }, 500);
+            
+            // Reload my challenges
+            loadMyChallenges();
+        } else {
+            // Regular game with all questions - show normal end screen
+            endScreen.classList.remove('hidden');
+            endScreenSubtitle.textContent = 'Bra kämpat!';
+            singlePlayerFinal.classList.remove('hidden');
+            finalScoreboard.classList.add('hidden');
+            singleFinalScore.textContent = `${totalScore}`;
+            progressBar.style.width = '100%';
+        }
     }
 }
 
