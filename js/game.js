@@ -1020,10 +1020,19 @@ function endSinglePlayerQuestion(pointsToAdd) {
 }
 
 async function endSinglePlayerGame() {
+    console.log('=== END SINGLE PLAYER GAME DEBUG ===');
+    console.log('ischallengeMode:', ischallengeMode);
+    console.log('challengeId:', challengeId);
+    console.log('selectedPack:', selectedPack);
+    console.log('totalScore:', totalScore);
+    console.log('questionsToPlay.length:', questionsToPlay.length);
+    console.log('=======================================');
+    
     gameScreen.classList.add('hidden');
     
     // If this is challenge creation mode
     if (ischallengeMode && !challengeId) {
+        console.log('-> Taking CHALLENGE CREATION path');
         try {
             // Create the challenge in Firebase with the results
             const newChallengeId = await FirebaseAPI.createChallenge(
@@ -1063,6 +1072,7 @@ async function endSinglePlayerGame() {
     }
     // If this is accepting a challenge
     else if (ischallengeMode && challengeId) {
+        console.log('-> Taking CHALLENGE ACCEPTANCE path');
         try {
             await FirebaseAPI.completeChallenge(
                 challengeId,
@@ -1097,12 +1107,18 @@ async function endSinglePlayerGame() {
     }
     // Normal single player mode
     else {
+        console.log('-> Taking NORMAL GAME path');
         endScreen.classList.remove('hidden');
         endScreenSubtitle.textContent = 'Bra kämpat!';
         singlePlayerFinal.classList.remove('hidden');
         finalScoreboard.classList.add('hidden');
         singleFinalScore.textContent = `${totalScore}`;
         progressBar.style.width = '100%';
+        
+        // Debug: Check if restart button exists and has listeners
+        const restartBtnCheck = document.getElementById('restart-btn');
+        console.log('Restart button found:', !!restartBtnCheck);
+        console.log('Restart button innerHTML:', restartBtnCheck?.innerHTML);
     }
 }
 
@@ -1664,6 +1680,9 @@ function endGame() {
 }
 
 function restartGame() {
+    console.log('=== RESTART GAME CALLED ===');
+    console.log('selectedPack before reset:', selectedPack);
+    
     // Stop any ongoing polling
     stopChallengePolling();
     
