@@ -2,13 +2,13 @@
   "name": "Grundfrågor",
   "description": "Grundläggande frågor för Ordna-spelet",
   "packs": [
-    "Historia", "Familjen Normal", "Filmfantasten", "Galaxhjärnan", "Boksmart och kultiverad",
-    "Plugghästen", "Familjen Normal", "Gatesmart och depraverad", "Familjen Hurtig", "Galaxhjärnan",
-    "Familjen Hurtig", "Historia", "Gatesmart och depraverad", "Plugghästen", "Historia",
-    "Boksmart och kultiverad", "Plugghästen", "Nörden", "Filmfantasten", "Familjen Ullared",
-    "Galaxhjärnan", "Plugghästen", "Historia", "Nörden", "Boksmart och kultiverad",
-    "Boomer", "Boomer", "Gatesmart och depraverad", "Familjen Ullared", "Familjen Hurtig",
-    "Familjen Ullared", "Familjen Normal"
+    "Grund", "Grund", "Grund", "Grund", "Grund",
+    "Grund", "Grund", "Grund", "Grund", "Grund",
+    "Grund", "Grund", "Grund", "Grund", "Grund",
+    "Grund", "Grund", "Grund", "Grund", "Grund",
+    "Grund", "Grund", "Grund", "Grund", "Grund",
+    "Grund", "Grund", "Grund", "Grund", "Grund",
+    "Grund", "Grund"
   ],
   "questions": [
     {
