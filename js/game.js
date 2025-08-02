@@ -36,7 +36,34 @@ let challengeData = null;
 let challengeQuestions = [];
 let challengeQuestionScores = [];
 
-// Load questions from JSON file
+// Load questions from a specific pack
+async function loadPackQuestions(packName) {
+    const pack = questionPacks.find(p => p.name === packName);
+    
+    if (!pack || pack.status !== 'available' || !pack.file) {
+        console.warn(`Pack "${packName}" not available or has no file`);
+        return [];
+    }
+    
+    try {
+        const response = await fetch(`data/${pack.file}`);
+        const data = await response.json();
+        
+        // Map questions with pack name
+        const questions = data.questions.map(q => ({
+            ...q,
+            pack: packName
+        }));
+        
+        console.log(`Loaded ${questions.length} questions from pack: ${packName}`);
+        return questions;
+    } catch (error) {
+        console.error(`Failed to load pack "${packName}":`, error);
+        return [];
+    }
+}
+
+// Load questions from JSON file (fallback or default)
 async function loadQuestions() {
     try {
         const response = await fetch('data/questions-grund.json');
@@ -57,19 +84,108 @@ async function loadQuestions() {
     }
 }
 
+// Load questions based on selected pack
+async function loadQuestionsForGame() {
+    if (selectedPack) {
+        // Load specific pack
+        const packQuestions = await loadPackQuestions(selectedPack);
+        if (packQuestions.length > 0) {
+            allQuestions = packQuestions;
+            return allQuestions;
+        }
+        // Fallback if pack loading fails
+        console.warn(`Failed to load pack "${selectedPack}", falling back to default questions`);
+    }
+    
+    // Load default questions
+    return await loadQuestions();
+}
+
 const questionPacks = [
-    { name: "Boomer", description: "Frågor om en tid då allt var bättre. Eller var det?" },
-    { name: "Nörden", description: "För dig som kan din superhjälte och din C++." },
-    { name: "Boksmart och kultiverad", description: "Testa dina kunskaper om finkultur och klassisk bildning." },
-    { name: "Gatesmart och depraverad", description: "Frågor som inte lärs ut i skolan. Tur är väl det." },
-    { name: "Filmfantasten", description: "Känner du igen repliken? Vet du vem som regisserade?" },
-    { name: "Familjen Normal", description: "Lagom svåra frågor för en helt vanlig fredagskväll." },
-    { name: "Familjen Hurtig", description: "Allt om sport, hälsa och att ständigt vara på språng." },
-    { name: "Familjen Ullared", description: "Fynd, familjebråk och folkfest i Gekås-anda." },
-    { name: "Plugghästen", description: "Geografins, kemins och grammatikens värld väntar." },
-    { name: "Galaxhjärnan", description: "Stora frågor om universum, vetenskap och existens." },
-    { name: "True Crime", description: "Gåtan, ledtrådarna och de ökända fallen." },
-    { name: "Historia", description: "Från antiken till kalla kriget – testa ditt historieminne." },
+    { 
+        name: "Boomer", 
+        description: "Frågor om en tid då allt var bättre. Eller var det?", 
+        status: "available", 
+        file: "questions-boomer.json",
+        price: "GRATIS"
+    },
+    { 
+        name: "Nörden", 
+        description: "För dig som kan din superhjälte och din C++.", 
+        status: "coming-soon", 
+        file: null,
+        price: "COMING SOON"
+    },
+    { 
+        name: "Boksmart och kultiverad", 
+        description: "Testa dina kunskaper om finkultur och klassisk bildning.", 
+        status: "coming-soon", 
+        file: null,
+        price: "COMING SOON"
+    },
+    { 
+        name: "Gatesmart och depraverad", 
+        description: "Frågor som inte lärs ut i skolan. Tur är väl det.", 
+        status: "coming-soon", 
+        file: null,
+        price: "COMING SOON"
+    },
+    { 
+        name: "Filmfantasten", 
+        description: "Känner du igen repliken? Vet du vem som regisserade?", 
+        status: "coming-soon", 
+        file: null,
+        price: "COMING SOON"
+    },
+    { 
+        name: "Familjen Normal", 
+        description: "Lagom svåra frågor för en helt vanlig fredagskväll.", 
+        status: "coming-soon", 
+        file: null,
+        price: "COMING SOON"
+    },
+    { 
+        name: "Familjen Hurtig", 
+        description: "Allt om sport, hälsa och att ständigt vara på språng.", 
+        status: "coming-soon", 
+        file: null,
+        price: "COMING SOON"
+    },
+    { 
+        name: "Familjen Ullared", 
+        description: "Fynd, familjebråk och folkfest i Gekås-anda.", 
+        status: "coming-soon", 
+        file: null,
+        price: "COMING SOON"
+    },
+    { 
+        name: "Plugghästen", 
+        description: "Geografins, kemins och grammatikens värld väntar.", 
+        status: "coming-soon", 
+        file: null,
+        price: "COMING SOON"
+    },
+    { 
+        name: "Galaxhjärnan", 
+        description: "Stora frågor om universum, vetenskap och existens.", 
+        status: "coming-soon", 
+        file: null,
+        price: "COMING SOON"
+    },
+    { 
+        name: "True Crime", 
+        description: "Gåtan, ledtrådarna och de ökända fallen.", 
+        status: "coming-soon", 
+        file: null,
+        price: "COMING SOON"
+    },
+    { 
+        name: "Historia", 
+        description: "Från antiken till kalla kriget – testa ditt historieminne.", 
+        status: "coming-soon", 
+        file: null,
+        price: "COMING SOON"
+    }
 ];
 
 // --- DOM Elements ---
@@ -109,6 +225,8 @@ const notificationsArea = document.getElementById('notifications-area');
 const gameScreen = document.getElementById('game-screen');
 const endScreen = document.getElementById('end-screen');
 const restartBtn = document.getElementById('restart-btn');
+const packSelect = document.getElementById('pack-select');
+const challengePackSelect = document.getElementById('challenge-pack-select');
 const questionCounter = document.getElementById('question-counter');
 const scoreboard = document.getElementById('scoreboard');
 const difficultyBadge = document.getElementById('difficulty-badge');
@@ -144,6 +262,7 @@ let currentQuestionIndex = 0;
 let questionsToPlay = [];
 let userOrder = []; 
 let selectedPacks = questionPacks.map(p => p.name);
+let selectedPack = null; // Currently selected pack for playing
 
 // Single Player State
 let isSinglePlayer = false;
@@ -193,19 +312,20 @@ async function createChallenge() {
     }
     
     try {
-        // Load questions if not already loaded
+        // Set selected pack from challenge dropdown before loading questions
+        selectedPack = challengePackSelect.value || null;
+        console.log('Creating challenge with pack:', selectedPack || 'All questions');
+        
+        // Load questions based on selected pack
+        await loadQuestionsForGame();
+        
         if (allQuestions.length === 0) {
-            await loadQuestions();
+            throw new Error('No questions available for selected pack');
         }
         
-        // Select 5 random questions
+        // Select 5 random questions from loaded pack
         const processedQuestions = processQuestions(allQuestions);
-        const availableQuestions = selectedPacks.length > 0 ? 
-            processedQuestions.filter(q => selectedPacks.includes(q.pack)) : 
-            processedQuestions;
-        
-        // Shuffle and take first 5
-        const shuffled = [...availableQuestions];
+        const shuffled = [...processedQuestions];
         shuffleArray(shuffled);
         challengeQuestions = shuffled.slice(0, 5);
         
@@ -702,6 +822,10 @@ async function startChallengeGame() {
             }
         }
         
+        // Set selected pack from challenge (for display purposes)
+        selectedPack = challengeData.packName || null;
+        console.log('Playing challenge with pack:', selectedPack || 'All questions');
+        
         // Set up game with the same questions
         challengeQuestions = challengeData.questions;
         challengeQuestionScores = [];
@@ -907,7 +1031,8 @@ async function endSinglePlayerGame() {
                 currentPlayer.id,
                 challengeQuestions,
                 totalScore,
-                challengeQuestionScores
+                challengeQuestionScores,
+                selectedPack
             );
             
             challengeId = newChallengeId;
@@ -981,6 +1106,26 @@ async function endSinglePlayerGame() {
     }
 }
 
+// Populate pack selection dropdown
+function populatePackSelect() {
+    const selects = [packSelect, challengePackSelect];
+    
+    selects.forEach(select => {
+        if (select) {
+            select.innerHTML = '<option value="">Alla frågor (standard)</option>';
+            
+            questionPacks.forEach(pack => {
+                if (pack.status === 'available') {
+                    const option = document.createElement('option');
+                    option.value = pack.name;
+                    option.textContent = `${pack.name} (${pack.price})`;
+                    select.appendChild(option);
+                }
+            });
+        }
+    });
+}
+
 function createPlayerInputs() {
     const count = playerCountSelect.value;
     playerNamesContainer.innerHTML = '';
@@ -1001,12 +1146,16 @@ function createPlayerInputs() {
 }
 
 async function initializeGame() {
-    // Load questions first
-    await loadQuestions();
+    // Set selected pack from dropdown
+    selectedPack = packSelect.value || null;
+    console.log('Starting game with pack:', selectedPack || 'All questions');
+    
+    // Load questions based on selected pack
+    await loadQuestionsForGame();
     
     if (allQuestions.length === 0) {
         console.error("No questions loaded!");
-        alert("Kunde inte ladda frågor. Kontrollera att data/questions-grund.json finns.");
+        alert("Kunde inte ladda frågor. Kontrollera att frågefiler finns.");
         return;
     }
     
@@ -1581,27 +1730,40 @@ function populatePackShop() {
     packGrid.innerHTML = '';
     questionPacks.forEach(pack => {
         const card = document.createElement('div');
-        card.className = 'pack-card cursor-pointer bg-slate-50 border-2 border-slate-200 rounded-lg p-4 hover:border-blue-400 hover:bg-white flex flex-col justify-between';
+        const isAvailable = pack.status === 'available';
+        const isSelected = selectedPacks.includes(pack.name);
+        
+        card.className = `pack-card border-2 rounded-lg p-4 flex flex-col justify-between ${
+            isAvailable ? 'cursor-pointer bg-slate-50 border-slate-200 hover:border-blue-400 hover:bg-white' : 
+            'cursor-not-allowed bg-slate-100 border-slate-300 opacity-75'
+        }`;
         card.dataset.packName = pack.name;
         
-        if (selectedPacks.includes(pack.name)) {
+        if (isSelected && isAvailable) {
             card.classList.add('selected');
         }
 
+        const priceColor = pack.status === 'available' ? 'text-green-600' : 'text-slate-400';
+        const statusIcon = pack.status === 'available' ? '✅' : '🔒';
+
         card.innerHTML = `
             <div>
-                <div class="selected-check">
-                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M5 13l4 4L19 7"></path></svg>
-                </div>
-                <h3 class="font-bold text-lg text-slate-800 mb-1 pr-8">${pack.name}</h3>
+                ${isAvailable && isSelected ? `
+                    <div class="selected-check">
+                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M5 13l4 4L19 7"></path></svg>
+                    </div>
+                ` : ''}
+                <h3 class="font-bold text-lg text-slate-800 mb-1 pr-8">${statusIcon} ${pack.name}</h3>
                 <p class="text-slate-600 text-sm leading-relaxed">${pack.description}</p>
             </div>
             <div class="mt-auto pt-3 border-t border-slate-200 text-right">
-                <span class="font-bold text-blue-600 text-lg">GRATIS</span>
+                <span class="font-bold ${priceColor} text-lg">${pack.price}</span>
             </div>
         `;
         
-        card.addEventListener('click', () => togglePackSelection(card, pack.name));
+        if (isAvailable) {
+            card.addEventListener('click', () => togglePackSelection(card, pack.name));
+        }
         packGrid.appendChild(card);
     });
 }
@@ -1749,6 +1911,7 @@ async function initializeApp() {
     
     // Setup UI
     populatePackShop();
+    populatePackSelect();
     createPlayerInputs();
     updateScoreboard();
     

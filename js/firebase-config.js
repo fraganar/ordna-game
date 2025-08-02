@@ -45,7 +45,7 @@ function initializeFirebase() {
 // Firebase helper functions
 const FirebaseAPI = {
     // Create a new challenge with questions
-    async createChallenge(challengerName, challengerId, questions, challengerScore, questionScores) {
+    async createChallenge(challengerName, challengerId, questions, challengerScore, questionScores, packName = null) {
         if (!firebaseInitialized) {
             console.log('Demo mode: Challenge would be created in Firebase');
             return 'demo_challenge_' + Date.now();
@@ -56,7 +56,7 @@ const FirebaseAPI = {
             const created = new Date();
             const expires = new Date(created.getTime() + 7 * 24 * 60 * 60 * 1000); // 7 days
             
-            await db.collection('challenges').doc(challengeId).set({
+            const challengeData = {
                 id: challengeId,
                 created: created,
                 expires: expires,
@@ -69,9 +69,16 @@ const FirebaseAPI = {
                     questionScores: questionScores
                 },
                 opponent: null
-            });
+            };
+            
+            // Add pack info if specified
+            if (packName) {
+                challengeData.packName = packName;
+            }
+            
+            await db.collection('challenges').doc(challengeId).set(challengeData);
 
-            console.log('Challenge created:', challengeId);
+            console.log('Challenge created:', challengeId, packName ? `with pack: ${packName}` : 'with all questions');
             return challengeId;
         } catch (error) {
             console.error('Error creating challenge:', error);

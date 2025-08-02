@@ -81,6 +81,15 @@
             <!-- Player Setup (Hidden by default) -->
             <div id="player-setup" class="hidden">
                  <h2 class="text-2xl sm:text-3xl font-bold text-slate-900 mb-6 text-center">Ställ in Spelare</h2>
+                 
+                 <!-- Pack Selection -->
+                 <div class="mb-6">
+                    <label for="pack-select" class="block text-base sm:text-lg font-medium text-slate-700 mb-2">Välj frågepaket</label>
+                    <select id="pack-select" class="w-full p-3 border border-slate-300 rounded-lg text-base sm:text-lg">
+                        <option value="">Alla frågor (standard)</option>
+                    </select>
+                 </div>
+                 
                  <div class="mb-6">
                     <label for="player-count" class="block text-base sm:text-lg font-medium text-slate-700 mb-2">Hur många spelare?</label>
                     <select id="player-count" class="w-full p-3 border border-slate-300 rounded-lg text-base sm:text-lg">
@@ -125,6 +134,15 @@
                     <p class="text-sm text-slate-600 mb-2">Utmanare: <strong id="challenger-name-display">Ditt namn</strong></p>
                     <p class="text-xs text-slate-500">Din vän kommer få en länk att klicka på</p>
                 </div>
+                
+                <!-- Pack Selection for Challenge -->
+                <div class="mb-6">
+                    <label for="challenge-pack-select" class="block text-base sm:text-lg font-medium text-slate-700 mb-2">Välj frågepaket</label>
+                    <select id="challenge-pack-select" class="w-full p-3 border border-slate-300 rounded-lg text-base sm:text-lg">
+                        <option value="">Alla frågor (standard)</option>
+                    </select>
+                </div>
+                
                 <div class="space-y-4">
                     <button id="create-challenge-btn" class="w-full bg-blue-600 text-white font-bold py-3 sm:py-4 px-6 rounded-lg text-lg sm:text-xl hover:bg-blue-700 transition-colors">
                         Skapa utmaning
