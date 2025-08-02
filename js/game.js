@@ -621,13 +621,13 @@ function showWaitingForOpponentView(challengeId) {
     });
     
     document.getElementById('share-waiting').addEventListener('click', async () => {
-        const shareText = `${currentPlayer.name} utmanar dig till Ordna!`;
+        const shareText = `${currentPlayer.name} utmanar dig i spelet Ordna!`;
         
         // Kolla om Web Share API finns (mobil och vissa desktop-browsers)
         if (navigator.share) {
             try {
                 await navigator.share({
-                    title: `${currentPlayer.name} utmanar dig till Ordna!`,
+                    title: `${currentPlayer.name} utmanar dig i spelet Ordna!`,
                     text: `${shareText} ${challengeUrl}`  // Slå ihop text och URL
                 });
             } catch (err) {
@@ -1960,13 +1960,13 @@ copyLinkBtn.addEventListener('click', async () => {
 // Web Share API - Dela knapp
 shareBtn.addEventListener('click', async () => {
     const challengeUrl = challengeLink.value;
-    const shareText = `${currentPlayer.name} utmanar dig till Ordna!`;
+    const shareText = `${currentPlayer.name} utmanar dig i spelet Ordna!`;
     
     // Kolla om Web Share API finns (mobil och vissa desktop-browsers)
     if (navigator.share) {
         try {
             await navigator.share({
-                title: `${currentPlayer.name} utmanar dig till Ordna!`,
+                title: `${currentPlayer.name} utmanar dig i spelet Ordna!`,
                 text: `${shareText} ${challengeUrl}`  // Slå ihop text och URL
             });
         } catch (err) {
