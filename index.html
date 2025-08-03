@@ -217,12 +217,7 @@
                 <p id="question-instruction" class="text-sm text-slate-500 mt-2"></p>
             </div>
             
-            <!-- Single Player Current Question Score -->
-            <div id="single-player-stars" class="hidden flex justify-center items-center my-4">
-                <div id="current-score-container" class="flex items-center justify-center space-x-2 p-2 bg-slate-100 rounded-lg">
-                    <!-- SVG stars will be inserted here -->
-                </div>
-            </div>
+            <!-- Single Player Current Question Score (REMOVED - now handled by decision button) -->
             
             <!-- Options -->
             <div id="options-grid" class="grid grid-cols-1 gap-3 sm:gap-4 my-4 sm:my-6">
@@ -232,10 +227,35 @@
             <!-- Footer: Explanation and Controls -->
             <div id="footer-area" class="min-h-[72px] flex items-center justify-center">
                  <div id="controls-box" class="w-full flex justify-center space-x-4">
+                    <!-- Old buttons (hidden by default, will be removed later) -->
                     <button id="stop-btn" class="hidden w-full max-w-xs bg-amber-500 text-white font-bold py-3 px-6 rounded-lg text-lg hover:bg-amber-600 transition-colors shadow-md">
                         Stanna
                     </button>
                     <button id="next-question-btn" class="hidden w-full max-w-xs bg-blue-600 text-white font-bold py-3 px-6 rounded-lg text-lg hover:bg-blue-700 transition-colors shadow-md">
+                        Nästa fråga
+                    </button>
+                    
+                    <!-- New two-part decision button -->
+                    <div id="decision-button" class="hidden decision-button">
+                        <button id="stop-side" class="stop-side">
+                            <span class="decision-icon">🛡️</span>
+                            <span class="decision-text">
+                                <span class="decision-action">Stanna</span>
+                                <span class="decision-points"></span>
+                            </span>
+                        </button>
+                        <div class="button-separator"></div>
+                        <button id="continue-side" class="continue-side">
+                            <span class="decision-icon">🎲</span>
+                            <span class="decision-text">
+                                <span class="decision-action">Fortsätt</span>
+                                <span class="decision-risk">& Gambla</span>
+                            </span>
+                        </button>
+                    </div>
+                    
+                    <!-- Large next question button for multiplayer -->
+                    <button id="large-next-question-btn" class="hidden large-next-question-btn">
                         Nästa fråga
                     </button>
                 </div>

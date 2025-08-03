@@ -245,6 +245,29 @@ const stopBtn = document.getElementById('stop-btn');
 const nextQuestionBtn = document.getElementById('next-question-btn');
 const finalScoreboard = document.getElementById('final-scoreboard');
 
+// New decision button elements
+const decisionButton = document.getElementById('decision-button');
+const stopSide = document.getElementById('stop-side');
+const continueSide = document.getElementById('continue-side');
+const largeNextQuestionBtn = document.getElementById('large-next-question-btn');
+
+// Function to trigger the attention animation on decision button
+function triggerDecisionButtonAnimation() {
+    // Remove animation class if it exists (to restart animation)
+    decisionButton.classList.remove('attention');
+    
+    // Force reflow to restart animation
+    void decisionButton.offsetWidth;
+    
+    // Add animation class
+    decisionButton.classList.add('attention');
+    
+    // Remove animation class after it completes
+    setTimeout(() => {
+        decisionButton.classList.remove('attention');
+    }, 2400); // 0.8s * 3 iterations
+}
+
 // Pack Shop Elements
 const packShopModal = document.getElementById('pack-shop-modal');
 const openPackShopBtn = document.getElementById('open-pack-shop-btn');
@@ -363,7 +386,7 @@ async function createChallenge() {
         // Setup UI for single player
         singlePlayerScore.classList.remove('hidden');
         singlePlayerProgress.classList.remove('hidden');
-        singlePlayerStars.classList.remove('hidden');
+        // singlePlayerStars removed - points now shown in decision button
         scoreboard.classList.add('hidden');
         
         currentQuestionIndex = 0;
@@ -892,7 +915,7 @@ async function startChallengeGame() {
         // Setup UI for single player
         singlePlayerScore.classList.remove('hidden');
         singlePlayerProgress.classList.remove('hidden');
-        singlePlayerStars.classList.remove('hidden');
+        // singlePlayerStars removed - points now shown in decision button
         scoreboard.classList.add('hidden');
         
         currentQuestionIndex = 0;
@@ -999,24 +1022,155 @@ function showGameResultScreen(score, gameType, totalQuestions) {
 
 // --- Functions ---
 
+// New flying point animation that goes to the stop button
+function showFlyingPointToButton(sourceElement) {
+    if (!isSinglePlayer) {
+        // Use the old animation for multiplayer for now
+        showPointAnimation(currentPlayerIndex, "+1");
+        return;
+    }
+    
+    // Get positions
+    const sourceRect = sourceElement.getBoundingClientRect();
+    const targetRect = stopSide.getBoundingClientRect();
+    
+    // Create flying point element
+    const flyingPoint = document.createElement('div');
+    flyingPoint.className = 'flying-point';
+    flyingPoint.textContent = '+1';
+    
+    // Start position (center of source element)
+    const startX = sourceRect.left + sourceRect.width / 2;
+    const startY = sourceRect.top + sourceRect.height / 2;
+    
+    // Target position (center of stop button)
+    const targetX = targetRect.left + targetRect.width / 2;
+    const targetY = targetRect.top + targetRect.height / 2;
+    
+    // Set initial position
+    flyingPoint.style.left = startX + 'px';
+    flyingPoint.style.top = startY + 'px';
+    
+    document.body.appendChild(flyingPoint);
+    
+    // Animate to target with bezier curve
+    const duration = 800;
+    const startTime = Date.now();
+    
+    function animate() {
+        const elapsed = Date.now() - startTime;
+        const progress = Math.min(elapsed / duration, 1);
+        
+        // Easing function for smooth animation
+        const easeOutCubic = 1 - Math.pow(1 - progress, 3);
+        
+        // Calculate current position with curve
+        const currentX = startX + (targetX - startX) * easeOutCubic;
+        const currentY = startY + (targetY - startY) * easeOutCubic - Math.sin(progress * Math.PI) * 50;
+        
+        flyingPoint.style.left = currentX + 'px';
+        flyingPoint.style.top = currentY + 'px';
+        
+        if (progress < 1) {
+            requestAnimationFrame(animate);
+        } else {
+            // Animation complete - remove element and update button
+            flyingPoint.remove();
+            
+            // Add landing effect
+            decisionButton.classList.add('point-landing');
+            setTimeout(() => {
+                decisionButton.classList.remove('point-landing');
+            }, 600);
+            
+            // Update button text and add glow
+            updateStopButtonPoints();
+        }
+    }
+    
+    requestAnimationFrame(animate);
+}
+
+// Update the stop button to show current points
+function updateStopButtonPoints() {
+    const pointsText = document.querySelector('#stop-side .decision-points');
+    if (currentQuestionScore > 0) {
+        pointsText.textContent = `+${currentQuestionScore} poäng`;
+        stopSide.classList.add('has-points');
+    } else {
+        pointsText.textContent = '';
+        stopSide.classList.remove('has-points');
+    }
+}
+
+// Disable stop button and transform continue to next question
+function transformButtonsToNextQuestion() {
+    // Disable stop button
+    stopSide.classList.add('disabled');
+    stopSide.disabled = true;
+    
+    // Animate points disappearing if there are any
+    const pointsText = document.querySelector('#stop-side .decision-points');
+    if (pointsText.textContent) {
+        pointsText.classList.add('disappearing');
+        setTimeout(() => {
+            pointsText.textContent = '';
+            pointsText.classList.remove('disappearing');
+        }, 600);
+    }
+    
+    // Transform continue button to next question
+    continueSide.classList.add('next-question');
+    const continueIcon = document.querySelector('#continue-side .decision-icon');
+    const continueAction = document.querySelector('#continue-side .decision-action');
+    const continueRisk = document.querySelector('#continue-side .decision-risk');
+    
+    continueIcon.textContent = '➡️';
+    continueAction.textContent = 'Nästa';
+    continueRisk.textContent = 'fråga';
+    
+    // Remove old event listener and add new one
+    continueSide.replaceWith(continueSide.cloneNode(true));
+    const newContinueSide = document.getElementById('continue-side');
+    newContinueSide.addEventListener('click', () => {
+        currentQuestionIndex++;
+        loadQuestion();
+    });
+}
+
+// Reset buttons for new question
+function resetDecisionButtons() {
+    // Reset stop button
+    stopSide.classList.remove('disabled', 'has-points');
+    stopSide.disabled = false;
+    
+    // Reset continue button
+    continueSide.classList.remove('next-question');
+    const continueIcon = document.querySelector('#continue-side .decision-icon');
+    const continueAction = document.querySelector('#continue-side .decision-action');
+    const continueRisk = document.querySelector('#continue-side .decision-risk');
+    
+    continueIcon.textContent = '🎲';
+    continueAction.textContent = 'Fortsätt';
+    continueRisk.textContent = '& Gambla';
+    
+    // Reset points display
+    updateStopButtonPoints();
+    
+    // Restore original continue button functionality
+    continueSide.replaceWith(continueSide.cloneNode(true));
+    const newContinueSide = document.getElementById('continue-side');
+    newContinueSide.addEventListener('click', () => {
+        // Just remove the attention animation if it's active
+        decisionButton.classList.remove('attention');
+    });
+}
+
 // Point animation for both single and multiplayer
 function showPointAnimation(playerIndex, text, isBanked = false) {
     if (isSinglePlayer) {
-        // Show animation on star container for single player
-        const starContainer = document.getElementById('current-score-container');
-        if (starContainer) {
-            const animationEl = document.createElement('span');
-            animationEl.className = 'point-float';
-            if (isBanked) {
-                animationEl.classList.add('banked');
-            }
-            animationEl.textContent = text;
-            starContainer.appendChild(animationEl);
-            
-            setTimeout(() => {
-                animationEl.remove();
-            }, 1000);
-        }
+        // Star animation removed - now using flying point animation to decision button
+        // No animation needed here as it's handled by showFlyingPointToButton
     } else {
         // Show animation on player card for multiplayer
         const cards = scoreboard.querySelectorAll('.player-score-card');
@@ -1064,25 +1218,7 @@ function showPlayerSetup() {
     createPlayerInputs();
 }
 
-// Single Player Functions
-function renderStars(count, filled = 0) {
-    currentScoreContainer.innerHTML = '';
-    for (let i = 0; i < count; i++) {
-        const star = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
-        star.setAttribute('class', `star-icon ${i < filled ? 'filled' : 'empty'}`);
-        star.setAttribute('viewBox', '0 0 24 24');
-        star.innerHTML = `<path d=\"M12 17.27L18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21z\"/>`;
-        currentScoreContainer.appendChild(star);
-    }
-}
-
-function updateStars(filledCount) {
-    const stars = currentScoreContainer.querySelectorAll('.star-icon');
-    stars.forEach((star, index) => {
-        star.classList.toggle('filled', index < filledCount);
-        star.classList.toggle('empty', index >= filledCount);
-    });
-}
+// Single Player Functions (Star system removed - now using decision button for points)
 
 function updateSinglePlayerDisplay() {
     singlePlayerScore.textContent = `Totalpoäng: ${totalScore}`;
@@ -1101,6 +1237,7 @@ function endSinglePlayerQuestion(pointsToAdd) {
     
     updateSinglePlayerDisplay();
     stopBtn.classList.add('hidden');
+    decisionButton.classList.add('hidden');
     nextQuestionBtn.classList.remove('hidden');
     
     const question = questionsToPlay[currentQuestionIndex];
@@ -1200,7 +1337,7 @@ async function endSinglePlayerGame() {
             showGameResultScreen(totalScore, selectedPack, questionsToPlay.length);
         } else {
             // Standard game with all questions
-            showGameResultScreen(totalScore, 'Allmänna frågor', questionsToPlay.length);
+            showGameResultScreen(totalScore, 'Grund', questionsToPlay.length);
         }
     }
 }
@@ -1313,13 +1450,13 @@ async function initializeGame() {
         // Show single player UI
         singlePlayerScore.classList.remove('hidden');
         singlePlayerProgress.classList.remove('hidden');
-        singlePlayerStars.classList.remove('hidden');
+        // singlePlayerStars removed - points now shown in decision button
         scoreboard.classList.add('hidden');
     } else {
         // Show multiplayer UI
         singlePlayerScore.classList.add('hidden');
         singlePlayerProgress.classList.add('hidden');
-        singlePlayerStars.classList.add('hidden');
+        // singlePlayerStars removed - points now shown in decision button
         scoreboard.classList.remove('hidden');
     }
     
@@ -1371,23 +1508,39 @@ function updateScoreboard() {
 
 function updateGameControls() {
     if (isSinglePlayer) {
-        stopBtn.textContent = 'Stanna & Säkra Poäng';
-        stopBtn.classList.remove('hidden');
-        stopBtn.disabled = false;
+        // Hide old buttons
+        stopBtn.classList.add('hidden');
+        nextQuestionBtn.classList.add('hidden');
+        
+        // Always show decision button
+        decisionButton.classList.remove('hidden');
+        
+        // Update stop button points
+        updateStopButtonPoints();
     } else {
         const player = players[currentPlayerIndex];
         const activePlayers = players.filter(p => !p.eliminatedInRound);
 
         if (activePlayers.length === 0) {
+            // Hide decision button and old stop button
+            decisionButton.classList.add('hidden');
             stopBtn.classList.add('hidden');
-            nextQuestionBtn.classList.remove('hidden');
+            // Use large next question button instead of small one
+            nextQuestionBtn.classList.add('hidden');
+            largeNextQuestionBtn.classList.remove('hidden');
         } else {
             nextQuestionBtn.classList.add('hidden');
+            largeNextQuestionBtn.classList.add('hidden');
             if (player && player.roundPot > 0 && !player.eliminatedInRound) {
-                stopBtn.textContent = `(${player.name}) Stanna på +${player.roundPot}`;
-                stopBtn.disabled = false;
-                stopBtn.classList.remove('hidden');
+                // Use new decision button for multiplayer too
+                stopBtn.classList.add('hidden');
+                decisionButton.classList.remove('hidden');
+                
+                // Update stop side text with player name
+                const pointsText = document.querySelector('#stop-side .decision-points');
+                pointsText.textContent = `${player.name} +${player.roundPot}p`;
             } else {
+                decisionButton.classList.add('hidden');
                 stopBtn.classList.add('hidden');
                 stopBtn.disabled = true;
             }
@@ -1410,6 +1563,11 @@ function loadQuestion() {
     mistakeMade = false;
     currentQuestionScore = 0;
     
+    // Reset decision buttons for new question
+    if (isSinglePlayer) {
+        resetDecisionButtons();
+    }
+    
     if (!isSinglePlayer) {
         players.forEach(p => {
             p.roundPot = 0;
@@ -1420,8 +1578,12 @@ function loadQuestion() {
     
     optionsGrid.innerHTML = '';
     nextQuestionBtn.classList.add('hidden');
-    stopBtn.classList.remove('hidden');
-    stopBtn.disabled = false;
+    
+    // Always show decision button for single player
+    if (isSinglePlayer) {
+        decisionButton.classList.remove('hidden');
+        stopBtn.classList.add('hidden');
+    }
     
     if (currentQuestionIndex >= questionsToPlay.length) {
         if (isSinglePlayer) {
@@ -1436,7 +1598,7 @@ function loadQuestion() {
         currentPlayerIndex = questionStarterIndex;
         updateScoreboard();
     } else {
-        renderStars(4); // Render 4 empty stars for single player
+        // Stars removed - points now shown in decision button
         updateSinglePlayerDisplay();
     }
     updateGameControls();
@@ -1558,22 +1720,31 @@ function handleOrderClick(button, optionText) {
         if (isCorrectStep) {
             userOrder.push(optionText);
             currentQuestionScore++;
-            updateStars(currentQuestionScore);
-            showPointAnimation(0, "+1");
+            showFlyingPointToButton(button);
             
-            button.className = 'option-btn w-full text-left p-4 rounded-lg border-2 order-selected';
-            button.innerHTML = `<span class="inline-flex items-center justify-center w-6 h-6 mr-3 bg-white text-blue-600 rounded-full font-bold">${userOrder.length}</span> ${optionText}`;
+            button.className = 'option-btn w-full text-left p-4 rounded-lg border-2 correct-step';
+            button.innerHTML = `<span class="inline-flex items-center justify-center w-6 h-6 mr-3 bg-white text-green-600 rounded-full font-bold">${userOrder.length}</span> ${optionText}`;
             button.disabled = true;
 
             if (userOrder.length === 4) {
-                endSinglePlayerQuestion(currentQuestionScore);
+                // Question completed successfully - transform buttons and move to next
+                transformButtonsToNextQuestion();
+                totalScore += currentQuestionScore;
+                updateSinglePlayerDisplay();
+                
+                // Save score for this question if in challenge mode
+                if (ischallengeMode) {
+                    challengeQuestionScores.push(currentQuestionScore);
+                }
             }
         } else {
             mistakeMade = true;
             currentQuestionScore = 0;
-            updateStars(0);
+            updateStopButtonPoints();
             button.classList.add('incorrect-step');
-            endSinglePlayerQuestion(0);
+            
+            // Transform buttons when wrong answer
+            transformButtonsToNextQuestion();
         }
     } else {
         // Multiplayer logic
@@ -1585,8 +1756,8 @@ function handleOrderClick(button, optionText) {
             showPointAnimation(currentPlayerIndex, "+1");
             updateScoreboard();
             
-            button.className = 'option-btn w-full text-left p-3 sm:p-4 rounded-lg border-2 order-selected text-sm sm:text-base';
-            button.innerHTML = `<span class="inline-flex items-center justify-center w-6 h-6 mr-3 bg-white text-blue-600 rounded-full font-bold">${userOrder.length}</span> ${optionText}`;
+            button.className = 'option-btn w-full text-left p-3 sm:p-4 rounded-lg border-2 correct-step text-sm sm:text-base';
+            button.innerHTML = `<span class="inline-flex items-center justify-center w-6 h-6 mr-3 bg-white text-green-600 rounded-full font-bold">${userOrder.length}</span> ${optionText}`;
             button.disabled = true;
 
             if (userOrder.length === question.alternativ.length) {
@@ -1626,17 +1797,26 @@ function handleBelongsDecision(userDecision, container, yesBtn, noBtn) {
     if (isSinglePlayer) {
         if (isCorrect) {
             currentQuestionScore++;
-            updateStars(currentQuestionScore);
-            showPointAnimation(0, "+1");
+            showFlyingPointToButton(container);
             container.classList.add('choice-made');
             clickedBtn.classList.add('correct-selection');
+            
+            // Check if all options have been decided for belongs-to questions
+            const allDecided = Array.from(document.querySelectorAll('.belongs-option-container'))
+                .every(cont => cont.dataset.decided === 'true');
+            
+            if (!allDecided) {
+                // Animation already handled by showFlyingPointToButton
+            }
         } else {
             clickedBtn.classList.add('selected'); 
             mistakeMade = true;
             currentQuestionScore = 0;
-            updateStars(0);
+            updateStopButtonPoints();
             container.classList.add('incorrect-choice');
-            endSinglePlayerQuestion(0);
+            
+            // Transform buttons when wrong answer
+            transformButtonsToNextQuestion();
         }
     } else {
         // Multiplayer logic
@@ -1672,7 +1852,13 @@ function playerStops() {
         if (currentQuestionScore > 0) {
             showPointAnimation(0, `+${currentQuestionScore}p`, true);
         }
-        endSinglePlayerQuestion(currentQuestionScore);
+        
+        // Transform buttons when player chooses to stop
+        transformButtonsToNextQuestion();
+        
+        // Add the points to total score
+        totalScore += currentQuestionScore;
+        updateSinglePlayerDisplay();
     } else {
         const player = players[currentPlayerIndex];
         if (player.roundPot > 0) {
@@ -1688,17 +1874,8 @@ function playerStops() {
 }
 
 function feedbackOrder() {
-    const buttons = optionsGrid.querySelectorAll('button');
-    buttons.forEach(btn => {
-        let btnText = btn.textContent;
-        const span = btn.querySelector('span');
-        if (span) btnText = btn.textContent.substring(span.textContent.length).trim();
-
-        if (userOrder.includes(btnText)) {
-            btn.classList.remove('order-selected');
-            btn.classList.add('correct-step'); 
-        }
-    });
+    // No longer needed - buttons already have correct green color when answered correctly
+    // This function is kept for compatibility but does nothing
 }
 
 function feedbackBelongsTo() {
@@ -1887,7 +2064,20 @@ restartBtn.addEventListener('click', restartGame);
 
 stopBtn.addEventListener('click', playerStops);
 
+// New decision button event handlers
+stopSide.addEventListener('click', playerStops);
+continueSide.addEventListener('click', () => {
+    // Don't hide the decision button - keep it visible
+    // Just remove the attention animation if it's active
+    decisionButton.classList.remove('attention');
+});
+
 nextQuestionBtn.addEventListener('click', () => {
+    currentQuestionIndex++;
+    loadQuestion();
+});
+
+largeNextQuestionBtn.addEventListener('click', () => {
     currentQuestionIndex++;
     loadQuestion();
 });
