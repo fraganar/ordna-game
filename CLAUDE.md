@@ -1,7 +1,40 @@
 # Ordna Game - Project Documentation
 
 ## About the Game
-Ett klurigt frågespel där spelare tävlar om vem som vågar chansa mest. Inom varje fråga bygger du upp poäng steg för steg, men ett fel svar ger noll poäng för hela frågan (tidigare intjänade poäng påverkas ej). Två spellägen: singelspelare (visar stjärnor) och multiplayer (spelare turas om). Frågetyper: "Ordna" (sortera alternativ i rätt ordning) och "Hör till" (bedöm vilka alternativ tillhör kategorin).
+Ett klurigt frågespel där spelare tävlar om vem som vågar chansa mest. Spela ensam eller med vänner (2-6 spelare) i denna interaktiva quiz där strategiskt risktagande är nyckeln till framgång.
+
+## Hur man spelar
+
+### Starta spelet
+1. Öppna `index.html` i en webbläsare (eller kör via lokal server)
+2. Välj antal spelare (1 för singelspelare, 2-6 för multiplayer)
+3. Ange spelarnamn
+4. Välj frågepaket (valfritt)
+5. Börja spela!
+
+### Spelregler
+
+**Grundläggande mekanik:**
+- **Poängsamling**: Varje rätt svar bygger upp din personliga pott för rundan
+- **Riskhantering**: Klicka på "Stanna" för att säkra din pott som poäng och stå över resten av rundan
+- **Elimination**: Ett fel svar nollställs din pott och du åker ut ur rundan (tidigare intjänade poäng behålls)
+- **Turordning** (endast multiplayer): Spelarna turas om, aktiv spelare markeras med blå ram
+
+**Frågetyper:**
+- **"Ordna"**: Klicka på alternativen i rätt ordning (t.ex. sortera länder efter storlek)
+- **"Hör till"**: Bedöm varje alternativ med ja/nej (t.ex. vilka är huvudstäder?)
+
+**Strategi:**
+Ju längre du vågar fortsätta, desto mer kan du vinna - men risken ökar. Ett fel och rundans poäng är förlorade!
+
+### Valmöjligheter i spelet
+
+**Från huvudmenyn kan användaren:**
+- **Spela själv** - Välj 1 spelare för att spela ensam och samla poäng (visas som stjärnor)
+- **Spela med vänner** - Välj 2-6 spelare för att tävla mot varandra lokalt
+- **Utmana någon** - Skapa en utmaning och bjud in en vän via delbar länk (se Challenge System nedan för detaljer)
+- **Mina utmaningar** - Se dina aktiva utmaningar och vem som svarat
+- **Välj frågepaket** - Aktivera/avaktivera olika frågepaket för variation
 
 ## Tech Stack
 - Frontend: Vanilla JavaScript (ES6+), HTML5, CSS3
