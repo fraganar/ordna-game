@@ -1094,11 +1094,10 @@ function showFlyingPointToButton(sourceElement) {
 // Update the stop button to show current points
 function updateStopButtonPoints() {
     const pointsText = document.querySelector('#stop-side .decision-points');
+    pointsText.textContent = `+${currentQuestionScore} poäng`;
     if (currentQuestionScore > 0) {
-        pointsText.textContent = `+${currentQuestionScore} poäng`;
         stopSide.classList.add('has-points');
     } else {
-        pointsText.textContent = '';
         stopSide.classList.remove('has-points');
     }
 }

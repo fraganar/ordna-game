@@ -52,27 +52,32 @@ body {
 .decision-button .stop-side,
 .decision-button .continue-side {
     flex: 1;
-    padding: 16px 24px;
+    padding: 20px 28px;
     border: none;
     cursor: pointer;
     transition: all 0.3s ease;
     display: flex;
     align-items: center;
     justify-content: center;
-    gap: 12px;
+    gap: 16px;
     font-weight: bold;
-    font-size: 18px;
+    font-size: 20px;
     color: white;
     position: relative;
 }
 
 .decision-button .stop-side {
-    background: linear-gradient(135deg, #10b981 0%, #059669 100%);
+    background: linear-gradient(135deg, #f0fdf4 0%, #dcfce7 50%, #bbf7d0 100%);
+    border: 1px solid #86efac;
+    color: #15803d;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1), 0 2px 4px rgba(134, 239, 172, 0.2);
 }
 
 .decision-button .stop-side:hover {
-    background: linear-gradient(135deg, #059669 0%, #047857 100%);
-    transform: translateX(-2px);
+    background: linear-gradient(135deg, #dcfce7 0%, #bbf7d0 50%, #86efac 100%);
+    border-color: #22c55e;
+    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15), 0 3px 6px rgba(34, 197, 94, 0.3);
+    transform: translateX(-2px) translateY(-1px);
 }
 
 .decision-button .continue-side {
@@ -92,7 +97,7 @@ body {
 }
 
 .decision-icon {
-    font-size: 24px;
+    font-size: 28px;
 }
 
 .decision-text {
@@ -103,18 +108,19 @@ body {
 }
 
 .decision-action {
-    font-size: 18px;
+    font-size: 20px;
     font-weight: 700;
 }
 
 .decision-points {
-    font-size: 14px;
+    font-size: 16px;
     opacity: 0.9;
     font-weight: 500;
+    color: #15803d !important;
 }
 
 .decision-risk {
-    font-size: 14px;
+    font-size: 16px;
     opacity: 0.9;
     font-weight: 500;
 }
@@ -143,21 +149,21 @@ body {
     
     .decision-button .stop-side,
     .decision-button .continue-side {
-        padding: 12px 16px;
-        gap: 8px;
+        padding: 16px 20px;
+        gap: 12px;
     }
     
     .decision-icon {
-        font-size: 20px;
+        font-size: 24px;
     }
     
     .decision-action {
-        font-size: 16px;
+        font-size: 18px;
     }
     
     .decision-points,
     .decision-risk {
-        font-size: 12px;
+        font-size: 14px;
     }
 }
 
@@ -166,10 +172,10 @@ body {
     position: fixed;
     font-size: 24px;
     font-weight: bold;
-    color: #10b981;
+    color: #22c55e;
     z-index: 1000;
     pointer-events: none;
-    text-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+    text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
 }
 
 @keyframes flyToButton {
@@ -190,13 +196,13 @@ body {
 /* Glow effect when point lands */
 @keyframes pointLanded {
     0% {
-        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15), 0 0 0 0 rgba(16, 185, 129, 0.7);
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15), 0 0 0 0 rgba(220, 252, 231, 0.8);
     }
     50% {
-        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15), 0 0 0 10px rgba(16, 185, 129, 0);
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15), 0 0 0 15px rgba(187, 247, 208, 0);
     }
     100% {
-        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15), 0 0 0 0 rgba(16, 185, 129, 0);
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15), 0 0 0 0 rgba(187, 247, 208, 0);
     }
 }
 
@@ -206,23 +212,28 @@ body {
 
 /* Enhanced stop button glow based on points */
 .decision-button .stop-side.has-points {
-    background: linear-gradient(135deg, #10b981 0%, #059669 100%);
-    box-shadow: 0 4px 12px rgba(16, 185, 129, 0.3);
+    background: linear-gradient(135deg, #f0fdf4 0%, #dcfce7 50%, #bbf7d0 100%);
+    border-color: #22c55e;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1), 0 2px 8px rgba(34, 197, 94, 0.3), 0 0 0 2px rgba(34, 197, 94, 0.1);
 }
 
 .decision-button .stop-side.has-points:hover {
-    box-shadow: 0 4px 16px rgba(16, 185, 129, 0.5);
+    box-shadow: 0 6px 16px rgba(0, 0, 0, 0.15), 0 3px 10px rgba(34, 197, 94, 0.4), 0 0 0 3px rgba(34, 197, 94, 0.2);
 }
 
 /* Disabled state for stop button */
 .decision-button .stop-side.disabled {
-    background: linear-gradient(135deg, #9ca3af 0%, #6b7280 100%);
+    background: linear-gradient(135deg, #f3f4f6 0%, #e5e7eb 50%, #d1d5db 100%);
+    border: 1px solid #9ca3af;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
     cursor: not-allowed;
     opacity: 0.7;
 }
 
 .decision-button .stop-side.disabled:hover {
-    background: linear-gradient(135deg, #9ca3af 0%, #6b7280 100%);
+    background: linear-gradient(135deg, #f3f4f6 0%, #e5e7eb 50%, #d1d5db 100%);
+    border: 1px solid #9ca3af;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
     transform: none;
 }
 
@@ -263,13 +274,13 @@ body {
     max-width: 480px;
     width: 100%;
     margin: 0 auto;
-    padding: 16px 24px;
+    padding: 20px 28px;
     border: none;
     cursor: pointer;
     border-radius: 12px;
     background: linear-gradient(135deg, #3b82f6 0%, #2563eb 100%);
     color: white;
-    font-size: 18px;
+    font-size: 20px;
     font-weight: bold;
     box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
     transition: all 0.3s ease;
@@ -282,8 +293,8 @@ body {
 
 @media (max-width: 640px) {
     .large-next-question-btn {
-        padding: 12px 16px;
-        font-size: 16px;
+        padding: 16px 20px;
+        font-size: 18px;
     }
 }
 
