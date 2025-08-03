@@ -248,7 +248,7 @@ const finalScoreboard = document.getElementById('final-scoreboard');
 // New decision button elements
 const decisionButton = document.getElementById('decision-button');
 const stopSide = document.getElementById('stop-side');
-const continueSide = document.getElementById('continue-side');
+let continueSide = document.getElementById('continue-side');
 const largeNextQuestionBtn = document.getElementById('large-next-question-btn');
 
 // Function to trigger the attention animation on decision button
@@ -1091,6 +1091,115 @@ function showFlyingPointToButton(sourceElement) {
     requestAnimationFrame(animate);
 }
 
+// Animate points flying from Stop button to total score
+function showFlyingPointsToTotal(points) {
+    const stopButton = document.getElementById('stop-side');
+    const totalScoreElement = document.getElementById('single-player-score');
+    
+    // Get positions
+    const stopRect = stopButton.getBoundingClientRect();
+    const totalRect = totalScoreElement.getBoundingClientRect();
+    
+    // Create flying point element
+    const flyingPoint = document.createElement('div');
+    flyingPoint.className = 'flying-point-to-total';
+    flyingPoint.textContent = `+${points}`;
+    flyingPoint.style.position = 'fixed';
+    flyingPoint.style.left = (stopRect.left + stopRect.width / 2) + 'px';
+    flyingPoint.style.top = (stopRect.top + stopRect.height / 2) + 'px';
+    flyingPoint.style.transform = 'translate(-50%, -50%)';
+    flyingPoint.style.zIndex = '1000';
+    flyingPoint.style.fontSize = '24px';
+    flyingPoint.style.fontWeight = 'bold';
+    flyingPoint.style.color = '#15803d';
+    flyingPoint.style.pointerEvents = 'none';
+    flyingPoint.style.textShadow = '0 2px 4px rgba(0, 0, 0, 0.3)';
+    
+    document.body.appendChild(flyingPoint);
+    
+    // Calculate control points for bezier curve
+    const startX = stopRect.left + stopRect.width / 2;
+    const startY = stopRect.top + stopRect.height / 2;
+    const endX = totalRect.left + totalRect.width / 2;
+    const endY = totalRect.top + totalRect.height / 2;
+    
+    const controlX1 = startX + (endX - startX) * 0.2;
+    const controlY1 = startY - 100; // Arc upward
+    const controlX2 = startX + (endX - startX) * 0.8;
+    const controlY2 = startY - 120;
+    
+    let startTime = null;
+    const duration = 800; // Animation duration in ms
+    
+    function animate(currentTime) {
+        if (!startTime) startTime = currentTime;
+        const elapsed = currentTime - startTime;
+        const progress = Math.min(elapsed / duration, 1);
+        
+        // Cubic bezier curve calculation
+        const t = progress;
+        const x = Math.pow(1-t, 3) * startX + 
+                  3 * Math.pow(1-t, 2) * t * controlX1 + 
+                  3 * (1-t) * Math.pow(t, 2) * controlX2 + 
+                  Math.pow(t, 3) * endX;
+        const y = Math.pow(1-t, 3) * startY + 
+                  3 * Math.pow(1-t, 2) * t * controlY1 + 
+                  3 * (1-t) * Math.pow(t, 2) * controlY2 + 
+                  Math.pow(t, 3) * endY;
+        
+        flyingPoint.style.left = x + 'px';
+        flyingPoint.style.top = y + 'px';
+        
+        // Fade and scale during last 20% of animation
+        if (progress > 0.8) {
+            const fadeProgress = (progress - 0.8) / 0.2;
+            flyingPoint.style.opacity = 1 - fadeProgress;
+            flyingPoint.style.transform = `translate(-50%, -50%) scale(${1 + fadeProgress * 0.5})`;
+        }
+        
+        if (progress < 1) {
+            requestAnimationFrame(animate);
+        } else {
+            // Animation complete - add glow effect to total score
+            totalScoreElement.style.transition = 'all 0.3s ease';
+            totalScoreElement.style.boxShadow = '0 0 20px rgba(21, 128, 61, 0.5)';
+            setTimeout(() => {
+                totalScoreElement.style.boxShadow = '';
+            }, 600);
+            
+            // Remove flying point
+            document.body.removeChild(flyingPoint);
+        }
+    }
+    
+    requestAnimationFrame(animate);
+}
+
+// Transform Stop button to "Secured" state after points fly away
+function transformStopButtonToSecured() {
+    const stopIcon = document.querySelector('#stop-side .decision-icon');
+    const stopAction = document.querySelector('#stop-side .decision-action');
+    const stopPoints = document.querySelector('#stop-side .decision-points');
+    
+    // Animate points disappearing first
+    stopPoints.style.transition = 'opacity 0.3s ease, transform 0.3s ease';
+    stopPoints.style.opacity = '0';
+    stopPoints.style.transform = 'scale(0.8)';
+    
+    // After points fade, transform the button
+    setTimeout(() => {
+        stopIcon.textContent = '✅';
+        stopAction.textContent = 'Säkrat';
+        stopPoints.textContent = '';
+        stopPoints.style.opacity = '';
+        stopPoints.style.transform = '';
+        stopPoints.style.transition = '';
+        
+        // Add a subtle completed state class
+        stopSide.classList.add('completed');
+    }, 300);
+}
+
 // Update the stop button to show current points
 function updateStopButtonPoints() {
     const pointsText = document.querySelector('#stop-side .decision-points');
@@ -1102,7 +1211,7 @@ function updateStopButtonPoints() {
     }
 }
 
-// Disable stop button and transform continue to next question
+// Disable stop button and transform continue to next question (for wrong answers)
 function transformButtonsToNextQuestion() {
     // Disable stop button
     stopSide.classList.add('disabled');
@@ -1119,6 +1228,11 @@ function transformButtonsToNextQuestion() {
     }
     
     // Transform continue button to next question
+    transformContinueToNextQuestion();
+}
+
+// Transform only the continue button to next question (for when player stops)
+function transformContinueToNextQuestion() {
     continueSide.classList.add('next-question');
     const continueIcon = document.querySelector('#continue-side .decision-icon');
     const continueAction = document.querySelector('#continue-side .decision-action');
@@ -1130,8 +1244,8 @@ function transformButtonsToNextQuestion() {
     
     // Remove old event listener and add new one
     continueSide.replaceWith(continueSide.cloneNode(true));
-    const newContinueSide = document.getElementById('continue-side');
-    newContinueSide.addEventListener('click', () => {
+    continueSide = document.getElementById('continue-side'); // Update reference
+    continueSide.addEventListener('click', () => {
         currentQuestionIndex++;
         loadQuestion();
     });
@@ -1140,8 +1254,15 @@ function transformButtonsToNextQuestion() {
 // Reset buttons for new question
 function resetDecisionButtons() {
     // Reset stop button
-    stopSide.classList.remove('disabled', 'has-points');
+    stopSide.classList.remove('disabled', 'has-points', 'completed');
     stopSide.disabled = false;
+    stopSide.dataset.processing = 'false'; // Reset processing flag
+    
+    // Restore original stop button content
+    const stopIcon = document.querySelector('#stop-side .decision-icon');
+    const stopAction = document.querySelector('#stop-side .decision-action');
+    stopIcon.textContent = '🛡️';
+    stopAction.textContent = 'Stanna';
     
     // Reset continue button
     continueSide.classList.remove('next-question');
@@ -1158,8 +1279,8 @@ function resetDecisionButtons() {
     
     // Restore original continue button functionality
     continueSide.replaceWith(continueSide.cloneNode(true));
-    const newContinueSide = document.getElementById('continue-side');
-    newContinueSide.addEventListener('click', () => {
+    continueSide = document.getElementById('continue-side'); // Update reference
+    continueSide.addEventListener('click', () => {
         // Just remove the attention animation if it's active
         decisionButton.classList.remove('attention');
     });
@@ -1719,21 +1840,49 @@ function handleOrderClick(button, optionText) {
         if (isCorrectStep) {
             userOrder.push(optionText);
             currentQuestionScore++;
-            showFlyingPointToButton(button);
+            
+            // Only show flying point to button if this is NOT the last answer (4th step)
+            if (userOrder.length < 4) {
+                showFlyingPointToButton(button);
+            }
             
             button.className = 'option-btn w-full text-left p-4 rounded-lg border-2 correct-step';
             button.innerHTML = `<span class="inline-flex items-center justify-center w-6 h-6 mr-3 bg-white text-green-600 rounded-full font-bold">${userOrder.length}</span> ${optionText}`;
             button.disabled = true;
 
             if (userOrder.length === 4) {
-                // Question completed successfully - transform buttons and move to next
-                transformButtonsToNextQuestion();
-                totalScore += currentQuestionScore;
-                updateSinglePlayerDisplay();
-                
-                // Save score for this question if in challenge mode
-                if (ischallengeMode) {
-                    challengeQuestionScores.push(currentQuestionScore);
+                // Question completed successfully - use same logic as manual stop
+                if (isSinglePlayer) {
+                    // Prevent multiple triggers
+                    if (stopSide.dataset.processing === 'true') return;
+                    stopSide.dataset.processing = 'true';
+                    
+                    if (currentQuestionScore > 0) {
+                        // Show flying animation from Stop button to total score
+                        showFlyingPointsToTotal(currentQuestionScore);
+                        
+                        // Transform stop button to "Secured" state immediately
+                        transformStopButtonToSecured();
+                        
+                        // Add the points to total score after a short delay
+                        setTimeout(() => {
+                            totalScore += currentQuestionScore;
+                            updateSinglePlayerDisplay();
+                        }, 400); // Trigger during animation
+                    } else {
+                        // If no points, just transform to secured state
+                        transformStopButtonToSecured();
+                        totalScore += currentQuestionScore;
+                        updateSinglePlayerDisplay();
+                    }
+                    
+                    // Only transform continue button
+                    transformContinueToNextQuestion();
+                    
+                    // Save score for this question if in challenge mode
+                    if (ischallengeMode) {
+                        challengeQuestionScores.push(currentQuestionScore);
+                    }
                 }
             }
         } else {
@@ -1796,15 +1945,47 @@ function handleBelongsDecision(userDecision, container, yesBtn, noBtn) {
     if (isSinglePlayer) {
         if (isCorrect) {
             currentQuestionScore++;
-            showFlyingPointToButton(container);
-            container.classList.add('choice-made');
-            clickedBtn.classList.add('correct-selection');
             
             // Check if all options have been decided for belongs-to questions
             const allDecided = Array.from(document.querySelectorAll('.belongs-option-container'))
                 .every(cont => cont.dataset.decided === 'true');
             
+            // Only show flying point to button if this is NOT the last answer
             if (!allDecided) {
+                showFlyingPointToButton(container);
+            }
+            
+            container.classList.add('choice-made');
+            clickedBtn.classList.add('correct-selection');
+            
+            if (allDecided) {
+                // All options decided - automatically secure points like "Ordna" questions
+                // Prevent multiple triggers
+                if (stopSide.dataset.processing === 'true') return;
+                stopSide.dataset.processing = 'true';
+                
+                if (currentQuestionScore > 0) {
+                    // Show flying animation from Stop button to total score
+                    showFlyingPointsToTotal(currentQuestionScore);
+                    
+                    // Transform stop button to "Secured" state immediately
+                    transformStopButtonToSecured();
+                    
+                    // Add the points to total score after a short delay
+                    setTimeout(() => {
+                        totalScore += currentQuestionScore;
+                        updateSinglePlayerDisplay();
+                    }, 400); // Trigger during animation
+                } else {
+                    // If no points, just transform to secured state
+                    transformStopButtonToSecured();
+                    totalScore += currentQuestionScore;
+                    updateSinglePlayerDisplay();
+                }
+                
+                // Only transform continue button
+                transformContinueToNextQuestion();
+            } else {
                 // Animation already handled by showFlyingPointToButton
             }
         } else {
@@ -1847,17 +2028,31 @@ function handleBelongsDecision(userDecision, container, yesBtn, noBtn) {
 }
 
 function playerStops() {
+    // Prevent double-clicks by checking if already processing
+    if (stopSide.dataset.processing === 'true') return;
+    stopSide.dataset.processing = 'true';
+    
     if (isSinglePlayer) {
         if (currentQuestionScore > 0) {
-            showPointAnimation(0, `+${currentQuestionScore}p`, true);
+            // Show flying animation from Stop button to total score
+            showFlyingPointsToTotal(currentQuestionScore);
+            
+            // Transform stop button to "Secured" state immediately
+            transformStopButtonToSecured();
+            
+            // Add the points to total score after a short delay
+            setTimeout(() => {
+                totalScore += currentQuestionScore;
+                updateSinglePlayerDisplay();
+            }, 400); // Trigger during animation
+        } else {
+            // If no points, just transform to secured state
+            transformStopButtonToSecured();
         }
         
-        // Transform buttons when player chooses to stop
-        transformButtonsToNextQuestion();
+        // Only transform continue button (keep stop button green and visible)
+        transformContinueToNextQuestion();
         
-        // Add the points to total score
-        totalScore += currentQuestionScore;
-        updateSinglePlayerDisplay();
     } else {
         const player = players[currentPlayerIndex];
         if (player.roundPot > 0) {
