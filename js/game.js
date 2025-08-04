@@ -1738,6 +1738,20 @@ function loadQuestion() {
             'Bedöm varje alternativ.';
         shuffledOptions.forEach(optionText => createBelongsToOption(optionText));
     }
+    
+    // Add cascading shimmer effect to new options
+    setTimeout(() => {
+        const options = optionsGrid.querySelectorAll('.option-btn, .belongs-option-container');
+        options.forEach((option, index) => {
+            setTimeout(() => {
+                option.classList.add('option-shimmer');
+                // Remove class after animation completes
+                setTimeout(() => {
+                    option.classList.remove('option-shimmer');
+                }, 800);
+            }, index * 150); // 150ms delay between each option
+        });
+    }, 100); // Small delay to ensure DOM is ready
 }
 
 function setAllOptionsDisabled(disabled) {

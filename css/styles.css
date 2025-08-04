@@ -587,4 +587,22 @@ body {
     }
 }
 
+/* Shimmer effect for new options */
+@keyframes optionShimmer {
+    0% {
+        box-shadow: 0 0 0 0 rgba(59, 130, 246, 0);
+    }
+    50% {
+        box-shadow: 0 0 25px 3px rgba(59, 130, 246, 0.5), 
+                    0 0 15px 1px rgba(147, 197, 253, 0.3);
+    }
+    100% {
+        box-shadow: 0 0 0 0 rgba(59, 130, 246, 0);
+    }
+}
+
+.option-shimmer {
+    animation: optionShimmer 0.8s ease-out;
+}
+
 
