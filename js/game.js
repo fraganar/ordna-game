@@ -248,7 +248,7 @@ const finalScoreboard = document.getElementById('final-scoreboard');
 // New decision button elements
 const decisionButton = document.getElementById('decision-button');
 const stopSide = document.getElementById('stop-side');
-let continueSide = document.getElementById('continue-side');
+const nextSide = document.getElementById('next-side');
 const largeNextQuestionBtn = document.getElementById('large-next-question-btn');
 
 // Function to trigger the attention animation on decision button
@@ -1211,8 +1211,8 @@ function updateStopButtonPoints() {
     }
 }
 
-// Disable stop button and transform continue to next question (for wrong answers)
-function transformButtonsToNextQuestion() {
+// Enable next button and disable stop button (for wrong answers)
+function enableNextButtonAfterMistake() {
     // Disable stop button
     stopSide.classList.add('disabled');
     stopSide.disabled = true;
@@ -1227,28 +1227,13 @@ function transformButtonsToNextQuestion() {
         }, 600);
     }
     
-    // Transform continue button to next question
-    transformContinueToNextQuestion();
+    // Enable next button
+    nextSide.disabled = false;
 }
 
-// Transform only the continue button to next question (for when player stops)
-function transformContinueToNextQuestion() {
-    continueSide.classList.add('next-question');
-    const continueIcon = document.querySelector('#continue-side .decision-icon');
-    const continueAction = document.querySelector('#continue-side .decision-action');
-    const continueRisk = document.querySelector('#continue-side .decision-risk');
-    
-    continueIcon.textContent = '➡️';
-    continueAction.textContent = 'Nästa';
-    continueRisk.textContent = 'fråga';
-    
-    // Remove old event listener and add new one
-    continueSide.replaceWith(continueSide.cloneNode(true));
-    continueSide = document.getElementById('continue-side'); // Update reference
-    continueSide.addEventListener('click', () => {
-        currentQuestionIndex++;
-        loadQuestion();
-    });
+// Enable next button (for when player stops or all correct)
+function enableNextButton() {
+    nextSide.disabled = false;
 }
 
 // Reset buttons for new question
@@ -1264,26 +1249,11 @@ function resetDecisionButtons() {
     stopIcon.textContent = '🛡️';
     stopAction.textContent = 'Stanna';
     
-    // Reset continue button
-    continueSide.classList.remove('next-question');
-    const continueIcon = document.querySelector('#continue-side .decision-icon');
-    const continueAction = document.querySelector('#continue-side .decision-action');
-    const continueRisk = document.querySelector('#continue-side .decision-risk');
-    
-    continueIcon.textContent = '🎲';
-    continueAction.textContent = 'Fortsätt';
-    continueRisk.textContent = '& Gambla';
+    // Disable next button for new question
+    nextSide.disabled = true;
     
     // Reset points display
     updateStopButtonPoints();
-    
-    // Restore original continue button functionality
-    continueSide.replaceWith(continueSide.cloneNode(true));
-    continueSide = document.getElementById('continue-side'); // Update reference
-    continueSide.addEventListener('click', () => {
-        // Just remove the attention animation if it's active
-        decisionButton.classList.remove('attention');
-    });
 }
 
 // Point animation for both single and multiplayer
@@ -1876,8 +1846,8 @@ function handleOrderClick(button, optionText) {
                         updateSinglePlayerDisplay();
                     }
                     
-                    // Only transform continue button
-                    transformContinueToNextQuestion();
+                    // Enable next button
+                    enableNextButton();
                     
                     // Save score for this question if in challenge mode
                     if (ischallengeMode) {
@@ -1891,8 +1861,8 @@ function handleOrderClick(button, optionText) {
             updateStopButtonPoints();
             button.classList.add('incorrect-step');
             
-            // Transform buttons when wrong answer
-            transformButtonsToNextQuestion();
+            // Enable next button and disable stop when wrong answer
+            enableNextButtonAfterMistake();
         }
     } else {
         // Multiplayer logic
@@ -1983,8 +1953,8 @@ function handleBelongsDecision(userDecision, container, yesBtn, noBtn) {
                     updateSinglePlayerDisplay();
                 }
                 
-                // Only transform continue button
-                transformContinueToNextQuestion();
+                // Enable next button
+                enableNextButton();
             } else {
                 // Animation already handled by showFlyingPointToButton
             }
@@ -1995,8 +1965,8 @@ function handleBelongsDecision(userDecision, container, yesBtn, noBtn) {
             updateStopButtonPoints();
             container.classList.add('incorrect-choice');
             
-            // Transform buttons when wrong answer
-            transformButtonsToNextQuestion();
+            // Enable next button and disable stop when wrong answer
+            enableNextButtonAfterMistake();
         }
     } else {
         // Multiplayer logic
@@ -2050,8 +2020,8 @@ function playerStops() {
             transformStopButtonToSecured();
         }
         
-        // Only transform continue button (keep stop button green and visible)
-        transformContinueToNextQuestion();
+        // Enable next button (keep stop button green and visible)
+        enableNextButton();
         
     } else {
         const player = players[currentPlayerIndex];
@@ -2260,10 +2230,9 @@ stopBtn.addEventListener('click', playerStops);
 
 // New decision button event handlers
 stopSide.addEventListener('click', playerStops);
-continueSide.addEventListener('click', () => {
-    // Don't hide the decision button - keep it visible
-    // Just remove the attention animation if it's active
-    decisionButton.classList.remove('attention');
+nextSide.addEventListener('click', () => {
+    currentQuestionIndex++;
+    loadQuestion();
 });
 
 nextQuestionBtn.addEventListener('click', () => {

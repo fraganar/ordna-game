@@ -148,7 +148,7 @@ body {
     }
     
     .decision-button .stop-side,
-    .decision-button .continue-side {
+    .decision-button .next-side {
         padding: 16px 20px;
         gap: 12px;
     }
@@ -284,13 +284,39 @@ body {
     animation: pointsDisappear 0.6s ease-out forwards;
 }
 
-/* Transform continue button to next question */
-.decision-button .continue-side.next-question {
+/* Next question button (replaces continue side) */
+.decision-button .next-side {
+    flex: 1;
+    padding: 20px 28px;
+    border: none;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 16px;
+    font-weight: bold;
+    font-size: 20px;
+    color: white;
+    position: relative;
     background: linear-gradient(135deg, #3b82f6 0%, #2563eb 100%);
 }
 
-.decision-button .continue-side.next-question:hover {
+.decision-button .next-side:hover:not(:disabled) {
     background: linear-gradient(135deg, #2563eb 0%, #1d4ed8 100%);
+    transform: translateX(2px);
+}
+
+/* Disabled state for next button */
+.decision-button .next-side:disabled {
+    background: linear-gradient(135deg, #e5e7eb 0%, #d1d5db 100%);
+    cursor: not-allowed;
+    opacity: 0.7;
+}
+
+.decision-button .next-side:disabled:hover {
+    background: linear-gradient(135deg, #e5e7eb 0%, #d1d5db 100%);
+    transform: none;
 }
 
 /* Large blue next question button for multiplayer */
