@@ -1231,20 +1231,56 @@ function updateStopButtonPoints() {
     }
 }
 
+// Animate points draining away when wrong answer
+function animatePointsDrain(currentPoints) {
+    if (currentPoints <= 0) return;
+    
+    const pointsElement = document.querySelector('#stop-side .decision-points');
+    const stopButton = document.getElementById('stop-side');
+    
+    // Add shake effect to button
+    stopButton.classList.add('button-shake');
+    
+    let remainingPoints = currentPoints;
+    const drainInterval = setInterval(() => {
+        remainingPoints--;
+        
+        // Add color change animation to the points text
+        pointsElement.classList.add('points-draining');
+        
+        // Show remaining points, but keep "0p" when reaching zero
+        if (remainingPoints > 0) {
+            pointsElement.textContent = `+${remainingPoints}p`;
+        } else {
+            pointsElement.textContent = '0p';
+            // Add permanent red color class for final 0p
+            pointsElement.classList.add('points-failed');
+        }
+        
+        // Remove animation class after it completes
+        setTimeout(() => {
+            pointsElement.classList.remove('points-draining');
+        }, 300);
+        
+        if (remainingPoints <= 0) {
+            clearInterval(drainInterval);
+            // Remove shake effect
+            setTimeout(() => {
+                stopButton.classList.remove('button-shake');
+            }, 500);
+        }
+    }, 200); // 200ms between each point decrease
+}
+
 // Enable next button and disable stop button (for wrong answers)
-function enableNextButtonAfterMistake() {
-    // Disable stop button
+function enableNextButtonAfterMistake(pointsToLose = 0) {
+    // Disable stop button FIRST (this makes "Stanna" text gray immediately)
     stopSide.classList.add('disabled');
     stopSide.disabled = true;
     
-    // Animate points disappearing if there are any
-    const pointsText = document.querySelector('#stop-side .decision-points');
-    if (pointsText.textContent) {
-        pointsText.classList.add('disappearing');
-        setTimeout(() => {
-            pointsText.textContent = '';
-            pointsText.classList.remove('disappearing');
-        }, 600);
+    // Then animate points draining if there were any points
+    if (pointsToLose > 0) {
+        animatePointsDrain(pointsToLose);
     }
     
     // Enable next button
@@ -1894,12 +1930,18 @@ function handleOrderClick(button, optionText) {
             }
         } else {
             mistakeMade = true;
-            currentQuestionScore = 0;
-            updateStopButtonPoints();
+            
+            // Store current points before resetting for animation
+            const pointsToLose = currentQuestionScore;
+            
             button.classList.add('incorrect-step');
             
-            // Enable next button and disable stop when wrong answer
-            enableNextButtonAfterMistake();
+            // Enable next button and disable stop when wrong answer (with animation)
+            enableNextButtonAfterMistake(pointsToLose);
+            
+            // Reset score after animation starts
+            currentQuestionScore = 0;
+            // Don't call updateStopButtonPoints here - animation will handle it
         }
     } else {
         // Multiplayer logic
@@ -1998,12 +2040,18 @@ function handleBelongsDecision(userDecision, container, yesBtn, noBtn) {
         } else {
             clickedBtn.classList.add('selected'); 
             mistakeMade = true;
-            currentQuestionScore = 0;
-            updateStopButtonPoints();
+            
+            // Store current points before resetting for animation
+            const pointsToLose = currentQuestionScore;
+            
             container.classList.add('incorrect-choice');
             
-            // Enable next button and disable stop when wrong answer
-            enableNextButtonAfterMistake();
+            // Enable next button and disable stop when wrong answer (with animation)
+            enableNextButtonAfterMistake(pointsToLose);
+            
+            // Reset score after animation starts
+            currentQuestionScore = 0;
+            // Don't call updateStopButtonPoints here - animation will handle it
         }
     } else {
         // Multiplayer logic
