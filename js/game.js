@@ -204,6 +204,8 @@ const showPlayerSetupBtn = document.getElementById('show-player-setup-btn');
 const playerCountSelect = document.getElementById('player-count');
 const playerNamesContainer = document.getElementById('player-names-container');
 const startGameBtn = document.getElementById('start-game-btn');
+
+
 // Player Name Setup Elements
 const playerNameSetup = document.getElementById('player-name-setup');
 const playerNameInput = document.getElementById('player-name-input');
@@ -1022,6 +1024,19 @@ function showGameResultScreen(score, gameType, totalQuestions) {
 
 // --- Functions ---
 
+
+// Wake up the stop button when first point is earned
+function wakeUpStopButton() {
+    const decisionButton = document.getElementById('decision-button');
+    decisionButton.classList.remove('inactive');
+    decisionButton.classList.add('awakening');
+    
+    // Remove awakening class after animation
+    setTimeout(() => {
+        decisionButton.classList.remove('awakening');
+    }, 1000);
+}
+
 // New flying point animation that goes to the stop button
 function showFlyingPointToButton(sourceElement) {
     if (!isSinglePlayer) {
@@ -1085,6 +1100,11 @@ function showFlyingPointToButton(sourceElement) {
             
             // Update button text and add glow
             updateStopButtonPoints();
+            
+            // Wake up button if first point
+            if (currentQuestionScore === 1) {
+                wakeUpStopButton();
+            }
         }
     }
     
@@ -1254,6 +1274,9 @@ function resetDecisionButtons() {
     
     // Reset points display
     updateStopButtonPoints();
+    
+    // Make decision button inactive at start of new question
+    decisionButton.classList.add('inactive');
 }
 
 // Point animation for both single and multiplayer
@@ -2423,6 +2446,7 @@ async function initializeApp() {
         }
     }
 }
+
 
 // Initialize the app
 initializeApp();
