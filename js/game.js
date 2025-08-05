@@ -1311,6 +1311,12 @@ function resetDecisionButtons() {
     // Reset points display
     updateStopButtonPoints();
     
+    // Remove failed class from points to restore green color
+    const pointsElement = document.querySelector('#stop-side .decision-points');
+    if (pointsElement) {
+        pointsElement.classList.remove('points-failed');
+    }
+    
     // Make decision button inactive at start of new question
     decisionButton.classList.add('inactive');
 }
