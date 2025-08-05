@@ -1274,6 +1274,9 @@ function animatePointsDrain(currentPoints) {
 
 // Enable next button and disable stop button (for wrong answers)
 function enableNextButtonAfterMistake(pointsToLose = 0) {
+    // Show correct answers when player makes mistake
+    showCorrectAnswers();
+    
     // Animate points draining if there were any points
     if (pointsToLose > 0) {
         animatePointsDrain(pointsToLose);
@@ -1697,6 +1700,9 @@ function updateGameControls() {
                 stopBtn.classList.add('hidden');
                 decisionButton.classList.remove('hidden');
                 
+                // Reset processing flag when new player gets turn
+                stopSide.dataset.processing = 'false';
+                
                 // Update stop side text with player name
                 const pointsText = document.querySelector('#stop-side .decision-points');
                 pointsText.textContent = `${player.name} +${player.roundPot}p`;
@@ -1724,9 +1730,13 @@ function loadQuestion() {
     mistakeMade = false;
     currentQuestionScore = 0;
     
+    
     // Reset decision buttons for new question
     if (isSinglePlayer) {
         resetDecisionButtons();
+    } else {
+        // Reset processing flag for multiplayer too
+        stopSide.dataset.processing = 'false';
     }
     
     if (!isSinglePlayer) {
@@ -1839,6 +1849,9 @@ function concludeQuestionRound() {
     
     updateScoreboard();
     updateGameControls();
+
+    // Show correct answers when question round concludes
+    showCorrectAnswers();
 
     const question = questionsToPlay[currentQuestionIndex];
     if (question.typ === 'ordna') {
@@ -2020,6 +2033,7 @@ function handleBelongsDecision(userDecision, container, yesBtn, noBtn) {
             clickedBtn.classList.add('correct-selection');
             
             if (allDecided) {
+                console.log('=== ALL DECIDED - SINGLEPLAYER HÖR TILL ===');
                 // All options decided - automatically secure points like "Ordna" questions
                 // Prevent multiple triggers
                 if (stopSide.dataset.processing === 'true') return;
@@ -2043,6 +2057,10 @@ function handleBelongsDecision(userDecision, container, yesBtn, noBtn) {
                     totalScore += currentQuestionScore;
                     updateSinglePlayerDisplay();
                 }
+                
+                // Show correct answers when question is completed
+                console.log('=== CALLING showCorrectAnswers() FROM SINGLEPLAYER COMPLETION ===');
+                showCorrectAnswers();
                 
                 // Enable next button
                 enableNextButton();
@@ -2117,6 +2135,9 @@ function playerStops() {
             transformStopButtonToSecured();
         }
         
+        // Show correct answers when player stops
+        showCorrectAnswers();
+        
         // Enable next button (keep stop button green and visible)
         enableNextButton();
         
@@ -2161,6 +2182,38 @@ function feedbackBelongsTo() {
         }
     });
 }
+
+function showCorrectAnswers() {
+    const question = questionsToPlay[currentQuestionIndex];
+    
+    if (question.typ === 'ordna') {
+        // Show correct order for all buttons
+        const buttons = optionsGrid.querySelectorAll('.option-btn');
+        
+        buttons.forEach((button) => {
+            const optionText = button.textContent;
+            const correctIndex = question.rätt_ordning.indexOf(optionText);
+            
+            // If not already shown as correct (green)
+            if (!button.classList.contains('correct-step') && correctIndex !== -1) {
+                // Show order number using same format as correct answers, but WITHOUT green background
+                button.innerHTML = `<span class="inline-flex items-center justify-center w-6 h-6 mr-3 bg-white text-green-600 rounded-full font-bold">${correctIndex + 1}</span> ${optionText}`;
+            }
+        });
+    } else if (question.typ === 'hör_till') {
+        // Run existing feedbackBelongsTo() which already handles this
+        feedbackBelongsTo();
+        
+        // Mark unanswered options
+        const containers = optionsGrid.querySelectorAll('.belongs-option-container');
+        containers.forEach(container => {
+            if (!container.dataset.decided || container.dataset.decided !== 'true') {
+                container.classList.add('unanswered-highlight');
+            }
+        });
+    }
+}
+
 
 function endGame() {
     gameScreen.classList.add('hidden');
