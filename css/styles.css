@@ -632,8 +632,24 @@ body {
 
 @keyframes buttonShake {
     0%, 100% { transform: translateX(0); }
-    25% { transform: translateX(-3px); }
-    75% { transform: translateX(3px); }
+    10% { transform: translateX(-5px); }
+    30% { transform: translateX(5px); }
+    50% { transform: translateX(-3px); }
+    70% { transform: translateX(3px); }
+    90% { transform: translateX(-1px); }
+}
+
+/* Dark pulse effect for wrong answer */
+@keyframes darkPulse {
+    0% {
+        box-shadow: 0 0 0 0 rgba(220, 38, 38, 0.7);
+    }
+    50% {
+        box-shadow: 0 0 30px 10px rgba(220, 38, 38, 0.3);
+    }
+    100% {
+        box-shadow: 0 0 0 0 rgba(220, 38, 38, 0);
+    }
 }
 
 .points-draining {
@@ -646,7 +662,11 @@ body {
 }
 
 .button-shake {
-    animation: buttonShake 0.5s ease-out;
+    animation: buttonShake 0.6s ease-out;
+}
+
+.button-dark-pulse {
+    animation: darkPulse 1.5s ease-out;
 }
 
 

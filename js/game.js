@@ -1238,8 +1238,8 @@ function animatePointsDrain(currentPoints) {
     const pointsElement = document.querySelector('#stop-side .decision-points');
     const stopButton = document.getElementById('stop-side');
     
-    // Add shake effect to button
-    stopButton.classList.add('button-shake');
+    // Add shake and dark pulse effects to button
+    stopButton.classList.add('button-shake', 'button-dark-pulse');
     
     let remainingPoints = currentPoints;
     const drainInterval = setInterval(() => {
@@ -1264,23 +1264,29 @@ function animatePointsDrain(currentPoints) {
         
         if (remainingPoints <= 0) {
             clearInterval(drainInterval);
-            // Remove shake effect
+            // Remove shake and pulse effects after animations complete
             setTimeout(() => {
-                stopButton.classList.remove('button-shake');
-            }, 500);
+                stopButton.classList.remove('button-shake', 'button-dark-pulse');
+            }, 1500); // Wait for longest animation to complete
         }
-    }, 200); // 200ms between each point decrease
+    }, 400); // 400ms between each point decrease - slower for better visibility
 }
 
 // Enable next button and disable stop button (for wrong answers)
 function enableNextButtonAfterMistake(pointsToLose = 0) {
-    // Disable stop button FIRST (this makes "Stanna" text gray immediately)
-    stopSide.classList.add('disabled');
-    stopSide.disabled = true;
-    
-    // Then animate points draining if there were any points
+    // Animate points draining if there were any points
     if (pointsToLose > 0) {
         animatePointsDrain(pointsToLose);
+        // Disable stop button AFTER animation starts
+        // This way button stays normal during countdown
+        setTimeout(() => {
+            stopSide.classList.add('disabled');
+            stopSide.disabled = true;
+        }, pointsToLose * 400 + 300); // Wait for countdown to finish
+    } else {
+        // If no points to lose, disable immediately
+        stopSide.classList.add('disabled');
+        stopSide.disabled = true;
     }
     
     // Enable next button
