@@ -2208,7 +2208,7 @@ function showCorrectAnswers() {
         const containers = optionsGrid.querySelectorAll('.belongs-option-container');
         containers.forEach(container => {
             if (!container.dataset.decided || container.dataset.decided !== 'true') {
-                container.classList.add('unanswered-highlight');
+                // Could add visual feedback for unanswered options here if needed
             }
         });
     }
