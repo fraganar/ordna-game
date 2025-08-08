@@ -372,8 +372,8 @@ async function createChallenge() {
             name: currentPlayer.name,
             score: 0,
             roundPot: 0,
-            eliminatedInRound: false,
-            eliminationReason: null
+            completedRound: false,
+            completionReason: null
         }];
         isSinglePlayer = true;
         totalScore = 0;
@@ -901,8 +901,8 @@ async function startChallengeGame() {
             name: currentPlayer.name,
             score: 0,
             roundPot: 0,
-            eliminatedInRound: false,
-            eliminationReason: null
+            completedRound: false,
+            completionReason: null
         }];
         isSinglePlayer = true;
         totalScore = 0;
@@ -1569,8 +1569,8 @@ async function initializeGame() {
             name: 'Spelare 1',
             score: 0,
             roundPot: 0,
-            eliminatedInRound: false,
-            eliminationReason: null
+            completedRound: false,
+            completionReason: null
         });
         isSinglePlayer = true;
         totalScore = 0;
@@ -1581,8 +1581,8 @@ async function initializeGame() {
                 name: input.value || `Spelare ${index + 1}`,
                 score: 0,
                 roundPot: 0,
-                eliminatedInRound: false,
-                eliminationReason: null
+                completedRound: false,
+                completionReason: null
             });
         });
         isSinglePlayer = false;
@@ -1637,25 +1637,25 @@ function updateScoreboard() {
         card.className = 'player-score-card p-3 border-2 rounded-lg flex flex-col justify-between min-h-[60px]';
         
         let turnIndicatorHTML = '';
-        if (player.eliminatedInRound) {
-            card.classList.add('eliminated');
+        if (player.completedRound) {
+            card.classList.add('completed');
         } else if (index === currentPlayerIndex) {
             card.classList.add('active-player');
             turnIndicatorHTML = `<div class="absolute -top-3 left-1/2 -translate-x-1/2 bg-blue-600 text-white text-xs font-bold px-2 py-0.5 rounded-full shadow-md">Din tur!</div>`;
         }
 
         let statusText = '';
-        if (player.eliminationReason === 'stopped') {
+        if (player.completionReason === 'stopped') {
             statusText = ' (Stannat)';
-        } else if (player.eliminationReason === 'wrong') {
+        } else if (player.completionReason === 'wrong') {
             statusText = ' (Fel)';
         }
 
         let roundPotHTML = '';
-        if (player.roundPot > 0 && !player.eliminatedInRound) {
+        if (player.roundPot > 0 && !player.completedRound) {
             roundPotHTML = `<span class="font-semibold text-green-600 ml-2">+${player.roundPot}</span>`;
         } 
-        else if (player.eliminationReason === 'wrong') {
+        else if (player.completionReason === 'wrong') {
             roundPotHTML = `<span class="font-semibold text-red-600 ml-2">+0</span>`;
         }
 
@@ -1683,7 +1683,7 @@ function updateGameControls() {
         updateStopButtonPoints();
     } else {
         const player = players[currentPlayerIndex];
-        const activePlayers = players.filter(p => !p.eliminatedInRound);
+        const activePlayers = players.filter(p => !p.completedRound);
 
         if (activePlayers.length === 0) {
             // Hide decision button and old stop button
@@ -1695,7 +1695,7 @@ function updateGameControls() {
         } else {
             nextQuestionBtn.classList.add('hidden');
             largeNextQuestionBtn.classList.add('hidden');
-            if (player && player.roundPot > 0 && !player.eliminatedInRound) {
+            if (player && player.roundPot > 0 && !player.completedRound) {
                 // Use new decision button for multiplayer too
                 stopBtn.classList.add('hidden');
                 decisionButton.classList.remove('hidden');
@@ -1742,8 +1742,8 @@ function loadQuestion() {
     if (!isSinglePlayer) {
         players.forEach(p => {
             p.roundPot = 0;
-            p.eliminatedInRound = false;
-            p.eliminationReason = null;
+            p.completedRound = false;
+            p.completionReason = null;
         });
     }
     
@@ -1817,14 +1817,14 @@ function setAllOptionsDisabled(disabled) {
 }
 
 function nextTurn() {
-    const activePlayers = players.filter(p => !p.eliminatedInRound);
+    const activePlayers = players.filter(p => !p.completedRound);
     if (activePlayers.length === 0) {
         concludeQuestionRound();
         return;
     }
 
     let nextIndex = (currentPlayerIndex + 1) % players.length;
-    while(players[nextIndex].eliminatedInRound) {
+    while(players[nextIndex].completedRound) {
         nextIndex = (nextIndex + 1) % players.length;
     }
     currentPlayerIndex = nextIndex;
@@ -1836,11 +1836,11 @@ function nextTurn() {
 
 function concludeQuestionRound() {
     players.forEach(player => {
-        if (!player.eliminatedInRound) {
+        if (!player.completedRound) {
             player.score += player.roundPot;
             player.roundPot = 0;
-            player.eliminatedInRound = true; 
-            player.eliminationReason = 'finished';
+            player.completedRound = true; 
+            player.completionReason = 'finished';
         }
     });
 
@@ -1989,8 +1989,8 @@ function handleOrderClick(button, optionText) {
             }
         } else {
             players[currentPlayerIndex].roundPot = 0;
-            players[currentPlayerIndex].eliminatedInRound = true;
-            players[currentPlayerIndex].eliminationReason = 'wrong';
+            players[currentPlayerIndex].completedRound = true;
+            players[currentPlayerIndex].completionReason = 'wrong';
             button.classList.add('incorrect-step');
             updateScoreboard();
             
@@ -2095,8 +2095,8 @@ function handleBelongsDecision(userDecision, container, yesBtn, noBtn) {
             clickedBtn.classList.add('correct-selection');
         } else {
             players[currentPlayerIndex].roundPot = 0;
-            players[currentPlayerIndex].eliminatedInRound = true;
-            players[currentPlayerIndex].eliminationReason = 'wrong';
+            players[currentPlayerIndex].completedRound = true;
+            players[currentPlayerIndex].completionReason = 'wrong';
             container.classList.add('incorrect-choice');
         }
         updateScoreboard();
@@ -2148,8 +2148,8 @@ function playerStops() {
         }
         player.score += player.roundPot;
         player.roundPot = 0;
-        player.eliminatedInRound = true;
-        player.eliminationReason = 'stopped';
+        player.completedRound = true;
+        player.completionReason = 'stopped';
         updateScoreboard();
         nextTurn();
     }
