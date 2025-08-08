@@ -206,8 +206,20 @@
                 <div id="progress-bar" class="bg-blue-600 h-2.5 rounded-full" style="width: 0%"></div>
             </div>
             
-            <!-- Multiplayer Scoreboard -->
-            <div id="scoreboard" class="grid grid-cols-2 sm:grid-cols-3 gap-2 mb-6 mt-4">
+            <!-- Unified Player Status Bar (for both single and multiplayer) -->
+            <div id="player-status-bar" class="hidden bg-slate-50 border border-slate-200 rounded-lg px-4 py-3 mb-4">
+                <div class="flex justify-between items-center">
+                    <div id="active-player-display" class="font-semibold text-slate-800">
+                        <!-- Will show "Anna spelar" or just "Totalpoäng: X" for single player -->
+                    </div>
+                    <div id="mini-scores" class="text-sm text-slate-600">
+                        <!-- Will show compact scores for multiplayer: "Anna: 12 • Bob: 8" -->
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Multiplayer Scoreboard (OLD - will be hidden/removed) -->
+            <div id="scoreboard" class="hidden grid grid-cols-2 sm:grid-cols-3 gap-2 mb-6 mt-4">
                 <!-- Player score cards will be inserted here -->
             </div>
 
