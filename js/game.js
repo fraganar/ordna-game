@@ -2113,6 +2113,12 @@ function handleBelongsDecision(userDecision, container, yesBtn, noBtn) {
 }
 
 function playerStops() {
+    // Check if button is disabled or there are no points to secure
+    if (stopSide.disabled || stopSide.classList.contains('disabled')) return;
+    
+    if (isSinglePlayer && currentQuestionScore === 0) return;
+    if (!isSinglePlayer && players[currentPlayerIndex].roundPot === 0) return;
+    
     // Prevent double-clicks by checking if already processing
     if (stopSide.dataset.processing === 'true') return;
     stopSide.dataset.processing = 'true';
