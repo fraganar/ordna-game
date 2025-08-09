@@ -125,6 +125,13 @@ const questionPacks = [
         price: "GRATIS"
     },
     { 
+        name: "Blandat 2", 
+        description: "Popkultur, sociala medier, svenska fenomen och internetkultur", 
+        status: "available", 
+        file: "questions-blandat2.json",
+        price: "GRATIS"
+    },
+    { 
         name: "Nörden", 
         description: "För dig som kan din superhjälte och din C++.", 
         status: "coming-soon", 

@@ -1,0 +1,217 @@
+{
+  "name": "Blandat 2",
+  "description": "Popkultur, sociala medier, svenska fenomen och internetkultur",
+  "questions": [
+    {
+      "typ": "ordna",
+      "svårighetsgrad": "medel",
+      "fråga": "Ordna dessa svenska låtar efter antal veckor som etta på Svensktoppen, från färst till flest.",
+      "alternativ": [
+        "Sommaren är kort - Tomas Ledin",
+        "Öppna landskap - Ulf Lundell",
+        "Stad i ljus - Tommy Körberg",
+        "Ängeln i rummet - Eva Dahlgren"
+      ],
+      "rätt_ordning": [
+        "Ängeln i rummet",
+        "Öppna landskap",
+        "Stad i ljus",
+        "Sommaren är kort"
+      ],
+      "förklaring": "Ängeln i rummet (3 veckor), Öppna landskap (8 veckor), Stad i ljus (10 veckor), Sommaren är kort (12 veckor som etta 1982)"
+    },
+    {
+      "typ": "ordna",
+      "svårighetsgrad": "lätt",
+      "fråga": "Ordna dessa kändisskandaler efter när de inträffade, från tidigast till senast.",
+      "alternativ": [
+        "Will Smith-smällen på Oscarsgalan",
+        "Janet Jacksons 'garderobsfel' på Super Bowl",
+        "Kanye West avbryter Taylor Swift",
+        "Britney Spears rakar av sig håret"
+      ],
+      "rätt_ordning": [
+        "Janet Jacksons 'garderobsfel' på Super Bowl",
+        "Britney Spears rakar av sig håret",
+        "Kanye West avbryter Taylor Swift",
+        "Will Smith-smällen på Oscarsgalan"
+      ],
+      "förklaring": "Super Bowl (2004), Britney (2007), Kanye/Taylor (2009 VMAs), Will Smith (2022)"
+    },
+    {
+      "typ": "ordna",
+      "svårighetsgrad": "svår",
+      "fråga": "Ordna dessa kultförklarade TV-serier efter antal säsonger, från färst till flest.",
+      "alternativ": [
+        "Friends",
+        "Seinfeld",
+        "Twin Peaks",
+        "Vänner"
+      ],
+      "rätt_ordning": [
+        "Twin Peaks",
+        "Seinfeld",
+        "Friends",
+        "Vänner"
+      ],
+      "förklaring": "Twin Peaks (3 säsonger), Seinfeld (9 säsonger), Friends (10 säsonger), Vänner (10 säsonger originalserie + 12 nya)"
+    },
+    {
+      "typ": "ordna",
+      "svårighetsgrad": "medel",
+      "fråga": "Ordna dessa klassiska romaner efter antal ord i originaltiteln, från färst till flest.",
+      "alternativ": [
+        "1984",
+        "Stolthet och fördom",
+        "Frankenstein",
+        "Den store Gatsby"
+      ],
+      "rätt_ordning": [
+        "1984",
+        "Frankenstein",
+        "Den store Gatsby",
+        "Stolthet och fördom"
+      ],
+      "förklaring": "1984 (1 ord), Frankenstein (1 ord), The Great Gatsby (3 ord), Pride and Prejudice (3 ord - men svenska titeln har 3 ord)"
+    },
+    {
+      "typ": "ordna",
+      "svårighetsgrad": "lätt",
+      "fråga": "Ordna dessa ikoniska filmrepliker efter hur många ord de innehåller, från färst till flest.",
+      "alternativ": [
+        "May the Force be with you",
+        "I'll be back",
+        "Rosebud",
+        "Here's looking at you, kid"
+      ],
+      "rätt_ordning": [
+        "Rosebud",
+        "I'll be back",
+        "Here's looking at you, kid",
+        "May the Force be with you"
+      ],
+      "förklaring": "Rosebud (1 ord), I'll be back (3 ord), Here's looking at you, kid (5 ord), May the Force be with you (6 ord)"
+    },
+    {
+      "typ": "ordna",
+      "svårighetsgrad": "medel",
+      "fråga": "Ordna dessa sociala medier-plattformar efter när de lanserades för allmänheten, från tidigast till senast.",
+      "alternativ": [
+        "Instagram",
+        "Facebook",
+        "TikTok",
+        "Twitter"
+      ],
+      "rätt_ordning": [
+        "Facebook",
+        "Twitter",
+        "Instagram",
+        "TikTok"
+      ],
+      "förklaring": "Facebook (2004), Twitter (2006), Instagram (2010), TikTok (2016 internationellt)"
+    },
+    {
+      "typ": "hör_till",
+      "svårighetsgrad": "lätt",
+      "fråga": "Vilka av följande har spelat James Bond på film?",
+      "kategori": "Hör till: James Bond-skådespelare",
+      "alternativ": [
+        "Pierce Brosnan",
+        "Hugh Grant",
+        "Daniel Craig",
+        "Colin Firth"
+      ],
+      "tillhör_index": [
+        0,
+        2
+      ],
+      "förklaring": "Pierce Brosnan (1995-2002) och Daniel Craig (2006-2021) har spelat Bond. Hugh Grant och Colin Firth har aldrig spelat 007."
+    },
+    {
+      "typ": "hör_till",
+      "svårighetsgrad": "medel",
+      "fråga": "Vilka av följande är sanna påståenden om IKEA?",
+      "kategori": "Hör till: sanna påståenden om IKEA",
+      "alternativ": [
+        "Grundades i Älmhult",
+        "Första varuhuset öppnade i Stockholm",
+        "Produktnamnen är ofta svenska",
+        "Ägs fortfarande av familjen Kamprad"
+      ],
+      "tillhör_index": [
+        0,
+        2
+      ],
+      "förklaring": "Sant: Grundades i Älmhult (1943), produkter har svenska namn. Falskt: Första varuhuset i Älmhult (inte Stockholm), ägs av stiftelser i Nederländerna."
+    },
+    {
+      "typ": "hör_till",
+      "svårighetsgrad": "svår",
+      "fråga": "Vilka av följande artister/band har INTE vunnit Melodifestivalen?",
+      "kategori": "Hör INTE till: Melodifestivalvinnare",
+      "alternativ": [
+        "Veronica Maggio",
+        "Carola",
+        "Kent",
+        "Måns Zelmerlöw"
+      ],
+      "tillhör_index": [
+        0,
+        2
+      ],
+      "förklaring": "Veronica Maggio och Kent har aldrig vunnit. Carola vann 1983, 1991, 2006. Måns Zelmerlöw vann 2015."
+    },
+    {
+      "typ": "hör_till",
+      "svårighetsgrad": "lätt",
+      "fråga": "Vilka av följande fenomen blev virala memes på internet?",
+      "kategori": "Hör till: virala internetmemes",
+      "alternativ": [
+        "Harlem Shake",
+        "Macarena",
+        "Ice Bucket Challenge",
+        "Twist"
+      ],
+      "tillhör_index": [
+        0,
+        2
+      ],
+      "förklaring": "Harlem Shake (2013) och Ice Bucket Challenge (2014) var internetfenomen. Macarena (1990-tal) och Twist (1960-tal) var dansflugor före interneteran."
+    },
+    {
+      "typ": "hör_till",
+      "svårighetsgrad": "medel",
+      "fråga": "Vilka av följande påståenden om det svenska språket är sanna?",
+      "kategori": "Hör till: sanna påståenden om svenska språket",
+      "alternativ": [
+        "Har tre extra bokstäver: å, ä, ö",
+        "Talas av cirka 10 miljoner människor",
+        "Har ingen böjning av adjektiv",
+        "Använder pitch accent"
+      ],
+      "tillhör_index": [
+        0,
+        1,
+        3
+      ],
+      "förklaring": "Sant: Å, ä, ö finns i alfabetet, cirka 10 miljoner talare, använder tonaccent. Falskt: Adjektiv böjs (en stor bil, ett stort hus)."
+    },
+    {
+      "typ": "hör_till",
+      "svårighetsgrad": "medel",
+      "fråga": "Vilka av följande kändisar har varit tillsammans med en svensk?",
+      "kategori": "Hör till: haft svensk partner",
+      "alternativ": [
+        "Tiger Woods",
+        "Leonardo DiCaprio",
+        "Madonna",
+        "George Clooney"
+      ],
+      "tillhör_index": [
+        0,
+        2
+      ],
+      "förklaring": "Tiger Woods var gift med Elin Nordegren, Madonna datade Jesus Luz (ej svensk) men var med Jean-Paul Gaultier. DiCaprio och Clooney har inte haft kända svenska partners."
+    }
+  ]
+}
