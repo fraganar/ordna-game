@@ -118,6 +118,13 @@ const questionPacks = [
         price: "GRATIS"
     },
     { 
+        name: "Blandat 1", 
+        description: "Varierade frågor om geografi, historia, teknik och allmänbildning", 
+        status: "available", 
+        file: "questions-blandat1.json",
+        price: "GRATIS"
+    },
+    { 
         name: "Nörden", 
         description: "För dig som kan din superhjälte och din C++.", 
         status: "coming-soon", 
