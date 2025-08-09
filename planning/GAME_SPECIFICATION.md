@@ -291,10 +291,14 @@ Scenario: Du har 2 poäng, nästa spelare har 0 säkrat
 - Fortsätt: Risk -2, men nästa spelare får svårare utgångsläge
 - Strategisk dimension: Förhindra andra från att bygga stora pottar
 
-Speciellt scenario: Sist kvar
-- Om alla andra är klara får du din pott automatiskt
-- Detta skapar incitament att "överleva" snarare än maximera poäng
-- En spelare med 1 poäng som överlever får den säkrad!
+Auto-säkring scenarios:
+1. Alla alternativ besvarade: Alla aktiva spelare får sina pottar säkrade
+2. Sist kvar: Om du är enda aktiva spelaren får du automatisk säkring
+3. Detta skapar incitament att "överleva" snarare än maximera poäng
+4. En spelare med 1 poäng som överlever får den säkrad!
+
+Viktigt: Auto-säkring gäller ALLA aktiva spelare samtidigt när villkoren uppnås,
+        inte bara den spelare som svarade sist.
 ```
 
 ### Psykologiska Aspekter
@@ -521,6 +525,9 @@ Lycka till! 🎯"
 
 ### Game State Management
 
+#### Unified Architecture (Refactored 2025-08-08)
+Efter omfattande refaktorering använder spelet nu en "unified architecture" där single-player behandlas som multiplayer med 1 spelare. Detta eliminerar kod-duplikation och säkerställer konsistent beteende mellan spellägen.
+
 #### Global Variables (Current Architecture)
 ```javascript
 // Core game state
@@ -528,13 +535,8 @@ let questionsToPlay = [];       // Frågor för aktuellt spel
 let currentQuestionIndex = 0;   // Vilken fråga som visas
 let userOrder = [];            // Spelares klick-ordning (ordna-frågor)
 
-// Single player state  
-let totalScore = 0;            // Säkrade poäng
-let currentQuestionScore = 0;  // Pott under aktuell fråga
-let mistakeMade = false;       // Fel svar gjort
-
-// Multiplayer state
-let players = [];              // Array med spelarobjekt
+// Unified player state (både single och multiplayer)
+let players = [];              // Array med spelarobjekt (1 för single, 2-6 för multi)
 let currentPlayerIndex = 0;    // Aktiv spelare (0-5)
 let questionStarterIndex = 0;  // Vem börjar nästa fråga
 
@@ -543,8 +545,40 @@ let ischallengeMode = false;   // Challenge-läge aktivt
 let challengeQuestions = [];   // 5 fasta frågor för challenge
 let challengeQuestionScores = []; // Poäng per fråga i challenge
 
-// UI state  
-let isSinglePlayer = false;    // Spelläge-flagga
+// Legacy variables (phase-out planned)
+let totalScore = 0;            // Används endast för bakåtkompatibilitet
+let currentQuestionScore = 0;  // Använd players[0].roundPot istället
+let mistakeMade = false;       // Ersatt av player.completedRound
+let isSinglePlayer = false;    // Ersatt av isSinglePlayerMode()
+```
+
+#### Helper Functions (New)
+```javascript
+// Introduced during 2025-08-08 refactoring for better code clarity
+function isSinglePlayerMode() {
+    return players.length === 1;
+}
+
+function isPlayerActive(player) {
+    return !player.completedRound && player.completionReason === null;
+}
+
+function hasActivePlayersInRound() {
+    return players.some(player => isPlayerActive(player));
+}
+
+// Centralized control flow
+function isQuestionCompleted() {
+    // Question is complete when no active players remain OR all options answered
+    return !hasActivePlayersInRound() || isCurrentQuestionFullyAnswered();
+}
+
+function checkAndHandleQuestionCompletion() {
+    if (isQuestionCompleted()) {
+        showCorrectAnswers();
+        updateGameControls();
+    }
+}
 ```
 
 ### Question Loading Pipeline
@@ -687,11 +721,13 @@ function concludeQuestionRound() {
 - **Multiple Languages:** Internationalisering
 
 ### Tekniska Förbättringar
-- **TypeScript Migration:** Bättre type safety
+- **Legacy Code Cleanup:** Eliminera kvarvarande globala variabler från pre-refactoring
+- **TypeScript Migration:** Bätter type safety och dokumentation
 - **Component Architecture:** Modularisera UI-komponenter  
 - **State Management:** Redux eller liknande för komplex state
 - **Testing Framework:** Automated testing av spellogik
 - **Performance Optimization:** Lazy loading, caching, etc.
+- **Code Documentation:** JSDoc för alla functions och state objects
 
 ---
 
@@ -706,7 +742,13 @@ function concludeQuestionRound() {
 - **Skalbarhet:** Enkelt att lägga till nya frågor och features
 
 ### Teknisk Mognad
-Spelet har en solid grund med fungerande single player, multiplayer och challenge-system. Den nuvarande koden fungerar men kan förbättras avseende struktur och konsistens mellan spellägen.
+**Status efter 2025-08-08 refactoring:**
+Spelet har genomgått omfattande refaktorering med implementering av unified architecture. Koden är nu betydligt mer konsistent mellan spellägen med eliminerad duplikation och förbättrad underhållbarhet. Helper-funktioner och centraliserad kontrollflöde gör koden lättare att förstå och vidareutveckla.
+
+**Kvarvarande teknisk skuld:**
+- Några legacy globala variabler finns kvar för bakåtkompatibilitet
+- Button state management kan förenkling ytterligare
+- Testing framework saknas fortfarande
 
 ### Utvecklingspotential  
 Med rätt refaktorering och fortsatt utveckling kan detta bli ett riktigt starkt quiz-spel som står sig mot kommersiella alternativ. Fokus bör ligga på att behålla kärnmekanikens elegans medan teknisk kvalitet och användarupplevelse förbättras.
@@ -717,6 +759,16 @@ Med rätt refaktorering och fortsatt utveckling kan detta bli ett riktigt starkt
 
 ---
 
-**Senast uppdaterad:** 2025-08-05  
-**Version:** 1.0  
-**Status:** Komplett specifikation baserad på kodanalys
+## Versionshistorik
+
+**Version 1.1** - 2025-08-08
+- Uppdaterad efter omfattande refaktorering
+- Tillagt unified architecture-dokumentation
+- Förtydligad auto-säkring mekanik
+- Dokumenterat nya helper-funktioner
+- Uppdaterat teknisk mognadsbedömning
+
+**Version 1.0** - 2025-08-05  
+- Initial komplett specifikation baserad på kodanalys
+
+**Status:** Aktuell specifikation som speglar refactoread implementation
