@@ -2389,11 +2389,11 @@ function showExplanation(explanationText) {
     if (!explanationDiv) {
         explanationDiv = document.createElement('div');
         explanationDiv.id = 'explanation-div';
-        explanationDiv.className = 'mt-4 p-4 bg-blue-50 border border-blue-200 rounded-lg text-sm text-blue-800 max-w-2xl mx-auto';
+        explanationDiv.className = 'p-4 bg-blue-50 border border-blue-200 rounded-lg text-sm text-blue-800 max-w-2xl mx-auto';
         
-        // Insert before the controls box
+        // Insert after the controls box
         const footerArea = document.getElementById('footer-area');
-        footerArea.insertBefore(explanationDiv, footerArea.firstChild);
+        footerArea.appendChild(explanationDiv);
     }
     
     explanationDiv.innerHTML = `
