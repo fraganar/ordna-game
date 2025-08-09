@@ -125,6 +125,13 @@ const questionPacks = [
         price: "GRATIS"
     },
     { 
+        name: "Blandat B", 
+        description: "Kuriosa, populärkultur och litteratur genom tiderna", 
+        status: "available", 
+        file: "questions-blandat-b.json",
+        price: "GRATIS"
+    },
+    { 
         name: "Nörden", 
         description: "För dig som kan din superhjälte och din C++.", 
         status: "coming-soon", 

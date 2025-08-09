@@ -1,0 +1,198 @@
+{
+  "name": "Blandat B",
+  "description": "Kuriosa, populärkultur och litteratur genom tiderna",
+  "questions": [
+    {
+      "typ": "hör_till",
+      "svårighetsgrad": "medel",
+      "fråga": "Vilket av följande påståenden om filmregissören Alfred Hitchcock är sant?",
+      "kategori": "Hör till: sanna påståenden om Alfred Hitchcock",
+      "alternativ": [
+        "Han hade panisk skräck för ägg och undvek dem hela livet.",
+        "Han vägrade använda telefon och kommunicerade enbart via brev.",
+        "Han utförde personligen alla sina egna stunttrick i sina filmer.",
+        "Han var vegetarian och svimmade om han såg rått kött."
+      ],
+      "tillhör_index": [0],
+      "förklaring": "Hitchcock hade panisk skräck för ägg (ovofobi) och berättade själv att han aldrig smakat ett. Övriga påståenden är påhittade."
+    },
+    {
+      "typ": "hör_till",
+      "svårighetsgrad": "svår",
+      "fråga": "Vilket av följande påståenden om författaren Mary Shelley är sant?",
+      "kategori": "Hör till: sanna påståenden om Mary Shelley",
+      "alternativ": [
+        "Hon sparade sin döde makes hjärta i sitt skrivbord under flera år.",
+        "Hon skrev under pseudonym en aldrig utgiven uppföljare till 'Frankenstein'.",
+        "Hon var i hemlighet förlovad med poeten Lord Byron en tid.",
+        "Hon uppfann en tidig prototyp till kameran som hon beskrev i dagböcker."
+      ],
+      "tillhör_index": [0],
+      "förklaring": "Efter Percy Shelleys död bevarade Mary Shelley hans förhärdade hjärta inlindat i siden i sitt skrivbord. Övriga alternativ är falska."
+    },
+    {
+      "typ": "hör_till",
+      "svårighetsgrad": "medel",
+      "fråga": "Vilket av följande är sant om skådespelaren Sir Christopher Lee?",
+      "kategori": "Hör till: sanna påståenden om Sir Christopher Lee",
+      "alternativ": [
+        "Han släppte ett heavy metal-album vid 90 års ålder.",
+        "Han tackade nej till att bli adlad av drottningen.",
+        "Han vann en Oscar för bästa manliga huvudroll i början av 2000-talet.",
+        "Han pratade endast italienska i privatlivet, trots sin filmkarriär."
+      ],
+      "tillhör_index": [0],
+      "förklaring": "Lee gav ut metal-album, bland annat 'Charlemagne: The Omens of Death', runt sin 90-årsdag. Övriga påståenden är falska."
+    },
+    {
+      "typ": "hör_till",
+      "svårighetsgrad": "lätt",
+      "fråga": "Vilket av följande påståenden om pyramider är sant?",
+      "kategori": "Hör till: sanna påståenden om pyramider",
+      "alternativ": [
+        "Landet Sudan har fler pyramider än Egypten.",
+        "Inkaimperiets pyramider i Peru byggdes före pyramiderna i Egypten.",
+        "Det finns över 100 pyramider dolda under isen i Antarktis.",
+        "Det har inte hittats några pyramider alls i Kina."
+      ],
+      "tillhör_index": [0],
+      "förklaring": "Sudan har cirka 250 kända pyramider, fler än Egypten som har omkring 118. Övriga påståenden är felaktiga."
+    },
+    {
+      "typ": "hör_till",
+      "svårighetsgrad": "lätt",
+      "fråga": "Vilka av följande påståenden om OS är sanna?",
+      "kategori": "Hör till: sanna påståenden om de Olympiska spelen",
+      "alternativ": [
+        "OS-ringen med blå färg representerar Europa.",
+        "Olympiska elden tänds i Grekland inför varje OS.",
+        "De första moderna olympiska spelen hölls 1896.",
+        "OS har alltid hållits vart fjärde år utan avbrott."
+      ],
+      "tillhör_index": [0, 1, 2],
+      "förklaring": "Blå ring = Europa, elden tänds i Olympia i Grekland, första moderna OS hölls 1896. OS har ställts in under världskrigen, så påstående 4 är falskt."
+    },
+    {
+      "typ": "hör_till",
+      "svårighetsgrad": "medel",
+      "fråga": "Vilka av följande påståenden om Shakespeare är sanna?",
+      "kategori": "Hör till: sanna påståenden om William Shakespeare",
+      "alternativ": [
+        "Han skrev 154 sonetter.",
+        "Hans pjäser översattes till svenska redan på 1600-talet.",
+        "Han gifte sig vid 18 års ålder.",
+        "Han var både skådespelare och pjäsförfattare."
+      ],
+      "tillhör_index": [0, 3],
+      "förklaring": "Shakespeare skrev 154 sonetter, och han var både skådespelare och dramatiker. Han gifte sig vid 18 år är fel (han var 18 när han blev fader, men 18-årsmyten bygger på missförstånd). Svenska översättningar kom först på 1700-talet."
+    },
+    {
+      "typ": "ordna",
+      "svårighetsgrad": "medel",
+      "fråga": "Ordna följande populärkulturella fenomen efter lanseringsår, från äldst till nyast.",
+      "alternativ": [
+        "Den första Star Wars-filmen",
+        "Barbiedockan",
+        "Den första iPhone-modellen",
+        "Den första James Bond-filmen"
+      ],
+      "rätt_ordning": [
+        "Barbiedockan",
+        "Den första James Bond-filmen",
+        "Den första Star Wars-filmen",
+        "Den första iPhone-modellen"
+      ],
+      "förklaring": "Barbie lanserades 1959, första Bond-film (Dr. No) 1962, Star Wars 1977, iPhone 2007."
+    },
+    {
+      "typ": "ordna",
+      "svårighetsgrad": "lätt",
+      "fråga": "Ordna dessa fiktiva karaktärer efter året de först introducerades, från äldst till nyast.",
+      "alternativ": [
+        "Batman",
+        "Sherlock Holmes",
+        "Harry Potter",
+        "Musse Pigg"
+      ],
+      "rätt_ordning": [
+        "Sherlock Holmes",
+        "Musse Pigg",
+        "Batman",
+        "Harry Potter"
+      ],
+      "förklaring": "Sherlock Holmes debuterade 1887, Musse Pigg 1928, Batman 1939, Harry Potter 1997."
+    },
+    {
+      "typ": "ordna",
+      "svårighetsgrad": "lätt",
+      "fråga": "Ordna dessa musikgenrer efter när de blev populära i större delen av världen, från tidigast till senast.",
+      "alternativ": [
+        "Hip-hop",
+        "Rock'n'roll",
+        "Disco",
+        "Grunge"
+      ],
+      "rätt_ordning": [
+        "Rock'n'roll",
+        "Disco",
+        "Hip-hop",
+        "Grunge"
+      ],
+      "förklaring": "Rock'n'roll slog igenom på 1950-talet, disco på 1970-talet, hip-hop på 1980-talet, grunge på 1990-talet."
+    },
+    {
+      "typ": "ordna",
+      "svårighetsgrad": "svår",
+      "fråga": "Ordna dessa litterära verk efter publiceringsår, från tidigast till senast.",
+      "alternativ": [
+        "1984 (George Orwell)",
+        "Moby Dick (Herman Melville)",
+        "Sagan om Ringen (J.R.R. Tolkien)",
+        "Don Quijote (Miguel de Cervantes)"
+      ],
+      "rätt_ordning": [
+        "Don Quijote (Miguel de Cervantes)",
+        "Moby Dick (Herman Melville)",
+        "1984 (George Orwell)",
+        "Sagan om Ringen (J.R.R. Tolkien)"
+      ],
+      "förklaring": "Don Quijote 1605, Moby Dick 1851, 1984 år 1949, Sagan om Ringen 1954–55."
+    },
+    {
+      "typ": "ordna",
+      "svårighetsgrad": "medel",
+      "fråga": "Ordna dessa städer efter hur många gånger de har arrangerat sommar-OS, från färst till flest.",
+      "alternativ": [
+        "London",
+        "Los Angeles",
+        "Paris",
+        "Aten"
+      ],
+      "rätt_ordning": [
+        "Aten",
+        "Paris",
+        "Los Angeles",
+        "London"
+      ],
+      "förklaring": "Aten (1 gång: 2004), Paris (2: 1900, 1924, snart 2024), Los Angeles (2: 1932, 1984, snart 2028), London (3: 1908, 1948, 2012)."
+    },
+    {
+      "typ": "ordna",
+      "svårighetsgrad": "lätt",
+      "fråga": "Ordna dessa TV-serier efter premiärår, från äldst till nyast.",
+      "alternativ": [
+        "Vänner",
+        "Game of Thrones",
+        "M*A*S*H",
+        "The Simpsons"
+      ],
+      "rätt_ordning": [
+        "M*A*S*H",
+        "The Simpsons",
+        "Vänner",
+        "Game of Thrones"
+      ],
+      "förklaring": "M*A*S*H 1972, The Simpsons 1989, Vänner 1994, Game of Thrones 2011."
+    }
+  ]
+}
