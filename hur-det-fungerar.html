@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="sv">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Hur Ordna fungerar</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&family=Poppins:wght@700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="css/styles.css?v=22">
+</head>
+<body class="bg-slate-100 text-slate-800 min-h-screen p-4">
+    <div class="max-w-2xl mx-auto bg-white rounded-xl shadow-lg p-6 sm:p-8">
+        <div class="mb-6">
+            <a href="index.html" class="text-blue-600 hover:text-blue-800 text-base">← Tillbaka till spelet</a>
+        </div>
+        
+        <h1 class="font-poppins text-3xl sm:text-4xl font-bold text-blue-600 mb-6">Hur Ordna fungerar</h1>
+        
+        <div class="mb-8">
+            <h2 class="text-xl font-bold text-slate-800 mb-3">Frågetyper</h2>
+            <div class="space-y-4">
+                <div class="bg-blue-50 border border-blue-200 rounded-lg p-4">
+                    <h3 class="font-semibold text-blue-800 mb-2">Ordna-frågor</h3>
+                    <p class="text-sm text-slate-700 mb-2">Klicka på alternativen i rätt ordning (t.ex. minst till störst, äldst till nyast).</p>
+                    <p class="text-xs text-slate-600"><strong>Obs:</strong> Du måste klicka i rätt ordning - ett fel och du är ute!</p>
+                </div>
+                
+                <div class="bg-purple-50 border border-purple-200 rounded-lg p-4">
+                    <h3 class="font-semibold text-purple-800 mb-2">Hör till-frågor</h3>
+                    <p class="text-sm text-slate-700 mb-2">Bedöm om varje alternativ hör till kategorin eller inte.</p>
+                    
+                    <div class="flex items-center gap-2 mt-3 mb-3">
+                        <span class="text-sm text-slate-600">Du ser två knappar:</span>
+                        <div class="flex rounded-lg overflow-hidden bg-gray-100 inline-flex">
+                            <button class="w-9 h-9 flex items-center justify-center bg-gray-50 border border-gray-300">
+                                <svg class="w-4 h-4" fill="none" stroke="#8E99A5" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7"></path></svg>
+                            </button>
+                            <button class="w-9 h-9 flex items-center justify-center bg-gray-50 border border-gray-300 border-l-0">
+                                <svg class="w-4 h-4" fill="none" stroke="#8E99A5" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12"></path></svg>
+                            </button>
+                        </div>
+                        <span class="text-sm text-slate-600">(✓ = ja, ✗ = nej)</span>
+                    </div>
+                    
+                    <p class="text-xs text-slate-600"><strong>Frihet:</strong> Du väljer själv i vilken ordning du svarar på alternativen!</p>
+                </div>
+            </div>
+        </div>
+        
+        <div class="mb-8">
+            <h2 class="text-xl font-bold text-slate-800 mb-3">Spela ensam eller utmana någon</h2>
+            <div class="space-y-2 text-sm text-slate-700">
+                <p>Varje rätt svar ger +1 poäng till din pott</p>
+                <p>Du ser din pott växa på <span class="bg-amber-100 px-2 py-1 rounded font-medium">Stanna +Xp</span> knappen</p>
+                <p>Klicka "Stanna" när som helst för att säkra poängen permanent</p>
+                <p>Ett fel svar = potten töms! (men säkrade poäng behålls)</p>
+                <p>När alla alternativ är besvarade säkras potten automatiskt</p>
+            </div>
+            
+            <div class="mt-4 p-4 bg-slate-50 rounded-lg border border-slate-200">
+                <p class="text-sm text-slate-600"><strong>Utmaningar:</strong> Du spelar 5 frågor och din vän får samma frågor. Högst totalpoäng vinner!</p>
+            </div>
+        </div>
+        
+        <div class="mb-8">
+            <h2 class="text-xl font-bold text-slate-800 mb-3">Spela flera (2-6 spelare)</h2>
+            <div class="space-y-2 text-sm text-slate-700">
+                <p>Spelarna turas om - aktiv spelare har blå ram</p>
+                <p>Varje spelare bygger sin egen pott under rundan</p>
+                <p>"Stanna" = säkra din pott och kliv av rundan</p>
+                <p>Fel svar = förlora potten och kliv av rundan</p>
+                <p>När alla är klara: de som fortfarande är kvar får sin pott automatiskt!</p>
+            </div>
+            
+            <div class="mt-4 p-4 bg-amber-50 rounded-lg border border-amber-200">
+                <p class="text-sm text-amber-800"><strong>Smart taktik:</strong> Ibland lönar det sig att vara försiktig och säkra poäng tidigt. Ibland är det värt att vänta ut de andra!</p>
+            </div>
+        </div>
+        
+        <div class="text-center mt-8">
+            <a href="index.html" class="inline-block bg-blue-600 text-white font-bold py-3 px-6 rounded-lg hover:bg-blue-700 transition-colors">
+                Börja spela!
+            </a>
+        </div>
+    </div>
+</body>
+</html>
