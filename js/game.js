@@ -1991,6 +1991,9 @@ function loadQuestion() {
     userOrder = [];
     // Reset all players' active state for new question
     
+    // Hide any existing explanation
+    hideExplanation();
+    
     // Reset decision buttons for new question
     resetDecisionButtons();
     
@@ -2386,6 +2389,34 @@ function feedbackBelongsTo() {
     });
 }
 
+function showExplanation(explanationText) {
+    // Create or find explanation element
+    let explanationDiv = document.getElementById('explanation-div');
+    
+    if (!explanationDiv) {
+        explanationDiv = document.createElement('div');
+        explanationDiv.id = 'explanation-div';
+        explanationDiv.className = 'mt-4 p-4 bg-blue-50 border border-blue-200 rounded-lg text-sm text-blue-800 max-w-2xl mx-auto';
+        
+        // Insert before the controls box
+        const footerArea = document.getElementById('footer-area');
+        footerArea.insertBefore(explanationDiv, footerArea.firstChild);
+    }
+    
+    explanationDiv.innerHTML = `
+        <p class="font-semibold mb-1">Förklaring:</p>
+        <p>${explanationText}</p>
+    `;
+    explanationDiv.classList.remove('hidden');
+}
+
+function hideExplanation() {
+    const explanationDiv = document.getElementById('explanation-div');
+    if (explanationDiv) {
+        explanationDiv.classList.add('hidden');
+    }
+}
+
 function showCorrectAnswers() {
     const question = questionsToPlay[currentQuestionIndex];
     
@@ -2414,6 +2445,11 @@ function showCorrectAnswers() {
                 // Could add visual feedback for unanswered options here if needed
             }
         });
+    }
+    
+    // Show explanation if available
+    if (question.förklaring) {
+        showExplanation(question.förklaring);
     }
 }
 
