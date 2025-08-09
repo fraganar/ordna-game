@@ -24,17 +24,17 @@ Ett klurigt frågespel där spelare tävlar om vem som vågar chansa mest. Spela
 - **"Ordna"**: Klicka på alternativen i rätt ordning (t.ex. sortera länder efter storlek)
 - **"Hör till"**: Bedöm varje alternativ med ja/nej (t.ex. vilka är huvudstäder?)
 
-**Strategi:**
-Ju längre du vågar fortsätta, desto mer kan du vinna - men risken ökar. Ett fel och rundans poäng är förlorade!
+**Känsla:**
+Vågar du chansa? Stanna eller fortsätt - valet är ditt! Ett fel och rundans poäng är förlorade!
 
 ### Valmöjligheter i spelet
 
 **Från huvudmenyn kan användaren:**
-- **Spela själv** - Välj 1 spelare för att spela ensam och samla poäng (visas som stjärnor)
+- **Spela själv** - Välj 1 spelare för att spela ensam och samla poäng (visas som "Totalpoäng: X")
 - **Spela med vänner** - Välj 2-6 spelare för att tävla mot varandra lokalt
 - **Utmana någon** - Skapa en utmaning och bjud in en vän via delbar länk (se Challenge System nedan för detaljer)
 - **Mina utmaningar** - Se dina aktiva utmaningar och vem som svarat
-- **Välj frågepaket** - Aktivera/avaktivera olika frågepaket för variation
+- **Välj frågepaket** - Aktivera/avaktivera olika frågepaket för variation (INAKTIVERAD - funktion under utveckling)
 
 ## Tech Stack
 - Frontend: Vanilla JavaScript (ES6+), HTML5, CSS3
@@ -47,6 +47,8 @@ Ju längre du vågar fortsätta, desto mer kan du vinna - men risken ökar. Ett 
 - `git add . && git commit -m "message"`: Commit changes
 - `git push`: Deploy to production (automatic via Netlify)
 - `./deploy.sh`: Quick deploy script (commit + push)
+- **Before committing**: Test both single and multiplayer modes thoroughly
+- **Code review question**: Does this change fit the architecture or am I patching?
 
 ## Local Development
 1. Start local server: `python3 -m http.server 8000`
@@ -66,10 +68,12 @@ Ju längre du vågar fortsätta, desto mer kan du vinna - men risken ökar. Ett 
 
 ## Project Structure
 - `index.html`: Main entry point
+- `hur-det-fungerar.html`: Detailed help page explaining game mechanics
 - `js/game.js`: Core game logic and question loading
 - `css/styles.css`: All styling including responsive design
 - `data/questions-grund.json`: Game questions with pack assignments
 - `data/`: Directory for additional question files
+- `planning/GAME_SPECIFICATION.md`: Complete technical game specification
 
 ## Challenge System
 - **Blind Challenge**: Players compete on same 5 questions without seeing opponent's score
@@ -89,3 +93,13 @@ Ju längre du vågar fortsätta, desto mer kan du vinna - men risken ökar. Ett 
 - Keep functions focused and well-named
 - Maintain separation between data (JSON) and logic (JS)
 - Use semantic HTML and responsive CSS
+
+## Code Quality & Technical Debt Prevention
+- **Think before you patch**: Consider if your change fits the existing architecture
+- **Refactor when adding features**: Don't just add code, improve what's there
+- **Keep functions focused**: One responsibility per function
+- **Use unified architecture**: Leverage the player-based system for both single/multiplayer
+- **Avoid quick fixes**: Short-term patches often become long-term technical debt
+
+## Detaljerad Dokumentation
+För djup teknisk specifikation av spelmekanik, UI-flöden och datastrukturer, se `planning/GAME_SPECIFICATION.md`
