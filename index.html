@@ -33,32 +33,32 @@
         <div id="start-screen" class="p-6 sm:p-8 lg:p-12">
             <div id="start-main">
                 <h1 class="font-poppins text-5xl sm:text-6xl md:text-7xl font-bold text-blue-600 mb-4 text-center">Ordna</h1>
-                <p class="text-slate-600 mb-6 sm:mb-8 text-base sm:text-lg text-center">Risktagandets frågespel! Bygg upp poäng – men ett fel svar och allt är förlorat.</p>
+                <p class="text-slate-600 mb-6 sm:mb-8 text-base sm:text-lg text-center">Vågar du chansa? Samla poäng på varje rätt svar – men ett fel och rundan är över!</p>
 
                 <div class="bg-slate-100 text-left p-4 sm:p-6 rounded-lg mb-6 sm:mb-8 border border-slate-200">
-                    <h2 class="font-bold text-lg text-slate-800 mb-4 text-center">Så här fungerar spelet</h2>
+                    <h2 class="font-bold text-lg text-slate-800 mb-4 text-center">Hur det fungerar</h2>
                     <ul class="space-y-3 text-slate-700 text-sm sm:text-base">
                         <li class="flex items-start">
                             <svg class="w-5 h-5 sm:w-6 sm:h-6 mr-3 text-blue-500 flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
-                            <span><strong>Rätt svar = +1 poäng</strong> till din pott. Bygg upp din poängpott genom att svara rätt på frågor.</span>
+                            <span><strong>Rätt svar = +1 poäng</strong> till din pott</span>
                         </li>
                         <li class="flex items-start">
                             <svg class="w-5 h-5 sm:w-6 sm:h-6 mr-3 text-green-500 flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
-                            <span><strong>"Stanna" = Säkra poängen!</strong> Välj att stanna när som helst för att bankera din pott som permanenta poäng.</span>
+                            <span><strong>"Stanna" = Säkra poängen!</strong> Bankera din pott när som helst</span>
                         </li>
                         <li class="flex items-start">
                             <svg class="w-5 h-5 sm:w-6 sm:h-6 mr-3 text-red-500 flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 14l2-2m0 0l2-2m-2 2l-2-2m2 2l2 2m7-2a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
-                            <span><strong>Fel svar = Potten förloras!</strong> Runda över – men dina tidigare säkrade poäng är kvar.</span>
+                            <span><strong>Fel svar = Potten förloras!</strong> Men säkrade poäng är kvar</span>
                         </li>
                         <li class="flex items-start">
                             <svg class="w-5 h-5 sm:w-6 sm:h-6 mr-3 text-purple-500 flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"></path></svg>
-                            <span><strong>Push your luck!</strong> Ju längre du vågar fortsätta, desto mer kan du vinna – eller förlora.</span>
+                            <span><strong>Push your luck!</strong> Ju längre du vågar, desto mer kan du vinna</span>
                         </li>
                     </ul>
                     
                     <div class="mt-4 pt-4 border-t border-slate-300">
                         <p class="text-xs sm:text-sm text-slate-600">
-                            <strong>Frågetyper:</strong> <span class="text-blue-600">Ordna</span> (sortera i rätt ordning) och <span class="text-purple-600">Hör till</span> (ja/nej-bedömningar)
+                            <strong>Frågetyper:</strong> <span class="text-blue-600">Ordna</span> (sortera rätt) och <span class="text-purple-600">Hör till</span> (ja/nej)
                         </p>
                     </div>
                 </div>
@@ -67,11 +67,11 @@
                     <button id="show-player-setup-btn" class="w-full bg-blue-600 text-white font-bold py-3 sm:py-4 px-6 rounded-lg text-lg sm:text-xl hover:bg-blue-700 transition-all duration-300 shadow-lg hover:shadow-xl transform hover:-translate-y-1">
                         Starta Spelet
                     </button>
-                    <button id="open-pack-shop-btn" class="w-full bg-slate-800 text-white font-bold py-3 sm:py-4 px-6 rounded-lg text-lg sm:text-xl hover:bg-slate-900 transition-all duration-300 shadow-lg hover:shadow-xl transform hover:-translate-y-1">
-                        Välj Frågepaket
-                    </button>
                     <button id="show-challenge-form-btn" class="w-full bg-slate-500 text-white font-bold py-3 sm:py-4 px-6 rounded-lg text-lg sm:text-xl hover:bg-slate-600 transition-all duration-300 shadow-lg hover:shadow-xl transform hover:-translate-y-1">
                         Utmana en vän!
+                    </button>
+                    <button id="open-pack-shop-btn" class="w-full bg-slate-800 text-white font-bold py-3 sm:py-4 px-6 rounded-lg text-lg sm:text-xl hover:bg-slate-900 transition-all duration-300 shadow-lg hover:shadow-xl transform hover:-translate-y-1">
+                        Välj Frågepaket
                     </button>
                 </div>
 
