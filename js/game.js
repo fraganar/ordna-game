@@ -125,7 +125,7 @@ const questionPacks = [
         price: "GRATIS"
     },
     { 
-        name: "Blandat B", 
+        name: "Blandat med B", 
         description: "Kuriosa, populärkultur och litteratur genom tiderna", 
         status: "available", 
         file: "questions-blandat-b.json",
@@ -1777,6 +1777,10 @@ function populatePackSelect() {
                     const option = document.createElement('option');
                     option.value = pack.name;
                     option.textContent = pack.name;
+                    // Set "Blandat med B" as default selection
+                    if (pack.name === 'Blandat med B') {
+                        option.selected = true;
+                    }
                     select.appendChild(option);
                 }
             });
