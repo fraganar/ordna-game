@@ -695,11 +695,11 @@ async function createChallenge() {
             throw new Error('No questions available for selected pack');
         }
         
-        // Select 5 random questions from loaded pack
+        // Select 12 random questions from loaded pack
         const processedQuestions = processQuestions(allQuestions);
         const shuffled = [...processedQuestions];
         shuffleArray(shuffled);
-        challengeQuestions = shuffled.slice(0, 5);
+        challengeQuestions = shuffled.slice(0, 12);
         
         
         // Set up challenge mode
