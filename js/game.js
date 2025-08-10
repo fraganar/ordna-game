@@ -44,15 +44,6 @@ function showChallengerHint() {
     const hintElement = document.getElementById('challenger-hint');
     const score = challengeData.challenger.questionScores[currentQuestionIndex];
     
-    // Debug logging
-    console.log('Challenge hint debug:', {
-        currentQuestionIndex,
-        questionScores: challengeData.challenger.questionScores,
-        score,
-        totalQuestions: questionsToPlay.length,
-        challengeId,
-        challengerName: challengeData.challenger.name
-    });
     
     if (score !== undefined) {
         hintElement.innerHTML = `
@@ -2111,7 +2102,10 @@ function loadQuestion() {
     showChallengerHint();
     
     const shuffledOptions = [...question.alternativ];
-    shuffleArray(shuffledOptions);
+    // Don't shuffle options in challenge mode to ensure same layout for both players
+    if (!ischallengeMode) {
+        shuffleArray(shuffledOptions);
+    }
 
     optionsGrid.className = 'grid grid-cols-1 gap-3 sm:gap-4 my-4 sm:my-6';
 
