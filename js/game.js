@@ -42,8 +42,17 @@ function showChallengerHint() {
     if (!ischallengeMode || !challengeId || !challengeData) return;
     
     const hintElement = document.getElementById('challenger-hint');
-    const score = challengeData.challenger.questionScores[currentQuestionIndex];
     
+    // Debug logging to understand the issue
+    console.log('=== Challenge Hint Debug ===');
+    console.log('Current Question Index:', currentQuestionIndex);
+    console.log('Current Question:', questionsToPlay[currentQuestionIndex]?.fråga);
+    console.log('Challenger Question Scores:', challengeData.challenger.questionScores);
+    console.log('Scores array length:', challengeData.challenger.questionScores.length);
+    console.log('Questions array length:', challengeData.questions.length);
+    console.log('First 3 questions:', challengeData.questions.slice(0, 3).map(q => q.fråga));
+    
+    const score = challengeData.challenger.questionScores[currentQuestionIndex];
     
     if (score !== undefined) {
         hintElement.innerHTML = `
@@ -52,6 +61,9 @@ function showChallengerHint() {
             </div>
         `;
         hintElement.classList.remove('hidden');
+    } else {
+        console.warn('No score found for question index:', currentQuestionIndex);
+        hintElement.classList.add('hidden');
     }
 }
 
@@ -426,6 +438,16 @@ function eliminateCurrentPlayer() {
     currentPlayer.completedRound = true;
     currentPlayer.completionReason = 'wrong';
     
+    // Save 0 points for challenge mode when eliminated
+    if (ischallengeMode && isSinglePlayerMode()) {
+        // Make sure we don't save duplicate scores
+        if (challengeQuestionScores.length === currentQuestionIndex) {
+            challengeQuestionScores.push(0);
+            console.log('Saved score for question', currentQuestionIndex, ': 0 (eliminated)');
+            console.log('All scores so far:', challengeQuestionScores);
+        }
+    }
+    
     enableNextButtonAfterMistake(pointsToLose);
     
     // Update displays
@@ -538,6 +560,16 @@ function secureCurrentPoints() {
     // Prevent multiple triggers
     if (stopSide.dataset.processing === 'true') return;
     stopSide.dataset.processing = 'true';
+    
+    // Save score for challenge mode IMMEDIATELY when securing points
+    if (ischallengeMode && isSinglePlayerMode()) {
+        // Only save if we haven't already saved for this question
+        if (challengeQuestionScores.length === currentQuestionIndex) {
+            challengeQuestionScores.push(pointsToSecure);
+            console.log('Saved score for question', currentQuestionIndex, ':', pointsToSecure, 'when securing');
+            console.log('All scores so far:', challengeQuestionScores);
+        }
+    }
     
     // Show flying animation from Stop button to display
     showFlyingPointsToTotal(pointsToSecure);
@@ -666,6 +698,8 @@ async function createChallenge() {
         const shuffled = [...processedQuestions];
         shuffleArray(shuffled);
         challengeQuestions = shuffled.slice(0, 5);
+        
+        console.log('Creating challenge with questions:', challengeQuestions.map(q => q.fråga));
         
         // Set up challenge mode
         ischallengeMode = true;
@@ -1192,6 +1226,9 @@ async function startChallengeGame() {
         challengeQuestions = challengeData.questions;
         challengeQuestionScores = [];
         
+        console.log('Starting challenge with questions:', challengeQuestions.map(q => q.fråga));
+        console.log('Challenger scores per question:', challengeData.challenger.questionScores);
+        
         // Start the game as single player
         players = [{
             name: currentPlayer.name,
@@ -1703,10 +1740,8 @@ function endSinglePlayerQuestion(pointsToAdd) {
     players[0].score += pointsToAdd;
     players[0].completedRound = true; // Lock interactions for single player
     
-    // Save score for this question if in challenge mode
-    if (ischallengeMode) {
-        challengeQuestionScores.push(pointsToAdd);
-    }
+    // NOTE: Score saving for challenge mode is now handled in secureCurrentPoints
+    // to ensure it happens at the right time
     
     updateSinglePlayerDisplay();
     stopBtn.classList.add('hidden');
@@ -2102,10 +2137,7 @@ function loadQuestion() {
     showChallengerHint();
     
     const shuffledOptions = [...question.alternativ];
-    // Don't shuffle options in challenge mode to ensure same layout for both players
-    if (!ischallengeMode) {
-        shuffleArray(shuffledOptions);
-    }
+    shuffleArray(shuffledOptions);
 
     optionsGrid.className = 'grid grid-cols-1 gap-3 sm:gap-4 my-4 sm:my-6';
 
@@ -2304,9 +2336,12 @@ function handleOrderClick(button, optionText) {
             // Auto-secure points when question complete
             secureCurrentPoints();
             
-            // Save score for challenge mode
-            if (ischallengeMode) {
-                challengeQuestionScores.push(currentPlayer.roundPot);
+            // Save score for challenge mode BEFORE securing points
+            if (ischallengeMode && isSinglePlayerMode()) {
+                const scoreToSave = currentPlayer.roundPot;
+                challengeQuestionScores.push(scoreToSave);
+                console.log('Saved score for question', currentQuestionIndex, ':', scoreToSave, 'BEFORE securing');
+                console.log('All scores so far:', challengeQuestionScores);
             }
             
             // For multiplayer: when all alternatives are answered, no one else can play
@@ -2381,9 +2416,12 @@ function handleBelongsDecision(userDecision, container, yesBtn, noBtn) {
             // Auto-secure points when all decided
             secureCurrentPoints();
             
-            // Save score for challenge mode
-            if (ischallengeMode) {
-                challengeQuestionScores.push(currentPlayer.roundPot);
+            // Save score for challenge mode BEFORE securing points
+            if (ischallengeMode && isSinglePlayerMode()) {
+                const scoreToSave = currentPlayer.roundPot;
+                challengeQuestionScores.push(scoreToSave);
+                console.log('Saved score for question', currentQuestionIndex, ':', scoreToSave, 'BEFORE securing');
+                console.log('All scores so far:', challengeQuestionScores);
             }
             
             // For multiplayer: when all alternatives are decided, no one else can play
@@ -2523,6 +2561,25 @@ function showCorrectAnswers() {
 
 
 function endGame() {
+    // Save any remaining points for challenge mode before ending
+    if (ischallengeMode && isSinglePlayerMode()) {
+        const currentPlayer = getCurrentPlayer();
+        
+        // Check if we need to save the last question's score
+        if (challengeQuestionScores.length < questionsToPlay.length) {
+            // Player has points that haven't been saved yet
+            if (currentPlayer.roundPot > 0) {
+                challengeQuestionScores.push(currentPlayer.roundPot);
+                console.log('Saved FINAL score for question', currentQuestionIndex - 1, ':', currentPlayer.roundPot);
+            } else if (currentPlayer.completedRound && currentPlayer.completionReason === 'wrong') {
+                // Player failed on last question
+                challengeQuestionScores.push(0);
+                console.log('Saved FINAL score for question', currentQuestionIndex - 1, ': 0 (failed)');
+            }
+            console.log('Final scores array:', challengeQuestionScores);
+        }
+    }
+    
     gameScreen.classList.add('hidden');
     
     // Handle different game modes
@@ -2712,16 +2769,25 @@ stopBtn.addEventListener('click', playerStops);
 // New decision button event handlers
 stopSide.addEventListener('click', playerStops);
 nextSide.addEventListener('click', () => {
+    console.log('=== Next Question ===');
+    console.log('Moving from question index:', currentQuestionIndex, 'to', currentQuestionIndex + 1);
+    console.log('Scores saved so far:', challengeQuestionScores);
     currentQuestionIndex++;
     loadQuestion();
 });
 
 nextQuestionBtn.addEventListener('click', () => {
+    console.log('=== Next Question ===');
+    console.log('Moving from question index:', currentQuestionIndex, 'to', currentQuestionIndex + 1);
+    console.log('Scores saved so far:', challengeQuestionScores);
     currentQuestionIndex++;
     loadQuestion();
 });
 
 largeNextQuestionBtn.addEventListener('click', () => {
+    console.log('=== Next Question ===');
+    console.log('Moving from question index:', currentQuestionIndex, 'to', currentQuestionIndex + 1);
+    console.log('Scores saved so far:', challengeQuestionScores);
     currentQuestionIndex++;
     loadQuestion();
 });
