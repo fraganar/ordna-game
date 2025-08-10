@@ -49,8 +49,7 @@ function showChallengerHint() {
     console.log('Current Question:', questionsToPlay[currentQuestionIndex]?.fråga);
     console.log('Challenger Question Scores:', challengeData.challenger.questionScores);
     console.log('Scores array length:', challengeData.challenger.questionScores.length);
-    console.log('Questions array length:', challengeData.questions.length);
-    console.log('First 3 questions:', challengeData.questions.slice(0, 3).map(q => q.fråga));
+    console.log('Expected scores for all questions:', challengeData.challenger.questionScores);
     
     const score = challengeData.challenger.questionScores[currentQuestionIndex];
     
@@ -699,7 +698,7 @@ async function createChallenge() {
         shuffleArray(shuffled);
         challengeQuestions = shuffled.slice(0, 5);
         
-        console.log('Creating challenge with questions:', challengeQuestions.map(q => q.fråga));
+        console.log('Creating challenge with questions:', challengeQuestions.map((q, i) => `${i}: ${q.fråga}`));
         
         // Set up challenge mode
         ischallengeMode = true;
@@ -1226,8 +1225,9 @@ async function startChallengeGame() {
         challengeQuestions = challengeData.questions;
         challengeQuestionScores = [];
         
-        console.log('Starting challenge with questions:', challengeQuestions.map(q => q.fråga));
+        console.log('Starting challenge with questions:', challengeQuestions.map((q, i) => `${i}: ${q.fråga}`));
         console.log('Challenger scores per question:', challengeData.challenger.questionScores);
+        console.log('Verifying: scores length =', challengeData.challenger.questionScores.length, ', questions length =', challengeQuestions.length);
         
         // Start the game as single player
         players = [{
@@ -2336,13 +2336,7 @@ function handleOrderClick(button, optionText) {
             // Auto-secure points when question complete
             secureCurrentPoints();
             
-            // Save score for challenge mode BEFORE securing points
-            if (ischallengeMode && isSinglePlayerMode()) {
-                const scoreToSave = currentPlayer.roundPot;
-                challengeQuestionScores.push(scoreToSave);
-                console.log('Saved score for question', currentQuestionIndex, ':', scoreToSave, 'BEFORE securing');
-                console.log('All scores so far:', challengeQuestionScores);
-            }
+            // Score saving now handled in secureCurrentPoints to avoid duplicates
             
             // For multiplayer: when all alternatives are answered, no one else can play
             // So we should mark all remaining active players as completed
@@ -2416,13 +2410,7 @@ function handleBelongsDecision(userDecision, container, yesBtn, noBtn) {
             // Auto-secure points when all decided
             secureCurrentPoints();
             
-            // Save score for challenge mode BEFORE securing points
-            if (ischallengeMode && isSinglePlayerMode()) {
-                const scoreToSave = currentPlayer.roundPot;
-                challengeQuestionScores.push(scoreToSave);
-                console.log('Saved score for question', currentQuestionIndex, ':', scoreToSave, 'BEFORE securing');
-                console.log('All scores so far:', challengeQuestionScores);
-            }
+            // Score saving now handled in secureCurrentPoints to avoid duplicates
             
             // For multiplayer: when all alternatives are decided, no one else can play
             // So we should mark all remaining active players as completed
@@ -2565,19 +2553,29 @@ function endGame() {
     if (ischallengeMode && isSinglePlayerMode()) {
         const currentPlayer = getCurrentPlayer();
         
+        // Debug current state
+        console.log('=== END GAME DEBUG ===');
+        console.log('Current scores array length:', challengeQuestionScores.length);
+        console.log('Total questions:', questionsToPlay.length);
+        console.log('Current question index:', currentQuestionIndex);
+        console.log('Player state - roundPot:', currentPlayer.roundPot, 'completed:', currentPlayer.completedRound, 'reason:', currentPlayer.completionReason);
+        
         // Check if we need to save the last question's score
         if (challengeQuestionScores.length < questionsToPlay.length) {
-            // Player has points that haven't been saved yet
-            if (currentPlayer.roundPot > 0) {
-                challengeQuestionScores.push(currentPlayer.roundPot);
-                console.log('Saved FINAL score for question', currentQuestionIndex - 1, ':', currentPlayer.roundPot);
-            } else if (currentPlayer.completedRound && currentPlayer.completionReason === 'wrong') {
-                // Player failed on last question
-                challengeQuestionScores.push(0);
-                console.log('Saved FINAL score for question', currentQuestionIndex - 1, ': 0 (failed)');
-            }
+            // Always save a score for missing questions
+            const scoreToSave = currentPlayer.roundPot || 0;
+            challengeQuestionScores.push(scoreToSave);
+            console.log('Saved FINAL score for question', challengeQuestionScores.length - 1, ':', scoreToSave);
             console.log('Final scores array:', challengeQuestionScores);
         }
+        
+        // Double check we have scores for all questions
+        while (challengeQuestionScores.length < questionsToPlay.length) {
+            challengeQuestionScores.push(0);
+            console.log('Added missing score 0 for question', challengeQuestionScores.length - 1);
+        }
+        
+        console.log('FINAL challenge scores:', challengeQuestionScores);
     }
     
     gameScreen.classList.add('hidden');
