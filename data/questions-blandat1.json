@@ -149,7 +149,7 @@
     {
       "typ": "hör_till",
       "svårighetsgrad": "lätt",
-      "fråga": "Tre av dessa är planeter i vårt solsystem, men en är det inte. Vilken hör inte till gruppen?",
+      "fråga": "Vilka av dessa räknas som planeter i vårt solsystem?",
       "kategori": "Hör INTE till: solsystemets planeter",
       "alternativ": [
         "Mars",
