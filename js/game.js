@@ -418,21 +418,54 @@ function eliminateCurrentPlayer() {
     checkAndHandleQuestionCompletion();
 }
 
-function progressToNextPlayerOrConclude() {
-    if (isSinglePlayerMode()) {
-        // Single player: check if question is complete
+// REPLACED progressToNextPlayerOrConclude with more robust design
+// New central function that handles both question completion and turn progression
+function determineNextAction() {
+    // 1. First priority: Check if question is physically completed (all options answered)
+    if (isCurrentQuestionFullyAnswered()) {
+        concludeQuestionImmediately();
+        return;
+    }
+    
+    // 2. Second: Check if there are any active players remaining
+    if (!hasActivePlayersInRound()) {
         checkAndHandleQuestionCompletion();
-    } else {
-        // Multiplayer: handle turn progression
+        return;
+    }
+    
+    // 3. Otherwise: Continue to next player (multiplayer only)
+    if (!isSinglePlayerMode()) {
         setTimeout(() => {
-            if (hasActivePlayersInRound()) {
+            // Double-check state hasn't changed during timeout
+            if (hasActivePlayersInRound() && !isCurrentQuestionFullyAnswered()) {
                 nextTurn();
             } else {
-                // All players done - check completion
-                checkAndHandleQuestionCompletion();
+                determineNextAction(); // Re-evaluate
             }
         }, 500);
+    } else {
+        // Single player with active player but not all options answered - just update controls
+        updateGameControls();
     }
+}
+
+// New function to immediately conclude a question when all options are answered
+function concludeQuestionImmediately() {
+    // Auto-secure points for all active players
+    players.forEach(player => {
+        if (isPlayerActive(player) && player.roundPot > 0) {
+            player.score += player.roundPot;
+            player.roundPot = 0;
+            player.completedRound = true;
+            player.completionReason = 'all_options_answered';
+        }
+    });
+    
+    // Update displays and show results
+    updateScoreboard();
+    updatePlayerDisplay();
+    showCorrectAnswers();
+    updateGameControls();
 }
 
 // NEW: Clean UI reset for turn changes
@@ -2258,7 +2291,7 @@ function handleOrderClick(button, optionText) {
         } else {
             // Question continues - handle turn progression for multiplayer only
             if (!isSinglePlayerMode()) {
-                progressToNextPlayerOrConclude();
+                determineNextAction();
             } else {
                 // For single player, update controls to reflect current state
                 updateGameControls();
@@ -2268,7 +2301,7 @@ function handleOrderClick(button, optionText) {
         // Wrong answer - eliminate current player
         button.classList.add('incorrect-step');
         eliminateCurrentPlayer();
-        progressToNextPlayerOrConclude();
+        determineNextAction();
     }
 }
 
@@ -2335,7 +2368,7 @@ function handleBelongsDecision(userDecision, container, yesBtn, noBtn) {
         } else {
             // Question continues - handle turn progression for multiplayer only
             if (!isSinglePlayerMode()) {
-                progressToNextPlayerOrConclude();
+                determineNextAction();
             } else {
                 // For single player, update controls to reflect current state
                 updateGameControls();
@@ -2348,7 +2381,7 @@ function handleBelongsDecision(userDecision, container, yesBtn, noBtn) {
         
         // Eliminate current player
         eliminateCurrentPlayer();
-        progressToNextPlayerOrConclude();
+        determineNextAction();
     }
 }
 
