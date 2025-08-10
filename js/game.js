@@ -37,19 +37,37 @@ let challengeQuestions = [];
 let challengeQuestionScores = [];
 let pendingChallengeCreation = false;
 
+// Centralized function to reset challenge state
+function resetChallengeState() {
+    ischallengeMode = false;
+    challengeId = null;
+    challengeData = null;
+    challengeQuestions = [];
+    challengeQuestionScores = [];
+}
+
+// Save score for current question in challenge mode
+function saveChallengeScore(score) {
+    if (!ischallengeMode || !isSinglePlayerMode()) return;
+    
+    // Only save if we haven't already saved for this question
+    if (challengeQuestionScores.length === currentQuestionIndex) {
+        challengeQuestionScores.push(score);
+    }
+}
+
 // Show challenger hint in challenge mode
 function showChallengerHint() {
     if (!ischallengeMode || !challengeId || !challengeData) return;
     
     const hintElement = document.getElementById('challenger-hint');
+    if (!hintElement) return;
     
-    // Debug logging to understand the issue
-    console.log('=== Challenge Hint Debug ===');
-    console.log('Current Question Index:', currentQuestionIndex);
-    console.log('Current Question:', questionsToPlay[currentQuestionIndex]?.fråga);
-    console.log('Challenger Question Scores:', challengeData.challenger.questionScores);
-    console.log('Scores array length:', challengeData.challenger.questionScores.length);
-    console.log('Expected scores for all questions:', challengeData.challenger.questionScores);
+    // Safety checks
+    if (!challengeData.challenger || !challengeData.challenger.questionScores) {
+        hintElement.classList.add('hidden');
+        return;
+    }
     
     const score = challengeData.challenger.questionScores[currentQuestionIndex];
     
@@ -61,7 +79,6 @@ function showChallengerHint() {
         `;
         hintElement.classList.remove('hidden');
     } else {
-        console.warn('No score found for question index:', currentQuestionIndex);
         hintElement.classList.add('hidden');
     }
 }
@@ -438,14 +455,7 @@ function eliminateCurrentPlayer() {
     currentPlayer.completionReason = 'wrong';
     
     // Save 0 points for challenge mode when eliminated
-    if (ischallengeMode && isSinglePlayerMode()) {
-        // Make sure we don't save duplicate scores
-        if (challengeQuestionScores.length === currentQuestionIndex) {
-            challengeQuestionScores.push(0);
-            console.log('Saved score for question', currentQuestionIndex, ': 0 (eliminated)');
-            console.log('All scores so far:', challengeQuestionScores);
-        }
-    }
+    saveChallengeScore(0);
     
     enableNextButtonAfterMistake(pointsToLose);
     
@@ -560,15 +570,8 @@ function secureCurrentPoints() {
     if (stopSide.dataset.processing === 'true') return;
     stopSide.dataset.processing = 'true';
     
-    // Save score for challenge mode IMMEDIATELY when securing points
-    if (ischallengeMode && isSinglePlayerMode()) {
-        // Only save if we haven't already saved for this question
-        if (challengeQuestionScores.length === currentQuestionIndex) {
-            challengeQuestionScores.push(pointsToSecure);
-            console.log('Saved score for question', currentQuestionIndex, ':', pointsToSecure, 'when securing');
-            console.log('All scores so far:', challengeQuestionScores);
-        }
-    }
+    // Save score for challenge mode when securing points
+    saveChallengeScore(pointsToSecure);
     
     // Show flying animation from Stop button to display
     showFlyingPointsToTotal(pointsToSecure);
@@ -698,7 +701,6 @@ async function createChallenge() {
         shuffleArray(shuffled);
         challengeQuestions = shuffled.slice(0, 5);
         
-        console.log('Creating challenge with questions:', challengeQuestions.map((q, i) => `${i}: ${q.fråga}`));
         
         // Set up challenge mode
         ischallengeMode = true;
@@ -1046,11 +1048,7 @@ function showWaitingForOpponentView(challengeId) {
         startMain.classList.remove('hidden');
         
         // Reset game state
-        ischallengeMode = false;
-        challengeId = null;
-        challengeData = null;
-        challengeQuestions = [];
-        challengeQuestionScores = [];
+        resetChallengeState();
         
         // Reload my challenges
         loadMyChallenges();
@@ -1147,12 +1145,7 @@ async function showChallengeResultView(challengeId) {
             startMain.classList.remove('hidden');
             
             // Reset game state
-                        // Player states will be reset in resetGameState()
-            ischallengeMode = false;
-            challengeId = null;
-            challengeData = null;
-            challengeQuestions = [];
-            challengeQuestionScores = [];
+            resetChallengeState();
             
             // Reload my challenges
             loadMyChallenges();
@@ -1225,9 +1218,6 @@ async function startChallengeGame() {
         challengeQuestions = challengeData.questions;
         challengeQuestionScores = [];
         
-        console.log('Starting challenge with questions:', challengeQuestions.map((q, i) => `${i}: ${q.fråga}`));
-        console.log('Challenger scores per question:', challengeData.challenger.questionScores);
-        console.log('Verifying: scores length =', challengeData.challenger.questionScores.length, ', questions length =', challengeQuestions.length);
         
         // Start the game as single player
         players = [{
@@ -2553,29 +2543,17 @@ function endGame() {
     if (ischallengeMode && isSinglePlayerMode()) {
         const currentPlayer = getCurrentPlayer();
         
-        // Debug current state
-        console.log('=== END GAME DEBUG ===');
-        console.log('Current scores array length:', challengeQuestionScores.length);
-        console.log('Total questions:', questionsToPlay.length);
-        console.log('Current question index:', currentQuestionIndex);
-        console.log('Player state - roundPot:', currentPlayer.roundPot, 'completed:', currentPlayer.completedRound, 'reason:', currentPlayer.completionReason);
-        
-        // Check if we need to save the last question's score
+        // Ensure we have scores for all questions
         if (challengeQuestionScores.length < questionsToPlay.length) {
-            // Always save a score for missing questions
-            const scoreToSave = currentPlayer.roundPot || 0;
-            challengeQuestionScores.push(scoreToSave);
-            console.log('Saved FINAL score for question', challengeQuestionScores.length - 1, ':', scoreToSave);
-            console.log('Final scores array:', challengeQuestionScores);
+            // Save the current round pot or 0 if player failed
+            const finalScore = currentPlayer.roundPot || 0;
+            challengeQuestionScores.push(finalScore);
         }
         
-        // Double check we have scores for all questions
+        // Safety check: fill any missing scores with 0
         while (challengeQuestionScores.length < questionsToPlay.length) {
             challengeQuestionScores.push(0);
-            console.log('Added missing score 0 for question', challengeQuestionScores.length - 1);
         }
-        
-        console.log('FINAL challenge scores:', challengeQuestionScores);
     }
     
     gameScreen.classList.add('hidden');
@@ -2635,12 +2613,8 @@ function restartGame() {
     currentQuestionIndex = 0;
     currentPlayerIndex = 0;
     questionStarterIndex = 0;
-    // Player states will be reset in resetGameState()
-    ischallengeMode = false;
-    challengeId = null;
-    challengeData = null;
-    challengeQuestions = [];
-    challengeQuestionScores = [];
+    // Reset challenge and game state
+    resetChallengeState();
     selectedPack = null;
     
     // Hide player status bar
@@ -2690,12 +2664,7 @@ function restartGame() {
     finalScoreboard.classList.remove('hidden');
     
     // Reset game state
-    // Player states will be reset in resetGameState()
-    ischallengeMode = false;
-    challengeId = null;
-    challengeData = null;
-    challengeQuestions = [];
-    challengeQuestionScores = [];
+    resetChallengeState();
     
     // Reload my challenges
     loadMyChallenges();
@@ -2767,25 +2736,16 @@ stopBtn.addEventListener('click', playerStops);
 // New decision button event handlers
 stopSide.addEventListener('click', playerStops);
 nextSide.addEventListener('click', () => {
-    console.log('=== Next Question ===');
-    console.log('Moving from question index:', currentQuestionIndex, 'to', currentQuestionIndex + 1);
-    console.log('Scores saved so far:', challengeQuestionScores);
     currentQuestionIndex++;
     loadQuestion();
 });
 
 nextQuestionBtn.addEventListener('click', () => {
-    console.log('=== Next Question ===');
-    console.log('Moving from question index:', currentQuestionIndex, 'to', currentQuestionIndex + 1);
-    console.log('Scores saved so far:', challengeQuestionScores);
     currentQuestionIndex++;
     loadQuestion();
 });
 
 largeNextQuestionBtn.addEventListener('click', () => {
-    console.log('=== Next Question ===');
-    console.log('Moving from question index:', currentQuestionIndex, 'to', currentQuestionIndex + 1);
-    console.log('Scores saved so far:', challengeQuestionScores);
     currentQuestionIndex++;
     loadQuestion();
 });
@@ -2930,9 +2890,7 @@ acceptChallengeBtn.addEventListener('click', async () => {
 
 declineChallengeBtn.addEventListener('click', () => {
     // Clear challenge data and show normal start screen
-    ischallengeMode = false;
-    challengeId = null;
-    challengeData = null;
+    resetChallengeState();
     
     challengeAccept.classList.add('hidden');
     startMain.classList.remove('hidden');
