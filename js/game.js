@@ -44,6 +44,16 @@ function showChallengerHint() {
     const hintElement = document.getElementById('challenger-hint');
     const score = challengeData.challenger.questionScores[currentQuestionIndex];
     
+    // Debug logging
+    console.log('Challenge hint debug:', {
+        currentQuestionIndex,
+        questionScores: challengeData.challenger.questionScores,
+        score,
+        totalQuestions: questionsToPlay.length,
+        challengeId,
+        challengerName: challengeData.challenger.name
+    });
+    
     if (score !== undefined) {
         hintElement.innerHTML = `
             <div class="challenger-hint-box">
