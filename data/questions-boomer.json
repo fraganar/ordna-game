@@ -1,5 +1,6 @@
 {
-  "name": "Boomer Frågor",
+  "name": "Boomer",
+  "description": "Frågor om en tid då allt var bättre. Eller var det?",
   "packs": ["Boomer", "Boomer", "Boomer", "Boomer", "Boomer"],
   "questions": [
     {

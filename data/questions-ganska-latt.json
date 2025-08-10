@@ -1,0 +1,204 @@
+{
+  "name": "Ganska lätt",
+  "description": "Ett lättare frågepaket med mestadels lätta frågor och några medelsvåra",
+  "questions": [
+    {
+      "typ": "ordna",
+      "svårighetsgrad": "lätt",
+      "fråga": "Ordna dessa städer efter geografisk latitud, från nordligast till sydligast.",
+      "alternativ": [
+        "Kairo",
+        "Stockholm",
+        "Kapstaden",
+        "London"
+      ],
+      "rätt_ordning": [
+        "Stockholm",
+        "London",
+        "Kairo",
+        "Kapstaden"
+      ],
+      "förklaring": "Stockholm ligger ca 59°N, London ca 51°N, Kairo ca 30°N, och Kapstaden ca 34°S (söder om ekvatorn)."
+    },
+    {
+      "typ": "ordna",
+      "svårighetsgrad": "lätt",
+      "fråga": "Ordna dessa djur efter topphastighet, från långsammaste till snabbaste.",
+      "alternativ": [
+        "Gepard",
+        "Elefant",
+        "Sengångare",
+        "Struts"
+      ],
+      "rätt_ordning": [
+        "Sengångare",
+        "Elefant",
+        "Struts",
+        "Gepard"
+      ],
+      "förklaring": "Sengångare rör sig omkring 0,2 km/h; en elefant kan springa ca 40 km/h; en struts upp till 70 km/h; en gepard runt 120 km/h på korta sträckor."
+    },
+    {
+      "typ": "hör_till",
+      "svårighetsgrad": "lätt",
+      "fråga": "Fotbolls-VM har genom historien endast vunnits av några få länder. Vilka av följande har tagit guld?",
+      "kategori": "Hör till: länder som har vunnit herrarnas fotbolls-VM",
+      "alternativ": [
+        "Brasilien",
+        "Nederländerna",
+        "Argentina",
+        "Tyskland"
+      ],
+      "tillhör_index": [
+        0,
+        2,
+        3
+      ],
+      "förklaring": "Brasilien (5 titlar), Tyskland (4) och Argentina (3) har vunnit VM-guld. Nederländerna har däremot aldrig vunnit (de har förlorat tre finaler)."
+    },
+    {
+      "typ": "hör_till",
+      "svårighetsgrad": "lätt",
+      "fråga": "Astrid Lindgren skrev många älskade barnböcker. Vilka av dessa figurer är skapade av henne?",
+      "kategori": "Hör till: Astrid Lindgrens figurer",
+      "alternativ": [
+        "Karlsson på taket",
+        "Lilla My",
+        "Emil i Lönneberga",
+        "Pippi Långstrump"
+      ],
+      "tillhör_index": [
+        0,
+        2,
+        3
+      ],
+      "förklaring": "Karlsson på taket, Emil i Lönneberga och Pippi Långstrump är alla karaktärer i Astrid Lindgrens berättelser. Lilla My är en figur ur Mumintrollen av Tove Jansson, alltså inte skapad av Lindgren."
+    },
+    {
+      "typ": "hör_till",
+      "svårighetsgrad": "lätt",
+      "fråga": "Tre av dessa är planeter i vårt solsystem, men en är det inte. Vilken hör inte till gruppen?",
+      "kategori": "Hör INTE till: solsystemets planeter",
+      "alternativ": [
+        "Mars",
+        "Pluto",
+        "Jupiter",
+        "Venus"
+      ],
+      "tillhör_index": [
+        1
+      ],
+      "förklaring": "Mars, Jupiter och Venus är alla bland de åtta planeterna i solsystemet. Pluto räknas sedan 2006 som en dvärgplanet och är inte längre en av de huvudsakliga planeterna."
+    },
+    {
+      "typ": "hör_till",
+      "svårighetsgrad": "lätt",
+      "fråga": "Vilket av följande påståenden om pyramider är sant?",
+      "kategori": "Hör till: sanna påståenden om pyramider",
+      "alternativ": [
+        "Landet Sudan har fler pyramider än Egypten.",
+        "Inkaimperiets pyramider i Peru byggdes före pyramiderna i Egypten.",
+        "Det finns över 100 pyramider dolda under isen i Antarktis.",
+        "Det har inte hittats några pyramider alls i Kina."
+      ],
+      "tillhör_index": [0],
+      "förklaring": "Sudan har cirka 250 kända pyramider, fler än Egypten som har omkring 118. Övriga påståenden är felaktiga."
+    },
+    {
+      "typ": "hör_till",
+      "svårighetsgrad": "lätt",
+      "fråga": "Vilka av följande påståenden om OS är sanna?",
+      "kategori": "Hör till: sanna påståenden om de Olympiska spelen",
+      "alternativ": [
+        "OS-ringen med blå färg representerar Europa.",
+        "Olympiska elden tänds i Grekland inför varje OS.",
+        "De första moderna olympiska spelen hölls 1896.",
+        "OS har alltid hållits vart fjärde år utan avbrott."
+      ],
+      "tillhör_index": [0, 1, 2],
+      "förklaring": "Blå ring = Europa, elden tänds i Olympia i Grekland, första moderna OS hölls 1896. OS har ställts in under världskrigen, så påstående 4 är falskt."
+    },
+    {
+      "typ": "ordna",
+      "svårighetsgrad": "lätt",
+      "fråga": "Ordna dessa fiktiva karaktärer efter året de först introducerades, från äldst till nyast.",
+      "alternativ": [
+        "Batman",
+        "Sherlock Holmes",
+        "Harry Potter",
+        "Musse Pigg"
+      ],
+      "rätt_ordning": [
+        "Sherlock Holmes",
+        "Musse Pigg",
+        "Batman",
+        "Harry Potter"
+      ],
+      "förklaring": "Sherlock Holmes debuterade 1887, Musse Pigg 1928, Batman 1939, Harry Potter 1997."
+    },
+    {
+      "typ": "ordna",
+      "svårighetsgrad": "lätt",
+      "fråga": "Ordna dessa musikgenrer efter när de blev populära i större delen av världen, från tidigast till senast.",
+      "alternativ": [
+        "Hip-hop",
+        "Rock'n'roll",
+        "Disco",
+        "Grunge"
+      ],
+      "rätt_ordning": [
+        "Rock'n'roll",
+        "Disco",
+        "Hip-hop",
+        "Grunge"
+      ],
+      "förklaring": "Rock'n'roll slog igenom på 1950-talet, disco på 1970-talet, hip-hop på 1980-talet, grunge på 1990-talet."
+    },
+    {
+      "typ": "ordna",
+      "svårighetsgrad": "lätt",
+      "fråga": "Ordna dessa TV-serier efter premiärår, från äldst till nyast.",
+      "alternativ": [
+        "Vänner",
+        "Game of Thrones",
+        "M*A*S*H",
+        "The Simpsons"
+      ],
+      "rätt_ordning": [
+        "M*A*S*H",
+        "The Simpsons",
+        "Vänner",
+        "Game of Thrones"
+      ],
+      "förklaring": "M*A*S*H 1972, The Simpsons 1989, Vänner 1994, Game of Thrones 2011."
+    },
+    {
+      "typ": "hör_till",
+      "svårighetsgrad": "medel",
+      "fråga": "Vilket av följande påståenden om filmregissören Alfred Hitchcock är sant?",
+      "kategori": "Hör till: sanna påståenden om Alfred Hitchcock",
+      "alternativ": [
+        "Han hade panisk skräck för ägg och undvek dem hela livet.",
+        "Han vägrade använda telefon och kommunicerade enbart via brev.",
+        "Han utförde personligen alla sina egna stunttrick i sina filmer.",
+        "Han var vegetarian och svimmade om han såg rått kött."
+      ],
+      "tillhör_index": [0],
+      "förklaring": "Hitchcock hade panisk skräck för ägg (ovofobi) och berättade själv att han aldrig smakat ett. Övriga påståenden är påhittade."
+    },
+    {
+      "typ": "hör_till",
+      "svårighetsgrad": "medel",
+      "fråga": "Vilket av följande är sant om skådespelaren Sir Christopher Lee?",
+      "kategori": "Hör till: sanna påståenden om Sir Christopher Lee",
+      "alternativ": [
+        "Han släppte ett heavy metal-album vid 90 års ålder.",
+        "Han tackade nej till att bli adlad av drottningen.",
+        "Han vann en Oscar för bästa manliga huvudroll i början av 2000-talet.",
+        "Han pratade endast italienska i privatlivet, trots sin filmkarriär."
+      ],
+      "tillhör_index": [0],
+      "förklaring": "Lee gav ut metal-album, bland annat 'Charlemagne: The Omens of Death', runt sin 90-årsdag. Övriga påståenden är falska."
+    }
+  ]
+}

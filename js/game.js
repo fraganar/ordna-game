@@ -83,6 +83,32 @@ function showChallengerHint() {
     }
 }
 
+// Load metadata for all available packs from their JSON files
+async function loadPackMetadata() {
+    console.log('Loading pack metadata from JSON files...');
+    
+    for (const pack of questionPacks) {
+        if (pack.status === 'available' && pack.file) {
+            try {
+                const response = await fetch(`data/${pack.file}`);
+                const data = await response.json();
+                
+                // Update pack metadata from JSON file
+                if (data.name) {
+                    pack.name = data.name;
+                }
+                if (data.description) {
+                    pack.description = data.description;
+                }
+                
+                console.log(`Updated metadata for pack: ${pack.name}`);
+            } catch (error) {
+                console.error(`Failed to load metadata for pack file ${pack.file}:`, error);
+            }
+        }
+    }
+}
+
 // Load questions from a specific pack
 async function loadPackQuestions(packName) {
     const pack = questionPacks.find(p => p.name === packName);
@@ -96,13 +122,19 @@ async function loadPackQuestions(packName) {
         const response = await fetch(`data/${pack.file}`);
         const data = await response.json();
         
+        // Update pack metadata from JSON file if available
+        if (data.name && data.description) {
+            pack.name = data.name;
+            pack.description = data.description;
+        }
+        
         // Map questions with pack name
         const questions = data.questions.map(q => ({
             ...q,
-            pack: packName
+            pack: data.name || packName
         }));
         
-        console.log(`Loaded ${questions.length} questions from pack: ${packName}`);
+        console.log(`Loaded ${questions.length} questions from pack: ${data.name || packName}`);
         return questions;
     } catch (error) {
         console.error(`Failed to load pack "${packName}":`, error);
@@ -175,6 +207,13 @@ const questionPacks = [
         description: "Kuriosa, populärkultur och litteratur genom tiderna", 
         status: "available", 
         file: "questions-blandat-b.json",
+        price: "GRATIS"
+    },
+    { 
+        name: "Ganska lätt", 
+        description: "Ett lättare frågepaket med mestadels lätta frågor och några medelsvåra", 
+        status: "available", 
+        file: "questions-ganska-latt.json",
         price: "GRATIS"
     },
     { 
@@ -2906,6 +2945,9 @@ declineChallengeBtn.addEventListener('click', () => {
 async function initializeApp() {
     // Initialize player identity
     initializePlayer();
+    
+    // Load metadata from JSON files first
+    await loadPackMetadata();
     
     // Setup UI
     populatePackShop();
