@@ -37,6 +37,23 @@ let challengeQuestions = [];
 let challengeQuestionScores = [];
 let pendingChallengeCreation = false;
 
+// Show challenger hint in challenge mode
+function showChallengerHint() {
+    if (!ischallengeMode || !challengeId || !challengeData) return;
+    
+    const hintElement = document.getElementById('challenger-hint');
+    const score = challengeData.challenger.questionScores[currentQuestionIndex];
+    
+    if (score !== undefined) {
+        hintElement.innerHTML = `
+            <div class="challenger-hint-box">
+                💡 ${challengeData.challenger.name}: ${score} poäng på denna fråga
+            </div>
+        `;
+        hintElement.classList.remove('hidden');
+    }
+}
+
 // Load questions from a specific pack
 async function loadPackQuestions(packName) {
     const pack = questionPacks.find(p => p.name === packName);
@@ -2031,6 +2048,13 @@ function loadQuestion() {
     // Hide any existing explanation
     hideExplanation();
     
+    // Hide challenger hint from previous question
+    const hintElement = document.getElementById('challenger-hint');
+    if (hintElement) {
+        hintElement.classList.add('hidden');
+        hintElement.innerHTML = '';
+    }
+    
     // Reset decision buttons for new question
     resetDecisionButtons();
     
@@ -2072,6 +2096,9 @@ function loadQuestion() {
     questionCounter.textContent = `Fråga ${currentQuestionIndex + 1} / ${questionsToPlay.length}`;
     setDifficultyBadge(question.svårighetsgrad);
     questionText.textContent = question.fråga;
+    
+    // Show challenger hint if in challenge mode
+    showChallengerHint();
     
     const shuffledOptions = [...question.alternativ];
     shuffleArray(shuffledOptions);
