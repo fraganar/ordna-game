@@ -454,6 +454,25 @@ function isQuestionCompleted() {
     }
 }
 
+// Central function to handle player round completion
+function completePlayerRound(player, reason, pointsToSecure = 0, skipCompletionCheck = false) {
+    // Secure points if any
+    if (pointsToSecure > 0) {
+        player.score += pointsToSecure;
+        player.roundPot = 0;
+    }
+    
+    // Mark player as completed
+    player.completedRound = true;
+    player.completionReason = reason;
+    
+    // Check if the entire question is complete (unless told to skip)
+    // This ensures correct answers are shown in single player when stopping
+    if (!skipCompletionCheck) {
+        checkAndHandleQuestionCompletion();
+    }
+}
+
 function isCurrentQuestionFullyAnswered() {
     const question = questionsToPlay[currentQuestionIndex];
     if (!question) return false;
@@ -488,13 +507,11 @@ function eliminateCurrentPlayer() {
     const currentPlayer = getCurrentPlayer();
     const pointsToLose = currentPlayer.roundPot;
     
-    // Reset player state
-    currentPlayer.roundPot = 0;
-    currentPlayer.completedRound = true;
-    currentPlayer.completionReason = 'wrong';
-    
     // Save 0 points for challenge mode when eliminated
     saveChallengeScore(0);
+    
+    // Use centralized function to complete round (no points to secure when wrong)
+    completePlayerRound(currentPlayer, 'wrong', 0);
     
     enableNextButtonAfterMistake(pointsToLose);
     
@@ -620,10 +637,8 @@ function secureCurrentPoints() {
     
     // Add points to player's total score after delay
     setTimeout(() => {
-        currentPlayer.score += pointsToSecure;
-        currentPlayer.roundPot = 0;
-        currentPlayer.completedRound = true;
-        currentPlayer.completionReason = 'stopped';
+        // Use centralized function to complete round
+        completePlayerRound(currentPlayer, 'stopped', pointsToSecure);
         
         // Update display immediately after score change
         updatePlayerDisplay();
@@ -2267,12 +2282,13 @@ function nextTurn() {
 function concludeQuestionRound() {
     players.forEach(player => {
         if (!player.completedRound) {
-            player.score += player.roundPot;
-            player.roundPot = 0;
-            player.completedRound = true; 
-            player.completionReason = 'finished';
+            // Use centralized function to complete round, but skip completion check
+            completePlayerRound(player, 'finished', player.roundPot, true);
         }
     });
+    
+    // Now check completion once after all players are marked complete
+    checkAndHandleQuestionCompletion();
 
     setAllOptionsDisabled(true);
     questionStarterIndex = (questionStarterIndex + 1) % players.length;
