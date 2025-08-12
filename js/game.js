@@ -2466,6 +2466,7 @@ function handleBelongsDecision(userDecision, container, yesBtn, noBtn) {
         addPointToCurrentPlayer(container);
         
         container.classList.add('choice-made');
+        container.classList.add('correct-choice'); // Add green background to entire container
         clickedBtn.classList.add('correct-selection');
         
         // Check if all options have been decided
