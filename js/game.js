@@ -2270,6 +2270,20 @@ function nextTurn() {
     // NEW: Re-enable options for new player
     setAllOptionsDisabled(false);
     
+    // Clear incorrect markings from previous players' wrong attempts (ordna questions only)
+    const question = questionsToPlay[currentQuestionIndex];
+    if (question && question.typ === 'ordna') {
+        const incorrectButtons = document.querySelectorAll('.option-btn.incorrect-step:not(.correct-step)');
+        incorrectButtons.forEach(button => {
+            // Only re-enable if not already correctly placed
+            if (!button.classList.contains('correct-step')) {
+                button.classList.remove('incorrect-step');
+                button.disabled = false;
+                button.dataset.answered = 'false';
+            }
+        });
+    }
+    
     // Optional: Brief turn transition effect
     if (!isSinglePlayerMode()) {
         playerStatusBar.classList.add('turn-transition');
@@ -2405,6 +2419,13 @@ function handleOrderClick(button, optionText) {
     } else {
         // Wrong answer - eliminate current player
         button.classList.add('incorrect-step');
+        
+        // In single player mode, disable the button permanently
+        if (isSinglePlayerMode()) {
+            button.disabled = true;
+        }
+        // In multiplayer, keep button enabled for other players to try later
+        
         eliminateCurrentPlayer();
         determineNextAction();
     }
