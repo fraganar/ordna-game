@@ -463,8 +463,6 @@ function addPointToCurrentPlayer(sourceElement) {
     if (currentPlayer.roundPot === 1) {
         if (window.AnimationEngine && window.AnimationEngine.wakeUpStopButton) {
             window.AnimationEngine.wakeUpStopButton();
-        } else {
-            wakeUpStopButton();
         }
     }
 }
@@ -1322,19 +1320,6 @@ function showGameResultScreen(score, gameType, totalQuestions) {
 // --- Functions ---
 
 
-// Wake up the stop button when first point is earned
-function wakeUpStopButton() {
-    const decisionButton = UI?.get('decisionButton');
-    if (!decisionButton) return;
-    
-    decisionButton.classList.remove('inactive');
-    decisionButton.classList.add('awakening');
-    
-    // Remove awakening class after animation
-    setTimeout(() => {
-        decisionButton.classList.remove('awakening');
-    }, 1000);
-}
 
 // New flying point animation that goes to the stop button (unified for both modes)
 function showFlyingPointToButton(sourceElement) {
@@ -1403,7 +1388,9 @@ function showFlyingPointToButton(sourceElement) {
             // Wake up button if first point
             const currentPlayer = window.PlayerManager ? window.PlayerManager.getCurrentPlayer() : null;
             if (currentPlayer && currentPlayer.roundPot === 1) {
-                wakeUpStopButton();
+                if (window.AnimationEngine && window.AnimationEngine.wakeUpStopButton) {
+                    window.AnimationEngine.wakeUpStopButton();
+                }
             }
         }
     }
@@ -1642,39 +1629,6 @@ function enableNextButton() {
     updateGameControls();
 }
 
-// Reset buttons for new question
-function resetDecisionButtons() {
-    // Reset stop button
-    const stopSide = UI?.get('stopSide');
-    if (stopSide) {
-        stopSide.classList.remove('disabled', 'has-points', 'completed');
-        stopSide.disabled = false;
-        stopSide.dataset.processing = 'false'; // Reset processing flag
-    }
-    
-    // Restore original stop button content
-    const stopIcon = document.querySelector('#stop-side .decision-icon');
-    const stopAction = document.querySelector('#stop-side .decision-action');
-    if (stopIcon) stopIcon.textContent = '🛡️';
-    if (stopAction) stopAction.textContent = 'Stanna';
-    
-    // Disable next button for new question
-    const nextSide = UI?.get('nextSide');
-    if (nextSide) nextSide.disabled = true;
-    
-    // Reset points display
-    updateStopButtonPoints();
-    
-    // Remove failed class from points to restore green color
-    const pointsElement = document.querySelector('#stop-side .decision-points');
-    if (pointsElement) {
-        pointsElement.classList.remove('points-failed');
-    }
-    
-    // Make decision button inactive at start of new question
-    const decisionButton = UI?.get('decisionButton');
-    if (decisionButton) decisionButton.classList.add('inactive');
-}
 
 // Point animation for both single and multiplayer
 function showPointAnimation(playerIndex, text, isBanked = false) {
@@ -1722,14 +1676,6 @@ function shuffleArray(array) {
     }
 }
 
-function showPlayerSetup() {
-    const startMain = UI?.get('startMain');
-    const playerSetup = UI?.get('playerSetup');
-    
-    if (startMain) startMain.classList.add('hidden');
-    if (playerSetup) playerSetup.classList.remove('hidden');
-    createPlayerInputs();
-}
 
 // Single Player Functions (Star system removed - now using decision button for points)
 
@@ -1892,29 +1838,6 @@ function populatePackSelect() {
     }
 }
 
-function createPlayerInputs() {
-    const playerCountSelect = UI?.get('playerCountSelect');
-    const playerNamesContainer = UI?.get('playerNamesContainer');
-    
-    if (!playerCountSelect || !playerNamesContainer) return;
-    
-    const count = playerCountSelect.value;
-    playerNamesContainer.innerHTML = '';
-    
-    // Skip name inputs for single player
-    if (count == 1) {
-        return;
-    }
-    
-    // Create name inputs for multiplayer
-    for (let i = 0; i < count; i++) {
-        const input = document.createElement('input');
-        input.type = 'text';
-        input.placeholder = `Spelare ${i + 1} namn`;
-        input.className = 'player-name-input w-full p-3 border border-slate-300 rounded-lg text-base sm:text-lg';
-        playerNamesContainer.appendChild(input);
-    }
-}
 
 async function initializeGame() {
     // Set selected pack from dropdown
@@ -2180,7 +2103,10 @@ function loadQuestion() {
     }
     
     // Reset decision buttons for new question
-    resetDecisionButtons();
+    if (window.AnimationEngine && window.AnimationEngine.resetDecisionButtons) {
+        window.AnimationEngine.resetDecisionButtons();
+    }
+    updateStopButtonPoints(); // Still need to update points display
     
     // Reset all players' round state for new question
     players.forEach(p => {
