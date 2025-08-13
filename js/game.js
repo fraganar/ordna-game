@@ -2117,7 +2117,15 @@ async function initializeGame() {
     
     // Setup unified UI
     updatePlayerDisplay();
-    loadQuestion();
+    
+    // Load first question using GameController if available
+    if (window.GameController && GameController.loadQuestion) {
+        console.log('Loading question via GameController');
+        GameController.loadQuestion();
+    } else {
+        console.log('Loading question via fallback');
+        loadQuestion();
+    }
 }
 
 function updateScoreboard() {
