@@ -438,7 +438,11 @@ function eliminateCurrentPlayer() {
     const pointsToLose = currentPlayer.roundPot;
     
     // Save 0 points for challenge mode when eliminated
-    saveChallengeScore(0);
+    if (window.ChallengeSystem) {
+        ChallengeSystem.saveScore(0, currentQuestionIndex);
+    } else {
+        saveChallengeScore(0);
+    }
     
     // Use centralized function to complete round (no points to secure when wrong)
     completePlayerRound(currentPlayer, 'wrong', 0);
@@ -564,7 +568,11 @@ function secureCurrentPoints() {
     stopSide.dataset.processing = 'true';
     
     // Save score for challenge mode when securing points
-    saveChallengeScore(pointsToSecure);
+    if (window.ChallengeSystem) {
+        ChallengeSystem.saveScore(pointsToSecure, currentQuestionIndex);
+    } else {
+        saveChallengeScore(pointsToSecure);
+    }
     
     // Show flying animation from Stop button to display
     showFlyingPointsToTotal(pointsToSecure);
@@ -1081,7 +1089,11 @@ function showWaitingForOpponentView(challengeId) {
         startMain.classList.remove('hidden');
         
         // Reset game state
-        resetChallengeState();
+        if (window.ChallengeSystem) {
+            ChallengeSystem.reset();
+        } else {
+            resetChallengeState();
+        }
         
         // Reload my challenges
         loadMyChallenges();
@@ -1179,7 +1191,11 @@ async function showChallengeResultView(challengeId) {
             startMain.classList.remove('hidden');
             
             // Reset game state
+            if (window.ChallengeSystem) {
+            ChallengeSystem.reset();
+        } else {
             resetChallengeState();
+        }
             
             // Reload my challenges
             loadMyChallenges();
@@ -2306,7 +2322,11 @@ function loadQuestion() {
     UI.setQuestionText(question.fråga);
     
     // Show challenger hint if in challenge mode
-    showChallengerHint();
+    if (window.ChallengeSystem) {
+        ChallengeSystem.showHint(currentQuestionIndex);
+    } else {
+        showChallengerHint();
+    }
     
     const shuffledOptions = [...question.alternativ];
     shuffleArray(shuffledOptions);
@@ -2839,7 +2859,11 @@ function restartGame() {
     currentPlayerIndex = 0;
     questionStarterIndex = 0;
     // Reset challenge and game state
-    resetChallengeState();
+    if (window.ChallengeSystem) {
+        ChallengeSystem.reset();
+    } else {
+        resetChallengeState();
+    }
     selectedPack = null;
     
     // Hide player status bar
@@ -2889,7 +2913,11 @@ function restartGame() {
     finalScoreboard.classList.remove('hidden');
     
     // Reset game state
-    resetChallengeState();
+    if (window.ChallengeSystem) {
+        ChallengeSystem.reset();
+    } else {
+        resetChallengeState();
+    }
     
     // Reload my challenges
     loadMyChallenges();
@@ -3156,7 +3184,11 @@ acceptChallengeBtn.addEventListener('click', async () => {
 
 declineChallengeBtn.addEventListener('click', () => {
     // Clear challenge data and show normal start screen
-    resetChallengeState();
+    if (window.ChallengeSystem) {
+        ChallengeSystem.reset();
+    } else {
+        resetChallengeState();
+    }
     
     challengeAccept.classList.add('hidden');
     startMain.classList.remove('hidden');
@@ -3233,8 +3265,11 @@ async function initializeApp() {
 
 
 // Initialize the app when DOM is ready
-if (document.readyState === 'loading') {
-    document.addEventListener('DOMContentLoaded', initializeApp);
-} else {
-    initializeApp();
+// Only run if App.js module isn't handling initialization
+if (!window.App) {
+    if (document.readyState === 'loading') {
+        document.addEventListener('DOMContentLoaded', initializeApp);
+    } else {
+        initializeApp();
+    }
 }
