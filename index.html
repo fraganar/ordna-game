@@ -28,14 +28,22 @@
     <!-- Firebase config -->
     <script src="js/firebase-config.js"></script>
     
-    <!-- UI Renderer -->
+    <!-- Core Modules (load in order) -->
     <script src="js/uiRenderer.js"></script>
+    <script src="js/gameData.js" defer></script>
+    <script src="js/playerManager.js" defer></script>
+    <script src="js/animationEngine.js" defer></script>
+    <script src="js/challengeSystem.js" defer></script>
+    <script src="js/gameController.js" defer></script>
     
-    <!-- Game script -->
+    <!-- Main Game script -->
     <script src="js/game.js" defer></script>
     
     <!-- Event Handlers -->
     <script src="js/eventHandlers.js" defer></script>
+    
+    <!-- App Initializer (load last) -->
+    <script src="js/app.js" defer></script>
 </head>
 <body class="bg-slate-100 text-slate-800 flex items-center justify-center min-h-screen p-2 sm:p-4">
 
