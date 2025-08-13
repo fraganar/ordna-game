@@ -217,5 +217,14 @@ class ChallengeSystem {
     }
 }
 
-// Create global instance
-window.ChallengeSystem = new ChallengeSystem();
+// Create global instance and make methods accessible
+const challengeSystemInstance = new ChallengeSystem();
+
+// Copy methods to the instance to make them accessible
+Object.getOwnPropertyNames(ChallengeSystem.prototype).forEach(name => {
+    if (name !== 'constructor' && typeof ChallengeSystem.prototype[name] === 'function') {
+        challengeSystemInstance[name] = ChallengeSystem.prototype[name].bind(challengeSystemInstance);
+    }
+});
+
+window.ChallengeSystem = challengeSystemInstance;

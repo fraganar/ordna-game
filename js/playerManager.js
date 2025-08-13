@@ -91,7 +91,7 @@ class PlayerManager {
         
         // Update points display
         if (window.AnimationEngine) {
-            AnimationEngine.updateStopButtonPoints();
+            window.AnimationEngine?.updateStopButtonPoints();
         }
     }
     
@@ -104,7 +104,7 @@ class PlayerManager {
         
         // Show animation
         if (window.AnimationEngine) {
-            AnimationEngine.showPointAnimation(sourceElement);
+            window.AnimationEngine?.showPointAnimation(sourceElement);
         }
         
         // Update display
@@ -112,7 +112,7 @@ class PlayerManager {
         
         // Wake up stop button on first point
         if (currentPlayer.roundPot === 1 && window.AnimationEngine) {
-            AnimationEngine.wakeUpStopButton();
+            window.AnimationEngine?.wakeUpStopButton();
         }
     }
     
@@ -131,7 +131,7 @@ class PlayerManager {
         
         // Show animations
         if (window.AnimationEngine) {
-            AnimationEngine.showSecureAnimation(pointsToSecure);
+            window.AnimationEngine?.showSecureAnimation(pointsToSecure);
         }
         
         // Update display
@@ -220,7 +220,7 @@ class PlayerManager {
             
             // Update progress bar
             if (window.GameController) {
-                const progressPercentage = (GameController.currentQuestionIndex / GameController.questionsToPlay.length) * 100;
+                const progressPercentage = (window.GameController.currentQuestionIndex / window.GameController.questionsToPlay.length) * 100;
                 if (progressBar) progressBar.style.width = `${progressPercentage}%`;
             }
             if (singlePlayerProgress) singlePlayerProgress.classList.remove('hidden');
@@ -270,5 +270,14 @@ class PlayerManager {
     }
 }
 
-// Create global instance
-window.PlayerManager = new PlayerManager();
+// Create global instance and make methods accessible
+const playerManagerInstance = new PlayerManager();
+
+// Copy methods to the instance to make them accessible
+Object.getOwnPropertyNames(PlayerManager.prototype).forEach(name => {
+    if (name !== 'constructor' && typeof PlayerManager.prototype[name] === 'function') {
+        playerManagerInstance[name] = PlayerManager.prototype[name].bind(playerManagerInstance);
+    }
+});
+
+window.PlayerManager = playerManagerInstance;

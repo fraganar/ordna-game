@@ -21,7 +21,7 @@ class AnimationEngine {
     
     // Show point animation when earning a point
     showPointAnimation(sourceElement) {
-        if (PlayerManager?.isSinglePlayerMode()) {
+        if (window.PlayerManager?.isSinglePlayerMode()) {
             this.showFlyingPointToButton(sourceElement);
         } else {
             this.showSimplePointPopup(sourceElement);
@@ -123,7 +123,7 @@ class AnimationEngine {
     
     // Show animation when securing points
     showSecureAnimation(points) {
-        if (PlayerManager?.isSinglePlayerMode()) {
+        if (window.PlayerManager?.isSinglePlayerMode()) {
             this.showFlyingPointsToTotal(points);
             this.transformStopButtonToSecured();
         } else {
@@ -240,13 +240,13 @@ class AnimationEngine {
     // Update stop button points display
     updateStopButtonPoints() {
         const pointsText = document.querySelector('#stop-side .decision-points');
-        const currentPlayer = PlayerManager?.getCurrentPlayer();
+        const currentPlayer = window.PlayerManager?.getCurrentPlayer();
         if (!currentPlayer || !pointsText) return;
         
         const currentPot = currentPlayer.roundPot;
         const stopSide = UI?.get('stopSide');
         
-        if (PlayerManager?.isSinglePlayerMode()) {
+        if (window.PlayerManager?.isSinglePlayerMode()) {
             pointsText.textContent = `+${currentPot} poäng`;
         } else {
             pointsText.textContent = `${currentPlayer.name} +${currentPot}p`;
@@ -267,7 +267,7 @@ class AnimationEngine {
         
         const pointsElement = document.querySelector('#stop-side .decision-points');
         const stopButton = UI?.get('stopSide');
-        const currentPlayer = PlayerManager?.getCurrentPlayer();
+        const currentPlayer = window.PlayerManager?.getCurrentPlayer();
         
         if (!pointsElement || !currentPlayer) return;
         
@@ -281,7 +281,7 @@ class AnimationEngine {
             remainingPoints--;
             
             // Update display
-            if (PlayerManager?.isSinglePlayerMode()) {
+            if (window.PlayerManager?.isSinglePlayerMode()) {
                 pointsElement.textContent = `+${remainingPoints} poäng`;
             } else {
                 pointsElement.textContent = `${currentPlayer.name} +${remainingPoints}p`;
@@ -394,8 +394,17 @@ class AnimationEngine {
     }
 }
 
-// Create global instance
-window.AnimationEngine = new AnimationEngine();
+// Create global instance and make methods accessible
+const animationEngineInstance = new AnimationEngine();
+
+// Copy methods to the instance to make them accessible
+Object.getOwnPropertyNames(AnimationEngine.prototype).forEach(name => {
+    if (name !== 'constructor' && typeof AnimationEngine.prototype[name] === 'function') {
+        animationEngineInstance[name] = AnimationEngine.prototype[name].bind(animationEngineInstance);
+    }
+});
+
+window.AnimationEngine = animationEngineInstance;
 
 // Add necessary CSS animations if not present
 const style = document.createElement('style');

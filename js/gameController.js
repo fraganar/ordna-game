@@ -198,7 +198,7 @@ class GameController {
     handleOrderClick(button, optionText, question) {
         if (button.disabled || this.mistakeMade) return;
         
-        const currentPlayer = PlayerManager?.getCurrentPlayer();
+        const currentPlayer = window.PlayerManager?.getCurrentPlayer();
         if (!currentPlayer || currentPlayer.completedRound) return;
         
         const expectedIndex = this.userOrder.length;
@@ -217,7 +217,7 @@ class GameController {
     handleBelongsDecision(decision, container, yesBtn, noBtn, question) {
         if (yesBtn.disabled || this.mistakeMade) return;
         
-        const currentPlayer = PlayerManager?.getCurrentPlayer();
+        const currentPlayer = window.PlayerManager?.getCurrentPlayer();
         if (!currentPlayer || currentPlayer.completedRound) return;
         
         const optionText = container.dataset.option;
@@ -258,7 +258,7 @@ class GameController {
         button.classList.add('wrong', 'bg-red-100', 'border-red-500');
         this.mistakeMade = true;
         
-        const currentPlayer = PlayerManager?.getCurrentPlayer();
+        const currentPlayer = window.PlayerManager?.getCurrentPlayer();
         if (currentPlayer) {
             const pointsToLose = currentPlayer.roundPot;
             currentPlayer.roundPot = 0;
@@ -270,7 +270,7 @@ class GameController {
             
             // Handle next action
             if (window.AnimationEngine) {
-                AnimationEngine.enableNextButtonAfterMistake(pointsToLose);
+                window.AnimationEngine?.enableNextButtonAfterMistake(pointsToLose);
             }
             
             this.determineNextAction();
@@ -312,7 +312,7 @@ class GameController {
         container.classList.add('wrong', 'bg-red-50');
         this.mistakeMade = true;
         
-        const currentPlayer = PlayerManager?.getCurrentPlayer();
+        const currentPlayer = window.PlayerManager?.getCurrentPlayer();
         if (currentPlayer) {
             const pointsToLose = currentPlayer.roundPot;
             currentPlayer.roundPot = 0;
@@ -324,7 +324,7 @@ class GameController {
             
             // Handle next action
             if (window.AnimationEngine) {
-                AnimationEngine.enableNextButtonAfterMistake(pointsToLose);
+                window.AnimationEngine?.enableNextButtonAfterMistake(pointsToLose);
             }
             
             this.determineNextAction();
@@ -353,7 +353,7 @@ class GameController {
     
     // Handle when all parts of question are answered correctly
     handleQuestionFullyCompleted() {
-        const currentPlayer = PlayerManager?.getCurrentPlayer();
+        const currentPlayer = window.PlayerManager?.getCurrentPlayer();
         if (currentPlayer && !currentPlayer.completedRound) {
             // Auto-secure points
             if (window.PlayerManager) {
@@ -412,7 +412,7 @@ class GameController {
     // Determine next action after answer
     determineNextAction() {
         setTimeout(() => {
-            if (PlayerManager?.isMultiplayerMode()) {
+            if (window.PlayerManager?.isMultiplayerMode()) {
                 if (PlayerManager.hasActivePlayersInRound()) {
                     PlayerManager.nextTurn();
                 } else {
@@ -430,7 +430,7 @@ class GameController {
         const decisionButton = UI?.get('decisionButton');
         const largeNextButton = UI?.get('largeNextQuestionBtn');
         
-        if (PlayerManager?.isMultiplayerMode()) {
+        if (window.PlayerManager?.isMultiplayerMode()) {
             // Multiplayer controls
             if (PlayerManager.hasActivePlayersInRound()) {
                 // Active players remain - show decision button
@@ -449,7 +449,7 @@ class GameController {
         
         // Update button states
         if (window.AnimationEngine) {
-            AnimationEngine.updateStopButtonPoints();
+            window.AnimationEngine?.updateStopButtonPoints();
         }
     }
     
@@ -461,7 +461,7 @@ class GameController {
     
     // End game
     endGame() {
-        if (PlayerManager?.isMultiplayerMode()) {
+        if (window.PlayerManager?.isMultiplayerMode()) {
             this.endMultiplayerGame();
         } else {
             this.endSinglePlayerGame();
@@ -470,7 +470,7 @@ class GameController {
     
     // End single player game
     endSinglePlayerGame() {
-        const player = PlayerManager?.getPlayers()[0];
+        const player = window.PlayerManager?.getPlayers()[0];
         if (!player) return;
         
         // Show result screen
@@ -491,7 +491,7 @@ class GameController {
         const endScreen = UI?.get('endScreen');
         if (endScreen) endScreen.classList.remove('hidden');
         
-        const players = PlayerManager?.getPlayers() || [];
+        const players = window.PlayerManager?.getPlayers() || [];
         players.sort((a, b) => b.score - a.score);
         
         const finalScoreboard = UI?.get('finalScoreboard');
@@ -541,5 +541,14 @@ class GameController {
     }
 }
 
-// Create global instance
-window.GameController = new GameController();
+// Create global instance and make methods accessible
+const gameControllerInstance = new GameController();
+
+// Copy methods to the instance to make them accessible
+Object.getOwnPropertyNames(GameController.prototype).forEach(name => {
+    if (name !== 'constructor' && typeof GameController.prototype[name] === 'function') {
+        gameControllerInstance[name] = GameController.prototype[name].bind(gameControllerInstance);
+    }
+});
+
+window.GameController = gameControllerInstance;

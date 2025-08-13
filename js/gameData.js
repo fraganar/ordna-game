@@ -163,5 +163,14 @@ class GameData {
     }
 }
 
-// Create global instance
-window.GameData = new GameData();
+// Create global instance and make methods accessible
+const gameDataInstance = new GameData();
+
+// Copy methods to the instance to make them accessible
+Object.getOwnPropertyNames(GameData.prototype).forEach(name => {
+    if (name !== 'constructor' && typeof GameData.prototype[name] === 'function') {
+        gameDataInstance[name] = GameData.prototype[name].bind(gameDataInstance);
+    }
+});
+
+window.GameData = gameDataInstance;

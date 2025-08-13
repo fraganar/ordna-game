@@ -37,9 +37,6 @@ let challengeQuestions = [];
 let challengeQuestionScores = [];
 let pendingChallengeCreation = false;
 
-// DUPLICATED FUNCTIONS - Now handled by ChallengeSystem module
-// These functions are kept as fallbacks only
-
 // Centralized function to reset challenge state
 function resetChallengeState() {
     ischallengeMode = false;

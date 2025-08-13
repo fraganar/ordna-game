@@ -87,7 +87,7 @@ class App {
     // Setup UI connections
     setupUI() {
         // Connect modules to UI
-        if (window.AnimationEngine) {
+        if (window.AnimationEngine && typeof AnimationEngine.resetDecisionButtons === 'function') {
             AnimationEngine.resetDecisionButtons();
         }
     }
@@ -116,11 +116,11 @@ class App {
     async checkNotifications() {
         if (!window.ChallengeSystem || !window.PlayerManager) return;
         
-        const playerName = PlayerManager.getPlayerName();
+        const playerName = window.PlayerManager ? window.PlayerManager.getPlayerName() : null;
         if (!playerName) return;
         
         try {
-            const results = await ChallengeSystem.checkForNotifications(playerName);
+            const results = await window.ChallengeSystem.checkForNotifications(playerName);
             if (results && results.length > 0) {
                 this.showNotifications(results);
             }
@@ -133,7 +133,7 @@ class App {
     loadMyChallenges() {
         if (!window.ChallengeSystem) return;
         
-        const challenges = ChallengeSystem.getMyChallenges();
+        const challenges = window.ChallengeSystem ? window.ChallengeSystem.getMyChallenges() : [];
         if (challenges.length === 0) return;
         
         // Show my challenges section
