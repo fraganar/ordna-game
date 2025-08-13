@@ -1,33 +1,8 @@
 // --- DATA ---
 let allQuestions = [];
 
-// --- Player Identity System ---
-let currentPlayer = null;
-
-// Initialize or get player identity
-function initializePlayer() {
-    let playerId = localStorage.getItem('playerId');
-    let playerName = localStorage.getItem('playerName');
-    
-    if (!playerId) {
-        playerId = 'player_' + Date.now() + '_' + Math.random().toString(36).substr(2, 9);
-        localStorage.setItem('playerId', playerId);
-    }
-    
-    currentPlayer = {
-        id: playerId,
-        name: playerName || null
-    };
-    
-    return currentPlayer;
-}
-
-// Set player name (first time setup)
-function setPlayerName(name) {
-    localStorage.setItem('playerName', name);
-    currentPlayer.name = name;
-    console.log('Player identity set:', currentPlayer);
-}
+// Player identity system now handled by PlayerManager module
+let currentPlayer = null; // Keep for compatibility, but PlayerManager is authoritative
 
 // Challenge System State
 let ischallengeMode = false;
@@ -37,54 +12,7 @@ let challengeQuestions = [];
 let challengeQuestionScores = [];
 let pendingChallengeCreation = false;
 
-// DUPLICATED FUNCTIONS - Now handled by ChallengeSystem module
-// These functions are kept as fallbacks only
-
-// Centralized function to reset challenge state
-function resetChallengeState() {
-    ischallengeMode = false;
-    challengeId = null;
-    challengeData = null;
-    challengeQuestions = [];
-    challengeQuestionScores = [];
-}
-
-// Save score for current question in challenge mode
-function saveChallengeScore(score) {
-    if (!ischallengeMode || !isSinglePlayerMode()) return;
-    
-    // Only save if we haven't already saved for this question
-    if (challengeQuestionScores.length === currentQuestionIndex) {
-        challengeQuestionScores.push(score);
-    }
-}
-
-// Show challenger hint in challenge mode
-function showChallengerHint() {
-    if (!ischallengeMode || !challengeId || !challengeData) return;
-    
-    const hintElement = document.getElementById('challenger-hint');
-    if (!hintElement) return;
-    
-    // Safety checks
-    if (!challengeData.challenger || !challengeData.challenger.questionScores) {
-        hintElement.classList.add('hidden');
-        return;
-    }
-    
-    const score = challengeData.challenger.questionScores[currentQuestionIndex];
-    
-    if (score !== undefined) {
-        hintElement.innerHTML = `
-            <div class="challenger-hint-box">
-                💡 ${challengeData.challenger.name}: ${score} poäng på denna fråga
-            </div>
-        `;
-        hintElement.classList.remove('hidden');
-    } else {
-        hintElement.classList.add('hidden');
-    }
-}
+// Challenge system functions now handled by ChallengeSystem module
 
 // Load metadata for all available packs from their JSON files
 async function loadPackMetadata() {
@@ -301,25 +229,7 @@ const questionPacks = [
 // --- DOM Elements ---
 // DOM elements now managed by UIRenderer class (loaded separately)
 
-// Function to trigger the attention animation on decision button
-function triggerDecisionButtonAnimation() {
-    // Use AnimationEngine if available, otherwise fallback
-    if (window.AnimationEngine && window.AnimationEngine.triggerDecisionButtonAnimation) {
-        window.AnimationEngine.triggerDecisionButtonAnimation();
-    } else {
-        // Fallback method
-        const decisionButton = UI.get('decisionButton');
-        if (!decisionButton) return;
-        
-        decisionButton.classList.remove('attention');
-        void decisionButton.offsetWidth;
-        decisionButton.classList.add('attention');
-        
-        setTimeout(() => {
-            decisionButton.classList.remove('attention');
-        }, 2400);
-    }
-}
+// Animation functions now handled by AnimationEngine module
 
 // DOM elements now managed by UIRenderer class
 
@@ -344,7 +254,10 @@ function isSinglePlayerMode() {
 
 // Get current player
 function getCurrentPlayer() {
-    return players[currentPlayerIndex];
+    if (window.PlayerManager) {
+        return window.PlayerManager.getCurrentPlayer();
+    }
+    return players[currentPlayerIndex]; // fallback
 }
 
 // Get total score for single player display
@@ -443,8 +356,6 @@ function eliminateCurrentPlayer() {
     // Save 0 points for challenge mode when eliminated
     if (window.ChallengeSystem) {
         window.ChallengeSystem.saveScore(0, currentQuestionIndex);
-    } else {
-        saveChallengeScore(0);
     }
     
     // Use centralized function to complete round (no points to secure when wrong)
@@ -573,8 +484,6 @@ function secureCurrentPoints() {
     // Save score for challenge mode when securing points
     if (window.ChallengeSystem) {
         window.ChallengeSystem.saveScore(pointsToSecure, currentQuestionIndex);
-    } else {
-        saveChallengeScore(pointsToSecure);
     }
     
     // Show flying animation from Stop button to display
@@ -1094,8 +1003,6 @@ function showWaitingForOpponentView(challengeId) {
         // Reset game state
         if (window.ChallengeSystem) {
             window.ChallengeSystem.reset();
-        } else {
-            resetChallengeState();
         }
         
         // Reload my challenges
@@ -1196,8 +1103,6 @@ async function showChallengeResultView(challengeId) {
             // Reset game state
             if (window.ChallengeSystem) {
             window.ChallengeSystem.reset();
-        } else {
-            resetChallengeState();
         }
             
             // Reload my challenges
@@ -1496,7 +1401,8 @@ function showFlyingPointToButton(sourceElement) {
             updateStopButtonPoints();
             
             // Wake up button if first point
-            if (currentPlayer.roundPot === 1) {
+            const currentPlayer = window.PlayerManager ? window.PlayerManager.getCurrentPlayer() : null;
+            if (currentPlayer && currentPlayer.roundPot === 1) {
                 wakeUpStopButton();
             }
         }
@@ -2324,8 +2230,6 @@ function loadQuestion() {
     // Show challenger hint if in challenge mode
     if (window.ChallengeSystem && typeof window.ChallengeSystem.showHint === 'function') {
         window.ChallengeSystem.showHint(currentQuestionIndex);
-    } else {
-        showChallengerHint();
     }
     
     const shuffledOptions = [...question.alternativ];
@@ -3221,8 +3125,7 @@ function waitForUI() {
 
 // --- Initial Setup ---
 async function initializeApp() {
-    // Initialize player identity
-    initializePlayer();
+    // Player identity initialization now handled by App.js
     
     // Load game data using new GameData module
     if (window.GameData && typeof GameData.initialize === 'function') {
@@ -3254,11 +3157,12 @@ async function initializeApp() {
         await showChallengeAcceptScreen();
     } else {
         // Check for notifications if user is returning
-        if (currentPlayer.name) {
+        const playerName = window.PlayerManager ? window.PlayerManager.getPlayerName() : null;
+        if (playerName) {
             await checkForNotifications();
             await loadMyChallenges();
             const challengerNameDisplay = UI?.get('challengerNameDisplay');
-            if (challengerNameDisplay) challengerNameDisplay.textContent = currentPlayer.name;
+            if (challengerNameDisplay) challengerNameDisplay.textContent = playerName;
         }
     }
 }
