@@ -328,7 +328,8 @@ let selectedPacks = questionPacks.map(p => p.name);
 let selectedPack = null; // Currently selected pack for playing
 
 // Game State - Unified for both single and multiplayer
-let players = [];
+// Use PlayerManager.players instead of local array
+let players = PlayerManager?.players || [];
 let currentPlayerIndex = 0;
 let questionStarterIndex = 0;
 // mistakeMade removed - now using player-specific states
@@ -1932,28 +1933,34 @@ async function endSinglePlayerGame() {
 
 // Populate pack selection dropdown
 function populatePackSelect() {
-    const packSelect = UI?.get('packSelect');
-    const challengePackSelect = UI?.get('challengePackSelect');
-    const selects = [packSelect, challengePackSelect];
-    
-    selects.forEach(select => {
-        if (select) {
-            select.innerHTML = '';
-            
-            questionPacks.forEach(pack => {
-                if (pack.status === 'available') {
-                    const option = document.createElement('option');
-                    option.value = pack.name;
-                    option.textContent = pack.name;
-                    // Set "Blandat med B" as default selection
-                    if (pack.name === 'Blandat med B') {
-                        option.selected = true;
+    // Use GameData if available, otherwise fall back to old method
+    if (window.GameData && GameData.packMetadata) {
+        GameData.populatePackSelectors();
+    } else {
+        // Fallback to old method
+        const packSelect = UI?.get('packSelect');
+        const challengePackSelect = UI?.get('challengePackSelect');
+        const selects = [packSelect, challengePackSelect];
+        
+        selects.forEach(select => {
+            if (select) {
+                select.innerHTML = '';
+                
+                questionPacks.forEach(pack => {
+                    if (pack.status === 'available') {
+                        const option = document.createElement('option');
+                        option.value = pack.name;
+                        option.textContent = pack.name;
+                        // Set "Blandat med B" as default selection
+                        if (pack.name === 'Blandat med B') {
+                            option.selected = true;
+                        }
+                        select.appendChild(option);
                     }
-                    select.appendChild(option);
-                }
-            });
-        }
-    });
+                });
+            }
+        });
+    }
 }
 
 function createPlayerInputs() {
@@ -1990,42 +1997,86 @@ async function initializeGame() {
     await loadQuestionsForGame();
     
     if (allQuestions.length === 0) {
-        console.error("No questions loaded!");
+        console.error("No questions loaded! allQuestions.length:", allQuestions.length);
+        console.log("GameData.allQuestions:", window.GameData?.allQuestions?.length || 'not available');
         alert("Kunde inte ladda frågor. Kontrollera att frågefiler finns.");
         return;
     }
+    
+    console.log("Questions loaded successfully:", allQuestions.length);
     
     const nameInputs = document.querySelectorAll('.player-name-input');
     const playerCountSelect = UI?.get('playerCountSelect');
     const playerCount = parseInt(playerCountSelect?.value || 1);
     
-    players = [];
+    // Initialize players using PlayerManager if available
+    console.log('PlayerManager check:', {
+        windowPlayerManager: !!window.PlayerManager,
+        initFunction: typeof PlayerManager?.initializePlayers,
+        hasMethod: 'initializePlayers' in (PlayerManager || {}),
+        playerManagerKeys: PlayerManager ? Object.getOwnPropertyNames(PlayerManager) : 'N/A',
+        playerManagerPrototype: PlayerManager ? Object.getOwnPropertyNames(Object.getPrototypeOf(PlayerManager)) : 'N/A'
+    });
     
-    // Initialize players (unified structure for both single and multiplayer)
+    // Collect player names first
+    const playerNames = [];
     if (playerCount === 1) {
-        players = [{
-            name: 'Du',
-            score: 0,
-            roundPot: 0,
-            completedRound: false,
-            completionReason: null
-        }];
+        playerNames.push('Du');
     } else {
-        // Handle multiplayer (with name inputs)
-        players = [];
         nameInputs.forEach((input, index) => {
-            players.push({
-                name: input.value || `Spelare ${index + 1}`,
+            playerNames.push(input.value || `Spelare ${index + 1}`);
+        });
+        if (playerNames.length < 2) {
+            console.error("Minst två spelare behövs!");
+            return;
+        }
+    }
+    
+    // Try PlayerManager first
+    let usePlayerManager = false;
+    if (window.PlayerManager) {
+        try {
+            console.log('Trying to call PlayerManager.initializePlayers...');
+            PlayerManager.initializePlayers(playerCount, playerNames);
+            players = PlayerManager.players; // Update reference
+            console.log('Players initialized via PlayerManager:', players.length, players);
+            usePlayerManager = true;
+        } catch (error) {
+            console.error('Error calling PlayerManager:', error);
+            console.log('Falling back to old method...');
+            usePlayerManager = false;
+        }
+    }
+    
+    // Fallback to old method if PlayerManager failed
+    if (!usePlayerManager) {
+        // Fallback to old method
+        players = [];
+        
+        if (playerCount === 1) {
+            players = [{
+                name: 'Du',
                 score: 0,
                 roundPot: 0,
                 completedRound: false,
                 completionReason: null
+            }];
+        } else {
+            nameInputs.forEach((input, index) => {
+                players.push({
+                    name: input.value || `Spelare ${index + 1}`,
+                    score: 0,
+                    roundPot: 0,
+                    completedRound: false,
+                    completionReason: null
+                });
             });
-        });
-        if (players.length < 2) {
-            console.error("Minst två spelare behövs!");
-            return;
+            if (players.length < 2) {
+                console.error("Minst två spelare behövs!");
+                return;
+            }
         }
+        console.log('Players initialized via fallback:', players.length);
     }
 
     if (selectedPacks.length === 0) {
@@ -3142,8 +3193,16 @@ async function initializeApp() {
     // Initialize player identity
     initializePlayer();
     
-    // Load metadata from JSON files first
-    await loadPackMetadata();
+    // Load game data using new GameData module
+    if (window.GameData && typeof GameData.initialize === 'function') {
+        await GameData.initialize();
+        // Copy questions to global array for compatibility
+        allQuestions = GameData.allQuestions;
+        console.log('GameData loaded:', allQuestions.length, 'questions');
+    } else {
+        // Fallback to old method
+        await loadPackMetadata();
+    }
     
     // Wait for UI to be ready before setting up UI elements
     await waitForUI();
