@@ -300,22 +300,24 @@ const questionPacks = [
 
 // Function to trigger the attention animation on decision button
 function triggerDecisionButtonAnimation() {
-    const decisionButton = UI.get('decisionButton');
-    if (!decisionButton) return;
-    
-    // Remove animation class if it exists (to restart animation)
-    decisionButton.classList.remove('attention');
-    
-    // Force reflow to restart animation
-    void decisionButton.offsetWidth;
-    
-    // Add animation class
-    decisionButton.classList.add('attention');
-    
-    // Remove animation class after it completes
-    setTimeout(() => {
+    // Use AnimationEngine if available, otherwise fallback
+    if (window.AnimationEngine && AnimationEngine.triggerDecisionButtonAnimation) {
+        AnimationEngine.triggerDecisionButtonAnimation();
+        console.log('Animation triggered via AnimationEngine');
+    } else {
+        // Fallback method
+        const decisionButton = UI.get('decisionButton');
+        if (!decisionButton) return;
+        
         decisionButton.classList.remove('attention');
-    }, 2400); // 0.8s * 3 iterations
+        void decisionButton.offsetWidth;
+        decisionButton.classList.add('attention');
+        
+        setTimeout(() => {
+            decisionButton.classList.remove('attention');
+        }, 2400);
+        console.log('Animation triggered via fallback');
+    }
 }
 
 // DOM elements now managed by UIRenderer class
@@ -543,7 +545,13 @@ function addPointToCurrentPlayer(sourceElement) {
     
     // Wake up stop button if first point
     if (currentPlayer.roundPot === 1) {
-        wakeUpStopButton();
+        if (window.AnimationEngine && AnimationEngine.wakeUpStopButton) {
+            AnimationEngine.wakeUpStopButton();
+            console.log('Wake up animation via AnimationEngine');
+        } else {
+            wakeUpStopButton();
+            console.log('Wake up animation via fallback');
+        }
     }
 }
 
