@@ -303,7 +303,6 @@ function triggerDecisionButtonAnimation() {
     // Use AnimationEngine if available, otherwise fallback
     if (window.AnimationEngine && AnimationEngine.triggerDecisionButtonAnimation) {
         AnimationEngine.triggerDecisionButtonAnimation();
-        console.log('Animation triggered via AnimationEngine');
     } else {
         // Fallback method
         const decisionButton = UI.get('decisionButton');
@@ -316,7 +315,6 @@ function triggerDecisionButtonAnimation() {
         setTimeout(() => {
             decisionButton.classList.remove('attention');
         }, 2400);
-        console.log('Animation triggered via fallback');
     }
 }
 
@@ -547,10 +545,8 @@ function addPointToCurrentPlayer(sourceElement) {
     if (currentPlayer.roundPot === 1) {
         if (window.AnimationEngine && AnimationEngine.wakeUpStopButton) {
             AnimationEngine.wakeUpStopButton();
-            console.log('Wake up animation via AnimationEngine');
         } else {
             wakeUpStopButton();
-            console.log('Wake up animation via fallback');
         }
     }
 }
@@ -2018,13 +2014,6 @@ async function initializeGame() {
     const playerCount = parseInt(playerCountSelect?.value || 1);
     
     // Initialize players using PlayerManager if available
-    console.log('PlayerManager check:', {
-        windowPlayerManager: !!window.PlayerManager,
-        initFunction: typeof PlayerManager?.initializePlayers,
-        hasMethod: 'initializePlayers' in (PlayerManager || {}),
-        playerManagerKeys: PlayerManager ? Object.getOwnPropertyNames(PlayerManager) : 'N/A',
-        playerManagerPrototype: PlayerManager ? Object.getOwnPropertyNames(Object.getPrototypeOf(PlayerManager)) : 'N/A'
-    });
     
     // Collect player names first
     const playerNames = [];
@@ -2044,14 +2033,11 @@ async function initializeGame() {
     let usePlayerManager = false;
     if (window.PlayerManager) {
         try {
-            console.log('Trying to call PlayerManager.initializePlayers...');
             PlayerManager.initializePlayers(playerCount, playerNames);
             players = PlayerManager.players; // Update reference
-            console.log('Players initialized via PlayerManager:', players.length, players);
             usePlayerManager = true;
         } catch (error) {
             console.error('Error calling PlayerManager:', error);
-            console.log('Falling back to old method...');
             usePlayerManager = false;
         }
     }
@@ -2084,7 +2070,6 @@ async function initializeGame() {
                 return;
             }
         }
-        console.log('Players initialized via fallback:', players.length);
     }
 
     if (selectedPacks.length === 0) {
@@ -2120,10 +2105,8 @@ async function initializeGame() {
     
     // Load first question using GameController if available
     if (window.GameController && GameController.loadQuestion) {
-        console.log('Loading question via GameController');
         GameController.loadQuestion();
     } else {
-        console.log('Loading question via fallback');
         loadQuestion();
     }
 }
