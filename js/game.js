@@ -246,8 +246,7 @@ let selectedPacks = questionPacks.map(p => p.name);
 let selectedPack = null; // Currently selected pack for playing
 
 // Game State - Unified for both single and multiplayer
-// Use PlayerManager.players instead of local array
-let players = PlayerManager?.players || [];
+// Note: players[] array removed - use PlayerManager.getPlayers() instead
 let currentPlayerIndex = 0;
 let questionStarterIndex = 0;
 // mistakeMade removed - now using player-specific states
@@ -257,7 +256,7 @@ function isSinglePlayerMode() {
     if (window.PlayerManager && window.PlayerManager.isSinglePlayerMode) {
         return window.PlayerManager.isSinglePlayerMode();
     }
-    return players.length === 1; // fallback
+    return true; // fallback to single player if PlayerManager not available
 }
 
 // Get current player
@@ -265,10 +264,8 @@ function isSinglePlayerMode() {
 
 // Get total score for single player display
 function getTotalScore() {
-    if (isSinglePlayerMode()) {
-        return players[0].score;
-    }
-    return 0;
+    const currentPlayer = window.PlayerManager?.getCurrentPlayer();
+    return currentPlayer ? currentPlayer.score : 0;
 }
 
 // Get current question score (pot)
@@ -285,7 +282,8 @@ function getCurrentQuestion() {
 // isPlayerActive() and hasActivePlayersInRound() wrappers removed - use PlayerManager directly
 
 function getCurrentActivePlayer() {
-    // This is still needed as it's not directly in PlayerManager
+    // Get first active player from PlayerManager
+    const players = window.PlayerManager?.getPlayers() || [];
     return players.find(p => window.PlayerManager.isPlayerActive(p)) || null;
 }
 
@@ -430,6 +428,7 @@ function determineNextAction() {
 // New function to immediately conclude a question when all options are answered
 function concludeQuestionImmediately() {
     // Auto-secure points for all active players
+    const players = window.PlayerManager?.getPlayers() || [];
     players.forEach(player => {
         if (window.PlayerManager.isPlayerActive(player) && player.roundPot > 0) {
             player.score += player.roundPot;
