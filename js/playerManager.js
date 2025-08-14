@@ -168,6 +168,11 @@ class PlayerManager {
         // Update display
         this.updatePlayerDisplay();
         
+        // Update game controls to handle stop button enable/disable based on player points
+        if (typeof window.updateGameControls === 'function') {
+            window.updateGameControls();
+        }
+        
         // Show turn transition effect
         const playerStatusBar = UI?.get('playerStatusBar');
         if (playerStatusBar) {

@@ -215,6 +215,223 @@ class ChallengeSystem {
             return true;
         }
     }
+    
+    // Load and display my challenges (moved from game.js)
+    async loadMyChallenges() {
+        const myChallengesSection = document.getElementById('my-challenges-section');
+        const myChallengesList = document.getElementById('my-challenges-list');
+        
+        const playerName = window.PlayerManager ? window.PlayerManager.getPlayerName() : null;
+        if (!playerName) {
+            if (myChallengesSection) myChallengesSection.classList.add('hidden');
+            return;
+        }
+        
+        // Get all challenges from localStorage
+        const allChallenges = [];
+        for (let i = 0; i < localStorage.length; i++) {
+            const key = localStorage.key(i);
+            if (key.startsWith('challenge_')) {
+                try {
+                    const challenge = JSON.parse(localStorage.getItem(key));
+                    allChallenges.push(challenge);
+                } catch (e) {
+                    // Invalid data, skip
+                }
+            }
+        }
+        
+        if (allChallenges.length === 0) {
+            if (myChallengesSection) myChallengesSection.classList.add('hidden');
+            return;
+        }
+        
+        // Sort by most recent
+        allChallenges.sort((a, b) => {
+            const aTime = a.createdAt || a.completedAt;
+            const bTime = b.createdAt || b.completedAt;
+            return new Date(bTime) - new Date(aTime);
+        });
+        
+        // Display challenges
+        if (myChallengesList) {
+            myChallengesList.innerHTML = '';
+            allChallenges.slice(0, 5).forEach(challenge => {
+                const item = document.createElement('div');
+                item.className = 'bg-slate-50 border border-slate-200 rounded-lg p-3 cursor-pointer hover:bg-slate-100 transition-colors';
+                
+                let statusBadge = '';
+                let statusText = '';
+                
+                if (challenge.role === 'challenger') {
+                    if (!challenge.hasSeenResult) {
+                        // Check if completed
+                        this.checkChallengeCompletionStatus(challenge.id).then(isComplete => {
+                            if (isComplete) {
+                                const statusBadgeEl = item.querySelector('.status-badge');
+                                if (statusBadgeEl) {
+                                    statusBadgeEl.innerHTML = 
+                                        '<span class="bg-green-100 text-green-800 text-xs font-semibold px-2 py-1 rounded">Klar!</span>';
+                                }
+                            }
+                        });
+                    }
+                    statusBadge = challenge.hasSeenResult ? 
+                        '<span class="bg-gray-100 text-gray-600 text-xs font-semibold px-2 py-1 rounded">Sedd</span>' :
+                        '<span class="bg-blue-100 text-blue-800 text-xs font-semibold px-2 py-1 rounded">Väntar</span>';
+                    statusText = `Du: ${challenge.totalScore}p`;
+                } else {
+                    statusBadge = '<span class="bg-green-100 text-green-800 text-xs font-semibold px-2 py-1 rounded">Spelad</span>';
+                    statusText = `Du: ${challenge.totalScore}p`;
+                }
+                
+                const timeAgo = this.getTimeAgo(challenge.createdAt || challenge.completedAt);
+                
+                item.innerHTML = `
+                    <div class="flex justify-between items-start">
+                        <div class="flex-1">
+                            <p class="font-semibold text-slate-800">${challenge.role === 'challenger' ? 'Utmanade' : 'Utmanad av'} någon</p>
+                            <p class="text-sm text-slate-500">${timeAgo} • ${statusText}</p>
+                        </div>
+                        <div class="status-badge">${statusBadge}</div>
+                    </div>
+                `;
+                
+                item.addEventListener('click', async () => {
+                    if (challenge.role === 'challenger') {
+                        const isComplete = await this.checkChallengeCompletionStatus(challenge.id);
+                        if (isComplete) {
+                            if (typeof window.showChallengeResultView === 'function') {
+                                window.showChallengeResultView(challenge.id);
+                            }
+                        } else {
+                            window.challengeId = challenge.id;
+                            if (window.UIController && window.UIController.showWaitingForOpponentView) {
+                                window.UIController.showWaitingForOpponentView(challenge.id);
+                            }
+                        }
+                    } else {
+                        if (typeof window.showChallengeResultView === 'function') {
+                            window.showChallengeResultView(challenge.id);
+                        }
+                    }
+                });
+                
+                myChallengesList.appendChild(item);
+            });
+        }
+        
+        if (myChallengesSection) myChallengesSection.classList.remove('hidden');
+    }
+    
+    // Helper function to check if challenge is complete
+    async checkChallengeCompletionStatus(challengeId) {
+        try {
+            const challenge = await window.FirebaseAPI.getChallenge(challengeId);
+            return challenge && challenge.status === 'complete';
+        } catch (error) {
+            return false;
+        }
+    }
+    
+    // Helper function to get time ago text
+    getTimeAgo(dateString) {
+        const now = new Date();
+        const date = new Date(dateString);
+        const diffInMs = now - date;
+        const diffInMinutes = Math.floor(diffInMs / (1000 * 60));
+        const diffInHours = Math.floor(diffInMinutes / 60);
+        const diffInDays = Math.floor(diffInHours / 24);
+        
+        if (diffInMinutes < 1) return 'Just nu';
+        if (diffInMinutes < 60) return `${diffInMinutes}min sedan`;
+        if (diffInHours < 24) return `${diffInHours}h sedan`;
+        if (diffInDays < 7) return `${diffInDays}d sedan`;
+        return date.toLocaleDateString('sv-SE');
+    }
+    
+    // Create a new challenge - starts the game immediately (moved from game.js)
+    async createChallenge() {
+        const playerName = window.PlayerManager ? window.PlayerManager.getPlayerName() : null;
+        console.log('Debug Challenge: playerName:', playerName);
+        if (!playerName) {
+            console.error('Player not set up');
+            return;
+        }
+        
+        try {
+            // Set selected pack from challenge dropdown before loading questions
+            const challengePackSelect = window.UI?.get('challengePackSelect');
+            window.selectedPack = challengePackSelect?.value || null;
+            console.log('Debug Challenge: selectedPack:', window.selectedPack);
+            
+            // Load questions based on selected pack
+            console.log('Debug Challenge: loadQuestionsForGame exists?', typeof window.loadQuestionsForGame === 'function');
+            if (typeof window.loadQuestionsForGame === 'function') {
+                await window.loadQuestionsForGame();
+                console.log('Debug Challenge: allQuestions length:', window.allQuestions?.length);
+            }
+            
+            if (!window.allQuestions || window.allQuestions.length === 0) {
+                console.error('Debug Challenge: No questions available');
+                throw new Error('No questions available for selected pack');
+            }
+            
+            // Select 12 random questions from loaded pack
+            const processedQuestions = typeof window.processQuestions === 'function' ? 
+                window.processQuestions(window.allQuestions) : window.allQuestions;
+            const shuffled = [...processedQuestions];
+            if (typeof window.shuffleArray === 'function') {
+                window.shuffleArray(shuffled);
+            }
+            this.challengeQuestions = shuffled.slice(0, 12);
+            
+            // Set up challenge mode
+            this.isChallengeMode = true;
+            this.challengeId = null; // Will be set after game completion
+            this.challengeQuestionScores = [];
+            
+            // Set global variables for compatibility
+            window.ischallengeMode = true;
+            window.challengeQuestions = this.challengeQuestions;
+            window.challengeQuestionScores = this.challengeQuestionScores;
+            
+            // Start the game directly as single player using PlayerManager
+            if (window.PlayerManager) {
+                window.PlayerManager.initializePlayers(1, [playerName]);
+            }
+            window.questionsToPlay = this.challengeQuestions;
+            
+            // Hide challenge form and show game
+            const challengeForm = window.UI?.get('challengeForm');
+            const singlePlayerScore = window.UI?.get('singlePlayerScore');
+            const singlePlayerProgress = window.UI?.get('singlePlayerProgress');
+            const scoreboard = window.UI?.get('scoreboard');
+            
+            if (challengeForm) challengeForm.classList.add('hidden');
+            if (window.UI?.showScreen) {
+                window.UI.showScreen('gameScreen');
+            }
+            
+            // Setup UI for single player
+            if (singlePlayerScore) singlePlayerScore.classList.remove('hidden');
+            if (singlePlayerProgress) singlePlayerProgress.classList.remove('hidden');
+            if (scoreboard) scoreboard.classList.add('hidden');
+            
+            window.currentQuestionIndex = 0;
+            console.log('Debug Challenge: currentQuestionIndex set to 0');
+            console.log('Debug Challenge: questionsToPlay length:', window.questionsToPlay?.length);
+            if (typeof window.loadQuestion === 'function') {
+                window.loadQuestion();
+            }
+            
+        } catch (error) {
+            console.error('Failed to create challenge:', error);
+            if (typeof window.showError === 'function') {
+                window.showError('Kunde inte skapa utmaning. Försök igen.');
+            }
+        }
+    }
 }
 
 // Create global instance and make methods accessible

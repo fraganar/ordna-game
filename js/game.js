@@ -92,19 +92,28 @@ async function loadQuestions() {
 
 // Load questions based on selected pack
 async function loadQuestionsForGame() {
+    console.log('Debug loadQuestionsForGame: selectedPack:', selectedPack);
     if (selectedPack) {
         // Load specific pack
+        console.log('Debug: Loading pack questions for:', selectedPack);
         const packQuestions = await loadPackQuestions(selectedPack);
+        console.log('Debug: packQuestions length:', packQuestions?.length);
         if (packQuestions.length > 0) {
             allQuestions = packQuestions;
+            window.allQuestions = packQuestions;
+            console.log('Debug: Set allQuestions to packQuestions, length:', allQuestions.length);
             return allQuestions;
         }
         // Fallback if pack loading fails
         console.warn(`Failed to load pack "${selectedPack}", falling back to default questions`);
     }
     
-    // Load default questions
-    return await loadQuestions();
+    // Load default questions and set global variable
+    console.log('Debug: Loading default questions');
+    allQuestions = await loadQuestions();
+    window.allQuestions = allQuestions;
+    console.log('Debug: Set allQuestions to default, length:', allQuestions?.length);
+    return allQuestions;
 }
 
 const questionPacks = [
@@ -272,6 +281,12 @@ function getCurrentQuestionScore() {
     return getCurrentPlayer().roundPot;
 }
 
+// Helper function to get current question from the right source
+function getCurrentQuestion() {
+    const questions = window.questionsToPlay || questionsToPlay;
+    return questions[currentQuestionIndex];
+}
+
 // NEW: Player-specific state management helpers
 function isPlayerActive(player) {
     if (window.PlayerManager && window.PlayerManager.isPlayerActive) {
@@ -326,7 +341,7 @@ function completePlayerRound(player, reason, pointsToSecure = 0, skipCompletionC
 }
 
 function isCurrentQuestionFullyAnswered() {
-    const question = questionsToPlay[currentQuestionIndex];
+    const question = getCurrentQuestion();
     if (!question) return false;
     
     if (question.typ === 'ordna') {
@@ -370,7 +385,9 @@ function eliminateCurrentPlayer() {
     enableNextButtonAfterMistake(pointsToLose);
     
     // Update displays
-    updatePlayerDisplay();
+    if (window.PlayerManager) {
+        window.PlayerManager.updatePlayerDisplay();
+    }
     updateGameControls();
     
     // Check if question is complete after elimination
@@ -397,7 +414,27 @@ function determineNextAction() {
         setTimeout(() => {
             // Double-check state hasn't changed during timeout
             if (hasActivePlayersInRound() && !isCurrentQuestionFullyAnswered()) {
-                nextTurn();
+                if (window.PlayerManager) {
+                    window.PlayerManager.nextTurn();
+                    
+                    // Clear incorrect markings from previous players' wrong attempts (ordna questions only)
+                    // This allows next player to try the same alternatives
+                    const question = getCurrentQuestion();
+                    if (question && question.typ === 'ordna') {
+                        const incorrectButtons = document.querySelectorAll('.option-btn.incorrect-step:not(.correct-step)');
+                        incorrectButtons.forEach(button => {
+                            // Only re-enable if not already correctly placed
+                            if (!button.classList.contains('correct-step')) {
+                                button.classList.remove('incorrect-step');
+                                button.disabled = false;
+                                button.dataset.answered = 'false';
+                            }
+                        });
+                    }
+                    
+                    // Re-enable options for new player
+                    setAllOptionsDisabled(false);
+                }
             } else {
                 determineNextAction(); // Re-evaluate
             }
@@ -422,7 +459,9 @@ function concludeQuestionImmediately() {
     
     // Update displays and show results
     updateScoreboard();
-    updatePlayerDisplay();
+    if (window.PlayerManager) {
+        window.PlayerManager.updatePlayerDisplay();
+    }
     showCorrectAnswers();
     updateGameControls();
 }
@@ -458,11 +497,17 @@ function addPointToCurrentPlayer(sourceElement) {
     currentPlayer.roundPot++;
     
     // Use unified flying animation for all modes
-    showFlyingPointToButton(sourceElement);
+    if (window.AnimationEngine) {
+        window.AnimationEngine.showPointAnimation(sourceElement);
+    }
     
     // Update displays
-    updateStopButtonPoints();
-    updatePlayerDisplay();
+    if (window.AnimationEngine) {
+        window.AnimationEngine.updateStopButtonPoints();
+    }
+    if (window.PlayerManager) {
+        window.PlayerManager.updatePlayerDisplay();
+    }
     updateGameControls(); // Always update button states when points change
     
     // Wake up stop button if first point
@@ -473,99 +518,77 @@ function addPointToCurrentPlayer(sourceElement) {
     }
 }
 
-// Handle when player secures points (unified function)
+// Handle when player secures points - delegates to PlayerManager but handles game-specific logic
 function secureCurrentPoints() {
-    const currentPlayer = getCurrentPlayer();
-    const pointsToSecure = currentPlayer.roundPot;
     const stopSide = UI.get('stopSide');
     
-    if (pointsToSecure <= 0 || !stopSide) return;
-    
     // Prevent multiple triggers
-    if (stopSide.dataset.processing === 'true') return;
-    stopSide.dataset.processing = 'true';
+    if (stopSide && stopSide.dataset.processing === 'true') return;
+    if (stopSide) stopSide.dataset.processing = 'true';
+    
+    const currentPlayer = getCurrentPlayer();
+    const pointsToSecure = currentPlayer.roundPot;
+    
+    if (pointsToSecure <= 0) return;
     
     // Save score for challenge mode when securing points
     if (window.ChallengeSystem) {
         window.ChallengeSystem.saveScore(pointsToSecure, currentQuestionIndex);
     }
     
-    // Show flying animation from Stop button to display
-    showFlyingPointsToTotal(pointsToSecure);
+    // Show animations immediately
+    if (window.AnimationEngine) {
+        window.AnimationEngine.showSecureAnimation(pointsToSecure);
+    }
     
-    // Transform stop button to "Secured" state
-    transformStopButtonToSecured();
-    
-    // Add points to player's total score after delay
+    // Use the stable, well-designed completePlayerRound function (like old code)
+    // This handles facit display correctly for both single and multiplayer
     setTimeout(() => {
         // Use centralized function to complete round
         completePlayerRound(currentPlayer, 'stopped', pointsToSecure);
         
         // Update display immediately after score change
-        updatePlayerDisplay();
+        if (window.PlayerManager) {
+            window.PlayerManager.updatePlayerDisplay();
+        }
         
         // Handle turn progression
         if (isSinglePlayerMode()) {
             enableNextButton();
         } else {
-            // Delay turn progression to let animations complete
-            setTimeout(nextTurn, 800);
+            // Check if more players need to play
+            if (window.PlayerManager.hasActivePlayersInRound()) {
+                setTimeout(() => { 
+                    window.PlayerManager.nextTurn(); 
+                    
+                    // Clear incorrect markings from previous players' wrong attempts (ordna questions only)
+                    // This allows next player to try the same alternatives
+                    const question = getCurrentQuestion();
+                    if (question && question.typ === 'ordna') {
+                        const incorrectButtons = document.querySelectorAll('.option-btn.incorrect-step:not(.correct-step)');
+                        incorrectButtons.forEach(button => {
+                            // Only re-enable if not already correctly placed
+                            if (!button.classList.contains('correct-step')) {
+                                button.classList.remove('incorrect-step');
+                                button.disabled = false;
+                                button.dataset.answered = 'false';
+                            }
+                        });
+                    }
+                    
+                    // Re-enable options for new player
+                    setAllOptionsDisabled(false);
+                }, 800);
+            } else {
+                // All players done - conclude round
+                window.PlayerManager.concludeQuestionRound();
+                updateGameControls(); // Update button states
+            }
         }
-    }, 600); // Increased delay to ensure animation completes
+    }, 600);
 }
 
 // Unified player display update
-function updatePlayerDisplay() {
-    const playerStatusBar = UI.get('playerStatusBar');
-    const activePlayerDisplay = UI.get('activePlayerDisplay');
-    const miniScores = UI.get('miniScores');
-    const progressBar = UI.get('progressBar');
-    const singlePlayerProgress = UI.get('singlePlayerProgress');
-    const singlePlayerScore = UI.get('singlePlayerScore');
-    const scoreboard = UI.get('scoreboard');
-    
-    if (playerStatusBar) playerStatusBar.classList.remove('hidden');
-    
-    if (isSinglePlayerMode()) {
-        // Single player: show total score
-        if (activePlayerDisplay) activePlayerDisplay.textContent = `Totalpoäng: ${players[0].score}`;
-        if (miniScores) miniScores.textContent = '';
-        
-        // Update progress bar
-        const progressPercentage = (currentQuestionIndex / questionsToPlay.length) * 100;
-        if (progressBar) progressBar.style.width = `${progressPercentage}%`;
-        if (singlePlayerProgress) singlePlayerProgress.classList.remove('hidden');
-        
-        // Hide old single player score display
-        if (singlePlayerScore) singlePlayerScore.classList.add('hidden');
-        if (scoreboard) scoreboard.classList.add('hidden');
-    } else {
-        // Multiplayer: show active player and mini scores with clear indication
-        const activePlayer = getCurrentPlayer();
-        if (activePlayerDisplay) {
-            activePlayerDisplay.innerHTML = `
-                <span class="inline-flex items-center gap-2">
-                    <span class="w-3 h-3 bg-blue-600 rounded-full animate-pulse"></span>
-                    <span class="text-blue-700 font-bold text-lg">${activePlayer.name} spelar</span>
-                </span>
-            `;
-        }
-        
-        // Build mini scores with clearer active indication
-        const scores = players.map(p => {
-            const isActive = p === activePlayer;
-            const scoreClass = isActive ? 'font-bold text-blue-700 bg-blue-100 px-2 py-1 rounded' : 'text-gray-600';
-            return `<span class="${scoreClass}">${p.name}: ${p.score}</span>`;
-        }).join(' • ');
-        
-        if (miniScores) miniScores.innerHTML = scores;
-        
-        // Hide old displays
-        if (singlePlayerScore) singlePlayerScore.classList.add('hidden');
-        if (singlePlayerProgress) singlePlayerProgress.classList.add('hidden');
-        if (scoreboard) scoreboard.classList.add('hidden');
-    }
-}
 
 // --- Challenge Functions ---
 
@@ -609,70 +632,6 @@ async function showChallengeAcceptScreen() {
     }
 }
 
-// Create a new challenge - starts the game immediately
-async function createChallenge() {
-    if (!currentPlayer || !currentPlayer.name) {
-        console.error('Player not set up');
-        return;
-    }
-    
-    try {
-        // Set selected pack from challenge dropdown before loading questions
-        const challengePackSelect = UI.get('challengePackSelect');
-        selectedPack = challengePackSelect?.value || null;
-        
-        // Load questions based on selected pack
-        await loadQuestionsForGame();
-        
-        if (allQuestions.length === 0) {
-            throw new Error('No questions available for selected pack');
-        }
-        
-        // Select 12 random questions from loaded pack
-        const processedQuestions = processQuestions(allQuestions);
-        const shuffled = [...processedQuestions];
-        shuffleArray(shuffled);
-        challengeQuestions = shuffled.slice(0, 12);
-        
-        
-        // Set up challenge mode
-        ischallengeMode = true;
-        challengeId = null; // Will be set after game completion
-        challengeQuestionScores = [];
-        
-        // Start the game directly as single player
-        players = [{
-            name: currentPlayer.name,
-            score: 0,
-            roundPot: 0,
-            completedRound: false,
-            completionReason: null
-        }];
-        questionsToPlay = challengeQuestions;
-        
-        // Hide challenge form and show game
-        const challengeForm = UI.get('challengeForm');
-        const singlePlayerScore = UI.get('singlePlayerScore');
-        const singlePlayerProgress = UI.get('singlePlayerProgress');
-        const scoreboard = UI.get('scoreboard');
-        
-        if (challengeForm) challengeForm.classList.add('hidden');
-        UI.showScreen('gameScreen');
-        
-        // Setup UI for single player
-        if (singlePlayerScore) singlePlayerScore.classList.remove('hidden');
-        if (singlePlayerProgress) singlePlayerProgress.classList.remove('hidden');
-        // singlePlayerStars removed - points now shown in decision button
-        if (scoreboard) scoreboard.classList.add('hidden');
-        
-        currentQuestionIndex = 0;
-        loadQuestion();
-        
-    } catch (error) {
-        console.error('Failed to create challenge:', error);
-        showError('Kunde inte skapa utmaning. Försök igen.');
-    }
-}
 
 // Check for new challenge results
 async function checkForNotifications() {
@@ -698,127 +657,6 @@ async function checkForNotifications() {
     }
 }
 
-// Load and display my challenges
-async function loadMyChallenges() {
-    const myChallengesSection = document.getElementById('my-challenges-section');
-    const myChallengesList = document.getElementById('my-challenges-list');
-    
-    if (!currentPlayer || !currentPlayer.name) {
-        myChallengesSection.classList.add('hidden');
-        return;
-    }
-    
-    // Get all challenges from localStorage
-    const allChallenges = [];
-    for (let i = 0; i < localStorage.length; i++) {
-        const key = localStorage.key(i);
-        if (key.startsWith('challenge_')) {
-            try {
-                const challenge = JSON.parse(localStorage.getItem(key));
-                allChallenges.push(challenge);
-            } catch (e) {
-                // Invalid data, skip
-            }
-        }
-    }
-    
-    if (allChallenges.length === 0) {
-        myChallengesSection.classList.add('hidden');
-        return;
-    }
-    
-    // Sort by most recent
-    allChallenges.sort((a, b) => {
-        const aTime = a.createdAt || a.completedAt;
-        const bTime = b.createdAt || b.completedAt;
-        return new Date(bTime) - new Date(aTime);
-    });
-    
-    // Display challenges
-    myChallengesList.innerHTML = '';
-    allChallenges.slice(0, 5).forEach(challenge => {
-        const item = document.createElement('div');
-        item.className = 'bg-slate-50 border border-slate-200 rounded-lg p-3 cursor-pointer hover:bg-slate-100 transition-colors';
-        
-        let statusBadge = '';
-        let statusText = '';
-        
-        if (challenge.role === 'challenger') {
-            if (!challenge.hasSeenResult) {
-                // Check if completed
-                checkChallengeCompletionStatus(challenge.id).then(isComplete => {
-                    if (isComplete) {
-                        item.querySelector('.status-badge').innerHTML = 
-                            '<span class="bg-green-100 text-green-800 text-xs font-semibold px-2 py-1 rounded">Klar!</span>';
-                    }
-                });
-            }
-            statusBadge = challenge.hasSeenResult ? 
-                '<span class="bg-gray-100 text-gray-600 text-xs font-semibold px-2 py-1 rounded">Sedd</span>' :
-                '<span class="bg-blue-100 text-blue-800 text-xs font-semibold px-2 py-1 rounded">Väntar</span>';
-            statusText = `Du: ${challenge.totalScore}p`;
-        } else {
-            statusBadge = '<span class="bg-green-100 text-green-800 text-xs font-semibold px-2 py-1 rounded">Spelad</span>';
-            statusText = `Du: ${challenge.totalScore}p`;
-        }
-        
-        const timeAgo = getTimeAgo(challenge.createdAt || challenge.completedAt);
-        
-        item.innerHTML = `
-            <div class="flex justify-between items-start">
-                <div class="flex-1">
-                    <p class="font-semibold text-slate-800">${challenge.role === 'challenger' ? 'Utmanade' : 'Utmanad av'} någon</p>
-                    <p class="text-sm text-slate-500">${timeAgo} • ${statusText}</p>
-                </div>
-                <div class="status-badge">${statusBadge}</div>
-            </div>
-        `;
-        
-        item.addEventListener('click', async () => {
-            if (challenge.role === 'challenger') {
-                const isComplete = await checkChallengeCompletionStatus(challenge.id);
-                if (isComplete) {
-                    showChallengeResultView(challenge.id);
-                } else {
-                    challengeId = challenge.id;
-                    showWaitingForOpponentView(challenge.id);
-                }
-            } else {
-                showChallengeResultView(challenge.id);
-            }
-        });
-        
-        myChallengesList.appendChild(item);
-    });
-    
-    myChallengesSection.classList.remove('hidden');
-}
-
-// Helper function to check if challenge is complete
-async function checkChallengeCompletionStatus(challengeId) {
-    try {
-        const challenge = await FirebaseAPI.getChallenge(challengeId);
-        return challenge && challenge.status === 'complete';
-    } catch (error) {
-        return false;
-    }
-}
-
-// Helper function to get time ago text
-function getTimeAgo(dateString) {
-    const date = new Date(dateString);
-    const now = new Date();
-    const diffMs = now - date;
-    const diffMins = Math.floor(diffMs / 60000);
-    const diffHours = Math.floor(diffMs / 3600000);
-    const diffDays = Math.floor(diffMs / 86400000);
-    
-    if (diffMins < 1) return 'Nyss';
-    if (diffMins < 60) return `${diffMins} min sedan`;
-    if (diffHours < 24) return `${diffHours} tim sedan`;
-    if (diffDays < 7) return `${diffDays} dagar sedan`;
-    return date.toLocaleDateString('sv-SE');
-}
 
 // Show notifications for completed challenges
 function showNotifications(results) {
@@ -882,138 +720,6 @@ function showError(message) {
     }, 5000);
 }
 
-// Show waiting for opponent view
-function showWaitingForOpponentView(challengeId) {
-    const challengeUrl = window.location.origin + window.location.pathname + 
-        '?challenge=' + challengeId;
-    
-    // Create waiting view HTML
-    const waitingHTML = `
-        <div class="p-6 sm:p-8 lg:p-12 text-center">
-            <h2 class="text-2xl sm:text-3xl font-bold text-slate-900 mb-6">Utmaning skapad!</h2>
-            <div class="bg-blue-50 border border-blue-200 rounded-lg p-4 mb-6">
-                <p class="text-lg font-semibold text-blue-800 mb-2">Ditt resultat: ${players[0].score} poäng</p>
-                <p class="text-sm text-blue-600">Väntar på att din vän ska spela...</p>
-            </div>
-            
-            <div class="bg-slate-50 border border-slate-200 rounded-lg p-4 mb-6">
-                <p class="text-sm text-slate-600 mb-3">Dela denna länk:</p>
-                <div class="bg-white border border-slate-300 rounded p-2 mb-3">
-                    <input type="text" id="challenge-link-waiting" value="${challengeUrl}" readonly class="w-full text-xs text-gray-600 bg-transparent border-none outline-none">
-                </div>
-                <div class="flex space-x-2">
-                    <button id="copy-link-waiting" class="flex-1 bg-blue-600 text-white py-2 px-3 rounded text-sm hover:bg-blue-700">
-                        Kopiera länk
-                    </button>
-                    <button id="share-waiting" class="flex-1 bg-slate-600 text-white py-2 px-3 rounded text-sm hover:bg-slate-700">
-                        Dela
-                    </button>
-                </div>
-            </div>
-            
-            <button id="check-status-btn" class="w-full bg-slate-600 text-white font-bold py-3 px-6 rounded-lg text-lg hover:bg-slate-700 transition-colors mb-4">
-                Kolla status
-            </button>
-            
-            <button id="back-to-start-waiting" class="w-full bg-slate-200 text-slate-800 font-bold py-3 px-6 rounded-lg text-lg hover:bg-slate-300 transition-colors">
-                Tillbaka till start
-            </button>
-        </div>
-    `;
-    
-    const endScreen = UI?.get('endScreen');
-    if (endScreen) {
-        endScreen.innerHTML = waitingHTML;
-        endScreen.classList.remove('hidden');
-    }
-    
-    // Add event listeners
-    document.getElementById('copy-link-waiting').addEventListener('click', async () => {
-        const input = document.getElementById('challenge-link-waiting');
-        try {
-            await navigator.clipboard.writeText(input.value);
-            document.getElementById('copy-link-waiting').textContent = 'Kopierad!';
-            setTimeout(() => {
-                document.getElementById('copy-link-waiting').textContent = 'Kopiera länk';
-            }, 2000);
-        } catch (err) {
-            input.select();
-            document.execCommand('copy');
-        }
-    });
-    
-    document.getElementById('share-waiting').addEventListener('click', async () => {
-        const shareText = `${currentPlayer.name} utmanar dig i spelet Ordna!`;
-        
-        // Kolla om Web Share API finns (mobil och vissa desktop-browsers)
-        if (navigator.share) {
-            try {
-                await navigator.share({
-                    title: `${currentPlayer.name} utmanar dig i spelet Ordna!`,
-                    text: `${shareText} ${challengeUrl}`  // Slå ihop text och URL
-                });
-            } catch (err) {
-                // Användaren avbröt delningen - gör inget
-            }
-        } else {
-            // Desktop fallback - kopiera länken med meddelande
-            const fullMessage = `${shareText} ${challengeUrl}`;
-            try {
-                await navigator.clipboard.writeText(fullMessage);
-                const btn = document.getElementById('share-waiting');
-                btn.innerHTML = '✓ Länk kopierad!';
-                setTimeout(() => {
-                    btn.textContent = 'Dela';
-                }, 2000);
-            } catch (err) {
-                // Fallback för äldre browsers
-                const input = document.getElementById('challenge-link-waiting');
-                input.select();
-                document.execCommand('copy');
-                const btn = document.getElementById('share-waiting');
-                btn.innerHTML = '✓ Länk kopierad!';
-                setTimeout(() => {
-                    btn.textContent = 'Dela';
-                }, 2000);
-            }
-        }
-    });
-    
-    document.getElementById('check-status-btn').addEventListener('click', async () => {
-        await checkChallengeStatus(challengeId);
-    });
-    
-    document.getElementById('back-to-start-waiting').addEventListener('click', () => {
-        // Go directly to start screen without showing end screen
-        stopChallengePolling();
-        
-        // Hide all screens first
-        const gameScreen = UI?.get('gameScreen');
-        const endScreen = UI?.get('endScreen');
-        const playerSetup = UI?.get('playerSetup');
-        const challengeForm = UI?.get('challengeForm');
-        
-        if (gameScreen) gameScreen.classList.add('hidden');
-        if (endScreen) endScreen.classList.add('hidden');
-        if (playerSetup) playerSetup.classList.add('hidden');
-        if (challengeForm) challengeForm.classList.add('hidden');
-        
-        // Show start screen
-        startScreen.classList.remove('hidden');
-        startMain.classList.remove('hidden');
-        
-        // Reset game state
-        if (window.ChallengeSystem) {
-            window.ChallengeSystem.reset();
-        }
-        
-        // Reload my challenges
-        loadMyChallenges();
-    });
-    
-    // Start polling
-    startChallengePolling(challengeId);
-}
 
 // Show challenge result comparison view
 async function showChallengeResultView(challengeId) {
@@ -1108,7 +814,9 @@ async function showChallengeResultView(challengeId) {
         }
             
             // Reload my challenges
-            loadMyChallenges();
+            if (window.ChallengeSystem) {
+                window.ChallengeSystem.loadMyChallenges();
+            }
         });
         
     } catch (error) {
@@ -1313,284 +1021,19 @@ function showGameResultScreen(score, gameType, totalQuestions) {
             selectedPack = null;
             
             // Reload my challenges
-            loadMyChallenges();
+            if (window.ChallengeSystem) {
+                window.ChallengeSystem.loadMyChallenges();
+            }
         });
     }
 }
 
 // --- Functions ---
 
-// New flying point animation that goes to the stop button (unified for both modes)
-function showFlyingPointToButton(sourceElement) {
-    
-    // Get positions
-    const sourceRect = sourceElement.getBoundingClientRect();
-    const stopSide = UI?.get('stopSide');
-    if (!stopSide) return;
-    const targetRect = stopSide.getBoundingClientRect();
-    
-    // Create flying point element
-    const flyingPoint = document.createElement('div');
-    flyingPoint.className = 'flying-point';
-    flyingPoint.textContent = '+1';
-    
-    // Start position (center of source element)
-    const startX = sourceRect.left + sourceRect.width / 2;
-    const startY = sourceRect.top + sourceRect.height / 2;
-    
-    // Target position (center of stop button)
-    const targetX = targetRect.left + targetRect.width / 2;
-    const targetY = targetRect.top + targetRect.height / 2;
-    
-    // Set initial position
-    flyingPoint.style.left = startX + 'px';
-    flyingPoint.style.top = startY + 'px';
-    
-    document.body.appendChild(flyingPoint);
-    
-    // Animate to target with bezier curve
-    const duration = 800;
-    const startTime = Date.now();
-    
-    function animate() {
-        const elapsed = Date.now() - startTime;
-        const progress = Math.min(elapsed / duration, 1);
-        
-        // Easing function for smooth animation
-        const easeOutCubic = 1 - Math.pow(1 - progress, 3);
-        
-        // Calculate current position with curve
-        const currentX = startX + (targetX - startX) * easeOutCubic;
-        const currentY = startY + (targetY - startY) * easeOutCubic - Math.sin(progress * Math.PI) * 50;
-        
-        flyingPoint.style.left = currentX + 'px';
-        flyingPoint.style.top = currentY + 'px';
-        
-        if (progress < 1) {
-            requestAnimationFrame(animate);
-        } else {
-            // Animation complete - remove element and update button
-            flyingPoint.remove();
-            
-            // Add landing effect
-            const decisionButton = UI?.get('decisionButton');
-            if (decisionButton) {
-                decisionButton.classList.add('point-landing');
-                setTimeout(() => {
-                    decisionButton.classList.remove('point-landing');
-                }, 600);
-            }
-            
-            // Update button text and add glow
-            updateStopButtonPoints();
-            
-            // Wake up button if first point
-            const currentPlayer = window.PlayerManager ? window.PlayerManager.getCurrentPlayer() : null;
-            if (currentPlayer && currentPlayer.roundPot === 1) {
-                if (window.AnimationEngine && window.AnimationEngine.wakeUpStopButton) {
-                    window.AnimationEngine.wakeUpStopButton();
-                }
-            }
-        }
-    }
-    
-    requestAnimationFrame(animate);
-}
 
-// Animate points flying from Stop button to total score
-function showFlyingPointsToTotal(points) {
-    const stopButton = UI?.get('stopSide');
-    if (!stopButton) return;
-    
-    // Get target element - use new player status bar for both single and multiplayer
-    const totalScoreElement = isSinglePlayerMode() ? 
-        UI?.get('activePlayerDisplay') : // Single player target
-        UI?.get('miniScores'); // Multiplayer target
-    
-    // Fallback if target not found
-    if (!totalScoreElement) {
-        console.error('Target element for flying points not found');
-        return;
-    }
-    
-    // Get positions
-    const stopRect = stopButton.getBoundingClientRect();
-    const totalRect = totalScoreElement.getBoundingClientRect();
-    
-    // Create flying point element
-    const flyingPoint = document.createElement('div');
-    flyingPoint.className = 'flying-point-to-total';
-    flyingPoint.textContent = `+${points}`;
-    flyingPoint.style.position = 'fixed';
-    flyingPoint.style.left = (stopRect.left + stopRect.width / 2) + 'px';
-    flyingPoint.style.top = (stopRect.top + stopRect.height / 2) + 'px';
-    flyingPoint.style.transform = 'translate(-50%, -50%)';
-    flyingPoint.style.zIndex = '1000';
-    flyingPoint.style.fontSize = '24px';
-    flyingPoint.style.fontWeight = 'bold';
-    flyingPoint.style.color = '#15803d';
-    flyingPoint.style.pointerEvents = 'none';
-    flyingPoint.style.textShadow = '0 2px 4px rgba(0, 0, 0, 0.3)';
-    
-    document.body.appendChild(flyingPoint);
-    
-    // Calculate control points for bezier curve
-    const startX = stopRect.left + stopRect.width / 2;
-    const startY = stopRect.top + stopRect.height / 2;
-    const endX = totalRect.left + totalRect.width / 2;
-    const endY = totalRect.top + totalRect.height / 2;
-    
-    const controlX1 = startX + (endX - startX) * 0.2;
-    const controlY1 = startY - 100; // Arc upward
-    const controlX2 = startX + (endX - startX) * 0.8;
-    const controlY2 = startY - 120;
-    
-    let startTime = null;
-    const duration = 800; // Animation duration in ms
-    
-    function animate(currentTime) {
-        if (!startTime) startTime = currentTime;
-        const elapsed = currentTime - startTime;
-        const progress = Math.min(elapsed / duration, 1);
-        
-        // Cubic bezier curve calculation
-        const t = progress;
-        const x = Math.pow(1-t, 3) * startX + 
-                  3 * Math.pow(1-t, 2) * t * controlX1 + 
-                  3 * (1-t) * Math.pow(t, 2) * controlX2 + 
-                  Math.pow(t, 3) * endX;
-        const y = Math.pow(1-t, 3) * startY + 
-                  3 * Math.pow(1-t, 2) * t * controlY1 + 
-                  3 * (1-t) * Math.pow(t, 2) * controlY2 + 
-                  Math.pow(t, 3) * endY;
-        
-        flyingPoint.style.left = x + 'px';
-        flyingPoint.style.top = y + 'px';
-        
-        // Fade and scale during last 20% of animation
-        if (progress > 0.8) {
-            const fadeProgress = (progress - 0.8) / 0.2;
-            flyingPoint.style.opacity = 1 - fadeProgress;
-            flyingPoint.style.transform = `translate(-50%, -50%) scale(${1 + fadeProgress * 0.5})`;
-        }
-        
-        if (progress < 1) {
-            requestAnimationFrame(animate);
-        } else {
-            // Animation complete - add glow effect to total score
-            totalScoreElement.style.transition = 'all 0.3s ease';
-            totalScoreElement.style.boxShadow = '0 0 20px rgba(21, 128, 61, 0.5)';
-            setTimeout(() => {
-                totalScoreElement.style.boxShadow = '';
-            }, 600);
-            
-            // Remove flying point
-            document.body.removeChild(flyingPoint);
-        }
-    }
-    
-    requestAnimationFrame(animate);
-}
 
-// Transform Stop button to "Secured" state after points fly away
-function transformStopButtonToSecured() {
-    const stopIcon = document.querySelector('#stop-side .decision-icon');
-    const stopAction = document.querySelector('#stop-side .decision-action');
-    const stopPoints = document.querySelector('#stop-side .decision-points');
-    
-    // Animate points disappearing first
-    stopPoints.style.transition = 'opacity 0.3s ease, transform 0.3s ease';
-    stopPoints.style.opacity = '0';
-    stopPoints.style.transform = 'scale(0.8)';
-    
-    // After points fade, transform the button
-    setTimeout(() => {
-        stopIcon.textContent = '✅';
-        stopAction.textContent = 'Säkrat';
-        stopPoints.textContent = '';
-        stopPoints.style.opacity = '';
-        stopPoints.style.transform = '';
-        stopPoints.style.transition = '';
-        
-        // Add a subtle completed state class
-        const stopSide = UI?.get('stopSide');
-        if (stopSide) stopSide.classList.add('completed');
-    }, 300);
-}
 
-// Update the stop button to show current points
-function updateStopButtonPoints() {
-    const pointsText = document.querySelector('#stop-side .decision-points');
-    const currentPlayer = getCurrentPlayer();
-    const currentPot = currentPlayer.roundPot;
-    const stopSide = UI?.get('stopSide');
-    
-    if (pointsText) {
-        if (isSinglePlayerMode()) {
-            pointsText.textContent = `+${currentPot} poäng`;
-        } else {
-            pointsText.textContent = `${currentPlayer.name} +${currentPot}p`;
-        }
-    }
-    
-    if (stopSide) {
-        if (currentPot > 0) {
-            stopSide.classList.add('has-points');
-        } else {
-            stopSide.classList.remove('has-points');
-        }
-    }
-}
 
-// Animate points draining away when wrong answer (unified for both modes)
-function animatePointsDrain(currentPoints) {
-    if (currentPoints <= 0) return;
-    
-    const pointsElement = document.querySelector('#stop-side .decision-points');
-    const stopButton = UI?.get('stopSide');
-    const currentPlayer = getCurrentPlayer();
-    
-    // Add shake and dark pulse effects to button
-    if (stopButton) {
-        stopButton.classList.add('button-shake', 'button-dark-pulse');
-    }
-    
-    let remainingPoints = currentPoints;
-    const drainInterval = setInterval(() => {
-        remainingPoints--;
-        
-        // Add color change animation to the points text
-        pointsElement.classList.add('points-draining');
-        
-        // Show remaining points with appropriate format
-        if (remainingPoints > 0) {
-            if (isSinglePlayerMode()) {
-                pointsElement.textContent = `+${remainingPoints} poäng`;
-            } else {
-                pointsElement.textContent = `${currentPlayer.name} +${remainingPoints}p`;
-            }
-        } else {
-            pointsElement.textContent = '0p';
-            // Add permanent red color class for final 0p
-            pointsElement.classList.add('points-failed');
-        }
-        
-        // Remove animation class after it completes
-        setTimeout(() => {
-            pointsElement.classList.remove('points-draining');
-        }, 300);
-        
-        if (remainingPoints <= 0) {
-            clearInterval(drainInterval);
-            // Remove shake and pulse effects after animations complete
-            setTimeout(() => {
-                if (stopButton) {
-                    stopButton.classList.remove('button-shake', 'button-dark-pulse');
-                }
-            }, 1500); // Wait for longest animation to complete
-        }
-    }, 400); // 400ms between each point decrease - slower for better visibility
-}
 
 // Handle question completion after wrong answer (disable stop, enable progression)
 function enableNextButtonAfterMistake(pointsToLose = 0) {
@@ -1598,7 +1041,9 @@ function enableNextButtonAfterMistake(pointsToLose = 0) {
     
     // Animate points draining if there were any points
     if (pointsToLose > 0) {
-        animatePointsDrain(pointsToLose);
+        if (window.AnimationEngine) {
+            window.AnimationEngine.animatePointsDrain(pointsToLose);
+        }
         // Disable stop button AFTER animation starts
         // This way button stays normal during countdown
         const stopSide = UI?.get('stopSide');
@@ -1692,7 +1137,7 @@ function endSinglePlayerQuestion(pointsToAdd) {
     decisionButton.classList.add('hidden');
     nextQuestionBtn.classList.remove('hidden');
     
-    const question = questionsToPlay[currentQuestionIndex];
+    const question = getCurrentQuestion();
 
     if (question.typ === 'ordna') {
         feedbackOrder();
@@ -1733,7 +1178,9 @@ async function endSinglePlayerGame() {
             localStorage.setItem(`challenge_${newChallengeId}`, JSON.stringify(challengeInfo));
             
             // Show waiting for opponent view
-            showWaitingForOpponentView(newChallengeId);
+            if (window.UIController && window.UIController.showWaitingForOpponentView) {
+                window.UIController.showWaitingForOpponentView(newChallengeId);
+            }
             
         } catch (error) {
             console.error('Failed to create challenge:', error);
@@ -1939,7 +1386,9 @@ async function initializeGame() {
     shuffleArray(questionsToPlay);
     
     // Setup unified UI
-    updatePlayerDisplay();
+    if (window.PlayerManager) {
+        window.PlayerManager.updatePlayerDisplay();
+    }
     
     // Load first question using GameController if available
     // For now, use fallback until GameController is properly integrated
@@ -2024,7 +1473,9 @@ function updateGameControls() {
                 stopSide.classList.remove('disabled');
                 stopSide.disabled = false;
                 stopSide.classList.add('has-points');
-                updateStopButtonPoints();
+                if (window.AnimationEngine) {
+        window.AnimationEngine.updateStopButtonPoints();
+    }
             } else {
                 stopSide.classList.add('disabled');
                 stopSide.disabled = true;
@@ -2062,7 +1513,9 @@ function updateGameControls() {
         
         // Update button state
         if (stopSide) stopSide.dataset.processing = 'false';
-        updateStopButtonPoints();
+        if (window.AnimationEngine) {
+        window.AnimationEngine.updateStopButtonPoints();
+    }
     }
 }
 
@@ -2096,14 +1549,21 @@ function loadQuestion() {
     if (window.AnimationEngine && window.AnimationEngine.resetDecisionButtons) {
         window.AnimationEngine.resetDecisionButtons();
     }
-    updateStopButtonPoints(); // Still need to update points display
+    if (window.AnimationEngine) {
+        window.AnimationEngine.updateStopButtonPoints();
+    } // Still need to update points display
     
     // Reset all players' round state for new question
-    players.forEach(p => {
-        p.roundPot = 0;
-        p.completedRound = false;
-        p.completionReason = null;
-    });
+    if (window.PlayerManager) {
+        window.PlayerManager.resetForNewQuestion();
+    } else {
+        // Fallback for old system
+        players.forEach(p => {
+            p.roundPot = 0;
+            p.completedRound = false;
+            p.completionReason = null;
+        });
+    }
     
     // Clear options and hide buttons
     const optionsGrid = UI.get('optionsGrid');
@@ -2120,8 +1580,14 @@ function loadQuestion() {
     if (decisionButton) decisionButton.classList.remove('hidden');
     if (stopBtn) stopBtn.classList.add('hidden');
     
-    // Check if game should end
-    if (currentQuestionIndex >= questionsToPlay.length) {
+    // Check if game should end - use window.questionsToPlay if available
+    const questions = window.questionsToPlay || questionsToPlay;
+    console.log('Debug loadQuestion: currentQuestionIndex:', currentQuestionIndex);
+    console.log('Debug loadQuestion: questions.length:', questions?.length);
+    console.log('Debug loadQuestion: local questionsToPlay.length:', questionsToPlay?.length);
+    console.log('Debug loadQuestion: window.questionsToPlay.length:', window.questionsToPlay?.length);
+    if (currentQuestionIndex >= questions.length) {
+        console.log('Debug loadQuestion: Ending game - no more questions');
         endGame();
         return;
     }
@@ -2134,12 +1600,14 @@ function loadQuestion() {
     }
     
     // Update displays
-    updatePlayerDisplay();
+    if (window.PlayerManager) {
+        window.PlayerManager.updatePlayerDisplay();
+    }
     updateGameControls();
 
-    const question = questionsToPlay[currentQuestionIndex];
+    const question = questions[currentQuestionIndex];
     
-    UI.updateQuestionCounter(currentQuestionIndex + 1, questionsToPlay.length);
+    UI.updateQuestionCounter(currentQuestionIndex + 1, questions.length);
     UI.updateDifficultyBadge(question.svårighetsgrad);
     UI.setQuestionText(question.fråga);
     
@@ -2209,64 +1677,6 @@ function setAllOptionsDisabled(disabled) {
     });
 }
 
-function nextTurn() {
-    // NEW: Check if round should conclude first
-    if (!hasActivePlayersInRound()) {
-        checkAndHandleQuestionCompletion();
-        return;
-    }
-    
-    // NEW: Find next active player with safety checks
-    let nextIndex = (currentPlayerIndex + 1) % players.length;
-    let searchCount = 0;
-    
-    while (!isPlayerActive(players[nextIndex]) && searchCount < players.length) {
-        nextIndex = (nextIndex + 1) % players.length;
-        searchCount++;
-    }
-    
-    // NEW: Safety check for infinite loop
-    if (searchCount >= players.length) {
-        console.error('No active players found in nextTurn()');
-        checkAndHandleQuestionCompletion();
-        return;
-    }
-    
-    currentPlayerIndex = nextIndex;
-    
-    // NEW: Reset UI for new player
-    resetPlayerUIForTurn();
-    updatePlayerDisplay();
-    updateGameControls();
-    
-    // NEW: Re-enable options for new player
-    setAllOptionsDisabled(false);
-    
-    // Clear incorrect markings from previous players' wrong attempts (ordna questions only)
-    const question = questionsToPlay[currentQuestionIndex];
-    if (question && question.typ === 'ordna') {
-        const incorrectButtons = document.querySelectorAll('.option-btn.incorrect-step:not(.correct-step)');
-        incorrectButtons.forEach(button => {
-            // Only re-enable if not already correctly placed
-            if (!button.classList.contains('correct-step')) {
-                button.classList.remove('incorrect-step');
-                button.disabled = false;
-                button.dataset.answered = 'false';
-            }
-        });
-    }
-    
-    // Optional: Brief turn transition effect
-    if (!isSinglePlayerMode()) {
-        const playerStatusBar = UI?.get('playerStatusBar');
-        if (playerStatusBar) {
-            playerStatusBar.classList.add('turn-transition');
-            setTimeout(() => {
-                playerStatusBar.classList.remove('turn-transition');
-            }, 300);
-        }
-    }
-}
 
 function concludeQuestionRound() {
     players.forEach(player => {
@@ -2287,7 +1697,7 @@ function concludeQuestionRound() {
 
     // Correct answers already shown by checkAndHandleQuestionCompletion()
 
-    const question = questionsToPlay[currentQuestionIndex];
+    const question = getCurrentQuestion();
     if (question.typ === 'ordna') {
         feedbackOrder();
     } else {
@@ -2348,7 +1758,8 @@ function handleOrderClick(button, optionText) {
         return;
     }
     
-    const question = questionsToPlay[currentQuestionIndex];
+    const questions = window.questionsToPlay || questionsToPlay;
+    const question = questions[currentQuestionIndex];
     const isCorrectStep = question.rätt_ordning[userOrder.length] === optionText;
     
     // Mark button as answered immediately to prevent double-clicks
@@ -2422,7 +1833,7 @@ function handleBelongsDecision(userDecision, container, yesBtn, noBtn) {
         return;
     }
     
-    const question = questionsToPlay[currentQuestionIndex];
+    const question = getCurrentQuestion();
     const optionText = container.querySelector('span').textContent;
     const correctOptions = question.tillhör_index.map(i => question.alternativ[i]);
     const actuallyBelongs = correctOptions.includes(optionText);
@@ -2509,7 +1920,7 @@ function feedbackOrder() {
 }
 
 function feedbackBelongsTo() {
-    const question = questionsToPlay[currentQuestionIndex];
+    const question = getCurrentQuestion();
     const correctOptions = question.tillhör_index.map(i => question.alternativ[i]);
     const optionsGrid = UI?.get('optionsGrid');
     if (!optionsGrid) return;
@@ -2562,7 +1973,7 @@ function hideExplanation() {
 }
 
 function showCorrectAnswers() {
-    const question = questionsToPlay[currentQuestionIndex];
+    const question = getCurrentQuestion();
     const optionsGrid = UI?.get('optionsGrid');
     if (!optionsGrid) return;
     
@@ -2738,7 +2149,9 @@ function restartGame() {
     }
     
     // Reload my challenges
-    loadMyChallenges();
+    if (window.ChallengeSystem) {
+        window.ChallengeSystem.loadMyChallenges();
+    }
 }
 
 // --- Pack Shop Functions ---
@@ -2804,6 +2217,30 @@ function openPackShop() {
 function closePackShop() { 
     const packShopModal = UI?.get('packShopModal');
     if (packShopModal) packShopModal.classList.add('hidden'); 
+}
+
+function createPlayerInputs() {
+    const playerCountSelect = UI?.get('playerCountSelect');
+    const playerNamesContainer = UI?.get('playerNamesContainer');
+    
+    if (!playerCountSelect || !playerNamesContainer) return;
+    
+    const count = playerCountSelect.value;
+    playerNamesContainer.innerHTML = '';
+    
+    // Skip name inputs for single player
+    if (count == 1) {
+        return;
+    }
+    
+    // Create name inputs for multiplayer
+    for (let i = 0; i < count; i++) {
+        const input = document.createElement('input');
+        input.type = 'text';
+        input.placeholder = `Spelare ${i + 1} namn`;
+        input.className = 'player-name-input w-full p-3 border border-slate-300 rounded-lg text-base sm:text-lg';
+        playerNamesContainer.appendChild(input);
+    }
 }
 
 // Event listeners moved to eventHandlers.js
@@ -2926,7 +2363,11 @@ backToStartBtn.addEventListener('click', () => {
     challengeSuccess.classList.add('hidden');
 });
 
-createChallengeBtn.addEventListener('click', createChallenge);
+createChallengeBtn.addEventListener('click', () => {
+    if (window.ChallengeSystem) {
+        window.ChallengeSystem.createChallenge();
+    }
+});
 
 // Copy link functionality
 copyLinkBtn.addEventListener('click', async () => {
@@ -3072,7 +2513,9 @@ async function initializeApp() {
         const playerName = window.PlayerManager ? window.PlayerManager.getPlayerName() : null;
         if (playerName) {
             await checkForNotifications();
-            await loadMyChallenges();
+            if (window.ChallengeSystem) {
+                await window.ChallengeSystem.loadMyChallenges();
+            }
             const challengerNameDisplay = UI?.get('challengerNameDisplay');
             if (challengerNameDisplay) challengerNameDisplay.textContent = playerName;
         }

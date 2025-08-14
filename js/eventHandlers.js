@@ -98,7 +98,11 @@ function initializeAllEventListeners() {
     
     const createChallengeBtn = UI.get('createChallengeBtn');
     if (createChallengeBtn) {
-        createChallengeBtn.addEventListener('click', createChallenge);
+        createChallengeBtn.addEventListener('click', () => {
+            if (window.ChallengeSystem) {
+                window.ChallengeSystem.createChallenge();
+            }
+        });
     }
     
     const backToStartBtn = UI.get('backToStartBtn');
@@ -170,7 +174,8 @@ async function handleSavePlayerName() {
 }
 
 function handleShowChallengeForm() {
-    if (!currentPlayer.name) {
+    const playerName = window.PlayerManager ? window.PlayerManager.getPlayerName() : null;
+    if (!playerName) {
         // Show name setup first
         pendingChallengeCreation = true;
         const startMain = UI.get('startMain');
@@ -186,7 +191,7 @@ function handleShowChallengeForm() {
     const challengeSuccess = UI.get('challengeSuccess');
     const createChallengeBtn = UI.get('createChallengeBtn');
     
-    if (challengerNameDisplay) challengerNameDisplay.textContent = currentPlayer.name;
+    if (challengerNameDisplay) challengerNameDisplay.textContent = playerName;
     if (startMain) startMain.classList.add('hidden');
     if (challengeForm) challengeForm.classList.remove('hidden');
     
@@ -235,13 +240,14 @@ async function handleShare() {
     if (!challengeLink) return;
     
     const challengeUrl = challengeLink.value;
-    const shareText = `${currentPlayer.name} utmanar dig i spelet Ordna!`;
+    const playerName = window.PlayerManager ? window.PlayerManager.getPlayerName() : 'Någon';
+    const shareText = `${playerName} utmanar dig i spelet Ordna!`;
     
     // Check if Web Share API is available
     if (navigator.share) {
         try {
             await navigator.share({
-                title: `${currentPlayer.name} utmanar dig i spelet Ordna!`,
+                title: `${playerName} utmanar dig i spelet Ordna!`,
                 text: `${shareText} ${challengeUrl}`
             });
         } catch (err) {

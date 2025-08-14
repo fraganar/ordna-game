@@ -121,80 +121,107 @@ class AnimationEngine {
         }, 1000);
     }
     
-    // Show animation when securing points
+    // Show animation when securing points - UNIFIED for all game modes (like original design)
     showSecureAnimation(points) {
-        if (window.PlayerManager?.isSinglePlayerMode()) {
-            this.showFlyingPointsToTotal(points);
-            this.transformStopButtonToSecured();
-        } else {
-            this.showSimpleSecureEffect();
-        }
+        // Always show full animations regardless of game mode - this matches the original design
+        this.showFlyingPointsToTotal(points);
+        this.transformStopButtonToSecured();
     }
     
-    // Flying points to total score (single player)
+    // Flying points to total score - UNIFIED for all game modes (restored original design)
     showFlyingPointsToTotal(points) {
         const stopButton = UI?.get('stopSide');
         if (!stopButton) return;
         
-        // Get target element
-        const totalScoreElement = UI?.get('activePlayerDisplay');
-        if (!totalScoreElement) return;
+        // Get target element - smart selection like original (single vs multiplayer)
+        const totalScoreElement = window.PlayerManager?.isSinglePlayerMode() ? 
+            UI?.get('activePlayerDisplay') : // Single player target
+            UI?.get('miniScores'); // Multiplayer target
+        
+        // Fallback if target not found
+        if (!totalScoreElement) {
+            console.error('Target element for flying points not found');
+            return;
+        }
         
         const sourceRect = stopButton.getBoundingClientRect();
         const targetRect = totalScoreElement.getBoundingClientRect();
         
-        // Create multiple flying points
-        for (let i = 0; i < Math.min(points, 5); i++) {
-            setTimeout(() => {
-                const flyingPoint = document.createElement('div');
-                flyingPoint.className = 'flying-point-star';
-                flyingPoint.textContent = '⭐';
-                flyingPoint.style.cssText = `
-                    position: fixed;
-                    left: ${sourceRect.left + sourceRect.width / 2}px;
-                    top: ${sourceRect.top + sourceRect.height / 2}px;
-                    font-size: 24px;
-                    z-index: 1000;
-                    pointer-events: none;
-                    transform: translate(-50%, -50%);
-                    transition: all 1s cubic-bezier(0.4, 0, 0.2, 1);
-                `;
-                
-                document.body.appendChild(flyingPoint);
-                
-                // Random arc path
-                const midX = (sourceRect.left + targetRect.left) / 2 + (Math.random() - 0.5) * 100;
-                const midY = Math.min(sourceRect.top, targetRect.top) - 50 - Math.random() * 50;
-                
-                // First move to arc peak
+        // Create flying point element (like original)
+        const flyingPoint = document.createElement('div');
+        flyingPoint.className = 'flying-point-to-total';
+        flyingPoint.textContent = `+${points}`;
+        flyingPoint.style.cssText = `
+            position: fixed;
+            left: ${sourceRect.left + sourceRect.width / 2}px;
+            top: ${sourceRect.top + sourceRect.height / 2}px;
+            font-size: 24px;
+            font-weight: bold;
+            color: #15803d;
+            z-index: 1000;
+            pointer-events: none;
+            transform: translate(-50%, -50%);
+            text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+        `;
+        
+        document.body.appendChild(flyingPoint);
+        
+        // Animate with cubic bezier curve (like original)
+        const startX = sourceRect.left + sourceRect.width / 2;
+        const startY = sourceRect.top + sourceRect.height / 2;
+        const endX = targetRect.left + targetRect.width / 2;
+        const endY = targetRect.top + targetRect.height / 2;
+        
+        const controlX1 = startX + (endX - startX) * 0.2;
+        const controlY1 = startY - 100; // Arc upward
+        const controlX2 = startX + (endX - startX) * 0.8;
+        const controlY2 = startY - 120;
+        
+        let startTime = null;
+        const duration = 800;
+        
+        function animate(currentTime) {
+            if (!startTime) startTime = currentTime;
+            const elapsed = currentTime - startTime;
+            const progress = Math.min(elapsed / duration, 1);
+            
+            // Cubic bezier curve calculation
+            const t = progress;
+            const x = Math.pow(1-t, 3) * startX + 
+                      3 * Math.pow(1-t, 2) * t * controlX1 + 
+                      3 * (1-t) * Math.pow(t, 2) * controlX2 + 
+                      Math.pow(t, 3) * endX;
+            const y = Math.pow(1-t, 3) * startY + 
+                      3 * Math.pow(1-t, 2) * t * controlY1 + 
+                      3 * (1-t) * Math.pow(t, 2) * controlY2 + 
+                      Math.pow(t, 3) * endY;
+            
+            flyingPoint.style.left = x + 'px';
+            flyingPoint.style.top = y + 'px';
+            
+            // Fade and scale during last 20% of animation
+            if (progress > 0.8) {
+                const fadeProgress = (progress - 0.8) / 0.2;
+                flyingPoint.style.opacity = 1 - fadeProgress;
+                flyingPoint.style.transform = `translate(-50%, -50%) scale(${1 + fadeProgress * 0.5})`;
+            }
+            
+            if (progress < 1) {
+                requestAnimationFrame(animate);
+            } else {
+                // Animation complete - add glow effect to total score
+                totalScoreElement.style.transition = 'all 0.3s ease';
+                totalScoreElement.style.boxShadow = '0 0 20px rgba(21, 128, 61, 0.5)';
                 setTimeout(() => {
-                    flyingPoint.style.left = `${midX}px`;
-                    flyingPoint.style.top = `${midY}px`;
-                    flyingPoint.style.transform = 'translate(-50%, -50%) scale(1.2)';
-                }, 50);
+                    totalScoreElement.style.boxShadow = '';
+                }, 600);
                 
-                // Then to target
-                setTimeout(() => {
-                    flyingPoint.style.left = `${targetRect.left + targetRect.width / 2}px`;
-                    flyingPoint.style.top = `${targetRect.top + targetRect.height / 2}px`;
-                    flyingPoint.style.transform = 'translate(-50%, -50%) scale(0)';
-                    flyingPoint.style.opacity = '0';
-                }, 500);
-                
-                // Cleanup
-                setTimeout(() => {
-                    flyingPoint.remove();
-                }, 1500);
-            }, i * 100);
+                // Remove flying point
+                flyingPoint.remove();
+            }
         }
         
-        // Flash total score after animation
-        setTimeout(() => {
-            totalScoreElement.classList.add('score-flash');
-            setTimeout(() => {
-                totalScoreElement.classList.remove('score-flash');
-            }, 600);
-        }, 1000);
+        requestAnimationFrame(animate);
     }
     
     // Transform stop button to "Secured" state
@@ -220,31 +247,21 @@ class AnimationEngine {
         }, 300);
     }
     
-    // Simple secure effect for multiplayer
-    showSimpleSecureEffect() {
-        const stopSide = UI?.get('stopSide');
-        if (!stopSide) return;
-        
-        stopSide.classList.add('completed');
-        
-        // Quick flash effect
-        stopSide.style.background = '#10b981';
-        stopSide.style.color = 'white';
-        
-        setTimeout(() => {
-            stopSide.style.background = '';
-            stopSide.style.color = '';
-        }, 300);
-    }
     
     // Update stop button points display
     updateStopButtonPoints() {
         const pointsText = document.querySelector('#stop-side .decision-points');
         const currentPlayer = window.PlayerManager?.getCurrentPlayer();
+        
         if (!currentPlayer || !pointsText) return;
         
         const currentPot = currentPlayer.roundPot;
         const stopSide = UI?.get('stopSide');
+        
+        // Reset any animation styles that might hide the text
+        pointsText.style.opacity = '1';
+        pointsText.style.transform = '';
+        pointsText.style.transition = '';
         
         if (window.PlayerManager?.isSinglePlayerMode()) {
             pointsText.textContent = `+${currentPot} poäng`;
