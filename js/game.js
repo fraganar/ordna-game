@@ -429,6 +429,7 @@ function determineNextAction() {
 function concludeQuestionImmediately() {
     // Auto-secure points for all active players  
     const players = window.PlayerManager?.getPlayers() || [];
+    
     players.forEach(player => {
         if (window.PlayerManager.isPlayerActive(player) && player.roundPot > 0) {
             player.score += player.roundPot;
@@ -1332,6 +1333,7 @@ function updateScoreboard() {
     if (!scoreboard) return;
     
     scoreboard.innerHTML = '';
+    const players = window.PlayerManager?.getPlayers() || [];
     players.forEach((player, index) => {
         const card = document.createElement('div');
         card.className = 'player-score-card p-3 border-2 rounded-lg flex flex-col justify-between min-h-[60px]';
@@ -1386,12 +1388,25 @@ function updateGameControls() {
     const currentPlayer = window.PlayerManager.getCurrentPlayer();
     
     if (!window.PlayerManager.hasActivePlayersInRound() && !isSinglePlayerMode()) {
-        // All players completed in multiplayer - show decision button with only next-side
+        // All players completed in multiplayer - show secured state
         if (decisionButton) decisionButton.classList.remove('hidden');
-        if (stopSide) stopSide.classList.add('hidden'); // Hide stop side - no one can stop anymore
+        
+        if (stopSide) {
+            stopSide.classList.remove('hidden');
+            stopSide.classList.add('disabled', 'completed');
+            stopSide.disabled = true;
+            
+            const stopIcon = stopSide.querySelector('.decision-icon');
+            const stopAction = stopSide.querySelector('.decision-action');
+            const stopPoints = stopSide.querySelector('.decision-points');
+            if (stopIcon) stopIcon.textContent = '✅';
+            if (stopAction) stopAction.textContent = 'Säkrat';
+            if (stopPoints) stopPoints.style.opacity = '0';
+        }
+        
         if (nextSide) {
             nextSide.classList.remove('hidden');
-            nextSide.disabled = false;
+            nextSide.disabled = false; // Enable next button
         }
     } else if (isSinglePlayerMode()) {
         // Single player: alltid visa decision button
@@ -1422,32 +1437,44 @@ function updateGameControls() {
             nextSide.disabled = !questionCompleted;
         }
     } else {
-        // Multiplayer active player - show decision button
+        // Multiplayer with active players
         if (decisionButton) decisionButton.classList.remove('hidden');
+        
+        // Check if current player is actually active
+        const isCurrentPlayerActive = currentPlayer && !currentPlayer.completedRound;
+        
+        if (stopSide) {
+            if (isCurrentPlayerActive && currentPlayer.roundPot > 0) {
+                // Active player with points - enable stop button
+                stopSide.classList.remove('hidden');
+                stopSide.classList.remove('disabled');
+                stopSide.disabled = false;
+            } else {
+                // Player completed or no points - disable stop button
+                stopSide.classList.remove('hidden');
+                stopSide.classList.add('disabled');
+                stopSide.disabled = true;
+                
+                // If player is completed, show they're done
+                if (currentPlayer && currentPlayer.completedRound) {
+                    const stopIcon = stopSide.querySelector('.decision-icon');
+                    const stopAction = stopSide.querySelector('.decision-action');
+                    if (stopIcon) stopIcon.textContent = '✅';
+                    if (stopAction) stopAction.textContent = 'Säkrat!';
+                }
+            }
+        }
+        
         if (nextSide) {
             nextSide.classList.remove('hidden');
             nextSide.disabled = !isQuestionCompleted(); // Enable when question complete
         }
         
-        if (stopSide) {
-            if (currentPlayer.roundPot > 0) {
-                // Player has points - enable stop button
-                stopSide.classList.remove('hidden');
-                stopSide.classList.remove('disabled');
-                stopSide.disabled = false;
-            } else {
-                // Player has no points - disable stop button but keep it visible
-                stopSide.classList.remove('hidden');
-                stopSide.classList.add('disabled');
-                stopSide.disabled = true;
-            }
-        }
-        
         // Update button state
         if (stopSide) stopSide.dataset.processing = 'false';
         if (window.AnimationEngine) {
-        window.AnimationEngine.updateStopButtonPoints();
-    }
+            window.AnimationEngine.updateStopButtonPoints();
+        }
     }
 }
 
@@ -1717,32 +1744,10 @@ function handleOrderClick(button, optionText) {
         button.innerHTML = `<span class="inline-flex items-center justify-center w-6 h-6 mr-3 bg-white text-green-600 rounded-full font-bold">${userOrder.length}</span> ${optionText}`;
         button.disabled = true;
 
-        // Check if question is complete (all alternatives answered)
-        if (userOrder.length === question.alternativ.length) {
-            // Auto-secure points when question complete
-            secureCurrentPoints();
-            
-            // Score saving now handled in secureCurrentPoints to avoid duplicates
-            
-            // For multiplayer: when all alternatives are answered, no one else can play
-            // So we should mark all remaining active players as completed
-            if (!isSinglePlayerMode()) {
-                players.forEach(player => {
-                    if (window.PlayerManager.isPlayerActive(player) && player !== window.PlayerManager.getCurrentPlayer()) {
-                        player.completedRound = true;
-                        player.completionReason = 'no_options_left';
-                    }
-                });
-            }
-        } else {
-            // Question continues - handle turn progression for multiplayer only
-            if (!isSinglePlayerMode()) {
-                determineNextAction();
-            } else {
-                // For single player, update controls to reflect current state
-                updateGameControls();
-            }
-        }
+        // Always use determineNextAction() - it will handle all cases correctly:
+        // - If all options are answered: auto-secure ALL players' points
+        // - If not: handle turn progression or update controls
+        determineNextAction();
     } else {
         // Wrong answer - eliminate current player
         button.classList.add('incorrect-step');
@@ -1796,35 +1801,10 @@ function handleBelongsDecision(userDecision, container, yesBtn, noBtn) {
         container.classList.add('correct-choice'); // Add green background to entire container
         clickedBtn.classList.add('correct-selection');
         
-        // Check if all options have been decided
-        const allDecided = Array.from(document.querySelectorAll('.belongs-option-container'))
-            .every(cont => cont.dataset.decided === 'true');
-        
-        if (allDecided) {
-            // Auto-secure points when all decided
-            secureCurrentPoints();
-            
-            // Score saving now handled in secureCurrentPoints to avoid duplicates
-            
-            // For multiplayer: when all alternatives are decided, no one else can play
-            // So we should mark all remaining active players as completed
-            if (!isSinglePlayerMode()) {
-                players.forEach(player => {
-                    if (window.PlayerManager.isPlayerActive(player) && player !== window.PlayerManager.getCurrentPlayer()) {
-                        player.completedRound = true;
-                        player.completionReason = 'no_options_left';
-                    }
-                });
-            }
-        } else {
-            // Question continues - handle turn progression for multiplayer only
-            if (!isSinglePlayerMode()) {
-                determineNextAction();
-            } else {
-                // For single player, update controls to reflect current state
-                updateGameControls();
-            }
-        }
+        // Always use determineNextAction() - it will handle all cases correctly:
+        // - If all options are decided: auto-secure ALL players' points  
+        // - If not: handle turn progression or update controls
+        determineNextAction();
     } else {
         // Wrong answer
         clickedBtn.classList.add('selected');

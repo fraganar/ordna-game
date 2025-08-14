@@ -353,12 +353,9 @@ class GameController {
     
     // Handle when all parts of question are answered correctly
     handleQuestionFullyCompleted() {
-        const currentPlayer = window.PlayerManager?.getCurrentPlayer();
-        if (currentPlayer && !currentPlayer.completedRound) {
-            // Auto-secure points
-            if (window.PlayerManager) {
-                PlayerManager.secureCurrentPoints();
-            }
+        // Auto-secure all active players' points (handles both single and multiplayer elegantly)
+        if (window.PlayerManager) {
+            PlayerManager.secureAllActivePoints();
         }
     }
     

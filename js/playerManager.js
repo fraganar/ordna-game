@@ -163,6 +163,44 @@ class PlayerManager {
         }, 2000);
     }
     
+    // Auto-secure all active players' points (for when question is fully completed)
+    secureAllActivePoints() {
+        if (this.isSinglePlayerMode()) {
+            // Single player: use existing method
+            this.secureCurrentPoints();
+            return;
+        }
+        
+        // Multiplayer: auto-secure all active players
+        const currentPlayer = this.getCurrentPlayer();
+        const currentPlayerPoints = currentPlayer?.roundPot || 0; // Get current player's points before securing
+        
+        // Calculate and secure points for all active players
+        this.players.forEach(player => {
+            if (!player.completedRound && player.roundPot > 0) {
+                player.score += player.roundPot;
+                player.roundPot = 0;
+                player.completedRound = true;
+                player.completionReason = 'finished';
+            }
+        });
+        
+        if (currentPlayerPoints <= 0) return;
+        
+        // Show animation for current player's points (analogous to single player)
+        if (window.AnimationEngine) {
+            window.AnimationEngine?.showSecureAnimation(currentPlayerPoints);
+        }
+        
+        // Update display
+        this.updatePlayerDisplay();
+        
+        // Handle next action (same pattern as secureCurrentPoints)
+        setTimeout(() => {
+            this.concludeQuestionRound();
+        }, 2000);
+    }
+    
     // Move to next player's turn
     nextTurn() {
         if (!this.isMultiplayerMode()) return;
