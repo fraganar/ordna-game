@@ -282,24 +282,11 @@ function getCurrentQuestion() {
     return questions[currentQuestionIndex];
 }
 
-// NEW: Player-specific state management helpers
-function isPlayerActive(player) {
-    if (window.PlayerManager && window.PlayerManager.isPlayerActive) {
-        return window.PlayerManager.isPlayerActive(player);
-    }
-    return !player.completedRound && player.completionReason === null; // fallback
-}
+// isPlayerActive() and hasActivePlayersInRound() wrappers removed - use PlayerManager directly
 
 function getCurrentActivePlayer() {
     // This is still needed as it's not directly in PlayerManager
-    return players.find(p => isPlayerActive(p)) || null;
-}
-
-function hasActivePlayersInRound() {
-    if (window.PlayerManager && window.PlayerManager.hasActivePlayersInRound) {
-        return window.PlayerManager.hasActivePlayersInRound();
-    }
-    return players.some(p => isPlayerActive(p)); // fallback
+    return players.find(p => window.PlayerManager.isPlayerActive(p)) || null;
 }
 
 function isQuestionCompleted() {
@@ -312,7 +299,7 @@ function isQuestionCompleted() {
         const currentPlayer = window.PlayerManager.getCurrentPlayer();
         return currentPlayer.completedRound;
     } else {
-        return !hasActivePlayersInRound();
+        return !window.PlayerManager.hasActivePlayersInRound();
     }
 }
 
@@ -399,7 +386,7 @@ function determineNextAction() {
     }
     
     // 2. Second: Check if there are any active players remaining
-    if (!hasActivePlayersInRound()) {
+    if (!window.PlayerManager.hasActivePlayersInRound()) {
         checkAndHandleQuestionCompletion();
         return;
     }
@@ -408,7 +395,7 @@ function determineNextAction() {
     if (!isSinglePlayerMode()) {
         setTimeout(() => {
             // Double-check state hasn't changed during timeout
-            if (hasActivePlayersInRound() && !isCurrentQuestionFullyAnswered()) {
+            if (window.PlayerManager.hasActivePlayersInRound() && !isCurrentQuestionFullyAnswered()) {
                 if (window.PlayerManager) {
                     window.PlayerManager.nextTurn();
                     
@@ -444,7 +431,7 @@ function determineNextAction() {
 function concludeQuestionImmediately() {
     // Auto-secure points for all active players
     players.forEach(player => {
-        if (isPlayerActive(player) && player.roundPot > 0) {
+        if (window.PlayerManager.isPlayerActive(player) && player.roundPot > 0) {
             player.score += player.roundPot;
             player.roundPot = 0;
             player.completedRound = true;
@@ -486,32 +473,7 @@ function resetPlayerUIForTurn() {
     }
 }
 
-// Add point to current player (unified function)
-function addPointToCurrentPlayer(sourceElement) {
-    const currentPlayer = window.PlayerManager.getCurrentPlayer();
-    currentPlayer.roundPot++;
-    
-    // Use unified flying animation for all modes
-    if (window.AnimationEngine) {
-        window.AnimationEngine.showPointAnimation(sourceElement);
-    }
-    
-    // Update displays
-    if (window.AnimationEngine) {
-        window.AnimationEngine.updateStopButtonPoints();
-    }
-    if (window.PlayerManager) {
-        window.PlayerManager.updatePlayerDisplay();
-    }
-    updateGameControls(); // Always update button states when points change
-    
-    // Wake up stop button if first point
-    if (currentPlayer.roundPot === 1) {
-        if (window.AnimationEngine && window.AnimationEngine.wakeUpStopButton) {
-            window.AnimationEngine.wakeUpStopButton();
-        }
-    }
-}
+// addPointToCurrentPlayer() moved to PlayerManager - use window.PlayerManager.addPointToCurrentPlayer()
 
 // Handle when player secures points - delegates to PlayerManager but handles game-specific logic
 function secureCurrentPoints() {
@@ -1448,7 +1410,7 @@ function updateGameControls() {
     
     const currentPlayer = window.PlayerManager.getCurrentPlayer();
     
-    if (!hasActivePlayersInRound() && !isSinglePlayerMode()) {
+    if (!window.PlayerManager.hasActivePlayersInRound() && !isSinglePlayerMode()) {
         // All players completed in multiplayer - show decision button with only next-side
         if (decisionButton) decisionButton.classList.remove('hidden');
         if (stopSide) stopSide.classList.add('hidden'); // Hide stop side - no one can stop anymore
@@ -1746,7 +1708,7 @@ function handleOrderClick(button, optionText) {
     const currentPlayer = window.PlayerManager.getCurrentPlayer();
     
     // NEW: Check player-specific state instead of global mistakeMade
-    if (!isPlayerActive(currentPlayer)) return;
+    if (!window.PlayerManager.isPlayerActive(currentPlayer)) return;
     
     // Prevent double-clicks and clicks on already answered buttons
     if (button.disabled || button.classList.contains('correct-step') || button.classList.contains('incorrect-step')) {
@@ -1769,7 +1731,7 @@ function handleOrderClick(button, optionText) {
         userOrder.push(optionText);
         
         // Add point using unified system
-        addPointToCurrentPlayer(button);
+        window.PlayerManager.addPointToCurrentPlayer(button);
         
         // Update button appearance
         button.className = 'option-btn w-full text-left p-4 rounded-lg border-2 correct-step';
@@ -1787,7 +1749,7 @@ function handleOrderClick(button, optionText) {
             // So we should mark all remaining active players as completed
             if (!isSinglePlayerMode()) {
                 players.forEach(player => {
-                    if (isPlayerActive(player) && player !== window.PlayerManager.getCurrentPlayer()) {
+                    if (window.PlayerManager.isPlayerActive(player) && player !== window.PlayerManager.getCurrentPlayer()) {
                         player.completedRound = true;
                         player.completionReason = 'no_options_left';
                     }
@@ -1821,7 +1783,7 @@ function handleBelongsDecision(userDecision, container, yesBtn, noBtn) {
     const currentPlayer = window.PlayerManager.getCurrentPlayer();
     
     // NEW: Check player-specific state instead of global mistakeMade
-    if (!isPlayerActive(currentPlayer)) return;
+    if (!window.PlayerManager.isPlayerActive(currentPlayer)) return;
     
     // Prevent double-clicks - check if this option is already decided
     if (container.dataset.decided === 'true') {
@@ -1849,7 +1811,7 @@ function handleBelongsDecision(userDecision, container, yesBtn, noBtn) {
 
     if (isCorrect) {
         // Add point using unified system
-        addPointToCurrentPlayer(container);
+        window.PlayerManager.addPointToCurrentPlayer(container);
         
         container.classList.add('choice-made');
         container.classList.add('correct-choice'); // Add green background to entire container
@@ -1869,7 +1831,7 @@ function handleBelongsDecision(userDecision, container, yesBtn, noBtn) {
             // So we should mark all remaining active players as completed
             if (!isSinglePlayerMode()) {
                 players.forEach(player => {
-                    if (isPlayerActive(player) && player !== window.PlayerManager.getCurrentPlayer()) {
+                    if (window.PlayerManager.isPlayerActive(player) && player !== window.PlayerManager.getCurrentPlayer()) {
                         player.completedRound = true;
                         player.completionReason = 'no_options_left';
                     }

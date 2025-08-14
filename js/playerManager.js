@@ -113,8 +113,16 @@ class PlayerManager {
             window.AnimationEngine?.showPointAnimation(sourceElement);
         }
         
-        // Update display
+        // Update displays
+        if (window.AnimationEngine) {
+            window.AnimationEngine?.updateStopButtonPoints();
+        }
         this.updatePlayerDisplay();
+        
+        // Update game controls (important for button states)
+        if (typeof window.updateGameControls === 'function') {
+            window.updateGameControls();
+        }
         
         // Wake up stop button on first point
         if (currentPlayer.roundPot === 1 && window.AnimationEngine) {

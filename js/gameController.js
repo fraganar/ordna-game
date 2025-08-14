@@ -413,7 +413,7 @@ class GameController {
     determineNextAction() {
         setTimeout(() => {
             if (window.PlayerManager?.isMultiplayerMode()) {
-                if (PlayerManager.hasActivePlayersInRound()) {
+                if (window.PlayerManager.hasActivePlayersInRound()) {
                     PlayerManager.nextTurn();
                 } else {
                     PlayerManager.concludeQuestionRound();
@@ -432,7 +432,7 @@ class GameController {
         
         if (window.PlayerManager?.isMultiplayerMode()) {
             // Multiplayer controls
-            if (PlayerManager.hasActivePlayersInRound()) {
+            if (window.PlayerManager.hasActivePlayersInRound()) {
                 // Active players remain - show decision button
                 if (decisionButton) decisionButton.classList.remove('hidden');
                 if (largeNextButton) largeNextButton.classList.add('hidden');
