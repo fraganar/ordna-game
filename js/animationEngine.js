@@ -19,16 +19,13 @@ class AnimationEngine {
         }, 1500);
     }
     
-    // Show point animation when earning a point
+    // Show point animation when earning a point - unified for all game modes
     showPointAnimation(sourceElement) {
-        if (window.PlayerManager?.isSinglePlayerMode()) {
-            this.showFlyingPointToButton(sourceElement);
-        } else {
-            this.showSimplePointPopup(sourceElement);
-        }
+        // Always show the flying point animation, regardless of game mode
+        this.showFlyingPointToButton(sourceElement);
     }
     
-    // Flying point animation for single player
+    // Flying point animation for all game modes (unified)
     showFlyingPointToButton(sourceElement) {
         if (!sourceElement) return;
         
@@ -93,33 +90,6 @@ class AnimationEngine {
         }, 800);
     }
     
-    // Simple popup for multiplayer
-    showSimplePointPopup(sourceElement) {
-        if (!sourceElement) return;
-        
-        const rect = sourceElement.getBoundingClientRect();
-        const popup = document.createElement('div');
-        popup.className = 'point-popup';
-        popup.textContent = '+1';
-        popup.style.cssText = `
-            position: fixed;
-            left: ${rect.left + rect.width / 2}px;
-            top: ${rect.top - 10}px;
-            font-size: 20px;
-            font-weight: bold;
-            color: #10b981;
-            z-index: 1000;
-            pointer-events: none;
-            transform: translate(-50%, -100%);
-            animation: popupFloat 1s ease-out forwards;
-        `;
-        
-        document.body.appendChild(popup);
-        
-        setTimeout(() => {
-            popup.remove();
-        }, 1000);
-    }
     
     // Show animation when securing points - UNIFIED for all game modes (like original design)
     showSecureAnimation(points) {

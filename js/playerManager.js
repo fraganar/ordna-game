@@ -89,6 +89,12 @@ class PlayerManager {
         stopSide.classList.remove('disabled', 'completed');
         stopSide.disabled = false;
         
+        // Restore original stop button content (important for multiplayer when switching players)
+        const stopIcon = stopSide.querySelector('.decision-icon');
+        const stopAction = stopSide.querySelector('.decision-action');
+        if (stopIcon) stopIcon.textContent = '🛡️';
+        if (stopAction) stopAction.textContent = 'Stanna';
+        
         // Update points display
         if (window.AnimationEngine) {
             window.AnimationEngine?.updateStopButtonPoints();

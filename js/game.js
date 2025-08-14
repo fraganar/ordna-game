@@ -261,12 +261,7 @@ function isSinglePlayerMode() {
 }
 
 // Get current player
-function getCurrentPlayer() {
-    if (window.PlayerManager) {
-        return window.PlayerManager.getCurrentPlayer();
-    }
-    return players[currentPlayerIndex]; // fallback
-}
+// getCurrentPlayer() wrapper removed - use PlayerManager.getCurrentPlayer() directly
 
 // Get total score for single player display
 function getTotalScore() {
@@ -278,7 +273,7 @@ function getTotalScore() {
 
 // Get current question score (pot)
 function getCurrentQuestionScore() {
-    return getCurrentPlayer().roundPot;
+    return window.PlayerManager.getCurrentPlayer().roundPot;
 }
 
 // Helper function to get current question from the right source
@@ -314,7 +309,7 @@ function isQuestionCompleted() {
     
     if (isSinglePlayerMode()) {
         // Single player: question is complete when player is done (stopped/wrong/finished)
-        const currentPlayer = getCurrentPlayer();
+        const currentPlayer = window.PlayerManager.getCurrentPlayer();
         return currentPlayer.completedRound;
     } else {
         return !hasActivePlayersInRound();
@@ -371,7 +366,7 @@ function checkAndHandleQuestionCompletion() {
 }
 
 function eliminateCurrentPlayer() {
-    const currentPlayer = getCurrentPlayer();
+    const currentPlayer = window.PlayerManager.getCurrentPlayer();
     const pointsToLose = currentPlayer.roundPot;
     
     // Save 0 points for challenge mode when eliminated
@@ -493,7 +488,7 @@ function resetPlayerUIForTurn() {
 
 // Add point to current player (unified function)
 function addPointToCurrentPlayer(sourceElement) {
-    const currentPlayer = getCurrentPlayer();
+    const currentPlayer = window.PlayerManager.getCurrentPlayer();
     currentPlayer.roundPot++;
     
     // Use unified flying animation for all modes
@@ -526,7 +521,7 @@ function secureCurrentPoints() {
     if (stopSide && stopSide.dataset.processing === 'true') return;
     if (stopSide) stopSide.dataset.processing = 'true';
     
-    const currentPlayer = getCurrentPlayer();
+    const currentPlayer = window.PlayerManager.getCurrentPlayer();
     const pointsToSecure = currentPlayer.roundPot;
     
     if (pointsToSecure <= 0) return;
@@ -1451,7 +1446,7 @@ function updateGameControls() {
     if (nextQuestionBtn) nextQuestionBtn.classList.add('hidden');
     if (largeNextQuestionBtn) largeNextQuestionBtn.classList.add('hidden');
     
-    const currentPlayer = getCurrentPlayer();
+    const currentPlayer = window.PlayerManager.getCurrentPlayer();
     
     if (!hasActivePlayersInRound() && !isSinglePlayerMode()) {
         // All players completed in multiplayer - show decision button with only next-side
@@ -1748,7 +1743,7 @@ function createBelongsToOption(optionText) {
 }
 
 function handleOrderClick(button, optionText) {
-    const currentPlayer = getCurrentPlayer();
+    const currentPlayer = window.PlayerManager.getCurrentPlayer();
     
     // NEW: Check player-specific state instead of global mistakeMade
     if (!isPlayerActive(currentPlayer)) return;
@@ -1792,7 +1787,7 @@ function handleOrderClick(button, optionText) {
             // So we should mark all remaining active players as completed
             if (!isSinglePlayerMode()) {
                 players.forEach(player => {
-                    if (isPlayerActive(player) && player !== getCurrentPlayer()) {
+                    if (isPlayerActive(player) && player !== window.PlayerManager.getCurrentPlayer()) {
                         player.completedRound = true;
                         player.completionReason = 'no_options_left';
                     }
@@ -1823,7 +1818,7 @@ function handleOrderClick(button, optionText) {
 }
 
 function handleBelongsDecision(userDecision, container, yesBtn, noBtn) {
-    const currentPlayer = getCurrentPlayer();
+    const currentPlayer = window.PlayerManager.getCurrentPlayer();
     
     // NEW: Check player-specific state instead of global mistakeMade
     if (!isPlayerActive(currentPlayer)) return;
@@ -1874,7 +1869,7 @@ function handleBelongsDecision(userDecision, container, yesBtn, noBtn) {
             // So we should mark all remaining active players as completed
             if (!isSinglePlayerMode()) {
                 players.forEach(player => {
-                    if (isPlayerActive(player) && player !== getCurrentPlayer()) {
+                    if (isPlayerActive(player) && player !== window.PlayerManager.getCurrentPlayer()) {
                         player.completedRound = true;
                         player.completionReason = 'no_options_left';
                     }
@@ -1905,7 +1900,7 @@ function playerStops() {
     const stopSide = UI?.get('stopSide');
     if (!stopSide || stopSide.disabled || stopSide.classList.contains('disabled')) return;
     
-    const currentPlayer = getCurrentPlayer();
+    const currentPlayer = window.PlayerManager.getCurrentPlayer();
     if (currentPlayer.roundPot === 0) return;
     
     // Use unified secure points function
@@ -2012,7 +2007,7 @@ function showCorrectAnswers() {
 function endGame() {
     // Save any remaining points for challenge mode before ending
     if (ischallengeMode && isSinglePlayerMode()) {
-        const currentPlayer = getCurrentPlayer();
+        const currentPlayer = window.PlayerManager.getCurrentPlayer();
         
         // Ensure we have scores for all questions
         if (challengeQuestionScores.length < questionsToPlay.length) {
