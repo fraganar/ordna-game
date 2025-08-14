@@ -1108,14 +1108,21 @@ async function endSinglePlayerGame() {
     if (gameScreen) gameScreen.classList.add('hidden');
     
     // If this is challenge creation mode
-    if (ischallengeMode && !challengeId) {
+    if (window.ischallengeMode && !challengeId) {
         try {
-            // Create the challenge in Firebase with the results
+            // Get final score from PlayerManager
+            const finalPlayer = window.PlayerManager.getCurrentPlayer();
+            const finalScore = finalPlayer ? finalPlayer.score : 0;
+            
+            // Create the challenge in Firebase with the results  
+            const playerName = finalPlayer ? finalPlayer.name : 'Unknown';
+            const playerId = finalPlayer ? finalPlayer.id : 'unknown_id';
+            
             const newChallengeId = await FirebaseAPI.createChallenge(
-                currentPlayer.name,
-                currentPlayer.id,
+                playerName,
+                playerId,
                 challengeQuestions,
-                players[0].score,
+                finalScore,
                 challengeQuestionScores,
                 selectedPack
             );
@@ -1126,10 +1133,10 @@ async function endSinglePlayerGame() {
             const challengeInfo = {
                 id: newChallengeId,
                 role: 'challenger',
-                playerName: currentPlayer.name,
+                playerName: playerName,
                 createdAt: new Date().toISOString(),
                 hasSeenResult: false,
-                totalScore: players[0].score,
+                totalScore: finalScore,
                 questionScores: challengeQuestionScores
             };
             localStorage.setItem(`challenge_${newChallengeId}`, JSON.stringify(challengeInfo));
@@ -1150,7 +1157,10 @@ async function endSinglePlayerGame() {
             if (endScreen) endScreen.classList.remove('hidden');
             if (singlePlayerFinal) singlePlayerFinal.classList.remove('hidden');
             if (finalScoreboard) finalScoreboard.classList.add('hidden');
-            if (singleFinalScore) singleFinalScore.textContent = `${players[0].score}`;
+            if (singleFinalScore) {
+                const errorFallbackScore = window.PlayerManager.getCurrentPlayer()?.score || 0;
+                singleFinalScore.textContent = `${errorFallbackScore}`;
+            }
         }
     }
     // If this is accepting a challenge
@@ -1195,12 +1205,15 @@ async function endSinglePlayerGame() {
         if (gameScreen) gameScreen.classList.add('hidden');
         
         // Show unified result screen for all regular games
+        const currentPlayer = window.PlayerManager.getCurrentPlayer();
+        const finalScore = currentPlayer ? currentPlayer.score : 0;
+        
         if (selectedPack) {
             // Pack-based game
-            showGameResultScreen(players[0].score, selectedPack, questionsToPlay.length);
+            showGameResultScreen(finalScore, selectedPack, questionsToPlay.length);
         } else {
             // Standard game with all questions
-            showGameResultScreen(players[0].score, 'Grund', questionsToPlay.length);
+            showGameResultScreen(finalScore, 'Grund', questionsToPlay.length);
         }
     }
 }
@@ -1545,7 +1558,11 @@ function loadQuestion() {
     console.log('Debug loadQuestion: window.questionsToPlay.length:', window.questionsToPlay?.length);
     if (currentQuestionIndex >= questions.length) {
         console.log('Debug loadQuestion: Ending game - no more questions');
-        endGame();
+        if (isSinglePlayerMode()) {
+            endSinglePlayerGame();
+        } else {
+            endGame();
+        }
         return;
     }
 
