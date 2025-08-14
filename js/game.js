@@ -1276,20 +1276,18 @@ async function initializeGame() {
         }
     }
     
-    // Try PlayerManager first
-    let usePlayerManager = false;
+    // Initialize players using PlayerManager
     if (window.PlayerManager) {
         try {
             window.PlayerManager.initializePlayers(playerCount, playerNames);
-            players = window.PlayerManager.players; // Update reference
-            usePlayerManager = true;
         } catch (error) {
-            console.error('Error calling PlayerManager:', error);
-            usePlayerManager = false;
+            console.error('Error initializing PlayerManager:', error);
+            return; // Cannot continue without PlayerManager
         }
+    } else {
+        console.error('PlayerManager not available!');
+        return;
     }
-    
-    // PlayerManager is now required - old fallback code removed
 
     if (selectedPacks.length === 0) {
         selectedPacks = questionPacks.map(p => p.name);
