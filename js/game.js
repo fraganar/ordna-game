@@ -16,7 +16,6 @@ let pendingChallengeCreation = false;
 
 // Load metadata for all available packs from their JSON files
 async function loadPackMetadata() {
-    console.log('Loading pack metadata from JSON files...');
     
     for (const pack of questionPacks) {
         if (pack.status === 'available' && pack.file) {
@@ -32,7 +31,6 @@ async function loadPackMetadata() {
                     pack.description = data.description;
                 }
                 
-                console.log(`Updated metadata for pack: ${pack.name}`);
             } catch (error) {
                 console.error(`Failed to load metadata for pack file ${pack.file}:`, error);
             }
@@ -65,7 +63,6 @@ async function loadPackQuestions(packName) {
             pack: data.name || packName
         }));
         
-        console.log(`Loaded ${questions.length} questions from pack: ${data.name || packName}`);
         return questions;
     } catch (error) {
         console.error(`Failed to load pack "${packName}":`, error);
@@ -84,7 +81,6 @@ async function loadQuestions() {
             return { ...q, pack: data.packs[index] || "Familjen Normal" };
         });
         
-        console.log(`Loaded ${allQuestions.length} questions from ${data.name}`);
         return allQuestions;
     } catch (error) {
         console.error('Failed to load questions:', error);
@@ -249,7 +245,10 @@ let questionStarterIndex = 0;
 
 // Helper to check if single player mode
 function isSinglePlayerMode() {
-    return players.length === 1;
+    if (window.PlayerManager && window.PlayerManager.isSinglePlayerMode) {
+        return window.PlayerManager.isSinglePlayerMode();
+    }
+    return players.length === 1; // fallback
 }
 
 // Get current player
@@ -275,15 +274,22 @@ function getCurrentQuestionScore() {
 
 // NEW: Player-specific state management helpers
 function isPlayerActive(player) {
-    return !player.completedRound && player.completionReason === null;
+    if (window.PlayerManager && window.PlayerManager.isPlayerActive) {
+        return window.PlayerManager.isPlayerActive(player);
+    }
+    return !player.completedRound && player.completionReason === null; // fallback
 }
 
 function getCurrentActivePlayer() {
+    // This is still needed as it's not directly in PlayerManager
     return players.find(p => isPlayerActive(p)) || null;
 }
 
 function hasActivePlayersInRound() {
-    return players.some(p => isPlayerActive(p));
+    if (window.PlayerManager && window.PlayerManager.hasActivePlayersInRound) {
+        return window.PlayerManager.hasActivePlayersInRound();
+    }
+    return players.some(p => isPlayerActive(p)); // fallback
 }
 
 function isQuestionCompleted() {
@@ -614,7 +620,6 @@ async function createChallenge() {
         // Set selected pack from challenge dropdown before loading questions
         const challengePackSelect = UI.get('challengePackSelect');
         selectedPack = challengePackSelect?.value || null;
-        console.log('Creating challenge with pack:', selectedPack || 'All questions');
         
         // Load questions based on selected pack
         await loadQuestionsForGame();
@@ -949,7 +954,6 @@ function showWaitingForOpponentView(challengeId) {
                 });
             } catch (err) {
                 // Användaren avbröt delningen - gör inget
-                console.log('Delning avbruten');
             }
         } else {
             // Desktop fallback - kopiera länken med meddelande
@@ -1168,7 +1172,6 @@ async function startChallengeGame() {
         
         // Set selected pack from challenge (for display purposes)
         selectedPack = challengeData.packName || null;
-        console.log('Playing challenge with pack:', selectedPack || 'All questions');
         
         // Set up game with the same questions
         challengeQuestions = challengeData.questions;
@@ -1259,7 +1262,6 @@ function stopChallengePolling() {
 
 // Show result screen for regular games (pack and standard)
 function showGameResultScreen(score, gameType, totalQuestions) {
-    console.log('Showing game result screen for:', gameType);
     
     const gameTypeName = gameType || 'Allmänna frågor';
     
@@ -1293,7 +1295,6 @@ function showGameResultScreen(score, gameType, totalQuestions) {
     const backButton = document.getElementById('back-to-start-final');
     if (backButton) {
         backButton.addEventListener('click', () => {
-            console.log('Back to start clicked from game result');
             
             // Go back to start screen
             const endScreen = UI?.get('endScreen');
@@ -1318,8 +1319,6 @@ function showGameResultScreen(score, gameType, totalQuestions) {
 }
 
 // --- Functions ---
-
-
 
 // New flying point animation that goes to the stop button (unified for both modes)
 function showFlyingPointToButton(sourceElement) {
@@ -1628,8 +1627,6 @@ function enableNextButton() {
     // Don't directly enable - let updateGameControls handle unified logic
     updateGameControls();
 }
-
-
 // Point animation for both single and multiplayer
 function showPointAnimation(playerIndex, text, isBanked = false) {
     if (isSinglePlayerMode()) {
@@ -1675,8 +1672,6 @@ function shuffleArray(array) {
         [array[i], array[j]] = [array[j], array[i]];
     }
 }
-
-
 // Single Player Functions (Star system removed - now using decision button for points)
 
 function updateSinglePlayerDisplay() {
@@ -1837,25 +1832,20 @@ function populatePackSelect() {
         });
     }
 }
-
-
 async function initializeGame() {
     // Set selected pack from dropdown
     const packSelect = UI?.get('packSelect');
     selectedPack = packSelect?.value || null;
-    console.log('Starting game with pack:', selectedPack || 'All questions');
     
     // Load questions based on selected pack
     await loadQuestionsForGame();
     
     if (allQuestions.length === 0) {
         console.error("No questions loaded! allQuestions.length:", allQuestions.length);
-        console.log("GameData.allQuestions:", window.GameData?.allQuestions?.length || 'not available');
         alert("Kunde inte ladda frågor. Kontrollera att frågefiler finns.");
         return;
     }
     
-    console.log("Questions loaded successfully:", allQuestions.length);
     
     const nameInputs = document.querySelectorAll('.player-name-input');
     const playerCountSelect = UI?.get('playerCountSelect');
@@ -2608,8 +2598,6 @@ function showCorrectAnswers() {
         showExplanation(question.förklaring);
     }
 }
-
-
 function endGame() {
     // Save any remaining points for challenge mode before ending
     if (ischallengeMode && isSinglePlayerMode()) {
@@ -2973,7 +2961,6 @@ shareBtn.addEventListener('click', async () => {
             });
         } catch (err) {
             // Användaren avbröt delningen - gör inget
-            console.log('Delning avbruten');
         }
     } else {
         // Desktop fallback - kopiera länken med meddelande
@@ -3058,7 +3045,6 @@ async function initializeApp() {
         await GameData.initialize();
         // Copy questions to global array for compatibility
         allQuestions = GameData.allQuestions;
-        console.log('GameData loaded:', allQuestions.length, 'questions');
     } else {
         // Fallback to old method
         await loadPackMetadata();
@@ -3092,8 +3078,6 @@ async function initializeApp() {
         }
     }
 }
-
-
 // Initialize the app when DOM is ready
 // Only run if App.js module isn't handling initialization
 if (!window.App) {
