@@ -427,7 +427,7 @@ function determineNextAction() {
 
 // New function to immediately conclude a question when all options are answered
 function concludeQuestionImmediately() {
-    // Auto-secure points for all active players
+    // Auto-secure points for all active players  
     const players = window.PlayerManager?.getPlayers() || [];
     players.forEach(player => {
         if (window.PlayerManager.isPlayerActive(player) && player.roundPot > 0) {
@@ -842,14 +842,7 @@ async function startChallengeGame() {
         challengeQuestionScores = [];
         
         
-        // Start the game as single player
-        players = [{
-            name: currentPlayer.name,
-            score: 0,
-            roundPot: 0,
-            completedRound: false,
-            completionReason: null
-        }];
+        // PlayerManager handles player initialization
         questionsToPlay = challengeQuestions;
         
         // Hide all screens and show game
@@ -1296,35 +1289,7 @@ async function initializeGame() {
         }
     }
     
-    // Fallback to old method if PlayerManager failed
-    if (!usePlayerManager) {
-        // Fallback to old method
-        players = [];
-        
-        if (playerCount === 1) {
-            players = [{
-                name: 'Du',
-                score: 0,
-                roundPot: 0,
-                completedRound: false,
-                completionReason: null
-            }];
-        } else {
-            nameInputs.forEach((input, index) => {
-                players.push({
-                    name: input.value || `Spelare ${index + 1}`,
-                    score: 0,
-                    roundPot: 0,
-                    completedRound: false,
-                    completionReason: null
-                });
-            });
-            if (players.length < 2) {
-                console.error("Minst två spelare behövs!");
-                return;
-            }
-        }
-    }
+    // PlayerManager is now required - old fallback code removed
 
     if (selectedPacks.length === 0) {
         selectedPacks = questionPacks.map(p => p.name);
@@ -2055,8 +2020,7 @@ function restartGame() {
     // Stop any ongoing polling
     stopChallengePolling();
     
-    // Reset game state
-    players = [];
+    // Reset game state - PlayerManager handles player reset
     currentQuestionIndex = 0;
     currentPlayerIndex = 0;
     questionStarterIndex = 0;
