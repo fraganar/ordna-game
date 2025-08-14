@@ -1719,21 +1719,13 @@ function handleOrderClick(button, optionText) {
 
         // Check if question is complete (all alternatives answered)
         if (userOrder.length === question.alternativ.length) {
-            // Auto-secure points when question complete
-            secureCurrentPoints();
-            
-            // Score saving now handled in secureCurrentPoints to avoid duplicates
-            
-            // For multiplayer: when all alternatives are answered, no one else can play
-            // So we should mark all remaining active players as completed
-            if (!isSinglePlayerMode()) {
-                players.forEach(player => {
-                    if (window.PlayerManager.isPlayerActive(player) && player !== window.PlayerManager.getCurrentPlayer()) {
-                        player.completedRound = true;
-                        player.completionReason = 'no_options_left';
-                    }
-                });
-            }
+            // When all options are answered, auto-secure points for ALL active players
+            concludeQuestionImmediately();
+            // Note: concludeQuestionImmediately() handles everything:
+            // - Secures points for all active players
+            // - Marks all players as completed
+            // - Shows correct answers
+            // - Updates displays
         } else {
             // Question continues - handle turn progression for multiplayer only
             if (!isSinglePlayerMode()) {
@@ -1801,21 +1793,13 @@ function handleBelongsDecision(userDecision, container, yesBtn, noBtn) {
             .every(cont => cont.dataset.decided === 'true');
         
         if (allDecided) {
-            // Auto-secure points when all decided
-            secureCurrentPoints();
-            
-            // Score saving now handled in secureCurrentPoints to avoid duplicates
-            
-            // For multiplayer: when all alternatives are decided, no one else can play
-            // So we should mark all remaining active players as completed
-            if (!isSinglePlayerMode()) {
-                players.forEach(player => {
-                    if (window.PlayerManager.isPlayerActive(player) && player !== window.PlayerManager.getCurrentPlayer()) {
-                        player.completedRound = true;
-                        player.completionReason = 'no_options_left';
-                    }
-                });
-            }
+            // When all options are decided, auto-secure points for ALL active players
+            concludeQuestionImmediately();
+            // Note: concludeQuestionImmediately() handles everything:
+            // - Secures points for all active players
+            // - Marks all players as completed
+            // - Shows correct answers
+            // - Updates displays
         } else {
             // Question continues - handle turn progression for multiplayer only
             if (!isSinglePlayerMode()) {
