@@ -124,7 +124,7 @@ class GameController {
         }
         
         // Update game controls
-        this.updateGameControls();
+        window.updateGameControls();
     }
     
     // Render question options based on type
@@ -417,41 +417,15 @@ class GameController {
                     PlayerManager.nextTurn();
                 } else {
                     PlayerManager.concludeQuestionRound();
-                    this.updateGameControls();
+                    window.updateGameControls();
                 }
             } else {
-                this.updateGameControls();
+                window.updateGameControls();
             }
         }, 100);
     }
     
-    // Update game control buttons
-    updateGameControls() {
-        const decisionButton = UI?.get('decisionButton');
-        const largeNextButton = UI?.get('largeNextQuestionBtn');
-        
-        if (window.PlayerManager?.isMultiplayerMode()) {
-            // Multiplayer controls
-            if (window.PlayerManager.hasActivePlayersInRound()) {
-                // Active players remain - show decision button
-                if (decisionButton) decisionButton.classList.remove('hidden');
-                if (largeNextButton) largeNextButton.classList.add('hidden');
-            } else {
-                // All players done - show large next button
-                if (decisionButton) decisionButton.classList.add('hidden');
-                if (largeNextButton) largeNextButton.classList.remove('hidden');
-            }
-        } else {
-            // Single player - always show decision button
-            if (decisionButton) decisionButton.classList.remove('hidden');
-            if (largeNextButton) largeNextButton.classList.add('hidden');
-        }
-        
-        // Update button states
-        if (window.AnimationEngine) {
-            window.AnimationEngine?.updateStopButtonPoints();
-        }
-    }
+    // updateGameControls() moved to game.js for consolidation
     
     // Move to next question
     nextQuestion() {
