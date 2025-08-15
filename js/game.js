@@ -180,26 +180,14 @@ let questionStarterIndex = 0;
 // mistakeMade removed - now using player-specific states
 
 // Helper to check if single player mode
-function isSinglePlayerMode() {
-    if (window.PlayerManager && window.PlayerManager.isSinglePlayerMode) {
-        return window.PlayerManager.isSinglePlayerMode();
-    }
-    return true; // fallback to single player if PlayerManager not available
-}
+// REMOVED: isSinglePlayerMode() - use PlayerManager.isSinglePlayerMode() directly
 
 // Get current player
 // getCurrentPlayer() wrapper removed - use PlayerManager.getCurrentPlayer() directly
 
 // Get total score for single player display
-function getTotalScore() {
-    const currentPlayer = window.PlayerManager?.getCurrentPlayer();
-    return currentPlayer ? currentPlayer.score : 0;
-}
-
-// Get current question score (pot)
-function getCurrentQuestionScore() {
-    return window.PlayerManager.getCurrentPlayer().roundPot;
-}
+// REMOVED: getTotalScore() - use PlayerManager.getCurrentPlayer().score directly
+// REMOVED: getCurrentQuestionScore() - use PlayerManager.getCurrentPlayer().roundPot directly
 
 // Helper function to get current question from the right source
 function getCurrentQuestion() {
@@ -209,18 +197,14 @@ function getCurrentQuestion() {
 
 // isPlayerActive() and hasActivePlayersInRound() wrappers removed - use PlayerManager directly
 
-function getCurrentActivePlayer() {
-    // Get first active player from PlayerManager
-    const players = window.PlayerManager?.getPlayers() || [];
-    return players.find(p => window.PlayerManager.isPlayerActive(p)) || null;
-}
+// REMOVED: getCurrentActivePlayer() - use PlayerManager.getCurrentPlayer() directly
 
 function isQuestionCompleted() {
     // Question is completed when:
     // 1. No active players remain (all stopped/eliminated), OR
     // 2. Current player has completed their turn (stopped or eliminated)
     
-    if (isSinglePlayerMode()) {
+    if (window.PlayerManager?.isSinglePlayerMode()) {
         // Single player: question is complete when player is done (stopped/wrong/finished)
         const currentPlayer = window.PlayerManager.getCurrentPlayer();
         return currentPlayer.completedRound;
@@ -316,7 +300,7 @@ function determineNextAction() {
     }
     
     // 2. SINGLE PLAYER: Check if player has stopped (needs facit)
-    if (isSinglePlayerMode()) {
+    if (window.PlayerManager?.isSinglePlayerMode()) {
         const currentPlayer = window.PlayerManager.getCurrentPlayer();
         if (currentPlayer && currentPlayer.completedRound) {
             // Player has stopped - show facit and enable next button
@@ -361,7 +345,7 @@ function determineNextAction() {
 
 // NEW: Clean UI reset for turn changes
 function resetPlayerUIForTurn() {
-    if (isSinglePlayerMode()) return;
+    if (window.PlayerManager?.isSinglePlayerMode()) return;
     
     const stopSide = UI.get('stopSide');
     if (!stopSide) return;
@@ -904,7 +888,7 @@ function enableNextButton() {
 }
 // Point animation for both single and multiplayer
 function showPointAnimation(playerIndex, text, isBanked = false) {
-    if (isSinglePlayerMode()) {
+    if (window.PlayerManager?.isSinglePlayerMode()) {
         // Star animation removed - now using flying point animation to decision button
         // No animation needed here as it's handled by showFlyingPointToButton
     } else {
@@ -1267,7 +1251,7 @@ function updateGameControls() {
     
     const currentPlayer = window.PlayerManager.getCurrentPlayer();
     
-    if (!window.PlayerManager.hasActivePlayersInRound() && !isSinglePlayerMode()) {
+    if (!window.PlayerManager.hasActivePlayersInRound() && !window.PlayerManager?.isSinglePlayerMode()) {
         // All players completed in multiplayer - show secured state
         if (decisionButton) decisionButton.classList.remove('hidden');
         
@@ -1288,7 +1272,7 @@ function updateGameControls() {
             nextSide.classList.remove('hidden');
             nextSide.disabled = false; // Enable next button
         }
-    } else if (isSinglePlayerMode()) {
+    } else if (window.PlayerManager?.isSinglePlayerMode()) {
         // Single player: alltid visa decision button
         if (decisionButton) decisionButton.classList.remove('hidden');
         if (stopSide) stopSide.classList.remove('hidden');
@@ -1427,7 +1411,7 @@ function loadQuestion() {
     console.log('Debug loadQuestion: window.questionsToPlay.length:', window.questionsToPlay?.length);
     if (currentQuestionIndex >= questions.length) {
         console.log('Debug loadQuestion: Ending game - no more questions');
-        if (isSinglePlayerMode()) {
+        if (window.PlayerManager?.isSinglePlayerMode()) {
             endSinglePlayerGame();
         } else {
             endGame();
@@ -1436,7 +1420,7 @@ function loadQuestion() {
     }
 
     // Set starting player for this question (rotation in multiplayer)
-    if (!isSinglePlayerMode()) {
+    if (!window.PlayerManager?.isSinglePlayerMode()) {
         currentPlayerIndex = questionStarterIndex;
     } else {
         currentPlayerIndex = 0;
@@ -1472,12 +1456,12 @@ function loadQuestion() {
     if (optionsGrid) optionsGrid.className = 'grid grid-cols-1 gap-3 sm:gap-4 my-4 sm:my-6';
 
     if (question.typ === 'ordna') {
-        UI.setQuestionInstruction(isSinglePlayerMode() ? 
+        UI.setQuestionInstruction(window.PlayerManager?.isSinglePlayerMode() ? 
             'Klicka på alternativen i rätt ordning. Ett fel och du förlorar frågans poäng.' :
             'Klicka på alternativen i rätt ordning.');
         shuffledOptions.forEach(optionText => createOrderButton(optionText));
     } else { // 'hör_till'
-        UI.setQuestionInstruction(isSinglePlayerMode() ?
+        UI.setQuestionInstruction(window.PlayerManager?.isSinglePlayerMode() ?
             'Bedöm varje alternativ. Ett fel och du förlorar frågans poäng.' :
             'Bedöm varje alternativ.');
         shuffledOptions.forEach(optionText => createBelongsToOption(optionText));
@@ -1616,7 +1600,7 @@ function handleOrderClick(button, optionText) {
     button.dataset.answered = 'true';
 
     // Disable all options during processing (for multiplayer turn-based)
-    if (!isSinglePlayerMode()) {
+    if (!window.PlayerManager?.isSinglePlayerMode()) {
         setAllOptionsDisabled(true);
     }
 
@@ -1650,7 +1634,7 @@ function handleOrderClick(button, optionText) {
         button.classList.add('incorrect-step');
         
         // In single player mode, disable the button permanently
-        if (isSinglePlayerMode()) {
+        if (window.PlayerManager?.isSinglePlayerMode()) {
             button.disabled = true;
         }
         // In multiplayer, keep button enabled for other players to try later
@@ -1699,7 +1683,7 @@ function handleBelongsDecision(userDecision, container, yesBtn, noBtn) {
     otherBtn.classList.add('deselected');
 
     // Disable all options during processing (for multiplayer turn-based)
-    if (!isSinglePlayerMode()) {
+    if (!window.PlayerManager?.isSinglePlayerMode()) {
         setAllOptionsDisabled(true);
     }
 
@@ -1859,7 +1843,7 @@ function showCorrectAnswers() {
 }
 function endGame() {
     // Save any remaining points for challenge mode before ending
-    if (ischallengeMode && isSinglePlayerMode()) {
+    if (ischallengeMode && window.PlayerManager?.isSinglePlayerMode()) {
         const currentPlayer = window.PlayerManager.getCurrentPlayer();
         
         // Ensure we have scores for all questions
@@ -1879,7 +1863,7 @@ function endGame() {
     if (gameScreen) gameScreen.classList.add('hidden');
     
     // Handle different game modes
-    if (isSinglePlayerMode()) {
+    if (window.PlayerManager?.isSinglePlayerMode()) {
         endSinglePlayerGame();
     } else {
         endMultiplayerGame();
