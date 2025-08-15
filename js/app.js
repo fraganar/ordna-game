@@ -25,10 +25,10 @@ class App {
             // Check for challenge in URL
             await this.checkForChallenge();
             
-            // Check for notifications
-            await this.checkNotifications();
+            // Only check for notifications if we're on the start screen (not starting a game)
+            // Notifications should be checked when user returns to main menu, not during game
             
-            // Load my challenges
+            // Load my challenges (but don't show notifications automatically)
             this.loadMyChallenges();
             
             this.initialized = true;
@@ -89,6 +89,13 @@ class App {
         // Connect modules to UI
         if (window.AnimationEngine && typeof AnimationEngine.resetDecisionButtons === 'function') {
             AnimationEngine.resetDecisionButtons();
+        }
+        
+        // Ensure notifications area is hidden at startup
+        const notificationsArea = document.getElementById('notifications-area');
+        if (notificationsArea) {
+            notificationsArea.classList.add('hidden');
+            notificationsArea.innerHTML = '';
         }
     }
     

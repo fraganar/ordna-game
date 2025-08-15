@@ -1526,9 +1526,16 @@ function loadQuestion() {
     UI.updateDifficultyBadge(question.svårighetsgrad);
     UI.setQuestionText(question.fråga);
     
-    // Show challenger hint if in challenge mode
+    // Show challenger hint if in challenge mode, hide otherwise
     if (window.ChallengeSystem && typeof window.ChallengeSystem.showHint === 'function') {
         window.ChallengeSystem.showHint(currentQuestionIndex);
+    } else {
+        // Ensure hint is hidden in non-challenge mode
+        const hintElement = document.getElementById('challenger-hint');
+        if (hintElement) {
+            hintElement.classList.add('hidden');
+            hintElement.innerHTML = '';
+        }
     }
     
     const shuffledOptions = [...question.alternativ];

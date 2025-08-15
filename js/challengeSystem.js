@@ -34,14 +34,20 @@ class ChallengeSystem {
     
     // Show challenger hint
     showHint(questionIndex) {
-        if (!this.isChallengeMode || !this.challengeId || !this.challengeData) return;
-        
         const hintElement = document.getElementById('challenger-hint');
         if (!hintElement) return;
         
-        // Safety checks
+        // ALWAYS hide if not in proper challenge mode
+        if (!this.isChallengeMode || !this.challengeId || !this.challengeData) {
+            hintElement.classList.add('hidden');
+            hintElement.innerHTML = '';
+            return;
+        }
+        
+        // Safety checks for challenge data
         if (!this.challengeData.challenger || !this.challengeData.challenger.questionScores) {
             hintElement.classList.add('hidden');
+            hintElement.innerHTML = '';
             return;
         }
         
@@ -56,6 +62,7 @@ class ChallengeSystem {
             hintElement.classList.remove('hidden');
         } else {
             hintElement.classList.add('hidden');
+            hintElement.innerHTML = '';
         }
     }
     
