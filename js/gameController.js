@@ -355,7 +355,7 @@ class GameController {
     handleQuestionFullyCompleted() {
         // Auto-secure all active players' points (handles both single and multiplayer elegantly)
         if (window.PlayerManager) {
-            PlayerManager.secureAllActivePoints();
+            window.PlayerManager.secureAllActivePoints();
         }
     }
     

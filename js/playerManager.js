@@ -137,6 +137,11 @@ class PlayerManager {
         
         if (pointsToSecure <= 0) return;
         
+        // Save score for challenge mode when securing points
+        if (window.ChallengeSystem) {
+            window.ChallengeSystem.saveScore(pointsToSecure, window.currentQuestionIndex);
+        }
+        
         // Secure the points
         currentPlayer.score += pointsToSecure;
         currentPlayer.roundPot = 0;
@@ -158,6 +163,11 @@ class PlayerManager {
                     this.nextTurn();
                 } else {
                     this.concludeQuestionRound();
+                }
+            } else {
+                // Single player: update controls to enable next button
+                if (typeof window.updateGameControls === 'function') {
+                    window.updateGameControls();
                 }
             }
         }, 2000);

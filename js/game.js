@@ -368,85 +368,68 @@ function eliminateCurrentPlayer() {
     if (window.PlayerManager) {
         window.PlayerManager.updatePlayerDisplay();
     }
-    updateGameControls();
     
-    // Check if question is complete after elimination
-    checkAndHandleQuestionCompletion();
+    // Use the ROBUST determineNextAction to handle ALL cases correctly
+    determineNextAction();
 }
 
 // REPLACED progressToNextPlayerOrConclude with more robust design
-// New central function that handles both question completion and turn progression
+// Central function that handles question state transitions (NOT called after last alternative)
 function determineNextAction() {
-    // 1. First priority: Check if question is physically completed (all options answered)
-    if (isCurrentQuestionFullyAnswered()) {
-        concludeQuestionImmediately();
-        return;
-    }
+    // NOTE: This is NOT called when question is physically complete (last alternative answered)
+    // That case is handled directly in handleOrderClick/handleBelongsDecision
     
-    // 2. Second: Check if there are any active players remaining
+    // 1. Check if no active players remain (all stopped/eliminated)
     if (!window.PlayerManager.hasActivePlayersInRound()) {
-        checkAndHandleQuestionCompletion();
+        // Show facit immediately
+        showCorrectAnswers();
+        updateGameControls();
         return;
     }
     
-    // 3. Otherwise: Continue to next player (multiplayer only)
-    if (!isSinglePlayerMode()) {
-        setTimeout(() => {
-            // Double-check state hasn't changed during timeout
-            if (window.PlayerManager.hasActivePlayersInRound() && !isCurrentQuestionFullyAnswered()) {
-                if (window.PlayerManager) {
-                    window.PlayerManager.nextTurn();
-                    
-                    // Clear incorrect markings from previous players' wrong attempts (ordna questions only)
-                    // This allows next player to try the same alternatives
-                    const question = getCurrentQuestion();
-                    if (question && question.typ === 'ordna') {
-                        const incorrectButtons = document.querySelectorAll('.option-btn.incorrect-step:not(.correct-step)');
-                        incorrectButtons.forEach(button => {
-                            // Only re-enable if not already correctly placed
-                            if (!button.classList.contains('correct-step')) {
-                                button.classList.remove('incorrect-step');
-                                button.disabled = false;
-                                button.dataset.answered = 'false';
-                            }
-                        });
-                    }
-                    
-                    // Re-enable options for new player
-                    setAllOptionsDisabled(false);
-                }
-            } else {
-                determineNextAction(); // Re-evaluate
-            }
-        }, 500);
-    } else {
-        // Single player with active player but not all options answered - just update controls
-        updateGameControls();
+    // 2. SINGLE PLAYER: Check if player has stopped (needs facit)
+    if (isSinglePlayerMode()) {
+        const currentPlayer = window.PlayerManager.getCurrentPlayer();
+        if (currentPlayer && currentPlayer.completedRound) {
+            // Player has stopped - show facit and enable next button
+            showCorrectAnswers();
+            setTimeout(() => {
+                updateGameControls();
+            }, 2000); // Wait for secure animation
+        }
+        return;
     }
+    
+    // 3. MULTIPLAYER: Continue to next player
+    setTimeout(() => {
+        // Double-check state hasn't changed during timeout
+        if (window.PlayerManager.hasActivePlayersInRound() && !isCurrentQuestionFullyAnswered()) {
+            if (window.PlayerManager) {
+                window.PlayerManager.nextTurn();
+                
+                // Clear incorrect markings from previous players' wrong attempts (ordna questions only)
+                const question = getCurrentQuestion();
+                if (question && question.typ === 'ordna') {
+                    const incorrectButtons = document.querySelectorAll('.option-btn.incorrect-step:not(.correct-step)');
+                    incorrectButtons.forEach(button => {
+                        if (!button.classList.contains('correct-step')) {
+                            button.classList.remove('incorrect-step');
+                            button.disabled = false;
+                            button.dataset.answered = 'false';
+                        }
+                    });
+                }
+                
+                // Re-enable options for new player
+                setAllOptionsDisabled(false);
+            }
+        } else {
+            determineNextAction(); // Re-evaluate
+        }
+    }, 500);
 }
 
-// New function to immediately conclude a question when all options are answered
-function concludeQuestionImmediately() {
-    // Auto-secure points for all active players  
-    const players = window.PlayerManager?.getPlayers() || [];
-    
-    players.forEach(player => {
-        if (window.PlayerManager.isPlayerActive(player) && player.roundPot > 0) {
-            player.score += player.roundPot;
-            player.roundPot = 0;
-            player.completedRound = true;
-            player.completionReason = 'all_options_answered';
-        }
-    });
-    
-    // Update displays and show results
-    updateScoreboard();
-    if (window.PlayerManager) {
-        window.PlayerManager.updatePlayerDisplay();
-    }
-    showCorrectAnswers();
-    updateGameControls();
-}
+// REMOVED: concludeQuestionImmediately - now handled by GameController.handleQuestionFullyCompleted()
 
 // NEW: Clean UI reset for turn changes
 function resetPlayerUIForTurn() {
@@ -498,8 +481,7 @@ function secureCurrentPoints() {
         window.AnimationEngine.showSecureAnimation(pointsToSecure);
     }
     
-    // Use the stable, well-designed completePlayerRound function (like old code)
-    // This handles facit display correctly for both single and multiplayer
+    // Update player state after animation starts
     setTimeout(() => {
         // Use centralized function to complete round
         completePlayerRound(currentPlayer, 'stopped', pointsToSecure);
@@ -509,39 +491,9 @@ function secureCurrentPoints() {
             window.PlayerManager.updatePlayerDisplay();
         }
         
-        // Handle turn progression
-        if (isSinglePlayerMode()) {
-            enableNextButton();
-        } else {
-            // Check if more players need to play
-            if (window.PlayerManager.hasActivePlayersInRound()) {
-                setTimeout(() => { 
-                    window.PlayerManager.nextTurn(); 
-                    
-                    // Clear incorrect markings from previous players' wrong attempts (ordna questions only)
-                    // This allows next player to try the same alternatives
-                    const question = getCurrentQuestion();
-                    if (question && question.typ === 'ordna') {
-                        const incorrectButtons = document.querySelectorAll('.option-btn.incorrect-step:not(.correct-step)');
-                        incorrectButtons.forEach(button => {
-                            // Only re-enable if not already correctly placed
-                            if (!button.classList.contains('correct-step')) {
-                                button.classList.remove('incorrect-step');
-                                button.disabled = false;
-                                button.dataset.answered = 'false';
-                            }
-                        });
-                    }
-                    
-                    // Re-enable options for new player
-                    setAllOptionsDisabled(false);
-                }, 800);
-            } else {
-                // All players done - conclude round
-                window.PlayerManager.concludeQuestionRound();
-                updateGameControls(); // Update button states
-            }
-        }
+        // Use the ROBUST determineNextAction to handle ALL cases correctly
+        // This will handle: showing facit, enabling next button, or moving to next player
+        determineNextAction();
     }, 600);
 }
 
@@ -1744,10 +1696,20 @@ function handleOrderClick(button, optionText) {
         button.innerHTML = `<span class="inline-flex items-center justify-center w-6 h-6 mr-3 bg-white text-green-600 rounded-full font-bold">${userOrder.length}</span> ${optionText}`;
         button.disabled = true;
 
-        // Always use determineNextAction() - it will handle all cases correctly:
-        // - If all options are answered: auto-secure ALL players' points
-        // - If not: handle turn progression or update controls
-        determineNextAction();
+        // Check if this was the LAST alternative
+        if (isCurrentQuestionFullyAnswered()) {
+            // Question physically complete - auto-secure ALL active players
+            if (window.GameController) {
+                window.GameController.handleQuestionFullyCompleted();
+            }
+            setTimeout(() => {
+                showCorrectAnswers();
+                updateGameControls();
+            }, 2000);
+        } else {
+            // More alternatives remain
+            determineNextAction();
+        }
     } else {
         // Wrong answer - eliminate current player
         button.classList.add('incorrect-step');
@@ -1758,8 +1720,21 @@ function handleOrderClick(button, optionText) {
         }
         // In multiplayer, keep button enabled for other players to try later
         
+        // Eliminate current player FIRST
         eliminateCurrentPlayer();
-        determineNextAction();
+        
+        // THEN check if question is complete (might be last alternative)
+        if (isCurrentQuestionFullyAnswered()) {
+            // Last alternative answered wrong - auto-secure remaining active players
+            if (window.GameController) {
+                window.GameController.handleQuestionFullyCompleted();
+            }
+            setTimeout(() => {
+                showCorrectAnswers();
+                updateGameControls();
+            }, 2000);
+        }
+        // Note: eliminateCurrentPlayer already calls determineNextAction()
     }
 }
 
@@ -1801,18 +1776,40 @@ function handleBelongsDecision(userDecision, container, yesBtn, noBtn) {
         container.classList.add('correct-choice'); // Add green background to entire container
         clickedBtn.classList.add('correct-selection');
         
-        // Always use determineNextAction() - it will handle all cases correctly:
-        // - If all options are decided: auto-secure ALL players' points  
-        // - If not: handle turn progression or update controls
-        determineNextAction();
+        // Check if this was the LAST alternative
+        if (isCurrentQuestionFullyAnswered()) {
+            // Question physically complete - auto-secure ALL active players
+            if (window.GameController) {
+                window.GameController.handleQuestionFullyCompleted();
+            }
+            setTimeout(() => {
+                showCorrectAnswers();
+                updateGameControls();
+            }, 2000);
+        } else {
+            // More alternatives remain
+            determineNextAction();
+        }
     } else {
         // Wrong answer
         clickedBtn.classList.add('selected');
         container.classList.add('incorrect-choice');
         
-        // Eliminate current player
+        // Eliminate current player FIRST
         eliminateCurrentPlayer();
-        determineNextAction();
+        
+        // THEN check if question is complete (might be last alternative)
+        if (isCurrentQuestionFullyAnswered()) {
+            // Last alternative answered wrong - auto-secure remaining active players
+            if (window.GameController) {
+                window.GameController.handleQuestionFullyCompleted();
+            }
+            setTimeout(() => {
+                showCorrectAnswers();
+                updateGameControls();
+            }, 2000);
+        }
+        // Note: eliminateCurrentPlayer already calls determineNextAction()
     }
 }
 

@@ -293,9 +293,7 @@ Scenario: Du har 2 poäng, nästa spelare har 0 säkrat
 
 Auto-säkring scenarios:
 1. Alla alternativ besvarade: Alla aktiva spelare får sina pottar säkrade
-2. Sist kvar: Om du är enda aktiva spelaren får du automatisk säkring
-3. Detta skapar incitament att "överleva" snarare än maximera poäng
-4. En spelare med 1 poäng som överlever får den säkrad!
+
 
 Viktigt: Auto-säkring gäller ALLA aktiva spelare samtidigt när villkoren uppnås,
         inte bara den spelare som svarade sist.
