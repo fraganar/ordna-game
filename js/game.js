@@ -38,83 +38,11 @@ async function loadPackMetadata() {
     }
 }
 
-// Load questions from a specific pack
-async function loadPackQuestions(packName) {
-    const pack = questionPacks.find(p => p.name === packName);
-    
-    if (!pack || pack.status !== 'available' || !pack.file) {
-        console.warn(`Pack "${packName}" not available or has no file`);
-        return [];
-    }
-    
-    try {
-        const response = await fetch(`data/${pack.file}`);
-        const data = await response.json();
-        
-        // Update pack metadata from JSON file if available
-        if (data.name && data.description) {
-            pack.name = data.name;
-            pack.description = data.description;
-        }
-        
-        // Map questions with pack name
-        const questions = data.questions.map(q => ({
-            ...q,
-            pack: data.name || packName
-        }));
-        
-        return questions;
-    } catch (error) {
-        console.error(`Failed to load pack "${packName}":`, error);
-        return [];
-    }
-}
+// REMOVED: loadPackQuestions - moved to GameData module
 
-// Load questions from JSON file (fallback or default)
-async function loadQuestions() {
-    try {
-        const response = await fetch('data/questions-grund.json');
-        const data = await response.json();
-        
-        // Map questions with their pack assignments
-        allQuestions = data.questions.map((q, index) => {
-            return { ...q, pack: data.packs[index] || "Familjen Normal" };
-        });
-        
-        return allQuestions;
-    } catch (error) {
-        console.error('Failed to load questions:', error);
-        // Fallback to empty array if loading fails
-        allQuestions = [];
-        return allQuestions;
-    }
-}
+// REMOVED: loadQuestions - moved to GameData module
 
-// Load questions based on selected pack
-async function loadQuestionsForGame() {
-    console.log('Debug loadQuestionsForGame: selectedPack:', selectedPack);
-    if (selectedPack) {
-        // Load specific pack
-        console.log('Debug: Loading pack questions for:', selectedPack);
-        const packQuestions = await loadPackQuestions(selectedPack);
-        console.log('Debug: packQuestions length:', packQuestions?.length);
-        if (packQuestions.length > 0) {
-            allQuestions = packQuestions;
-            window.allQuestions = packQuestions;
-            console.log('Debug: Set allQuestions to packQuestions, length:', allQuestions.length);
-            return allQuestions;
-        }
-        // Fallback if pack loading fails
-        console.warn(`Failed to load pack "${selectedPack}", falling back to default questions`);
-    }
-    
-    // Load default questions and set global variable
-    console.log('Debug: Loading default questions');
-    allQuestions = await loadQuestions();
-    window.allQuestions = allQuestions;
-    console.log('Debug: Set allQuestions to default, length:', allQuestions?.length);
-    return allQuestions;
-}
+// REMOVED: loadQuestionsForGame - moved to GameData module
 
 const questionPacks = [
     { 
@@ -1199,8 +1127,8 @@ async function initializeGame() {
     const packSelect = UI?.get('packSelect');
     selectedPack = packSelect?.value || null;
     
-    // Load questions based on selected pack
-    await loadQuestionsForGame();
+    // Load questions using GameData (working implementation moved there)
+    allQuestions = await window.GameData.loadQuestionsForGame(selectedPack);
     
     if (allQuestions.length === 0) {
         console.error("No questions loaded! allQuestions.length:", allQuestions.length);

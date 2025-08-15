@@ -372,11 +372,12 @@ class ChallengeSystem {
             window.selectedPack = challengePackSelect?.value || null;
             console.log('Debug Challenge: selectedPack:', window.selectedPack);
             
-            // Load questions based on selected pack
-            console.log('Debug Challenge: loadQuestionsForGame exists?', typeof window.loadQuestionsForGame === 'function');
-            if (typeof window.loadQuestionsForGame === 'function') {
-                await window.loadQuestionsForGame();
+            // Load questions using GameData (working implementation moved there)
+            if (window.GameData && window.GameData.loadQuestionsForGame) {
+                await window.GameData.loadQuestionsForGame(selectedPack);
                 console.log('Debug Challenge: allQuestions length:', window.allQuestions?.length);
+            } else {
+                console.error('GameData.loadQuestionsForGame not available');
             }
             
             if (!window.allQuestions || window.allQuestions.length === 0) {
