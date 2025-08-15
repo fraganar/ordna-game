@@ -70,16 +70,8 @@ class App {
     
     // Load all game data
     async loadGameData() {
-        if (window.GameData && typeof GameData.initialize === 'function') {
-            await GameData.initialize();
-            
-            // Pass questions to GameController
-            if (window.GameController) {
-                GameController.allQuestions = GameData.allQuestions;
-                GameController.packMetadata = GameData.packMetadata;
-            }
-            
-            // Populate pack selectors
+        if (window.GameData && typeof GameData.populatePackSelectors === 'function') {
+            // Only populate pack selectors - questions load on-demand now
             GameData.populatePackSelectors();
         }
     }

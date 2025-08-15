@@ -1455,16 +1455,22 @@ function loadQuestion() {
 
     if (optionsGrid) optionsGrid.className = 'grid grid-cols-1 gap-3 sm:gap-4 my-4 sm:my-6';
 
+    // Set instructions
     if (question.typ === 'ordna') {
         UI.setQuestionInstruction(window.PlayerManager?.isSinglePlayerMode() ? 
             'Klicka på alternativen i rätt ordning. Ett fel och du förlorar frågans poäng.' :
             'Klicka på alternativen i rätt ordning.');
-        shuffledOptions.forEach(optionText => createOrderButton(optionText));
     } else { // 'hör_till'
         UI.setQuestionInstruction(window.PlayerManager?.isSinglePlayerMode() ?
             'Bedöm varje alternativ. Ett fel och du förlorar frågans poäng.' :
             'Bedöm varje alternativ.');
-        shuffledOptions.forEach(optionText => createBelongsToOption(optionText));
+    }
+    
+    // Use GameController for rendering (functions moved there from game.js)
+    if (window.GameController && window.GameController.renderQuestionOptions) {
+        window.GameController.renderQuestionOptions(question);
+    } else {
+        console.error('GameController.renderQuestionOptions not available!');
     }
     
     // Add cascading shimmer effect to new options
@@ -1539,47 +1545,6 @@ function concludeQuestionRound() {
     }
 }
 
-function createOrderButton(optionText) {
-    const optionsGrid = UI.get('optionsGrid');
-    if (!optionsGrid) return;
-    
-    const button = document.createElement('button');
-    button.className = 'option-btn w-full text-left p-3 sm:p-4 rounded-lg border-2 border-slate-300 bg-white hover:bg-slate-50 hover:border-blue-400 text-sm sm:text-base';
-    button.textContent = optionText;
-    button.addEventListener('click', () => handleOrderClick(button, optionText));
-    optionsGrid.appendChild(button);
-}
-
-function createBelongsToOption(optionText) {
-    const container = document.createElement('div');
-    container.className = 'belongs-option-container w-full text-left p-2 rounded-lg border-2 border-slate-300 bg-white';
-    
-    const text = document.createElement('span');
-    text.textContent = optionText;
-    text.className = 'flex-grow pr-2 sm:pr-4 text-sm sm:text-base';
-
-    const buttonWrapper = document.createElement('div');
-    buttonWrapper.className = 'decision-buttons';
-
-    const yesBtn = document.createElement('button');
-    yesBtn.innerHTML = `<svg class="icon" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7"></path></svg>`;
-    yesBtn.className = 'yes-btn';
-    
-    const noBtn = document.createElement('button');
-    noBtn.innerHTML = `<svg class="icon" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12"></path></svg>`;
-    noBtn.className = 'no-btn';
-
-    yesBtn.addEventListener('click', () => handleBelongsDecision(true, container, yesBtn, noBtn));
-    noBtn.addEventListener('click', () => handleBelongsDecision(false, container, yesBtn, noBtn));
-
-    buttonWrapper.appendChild(yesBtn);
-    buttonWrapper.appendChild(noBtn);
-    container.appendChild(text);
-    container.appendChild(buttonWrapper);
-    
-    const optionsGrid = UI.get('optionsGrid');
-    if (optionsGrid) optionsGrid.appendChild(container);
-}
 
 function handleOrderClick(button, optionText) {
     const currentPlayer = window.PlayerManager.getCurrentPlayer();

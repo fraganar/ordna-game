@@ -128,6 +128,7 @@ class GameController {
     }
     
     // Render question options based on type
+    // Render question options based on type - MOVED FROM game.js (working implementation)
     renderQuestionOptions(question) {
         const optionsGrid = UI?.get('optionsGrid');
         if (!optionsGrid) return;
@@ -139,96 +140,60 @@ class GameController {
         }
     }
     
-    // Render options for "ordna" type questions
-    renderOrderOptions(question, container) {
-        question.alternativ.forEach((option, index) => {
+    // Create order button - MOVED FROM game.js (working implementation)
+    renderOrderOptions(question, optionsGrid) {
+        const shuffledOptions = [...question.alternativ];
+        this.shuffleArray(shuffledOptions);
+        
+        shuffledOptions.forEach(optionText => {
             const button = document.createElement('button');
-            button.className = 'option-btn p-3 sm:p-4 bg-white border-2 border-slate-300 rounded-lg hover:border-blue-400 transition-all text-sm sm:text-base';
-            button.textContent = option;
-            button.dataset.index = index;
-            
-            button.addEventListener('click', () => {
-                this.handleOrderClick(button, option, question);
-            });
-            
-            container.appendChild(button);
+            button.className = 'option-btn w-full text-left p-3 sm:p-4 rounded-lg border-2 border-slate-300 bg-white hover:bg-slate-50 hover:border-blue-400 text-sm sm:text-base';
+            button.textContent = optionText;
+            button.addEventListener('click', () => window.handleOrderClick(button, optionText));
+            optionsGrid.appendChild(button);
         });
     }
     
-    // Render options for "hör_till" type questions
-    renderBelongsOptions(question, container) {
-        question.alternativ.forEach((option, index) => {
-            const optionContainer = document.createElement('div');
-            optionContainer.className = 'belongs-option-container flex items-center gap-2 p-2 bg-slate-50 rounded-lg';
-            optionContainer.dataset.option = option;
-            optionContainer.dataset.index = index;
+    // Create belongs option - MOVED FROM game.js (working implementation) 
+    renderBelongsOptions(question, optionsGrid) {
+        const shuffledOptions = [...question.alternativ];
+        this.shuffleArray(shuffledOptions);
+        
+        shuffledOptions.forEach(optionText => {
+            const container = document.createElement('div');
+            container.className = 'belongs-option-container w-full text-left p-2 rounded-lg border-2 border-slate-300 bg-white';
             
-            const optionText = document.createElement('span');
-            optionText.className = 'flex-1 text-sm sm:text-base px-2';
-            optionText.textContent = option;
-            
-            const buttonContainer = document.createElement('div');
-            buttonContainer.className = 'flex gap-1';
-            
+            const text = document.createElement('span');
+            text.textContent = optionText;
+            text.className = 'flex-grow pr-2 sm:pr-4 text-sm sm:text-base';
+
+            const buttonWrapper = document.createElement('div');
+            buttonWrapper.className = 'decision-buttons';
+
             const yesBtn = document.createElement('button');
-            yesBtn.className = 'decision-btn yes-btn px-3 py-1 bg-green-100 hover:bg-green-200 rounded text-green-700 font-medium transition-colors';
-            yesBtn.textContent = 'Ja';
+            yesBtn.innerHTML = `<svg class="icon" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7"></path></svg>`;
+            yesBtn.className = 'yes-btn';
             
             const noBtn = document.createElement('button');
-            noBtn.className = 'decision-btn no-btn px-3 py-1 bg-red-100 hover:bg-red-200 rounded text-red-700 font-medium transition-colors';
-            noBtn.textContent = 'Nej';
-            
-            yesBtn.addEventListener('click', () => {
-                this.handleBelongsDecision('yes', optionContainer, yesBtn, noBtn, question);
-            });
-            
-            noBtn.addEventListener('click', () => {
-                this.handleBelongsDecision('no', optionContainer, yesBtn, noBtn, question);
-            });
-            
-            buttonContainer.appendChild(yesBtn);
-            buttonContainer.appendChild(noBtn);
-            optionContainer.appendChild(optionText);
-            optionContainer.appendChild(buttonContainer);
-            container.appendChild(optionContainer);
+            noBtn.innerHTML = `<svg class="icon" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12"></path></svg>`;
+            noBtn.className = 'no-btn';
+
+            yesBtn.addEventListener('click', () => window.handleBelongsDecision(true, container, yesBtn, noBtn));
+            noBtn.addEventListener('click', () => window.handleBelongsDecision(false, container, yesBtn, noBtn));
+
+            buttonWrapper.appendChild(yesBtn);
+            buttonWrapper.appendChild(noBtn);
+            container.appendChild(text);
+            container.appendChild(buttonWrapper);
+            optionsGrid.appendChild(container);
         });
     }
     
-    // Handle click on order option
-    handleOrderClick(button, optionText, question) {
-        if (button.disabled || this.mistakeMade) return;
-        
-        const currentPlayer = window.PlayerManager?.getCurrentPlayer();
-        if (!currentPlayer || currentPlayer.completedRound) return;
-        
-        const expectedIndex = this.userOrder.length;
-        const correctOrder = question.rätt_ordning[expectedIndex];
-        const optionIndex = question.alternativ.findIndex(alt => alt === correctOrder);
-        const isCorrect = (optionText === question.alternativ[optionIndex]);
-        
-        if (isCorrect) {
-            this.handleCorrectAnswer(button, expectedIndex + 1);
-        } else {
-            this.handleWrongAnswer(button);
-        }
-    }
-    
-    // Handle belongs decision
-    handleBelongsDecision(decision, container, yesBtn, noBtn, question) {
-        if (yesBtn.disabled || this.mistakeMade) return;
-        
-        const currentPlayer = window.PlayerManager?.getCurrentPlayer();
-        if (!currentPlayer || currentPlayer.completedRound) return;
-        
-        const optionText = container.dataset.option;
-        const optionIndex = parseInt(container.dataset.index);
-        const shouldBelong = question.tillhör_index.includes(optionIndex);
-        const isCorrect = (decision === 'yes') === shouldBelong;
-        
-        if (isCorrect) {
-            this.handleCorrectBelongsAnswer(decision === 'yes' ? yesBtn : noBtn, container);
-        } else {
-            this.handleWrongBelongsAnswer(decision === 'yes' ? yesBtn : noBtn, container);
+    // Utility: Shuffle array (needed for rendering)
+    shuffleArray(array) {
+        for (let i = array.length - 1; i > 0; i--) {
+            const j = Math.floor(Math.random() * (i + 1));
+            [array[i], array[j]] = [array[j], array[i]];
         }
     }
     
