@@ -2,7 +2,7 @@
 
 Efter refaktoreringen finns det många funktioner som implementerats i både `game.js` och de nya modulfilerna. Detta dokument kartlägger alla dubbelimplementationer för att skapa ett underlag för att eliminera duplicerad kod.
 
-## Status: 🟡 Pågående sanering (3/9 klart)
+## Status: 🟡 Pågående sanering (4/9 klart)
 Refaktoreringen har skapat en situation där `game.js` fortfarande innehåller mycket aktiv kod som duplicerar funktionalitet i de nya modulerna.
 
 ## Huvudproblem
@@ -123,24 +123,31 @@ Renderar frågealternativ baserat på frågetyp
 
 ---
 
-## ID:4 Poänganimationer
+## ID:4 Poänganimationer ✅ KLART
 
-### Dubbelimplementation
-- **game.js**: `showPointAnimation()` (föråldrad implementering)
-- **animationEngine.js**: `showPointAnimation()`, `showFlyingPointToButton()`, `showSecureAnimation()`
+### Dubbelimplementation (LÖST)
+- **game.js**: `showPointAnimation()` → BORTTAGET
+- **animationEngine.js**: `showPointAnimation()`, `showFlyingPointToButton()`, `showSecureAnimation()` → ANVÄNDS
 
 ### Beskrivning
 Visar animationer när spelare får poäng
 
-### Nuvarande användning
-- ✅ AnimationEngine-modulen används
-- ❌ game.js har föråldrad implementering
+### Lösning
+**ENKEL ELIMINATION** - game.js hade föråldrad animationskod som aldrig användes:
 
-### Åtgärd
-- [ ] Review: Granska planen och verifiera nuvarande användning innan start
-- [ ] Ta bort föråldrad animationskod från game.js
-- [ ] Säkerställ att alla animationer går genom AnimationEngine
-- [ ] Testa lokalt innan commit
+1. **Identifierat:** game.js `showPointAnimation(playerIndex, text, isBanked)` användes aldrig
+2. **Verifierat:** PlayerManager och andra moduler använde redan `AnimationEngine.showPointAnimation(sourceElement)`
+3. **Tagit bort:** Den föråldrade funktionen från game.js
+4. **Testat:** Alla animationer fungerar perfekt genom AnimationEngine
+
+### Genomförda åtgärder
+- ✅ Review: Identifierade att game.js hade föråldrad animationskod
+- ✅ Tog bort `showPointAnimation()` från game.js (23 rader)
+- ✅ Verifierade att alla anrop går genom AnimationEngine
+- ✅ Testat lokalt - alla animationer fungerar
+- ✅ Committed
+
+**Resultat:** -23 rader, alla animationer går genom EN modul (AnimationEngine)
 
 ---
 
@@ -264,8 +271,8 @@ Blandar arrayer (Fisher-Yates shuffle)
 3. ~~**ID:3 Spelfrågornas rendering** ✅ KLART~~
 
 ### Fas 2: UI och användarupplevelse (Medel prioritet)  
-4. **ID:4 Poänganimationer** - Enkel duplicering
-5. **ID:5 Spelkontroll och navigation** - Medel komplexitet
+4. ~~**ID:4 Poänganimationer** ✅ KLART~~
+5. **ID:5 Spelkontroll och navigation** - Nästa i ordning
 6. **ID:6 Challenge-systemet** - Komplex men avgränsad
 
 ### Fas 3: Städning (Låg prioritet)

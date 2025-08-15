@@ -886,30 +886,6 @@ function enableNextButton() {
     // Don't directly enable - let updateGameControls handle unified logic
     updateGameControls();
 }
-// Point animation for both single and multiplayer
-function showPointAnimation(playerIndex, text, isBanked = false) {
-    if (window.PlayerManager?.isSinglePlayerMode()) {
-        // Star animation removed - now using flying point animation to decision button
-        // No animation needed here as it's handled by showFlyingPointToButton
-    } else {
-        // Show animation on player card for multiplayer
-        const cards = scoreboard.querySelectorAll('.player-score-card');
-        if (cards.length > playerIndex) {
-            const card = cards[playerIndex];
-            const animationEl = document.createElement('span');
-            animationEl.className = 'point-float';
-            if (isBanked) {
-                animationEl.classList.add('banked');
-            }
-            animationEl.textContent = text;
-            card.appendChild(animationEl);
-            
-            setTimeout(() => {
-                animationEl.remove();
-            }, 1000);
-        }
-    }
-}
 
 function processQuestions(questions) {
     return questions.map(q => {
