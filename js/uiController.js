@@ -108,7 +108,7 @@ class UIController {
         
         // Update UI
         if (window.PlayerManager) {
-            window.PlayerManager.updatePlayerDisplay();
+            UI?.updatePlayerDisplay();
         }
     }
     

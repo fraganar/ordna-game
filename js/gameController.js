@@ -46,7 +46,7 @@ class GameController {
         
         // Update display
         if (window.PlayerManager) {
-            PlayerManager.updatePlayerDisplay();
+            UI?.updatePlayerDisplay();
         }
         
         // Load first question

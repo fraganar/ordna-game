@@ -117,7 +117,7 @@ class PlayerManager {
         if (window.AnimationEngine) {
             window.AnimationEngine?.updateStopButtonPoints();
         }
-        this.updatePlayerDisplay();
+        UI?.updatePlayerDisplay();
         
         // Update game controls (important for button states)
         if (typeof window.updateGameControls === 'function') {
@@ -157,7 +157,7 @@ class PlayerManager {
         }
         
         // Update display
-        this.updatePlayerDisplay();
+        UI?.updatePlayerDisplay();
         
         // Handle next action
         setTimeout(() => {
@@ -208,7 +208,7 @@ class PlayerManager {
         });
         
         // Update display immediately
-        this.updatePlayerDisplay();
+        UI?.updatePlayerDisplay();
         
         // Show animations sequentially with proper delay between each
         if (playersToSecure.length > 0 && window.AnimationEngine) {
@@ -263,7 +263,7 @@ class PlayerManager {
         this.resetPlayerUIForTurn();
         
         // Update display
-        this.updatePlayerDisplay();
+        UI?.updatePlayerDisplay();
         
         // Update game controls to handle stop button enable/disable based on player points
         if (typeof window.updateGameControls === 'function') {
@@ -298,67 +298,9 @@ class PlayerManager {
         }
         
         // Update display
-        this.updatePlayerDisplay();
+        UI?.updatePlayerDisplay();
     }
     
-    // Update player display (scoreboard, status bar, etc.)
-    updatePlayerDisplay() {
-        const playerStatusBar = UI?.get('playerStatusBar');
-        const activePlayerDisplay = UI?.get('activePlayerDisplay');
-        const miniScores = UI?.get('miniScores');
-        const progressBar = UI?.get('progressBar');
-        const singlePlayerProgress = UI?.get('singlePlayerProgress');
-        const singlePlayerScore = UI?.get('singlePlayerScore');
-        const scoreboard = UI?.get('scoreboard');
-        
-        if (playerStatusBar) playerStatusBar.classList.remove('hidden');
-        
-        if (this.isSinglePlayerMode()) {
-            // Single player display
-            if (activePlayerDisplay) {
-                activePlayerDisplay.textContent = `Totalpoäng: ${this.players[0].score}`;
-            }
-            if (miniScores) miniScores.textContent = '';
-            
-            // Update progress bar
-            if (window.GameController) {
-                const progressPercentage = (window.GameController.currentQuestionIndex / window.GameController.questionsToPlay.length) * 100;
-                if (progressBar) progressBar.style.width = `${progressPercentage}%`;
-            }
-            if (singlePlayerProgress) singlePlayerProgress.classList.remove('hidden');
-            
-            // Hide old displays
-            if (singlePlayerScore) singlePlayerScore.classList.add('hidden');
-            if (scoreboard) scoreboard.classList.add('hidden');
-        } else {
-            // Multiplayer display
-            const activePlayer = this.getCurrentPlayer();
-            if (activePlayerDisplay && activePlayer) {
-                activePlayerDisplay.innerHTML = `
-                    <span class="inline-flex items-center gap-2">
-                        <span class="w-3 h-3 bg-blue-600 rounded-full animate-pulse"></span>
-                        <span class="text-blue-700 font-bold text-lg">${activePlayer.name} spelar</span>
-                    </span>
-                `;
-            }
-            
-            // Build mini scores
-            if (miniScores) {
-                const scores = this.players.map(p => {
-                    const isActive = p === activePlayer && !p.completedRound;
-                    const scoreClass = isActive ? 'text-blue-700 font-bold' : 'text-slate-600';
-                    return `<span class="${scoreClass}">${p.name}: ${p.score}</span>`;
-                }).join(' • ');
-                
-                miniScores.innerHTML = scores;
-            }
-            
-            // Hide single player displays
-            if (singlePlayerScore) singlePlayerScore.classList.add('hidden');
-            if (singlePlayerProgress) singlePlayerProgress.classList.add('hidden');
-            if (scoreboard) scoreboard.classList.add('hidden');
-        }
-    }
     
     // Save player name to localStorage
     setPlayerName(name) {

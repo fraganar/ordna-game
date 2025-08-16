@@ -38,11 +38,6 @@ async function loadPackMetadata() {
     }
 }
 
-// REMOVED: loadPackQuestions - moved to GameData module
-
-// REMOVED: loadQuestions - moved to GameData module
-
-// REMOVED: loadQuestionsForGame - moved to GameData module
 
 const questionPacks = [
     { 
@@ -160,11 +155,6 @@ const questionPacks = [
 ];
 
 // --- DOM Elements ---
-// DOM elements now managed by UIRenderer class (loaded separately)
-
-// Animation functions now handled by AnimationEngine module
-
-// DOM elements now managed by UIRenderer class
 
 // --- Game State ---
 let currentQuestionIndex = 0;
@@ -174,20 +164,9 @@ let selectedPacks = questionPacks.map(p => p.name);
 let selectedPack = null; // Currently selected pack for playing
 
 // Game State - Unified for both single and multiplayer
-// Note: players[] array removed - use PlayerManager.getPlayers() instead
 let currentPlayerIndex = 0;
 let questionStarterIndex = 0;
 // mistakeMade removed - now using player-specific states
-
-// Helper to check if single player mode
-// REMOVED: isSinglePlayerMode() - use PlayerManager.isSinglePlayerMode() directly
-
-// Get current player
-// getCurrentPlayer() wrapper removed - use PlayerManager.getCurrentPlayer() directly
-
-// Get total score for single player display
-// REMOVED: getTotalScore() - use PlayerManager.getCurrentPlayer().score directly
-// REMOVED: getCurrentQuestionScore() - use PlayerManager.getCurrentPlayer().roundPot directly
 
 // Helper function to get current question from the right source
 function getCurrentQuestion() {
@@ -195,9 +174,7 @@ function getCurrentQuestion() {
     return questions[currentQuestionIndex];
 }
 
-// isPlayerActive() and hasActivePlayersInRound() wrappers removed - use PlayerManager directly
 
-// REMOVED: getCurrentActivePlayer() - use PlayerManager.getCurrentPlayer() directly
 
 function isQuestionCompleted() {
     // Question is completed when:
@@ -281,7 +258,7 @@ function eliminateCurrentPlayer() {
     
     // Update displays
     if (window.PlayerManager) {
-        window.PlayerManager.updatePlayerDisplay();
+        UI?.updatePlayerDisplay();
     }
     
     // Use the ROBUST determineNextAction to handle ALL cases correctly
@@ -344,7 +321,6 @@ function determineNextAction() {
     }, 500);
 }
 
-// REMOVED: concludeQuestionImmediately - now handled by GameController.handleQuestionFullyCompleted()
 
 // NEW: Clean UI reset for turn changes
 function resetPlayerUIForTurn() {
@@ -371,7 +347,6 @@ function resetPlayerUIForTurn() {
     }
 }
 
-// addPointToCurrentPlayer() moved to PlayerManager - use window.PlayerManager.addPointToCurrentPlayer()
 
 // Handle when player secures points - delegates to PlayerManager but handles game-specific logic
 function secureCurrentPoints() {
@@ -403,7 +378,7 @@ function secureCurrentPoints() {
         
         // Update display immediately after score change
         if (window.PlayerManager) {
-            window.PlayerManager.updatePlayerDisplay();
+            UI?.updatePlayerDisplay();
         }
         
         // Use the ROBUST determineNextAction to handle ALL cases correctly
@@ -434,8 +409,7 @@ async function showChallengeAcceptScreen() {
         // Get challenge details from Firebase
         challengeData = await FirebaseAPI.getChallenge(challengeId);
         
-        const challengerDisplayName = UI.get('challengerDisplayName');
-        if (challengerDisplayName) challengerDisplayName.textContent = challengeData.challengerName;
+        UI?.setChallengerDisplayName(challengeData.challengerName);
         
         const startMain = UI.get('startMain');
         const playerSetup = UI.get('playerSetup');
@@ -448,7 +422,7 @@ async function showChallengeAcceptScreen() {
         if (challengeAccept) challengeAccept.classList.remove('hidden');
     } catch (error) {
         console.error('Failed to load challenge:', error);
-        showError('Utmaningen kunde inte laddas. Kontrollera länken.');
+        UI?.showError('Utmaningen kunde inte laddas. Kontrollera länken.');
         const challengeAccept = UI.get('challengeAccept');
         const startMain = UI.get('startMain');
         if (challengeAccept) challengeAccept.classList.add('hidden');
@@ -662,13 +636,7 @@ async function checkChallengeStatus(challengeId) {
             showChallengeResultView(challengeId);
         } else {
             // Show status message
-            const statusBtn = document.getElementById('check-status-btn');
-            if (statusBtn) {
-                statusBtn.textContent = 'Väntar fortfarande...';
-                setTimeout(() => {
-                    statusBtn.textContent = 'Kolla status';
-                }, 2000);
-            }
+            UI?.updateStatusButton('Väntar fortfarande...', 'Kolla status');
         }
     } catch (error) {
         console.error('Failed to check challenge status:', error);
@@ -696,7 +664,7 @@ async function startChallengeGame() {
         if (storedChallenge) {
             const info = JSON.parse(storedChallenge);
             if (info.role === 'opponent') {
-                showError('Du har redan spelat denna utmaning');
+                UI?.showError('Du har redan spelat denna utmaning');
                 showChallengeResultView(challengeId);
                 return;
             }
@@ -738,7 +706,7 @@ async function startChallengeGame() {
         
     } catch (error) {
         console.error('Failed to start challenge:', error);
-        showError(error.message || 'Kunde inte starta utmaning');
+        UI?.showError(error.message || 'Kunde inte starta utmaning');
         const challengeAccept = UI?.get('challengeAccept');
         const startMain = UI?.get('startMain');
         if (challengeAccept) challengeAccept.classList.add('hidden');
@@ -810,11 +778,8 @@ function showGameResultScreen(score, gameType, totalQuestions) {
         </div>
     `;
     
-    const endScreen = UI?.get('endScreen');
-    if (endScreen) {
-        endScreen.innerHTML = resultHTML;
-        endScreen.classList.remove('hidden');
-    }
+    UI?.setEndScreenContent(resultHTML);
+    UI?.showEndScreen();
     
     // Add event listener for back button
     const backButton = document.getElementById('back-to-start-final');
@@ -853,7 +818,6 @@ function showGameResultScreen(score, gameType, totalQuestions) {
 
 
 // Handle question completion after wrong answer (disable stop, enable progression)
-// REMOVED: enableNextButtonAfterMistake - use AnimationEngine.enableNextButtonAfterMistake instead
 
 // Handle question completion (enable progression to next question)
 function enableNextButton() {
@@ -897,9 +861,9 @@ function endSinglePlayerQuestion(pointsToAdd) {
     // to ensure it happens at the right time
     
     updateSinglePlayerDisplay();
-    stopBtn.classList.add('hidden');
-    decisionButton.classList.add('hidden');
-    nextQuestionBtn.classList.remove('hidden');
+    UI?.hideStopButton();
+    UI?.hideDecisionButton();
+    UI?.showNextQuestionButton();
     
     const question = getCurrentQuestion();
 
@@ -911,8 +875,7 @@ function endSinglePlayerQuestion(pointsToAdd) {
 }
 
 async function endSinglePlayerGame() {
-    const gameScreen = UI?.get('gameScreen');
-    if (gameScreen) gameScreen.classList.add('hidden');
+    UI?.hideGameScreen();
     
     // If this is challenge creation mode
     if (window.ischallengeMode && !challengeId) {
@@ -955,18 +918,17 @@ async function endSinglePlayerGame() {
             
         } catch (error) {
             console.error('Failed to create challenge:', error);
-            showError('Kunde inte skapa utmaning. Försök igen.');
-            const endScreen = UI?.get('endScreen');
+            UI?.showError('Kunde inte skapa utmaning. Försök igen.');
             const singlePlayerFinal = UI?.get('singlePlayerFinal');
             const finalScoreboard = UI?.get('finalScoreboard');
             const singleFinalScore = UI?.get('singleFinalScore');
             
-            if (endScreen) endScreen.classList.remove('hidden');
+            UI?.showEndScreen();
             if (singlePlayerFinal) singlePlayerFinal.classList.remove('hidden');
             if (finalScoreboard) finalScoreboard.classList.add('hidden');
             if (singleFinalScore) {
                 const errorFallbackScore = window.PlayerManager.getCurrentPlayer()?.score || 0;
-                singleFinalScore.textContent = `${errorFallbackScore}`;
+                UI?.setFinalScore(errorFallbackScore);
             }
         }
     }
@@ -997,19 +959,18 @@ async function endSinglePlayerGame() {
             
         } catch (error) {
             console.error('Failed to complete challenge:', error);
-            showError('Kunde inte spara resultat. Försök igen.');
-            endScreen.classList.remove('hidden');
+            UI?.showError('Kunde inte spara resultat. Försök igen.');
+            UI?.showEndScreen();
             singlePlayerFinal.classList.remove('hidden');
             finalScoreboard.classList.add('hidden');
-            singleFinalScore.textContent = `${players[0].score}`;
+            UI?.setFinalScore(players[0].score);
         }
     }
     // Normal single player mode
     else {
         
         // Hide game screen first
-        const gameScreen = UI?.get('gameScreen');
-        if (gameScreen) gameScreen.classList.add('hidden');
+        UI?.hideGameScreen();
         
         // Show unified result screen for all regular games
         const currentPlayer = window.PlayerManager.getCurrentPlayer();
@@ -1027,17 +988,24 @@ async function endSinglePlayerGame() {
 
 // Populate pack selection dropdown
 function populatePackSelect() {
+    console.log('populatePackSelect called');
     // Use GameData if available, otherwise fall back to old method
     if (window.GameData && GameData.packMetadata) {
+        console.log('Using GameData.populatePackSelectors');
         GameData.populatePackSelectors();
     } else {
+        console.log('Using fallback method, GameData available:', !!window.GameData, 'packMetadata available:', !!(window.GameData && GameData.packMetadata));
         // Fallback to old method
         const packSelect = UI?.get('packSelect');
         const challengePackSelect = UI?.get('challengePackSelect');
         const selects = [packSelect, challengePackSelect];
         
+        console.log('Found selects:', selects.map(s => s ? s.id : 'null'));
+        console.log('questionPacks:', questionPacks);
+        
         selects.forEach(select => {
             if (select) {
+                console.log('Populating select:', select.id);
                 select.innerHTML = '';
                 
                 questionPacks.forEach(pack => {
@@ -1117,13 +1085,7 @@ async function initializeGame() {
         questionsToPlay = [...processedQuestions];
     }
     
-    const startScreen = UI?.get('startScreen');
-    const endScreen = UI?.get('endScreen');
-    const gameScreen = UI?.get('gameScreen');
-    
-    if (startScreen) startScreen.classList.add('hidden');
-    if (endScreen) endScreen.classList.add('hidden');
-    if (gameScreen) gameScreen.classList.remove('hidden');
+    UI?.showGameScreen();
     
     
     // Initialize game state
@@ -1134,7 +1096,7 @@ async function initializeGame() {
     
     // Setup unified UI
     if (window.PlayerManager) {
-        window.PlayerManager.updatePlayerDisplay();
+        UI?.updatePlayerDisplay();
     }
     
     // Load first question using GameController if available
@@ -1146,7 +1108,7 @@ function updateScoreboard() {
     const scoreboard = UI?.get('scoreboard');
     if (!scoreboard) return;
     
-    scoreboard.innerHTML = '';
+    UI?.clearElement('scoreboard');
     const players = window.PlayerManager?.getPlayers() || [];
     players.forEach((player, index) => {
         const card = document.createElement('div');
@@ -1188,61 +1150,31 @@ function updateScoreboard() {
 
 function updateGameControls() {
     // Always hide old buttons
-    const stopBtn = UI?.get('stopBtn');
-    const nextQuestionBtn = UI?.get('nextQuestionBtn');
-    const largeNextQuestionBtn = UI?.get('largeNextQuestionBtn');
-    const decisionButton = UI?.get('decisionButton');
     const stopSide = UI?.get('stopSide');
     const nextSide = UI?.get('nextSide');
     
-    if (stopBtn) stopBtn.classList.add('hidden');
-    if (nextQuestionBtn) nextQuestionBtn.classList.add('hidden');
-    if (largeNextQuestionBtn) largeNextQuestionBtn.classList.add('hidden');
+    UI?.hideAllGameButtons();
     
     const currentPlayer = window.PlayerManager.getCurrentPlayer();
     
     if (!window.PlayerManager.hasActivePlayersInRound() && !window.PlayerManager?.isSinglePlayerMode()) {
         // All players completed in multiplayer - show secured state
-        if (decisionButton) decisionButton.classList.remove('hidden');
-        
-        if (stopSide) {
-            stopSide.classList.remove('hidden');
-            stopSide.classList.add('disabled', 'completed');
-            stopSide.disabled = true;
-            
-            const stopIcon = stopSide.querySelector('.decision-icon');
-            const stopAction = stopSide.querySelector('.decision-action');
-            const stopPoints = stopSide.querySelector('.decision-points');
-            if (stopIcon) stopIcon.textContent = '✅';
-            if (stopAction) stopAction.textContent = 'Säkrat';
-            if (stopPoints) stopPoints.style.opacity = '0';
-        }
-        
-        if (nextSide) {
-            nextSide.classList.remove('hidden');
-            nextSide.disabled = false; // Enable next button
-        }
+        UI?.showDecisionButton();
+        UI?.configureStopButtonForMultiplayerCompleted();
+        UI?.showAndEnableNextSide();
     } else if (window.PlayerManager?.isSinglePlayerMode()) {
         // Single player: alltid visa decision button
-        if (decisionButton) decisionButton.classList.remove('hidden');
+        UI?.showDecisionButton();
         if (stopSide) stopSide.classList.remove('hidden');
         if (nextSide) nextSide.classList.remove('hidden');
         
         // Stop button: aktiv endast när spelaren har poäng OCH inte är eliminerad
-        if (stopSide) {
-            if (currentPlayer.roundPot > 0 && currentPlayer.completionReason !== 'wrong') {
-                stopSide.classList.remove('disabled');
-                stopSide.disabled = false;
-                stopSide.classList.add('has-points');
-                if (window.AnimationEngine) {
-        window.AnimationEngine.updateStopButtonPoints();
-    }
-            } else {
-                stopSide.classList.add('disabled');
-                stopSide.disabled = true;
-                stopSide.classList.remove('has-points');
-            }
-            stopSide.dataset.processing = 'false';
+        const hasPoints = currentPlayer.roundPot > 0;
+        const isEliminated = currentPlayer.completionReason === 'wrong';
+        UI?.configureStopButtonForSinglePlayer(hasPoints, isEliminated);
+        
+        if (hasPoints && !isEliminated && window.AnimationEngine) {
+            window.AnimationEngine.updateStopButtonPoints();
         }
         
         // Next button: ALLTID disabled tills frågan är helt klar
@@ -1252,37 +1184,15 @@ function updateGameControls() {
         }
     } else {
         // Multiplayer with active players
-        if (decisionButton) decisionButton.classList.remove('hidden');
+        UI?.showDecisionButton();
         
         // Check if current player is actually active
         const isCurrentPlayerActive = currentPlayer && !currentPlayer.completedRound;
+        const hasPoints = currentPlayer.roundPot > 0;
+        const isCompleted = currentPlayer && currentPlayer.completedRound;
         
-        if (stopSide) {
-            if (isCurrentPlayerActive && currentPlayer.roundPot > 0) {
-                // Active player with points - enable stop button
-                stopSide.classList.remove('hidden');
-                stopSide.classList.remove('disabled');
-                stopSide.disabled = false;
-            } else {
-                // Player completed or no points - disable stop button
-                stopSide.classList.remove('hidden');
-                stopSide.classList.add('disabled');
-                stopSide.disabled = true;
-                
-                // If player is completed, show they're done
-                if (currentPlayer && currentPlayer.completedRound) {
-                    const stopIcon = stopSide.querySelector('.decision-icon');
-                    const stopAction = stopSide.querySelector('.decision-action');
-                    if (stopIcon) stopIcon.textContent = '✅';
-                    if (stopAction) stopAction.textContent = 'Säkrat!';
-                }
-            }
-        }
-        
-        if (nextSide) {
-            nextSide.classList.remove('hidden');
-            nextSide.disabled = !isQuestionCompleted(); // Enable when question complete
-        }
+        UI?.configureStopButtonForMultiplayer(isCurrentPlayerActive, hasPoints, isCompleted);
+        UI?.showNextSideWithState(isQuestionCompleted());
         
         // Update button state
         if (stopSide) stopSide.dataset.processing = 'false';
@@ -1314,8 +1224,7 @@ function loadQuestion() {
     // Hide challenger hint from previous question
     const hintElement = document.getElementById('challenger-hint');
     if (hintElement) {
-        hintElement.classList.add('hidden');
-        hintElement.innerHTML = '';
+        UI?.hideHintElement();
     }
     
     // Reset decision buttons for new question
@@ -1340,18 +1249,13 @@ function loadQuestion() {
     
     // Clear options and hide buttons
     const optionsGrid = UI.get('optionsGrid');
-    const nextQuestionBtn = UI.get('nextQuestionBtn');
-    const largeNextQuestionBtn = UI.get('largeNextQuestionBtn');
-    const decisionButton = UI.get('decisionButton');
-    const stopBtn = UI.get('stopBtn');
     
-    if (optionsGrid) optionsGrid.innerHTML = '';
-    if (nextQuestionBtn) nextQuestionBtn.classList.add('hidden');
-    if (largeNextQuestionBtn) largeNextQuestionBtn.classList.add('hidden');
+    UI?.clearOptionsGrid();
+    UI?.hideAllGameButtons();
     
     // Always show decision button - it will be configured per player/mode
-    if (decisionButton) decisionButton.classList.remove('hidden');
-    if (stopBtn) stopBtn.classList.add('hidden');
+    UI?.showDecisionButton();
+    UI?.hideStopButton();
     
     // Check if game should end - use window.questionsToPlay if available
     const questions = window.questionsToPlay || questionsToPlay;
@@ -1378,7 +1282,7 @@ function loadQuestion() {
     
     // Update displays
     if (window.PlayerManager) {
-        window.PlayerManager.updatePlayerDisplay();
+        UI?.updatePlayerDisplay();
     }
     updateGameControls();
 
@@ -1393,11 +1297,7 @@ function loadQuestion() {
         window.ChallengeSystem.showHint(currentQuestionIndex);
     } else {
         // Ensure hint is hidden in non-challenge mode
-        const hintElement = document.getElementById('challenger-hint');
-        if (hintElement) {
-            hintElement.classList.add('hidden');
-            hintElement.innerHTML = '';
-        }
+        UI?.hideHintElement();
     }
     
     const shuffledOptions = [...question.alternativ];
@@ -1787,8 +1687,7 @@ function endGame() {
 
 // Handle end of multiplayer game  
 function endMultiplayerGame() {
-    const endScreen = UI?.get('endScreen');
-    if (endScreen) endScreen.classList.remove('hidden');
+    UI?.showEndScreen();
     
     players.sort((a, b) => b.score - a.score);
     const finalScoreboard = UI?.get('finalScoreboard');
@@ -1877,11 +1776,7 @@ function restartGame() {
     singleFinalScore = document.getElementById('single-final-score');
     finalScoreboard = document.getElementById('final-scoreboard');
     
-    endScreen.classList.add('hidden');
-    startScreen.classList.remove('hidden');
-    startMain.classList.remove('hidden');
-    playerSetup.classList.add('hidden');
-    challengeForm.classList.add('hidden');
+    UI?.showStartScreen();
     
     // Reset single player display
     singlePlayerFinal.classList.add('hidden');
@@ -2041,238 +1936,7 @@ function initializeEventListeners() {
 }
 
 // Event listeners removed - now in eventHandlers.js
+// UI waiting functionality moved to App.js module
 
-/* REMOVED EVENT LISTENERS START
-    const savePlayerNameBtn = UI.get('savePlayerNameBtn');
-    const playerNameInput = UI.get('playerNameInput');
-    
-    if (savePlayerNameBtn) {
-        savePlayerNameBtn.addEventListener('click', async () => {
-            const playerNameSetup = UI.get('playerNameSetup');
-            const challengeForm = UI.get('challengeForm');
-            const challengerNameDisplay = UI.get('challengerNameDisplay');
-            
-            const name = playerNameInput?.value.trim();
-            if (name) {
-                setPlayerName(name);
-                if (playerNameSetup) playerNameSetup.classList.add('hidden');
-                
-                // Check if user was trying to create a challenge
-                if (pendingChallengeCreation) {
-                    pendingChallengeCreation = false;
-                    if (challengeForm) challengeForm.classList.remove('hidden');
-                    if (challengerNameDisplay) challengerNameDisplay.textContent = name;
-            // Reset form state
-            challengeSuccess.classList.add('hidden');
-            createChallengeBtn.classList.remove('hidden');
-        }
-        // Check if there's a pending challenge to accept
-        else if (localStorage.getItem('pendingChallenge')) {
-            const pendingChallenge = localStorage.getItem('pendingChallenge');
-            localStorage.removeItem('pendingChallenge');
-            challengeId = pendingChallenge;
-            ischallengeMode = true;
-            await startChallengeGame();
-        } 
-        // Normal return to start screen
-        else {
-            startMain.classList.remove('hidden');
-            // Update challenger name display
-            challengerNameDisplay.textContent = name;
-        }
-    }
-});
-
-// Challenge form listeners
-showChallengeFormBtn.addEventListener('click', () => {
-    if (!currentPlayer.name) {
-        // Show name setup first
-        pendingChallengeCreation = true;  // Markera att vi vill skapa utmaning efter namnupplägg
-        startMain.classList.add('hidden');
-        playerNameSetup.classList.remove('hidden');
-        return;
-    }
-    
-    challengerNameDisplay.textContent = currentPlayer.name;
-    startMain.classList.add('hidden');
-    challengeForm.classList.remove('hidden');
-    
-    // Reset form state
-    challengeSuccess.classList.add('hidden');
-    createChallengeBtn.classList.remove('hidden');
-});
-
-backToStartBtn.addEventListener('click', () => {
-    challengeForm.classList.add('hidden');
-    startMain.classList.remove('hidden');
-    challengeError.classList.add('hidden');
-    challengeSuccess.classList.add('hidden');
-});
-
-createChallengeBtn.addEventListener('click', () => {
-    if (window.ChallengeSystem) {
-        window.ChallengeSystem.createChallenge();
-    }
-});
-
-// Copy link functionality
-copyLinkBtn.addEventListener('click', async () => {
-    try {
-        await navigator.clipboard.writeText(challengeLink.value);
-        copyLinkBtn.textContent = 'Kopierad!';
-        setTimeout(() => {
-            copyLinkBtn.textContent = 'Kopiera länk';
-        }, 2000);
-    } catch (err) {
-        // Fallback for older browsers
-        challengeLink.select();
-        document.execCommand('copy');
-        copyLinkBtn.textContent = 'Kopierad!';
-        setTimeout(() => {
-            copyLinkBtn.textContent = 'Kopiera länk';
-        }, 2000);
-    }
-});
-
-// Web Share API - Dela knapp
-shareBtn.addEventListener('click', async () => {
-    const challengeUrl = challengeLink.value;
-    const shareText = `${currentPlayer.name} utmanar dig i spelet Ordna!`;
-    
-    // Kolla om Web Share API finns (mobil och vissa desktop-browsers)
-    if (navigator.share) {
-        try {
-            await navigator.share({
-                title: `${currentPlayer.name} utmanar dig i spelet Ordna!`,
-                text: `${shareText} ${challengeUrl}`  // Slå ihop text och URL
-            });
-        } catch (err) {
-            // Användaren avbröt delningen - gör inget
-        }
-    } else {
-        // Desktop fallback - kopiera länken med meddelande
-        const fullMessage = `${shareText} ${challengeUrl}`;
-        try {
-            await navigator.clipboard.writeText(fullMessage);
-            shareBtn.innerHTML = '✓ Länk kopierad!';
-            setTimeout(() => {
-                shareBtn.textContent = 'Dela';
-            }, 2000);
-        } catch (err) {
-            // Fallback för äldre browsers
-            challengeLink.select();
-            document.execCommand('copy');
-            shareBtn.innerHTML = '✓ Länk kopierad!';
-            setTimeout(() => {
-                shareBtn.textContent = 'Dela';
-            }, 2000);
-        }
-    }
-});
-
-// Challenge acceptance listeners
-acceptChallengeBtn.addEventListener('click', async () => {
-    ischallengeMode = true;
-    challengeAccept.classList.add('hidden');
-    
-    // Check if user needs to set name
-    if (!currentPlayer.name) {
-        playerNameSetup.classList.remove('hidden');
-        // Store that we need to start challenge after name setup
-        localStorage.setItem('pendingChallenge', challengeId);
-    } else {
-        // Start the challenge directly
-        await startChallengeGame();
-    }
-});
-
-declineChallengeBtn.addEventListener('click', () => {
-    // Clear challenge data and show normal start screen
-    if (window.ChallengeSystem) {
-        ChallengeSystem.reset();
-    } else {
-        resetChallengeState();
-    }
-    
-    challengeAccept.classList.add('hidden');
-    startMain.classList.remove('hidden');
-    
-    // Clear URL parameters
-    if (window.history.replaceState) {
-        window.history.replaceState({}, document.title, window.location.pathname);
-    }
-});
-
-END OF REMOVED EVENT LISTENERS */
-
-// Wait for UI to be ready
-function waitForUI() {
-    return new Promise((resolve) => {
-        if (window.UI) {
-            resolve();
-        } else {
-            const checkUI = () => {
-                if (window.UI) {
-                    resolve();
-                } else {
-                    setTimeout(checkUI, 50);
-                }
-            };
-            checkUI();
-        }
-    });
-}
-
-// --- Initial Setup ---
-async function initializeApp() {
-    // Player identity initialization now handled by App.js
-    
-    // Load game data using new GameData module
-    if (window.GameData && typeof GameData.initialize === 'function') {
-        await GameData.initialize();
-        // Copy questions to global array for compatibility
-        allQuestions = GameData.allQuestions;
-    } else {
-        // Fallback to old method
-        await loadPackMetadata();
-    }
-    
-    // Wait for UI to be ready before setting up UI elements
-    await waitForUI();
-    
-    // Setup UI
-    populatePackShop();
-    populatePackSelect();
-    
-    // Set default selected pack
-    selectedPack = 'Blandat med B';
-    
-    createPlayerInputs();
-    updateScoreboard();
-    
-    // Check if there's a challenge in URL
-    if (checkForChallenge()) {
-        // Show challenge acceptance screen
-        await showChallengeAcceptScreen();
-    } else {
-        // Check for notifications if user is returning
-        const playerName = window.PlayerManager ? window.PlayerManager.getPlayerName() : null;
-        if (playerName) {
-            await checkForNotifications();
-            if (window.ChallengeSystem) {
-                await window.ChallengeSystem.loadMyChallenges();
-            }
-            const challengerNameDisplay = UI?.get('challengerNameDisplay');
-            if (challengerNameDisplay) challengerNameDisplay.textContent = playerName;
-        }
-    }
-}
-// Initialize the app when DOM is ready
-// Only run if App.js module isn't handling initialization
-if (!window.App) {
-    if (document.readyState === 'loading') {
-        document.addEventListener('DOMContentLoaded', initializeApp);
-    } else {
-        initializeApp();
-    }
-}
+// App initialization functions removed - now handled by App.js module
+// App initialization now handled exclusively by App.js module
