@@ -137,6 +137,9 @@ class PlayerManager {
         
         if (pointsToSecure <= 0) return;
         
+        // CRITICAL BUGFIX: Don't secure points if player answered wrong
+        if (currentPlayer.completionReason === 'wrong') return;
+        
         // Save score for challenge mode when securing points
         if (window.ChallengeSystem) {
             window.ChallengeSystem.saveScore(pointsToSecure, window.currentQuestionIndex);
@@ -174,41 +177,73 @@ class PlayerManager {
     }
     
     // Auto-secure all active players' points (for when question is fully completed)
+    // UNIFIED auto-secure for 1-N players (no special casing for single player)
     secureAllActivePoints() {
-        if (this.isSinglePlayerMode()) {
-            // Single player: use existing method
-            this.secureCurrentPoints();
-            return;
-        }
-        
-        // Multiplayer: auto-secure all active players
+        // Collect info BEFORE modifying state (for proper animations)
         const currentPlayer = this.getCurrentPlayer();
-        const currentPlayerPoints = currentPlayer?.roundPot || 0; // Get current player's points before securing
+        const playersToSecure = [];
         
-        // Calculate and secure points for all active players
+        // Find all players eligible for auto-securing
+        // Rules: Not completed, has points, not eliminated
         this.players.forEach(player => {
-            if (!player.completedRound && player.roundPot > 0) {
-                player.score += player.roundPot;
-                player.roundPot = 0;
-                player.completedRound = true;
-                player.completionReason = 'finished';
+            if (!player.completedRound && player.roundPot > 0 && player.completionReason !== 'wrong') {
+                playersToSecure.push({
+                    player: player,
+                    points: player.roundPot
+                });
             }
         });
         
-        if (currentPlayerPoints <= 0) return;
+        // Secure points for all eligible players
+        playersToSecure.forEach(({player, points}) => {
+            player.score += points;
+            player.roundPot = 0;
+            player.completedRound = true;
+            player.completionReason = 'finished';
+            
+            // Save for challenge mode if current player
+            if (player === currentPlayer && window.ChallengeSystem) {
+                window.ChallengeSystem.saveScore(points, window.currentQuestionIndex);
+            }
+        });
         
-        // Show animation for current player's points (analogous to single player)
-        if (window.AnimationEngine) {
-            window.AnimationEngine?.showSecureAnimation(currentPlayerPoints);
-        }
-        
-        // Update display
+        // Update display immediately
         this.updatePlayerDisplay();
         
-        // Handle next action (same pattern as secureCurrentPoints)
+        // Show animations sequentially with proper delay between each
+        if (playersToSecure.length > 0 && window.AnimationEngine) {
+            this.showSequentialAnimations(playersToSecure, 0);
+        } else {
+            // No animations to show, conclude immediately
+            setTimeout(() => {
+                this.concludeQuestionRound();
+            }, 2000);
+        }
+    }
+    
+    // Show animations one by one with delay
+    showSequentialAnimations(playersToSecure, index) {
+        if (index >= playersToSecure.length) {
+            // All animations done, conclude question
+            setTimeout(() => {
+                this.concludeQuestionRound();
+            }, 1500); // Extra delay after last animation
+            return;
+        }
+        
+        const {player, points} = playersToSecure[index];
+        
+        // Show animation for this player
+        if (window.AnimationEngine) {
+            // Add visual indicator for which player is being secured (optional)
+            console.log(`Securing ${player.name}: ${points} points`);
+            window.AnimationEngine.showSecureAnimation(points);
+        }
+        
+        // Show next animation after a longer delay (2 seconds)
         setTimeout(() => {
-            this.concludeQuestionRound();
-        }, 2000);
+            this.showSequentialAnimations(playersToSecure, index + 1);
+        }, 2000); // 2 second delay between animations
     }
     
     // Move to next player's turn

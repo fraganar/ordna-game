@@ -1254,9 +1254,9 @@ function updateGameControls() {
         if (stopSide) stopSide.classList.remove('hidden');
         if (nextSide) nextSide.classList.remove('hidden');
         
-        // Stop button: aktiv endast när spelaren har poäng
+        // Stop button: aktiv endast när spelaren har poäng OCH inte är eliminerad
         if (stopSide) {
-            if (currentPlayer.roundPot > 0) {
+            if (currentPlayer.roundPot > 0 && currentPlayer.completionReason !== 'wrong') {
                 stopSide.classList.remove('disabled');
                 stopSide.disabled = false;
                 stopSide.classList.add('has-points');

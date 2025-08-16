@@ -165,12 +165,13 @@ Hanterar spelkontroller och navigation mellan frågor
 - ⚠️ Blandad användning - game.js-funktioner anropas från event handlers
 - ⚠️ GameController och PlayerManager har egen logik
 
-### Åtgärd
-- [ ] Review: Granska planen och verifiera nuvarande användning innan start
-- [ ] Konsolidera all spelkontroll i GameController
+### Åtgärd (ANVÄND METODEN FRÅN ID:1)
+- [ ] Review: **Identifiera vilken kod som faktiskt körs** (troligen game.js)
+- [ ] **Kopiera fungerande kod** från game.js till GameController
 - [ ] Uppdatera event handlers att använda GameController
-- [ ] Ta bort dubblerad kontrolllogik från game.js
-- [ ] Testa lokalt innan commit
+- [ ] Testa att allt fungerar
+- [ ] Ta bort gamla funktioner från game.js
+- [ ] Städa GameController från oanvänd kod
 
 ---
 
@@ -263,22 +264,98 @@ Blandar arrayer (Fisher-Yates shuffle)
 
 ---
 
-## Prioriterad åtgärdsplan
+## ID:10 REFAKTORERING - Testbar arkitektur
 
-### Fas 1: Kritiska dubbletter (Hög prioritet)
+### Nuvarande problem
+- **Otydliga gränser:** Spellogik utspridd över PlayerManager, GameController och game.js
+- **Svårtestbart:** UI och logik sammanblandade, svårt att testa utan DOM
+- **Cirkulära beroenden:** Moduler anropar varandra via window-objekt
+
+### Föreslagen arkitektur
+
+#### GameState (Ren datamodell - 100% testbar)
+```javascript
+class GameState {
+    // Ren data, inga side-effects
+    players: []
+    currentQuestionIndex: 0
+    questionsToPlay: []
+    
+    // Pure functions som returnerar nytt state
+    canPlayerStop(playerId) → boolean
+    processAnswer(playerId, isCorrect) → Event
+    getPlayersToAutoSecure() → Player[]
+}
+```
+
+#### GameEngine (Koordinerar state - testbar)
+```javascript
+class GameEngine {
+    // Hanterar all spellogik
+    handleAnswer(playerId, answer, correctAnswer) → Event[]
+    autoSecurePlayers() → Player[]
+    determineNextAction() → Action
+    
+    // Event log för testning och replay
+    eventLog: Event[]
+}
+```
+
+#### UIController (Endast UI updates)
+```javascript
+class UIController {
+    // Reagerar på events från GameEngine
+    handleEvents(events) → void
+    updateButtons(state) → void
+    showAnimations(events) → void
+}
+```
+
+### Unit test exempel
+```javascript
+it('SP-4: Single player fel på sista alternativet', () => {
+    const state = new GameState();
+    state.players = [{ id: 1, roundPot: 3 }];
+    
+    const engine = new GameEngine(state);
+    const events = engine.handleAnswer(1, 'wrong', 'right');
+    
+    expect(state.players[0].roundPot).toBe(0);
+    expect(state.players[0].completionReason).toBe('wrong');
+});
+```
+
+### Fördelar
+1. **100% testbar** - All logik i pure functions utan DOM
+2. **Event-driven** - Allt som händer loggas och kan replaysas
+3. **Ren separation** - State, Logic och UI helt separerade
+4. **Lättare debugging** - Event log visar exakt vad som hände
+
+### Åtgärd
+- [ ] Review: Analysera nuvarande kodstruktur
+- [ ] Skapa GameState klass med ren data
+- [ ] Skapa GameEngine för spellogik
+- [ ] Migrera UI-kod till UIController
+- [ ] Implementera unit tests för alla testfall i TESTFALL.md
+- [ ] Verifiera att alla testfall passerar
+
+---
+
+## Prioriterad åtgärdsplan - REVIDERAD
+
+### Fas 1: Slutför dubbelimplementationer (~1 timme)
 1. ~~**ID:1 Frågeinläsning** ✅ KLART~~ 
 2. ~~**ID:2 Spelarhantering** ✅ KLART~~
 3. ~~**ID:3 Spelfrågornas rendering** ✅ KLART~~
-
-### Fas 2: UI och användarupplevelse (Medel prioritet)  
 4. ~~**ID:4 Poänganimationer** ✅ KLART~~
-5. **ID:5 Spelkontroll och navigation** - Nästa i ordning
-6. **ID:6 Challenge-systemet** - Komplex men avgränsad
+5. **ID:5 Spelkontroll och navigation** - ~20 min
+6. **ID:6 Challenge-systemet** - ~15 min
+7. **ID:7 UI-hantering** - ~15 min
+8. **ID:8 App-initialisering** - ~10 min
+9. **ID:9 Array-hantering** - ~5 min
 
-### Fas 3: Städning (Låg prioritet)
-7. **ID:8 App-initialisering** - Mindre komplex
-8. **ID:9 Array-hantering** - Enkel att konsolidera
-9. **ID:3 Spelfrågornas rendering** - Redan mestadels konsoliderat
+### Fas 2: Refaktorering till testbar arkitektur
+10. **ID:10 REFAKTORERING** - Implementera GameState/GameEngine/UIController arkitektur med unit tests
 
 ## Framtida arkitektur
 

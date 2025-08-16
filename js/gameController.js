@@ -316,11 +316,24 @@ class GameController {
         }
     }
     
-    // Handle when all parts of question are answered correctly
+    // Handle when all parts of question are answered (right or wrong)
     handleQuestionFullyCompleted() {
-        // Auto-secure all active players' points (handles both single and multiplayer elegantly)
-        if (window.PlayerManager) {
-            window.PlayerManager.secureAllActivePoints();
+        const currentPlayer = window.PlayerManager?.getCurrentPlayer();
+        const currentPlayerWrong = currentPlayer?.completionReason === 'wrong';
+        
+        if (currentPlayerWrong) {
+            // Current player answered wrong on last option
+            // Wait for loss animation to complete before auto-securing others
+            setTimeout(() => {
+                if (window.PlayerManager) {
+                    window.PlayerManager.secureAllActivePoints();
+                }
+            }, 1500); // 1.5 second delay after wrong answer animation
+        } else {
+            // Normal case - auto-secure immediately
+            if (window.PlayerManager) {
+                window.PlayerManager.secureAllActivePoints();
+            }
         }
     }
     
