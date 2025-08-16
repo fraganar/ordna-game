@@ -274,7 +274,10 @@ function eliminateCurrentPlayer() {
     // Use centralized function to complete round (no points to secure when wrong)
     completePlayerRound(currentPlayer, 'wrong', 0);
     
-    enableNextButtonAfterMistake(pointsToLose);
+    // Use AnimationEngine for animations
+    if (window.AnimationEngine) {
+        window.AnimationEngine.enableNextButtonAfterMistake(pointsToLose);
+    }
     
     // Update displays
     if (window.PlayerManager) {
@@ -850,36 +853,7 @@ function showGameResultScreen(score, gameType, totalQuestions) {
 
 
 // Handle question completion after wrong answer (disable stop, enable progression)
-function enableNextButtonAfterMistake(pointsToLose = 0) {
-    // Correct answers will be shown by checkAndHandleQuestionCompletion()
-    
-    // Animate points draining if there were any points
-    if (pointsToLose > 0) {
-        if (window.AnimationEngine) {
-            window.AnimationEngine.animatePointsDrain(pointsToLose);
-        }
-        // Disable stop button AFTER animation starts
-        // This way button stays normal during countdown
-        const stopSide = UI?.get('stopSide');
-        if (stopSide) {
-            setTimeout(() => {
-                stopSide.classList.add('disabled');
-                stopSide.disabled = true;
-            }, pointsToLose * 400 + 300); // Wait for countdown to finish
-        }
-    } else {
-        // If no points to lose, disable immediately
-        const stopSide = UI?.get('stopSide');
-        if (stopSide) {
-            stopSide.classList.add('disabled');
-            stopSide.disabled = true;
-        }
-    }
-    
-    // Don't directly enable next button - let updateGameControls handle it
-    // This prevents the bug where next button appears when other players are still active
-    updateGameControls();
-}
+// REMOVED: enableNextButtonAfterMistake - use AnimationEngine.enableNextButtonAfterMistake instead
 
 // Handle question completion (enable progression to next question)
 function enableNextButton() {

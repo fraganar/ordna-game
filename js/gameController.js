@@ -238,7 +238,10 @@ class GameController {
                 window.AnimationEngine?.enableNextButtonAfterMistake(pointsToLose);
             }
             
-            this.determineNextAction();
+            // Use the working implementation from game.js
+            if (typeof window.determineNextAction === 'function') {
+                window.determineNextAction();
+            }
         }
     }
     
@@ -292,7 +295,10 @@ class GameController {
                 window.AnimationEngine?.enableNextButtonAfterMistake(pointsToLose);
             }
             
-            this.determineNextAction();
+            // Use the working implementation from game.js
+            if (typeof window.determineNextAction === 'function') {
+                window.determineNextAction();
+            }
         }
     }
     
@@ -385,22 +391,8 @@ class GameController {
     }
     
     // Determine next action after answer
-    determineNextAction() {
-        setTimeout(() => {
-            if (window.PlayerManager?.isMultiplayerMode()) {
-                if (window.PlayerManager.hasActivePlayersInRound()) {
-                    PlayerManager.nextTurn();
-                } else {
-                    PlayerManager.concludeQuestionRound();
-                    window.updateGameControls();
-                }
-            } else {
-                window.updateGameControls();
-            }
-        }, 100);
-    }
-    
-    // updateGameControls() moved to game.js for consolidation
+    // determineNextAction() - using the working implementation from game.js
+    // updateGameControls() - consolidated in game.js
     
     // Move to next question
     nextQuestion() {
