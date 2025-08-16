@@ -25,8 +25,19 @@ class App {
             // Check for challenge in URL
             await this.checkForChallenge();
             
-            // Only check for notifications if we're on the start screen (not starting a game)
-            // Notifications should be checked when user returns to main menu, not during game
+            // MIGRATED from game.js initializeApp(): Check for notifications
+            const playerName = window.PlayerManager ? window.PlayerManager.getPlayerName() : null;
+            if (playerName) {
+                if (typeof window.checkForNotifications === 'function') {
+                    await window.checkForNotifications();
+                }
+                if (window.ChallengeSystem) {
+                    await window.ChallengeSystem.loadMyChallenges();
+                }
+                // Set challenger name display
+                const challengerNameDisplay = UI?.get('challengerDisplayName');
+                if (challengerNameDisplay) challengerNameDisplay.textContent = playerName;
+            }
             
             // Load my challenges (but don't show notifications automatically)
             this.loadMyChallenges();
@@ -70,9 +81,15 @@ class App {
     
     // Load all game data
     async loadGameData() {
-        if (window.GameData && typeof GameData.populatePackSelectors === 'function') {
-            // Only populate pack selectors - questions load on-demand now
-            GameData.populatePackSelectors();
+        // Game data loading (without UI population which happens later)
+        console.log('Loading game data...');
+        
+        // MIGRATED from game.js initializeApp(): Populate pack shop
+        if (typeof window.populatePackShop === 'function') {
+            console.log('Calling populatePackShop...');
+            window.populatePackShop();
+        } else {
+            console.warn('populatePackShop function not found');
         }
     }
     
@@ -81,6 +98,37 @@ class App {
         // Connect modules to UI
         if (window.AnimationEngine && typeof AnimationEngine.resetDecisionButtons === 'function') {
             AnimationEngine.resetDecisionButtons();
+        }
+        
+        // MIGRATED from loadGameData(): Populate pack selectors (now that UI is ready)
+        console.log('Debug GameData:', {
+            'window.GameData exists': !!window.GameData,
+            'GameData.populatePackSelectors type': typeof (window.GameData && window.GameData.populatePackSelectors),
+            'GameData keys': window.GameData ? Object.getOwnPropertyNames(window.GameData) : 'no GameData'
+        });
+        
+        if (window.GameData && typeof window.GameData.populatePackSelectors === 'function') {
+            console.log('Using GameData.populatePackSelectors...');
+            window.GameData.populatePackSelectors();
+        } else {
+            // Fallback to old method if GameData not available
+            console.log('Fallback: Using window.populatePackSelect...');
+            if (typeof window.populatePackSelect === 'function') {
+                window.populatePackSelect();
+            }
+        }
+        
+        // MIGRATED from game.js initializeApp(): UI setup
+        if (typeof window.createPlayerInputs === 'function') {
+            window.createPlayerInputs();
+        }
+        if (typeof window.updateScoreboard === 'function') {
+            window.updateScoreboard();
+        }
+        
+        // Set default selected pack
+        if (typeof window.selectedPack !== 'undefined') {
+            window.selectedPack = 'Blandat med B';
         }
         
         // Ensure notifications area is hidden at startup

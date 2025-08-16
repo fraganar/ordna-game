@@ -117,8 +117,9 @@ class GameData {
     
     // Populate pack selector dropdowns - simplified for on-demand loading
     populatePackSelectors() {
-        const packSelect = UI?.get('packSelect');
-        const challengePackSelect = UI?.get('challengePackSelect');
+        // Use direct DOM access since UI might not be ready yet
+        const packSelect = document.getElementById('pack-select');
+        const challengePackSelect = document.getElementById('challenge-pack-select');
         
         // Define available packs (same as getPackConfig)
         const packConfigs = [
@@ -141,8 +142,12 @@ class GameData {
             option.textContent = pack.displayName;
             
             // Add to both selectors
-            if (packSelect) packSelect.appendChild(option.cloneNode(true));
-            if (challengePackSelect) challengePackSelect.appendChild(option.cloneNode(true));
+            if (packSelect) {
+                packSelect.appendChild(option.cloneNode(true));
+            }
+            if (challengePackSelect) {
+                challengePackSelect.appendChild(option.cloneNode(true));
+            }
         });
         
         // Set default selection to "Blandat med B"
