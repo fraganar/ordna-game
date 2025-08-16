@@ -175,25 +175,35 @@ Hanterar spelkontroller och navigation mellan frågor
 
 ---
 
-## ID:6 Challenge-systemet
+## ID:6 Challenge-systemet 🔴 FLYTTAD SIST
+
+### ⚠️ VIKTIGT: Challenge fungerar INTE i nuvarande version
+Efter att vi backade från våra försök är challenge-systemet trasigt. Vi har dokumenterat den fungerande lösningen i:
+- **FUNGERANDE_CHALLENGE_ANALYS.md** - Exakt kod från commit 607106f som fungerade
+- **CHALLENGE_LÄRDOMAR.md** - Analys av varför det inte fungerade och möjliga lösningar
 
 ### Dubbelimplementation
 - **game.js**: `createChallenge()`, `checkForChallenge()`, `showChallengeAcceptScreen()`, polling-funktioner
 - **challengeSystem.js**: `createChallenge()`, `loadChallenge()`, `acceptChallenge()`, `startPolling()`
 
 ### Beskrivning
-Hanterar utmaningssystemet
+Hanterar utmaningssystemet - KOMPLEXT på grund av:
+- Kräver legacy `players` array istället för PlayerManager
+- Behöver direkta DOM-referenser
+- Firebase-integration
+- Polling-mekanismer
 
-### Nuvarande användning
-- ✅ ChallengeSystem-modulen är den primära
-- ❌ game.js har fortfarande aktiv kod som används
+### Varför flyttad sist
+1. **Arkitektur-konflikt**: Challenge kräver legacy-system som kolliderar med ny arkitektur
+2. **Tidskrävande**: Många försök misslyckades (se CHALLENGE_LÄRDOMAR.md)
+3. **Inte kärnfunktion**: Regular game viktigare än challenge
+4. **Bättre förutsättningar senare**: Efter ID:7-10 har vi renare arkitektur
 
-### Åtgärd
-- [ ] Review: Granska planen och verifiera nuvarande användning innan start
-- [ ] Migrera all challenge-logik till ChallengeSystem
-- [ ] Ta bort challenge-funktioner från game.js
-- [ ] Uppdatera alla anrop att använda ChallengeSystem
-- [ ] Testa lokalt innan commit
+### Åtgärd (när vi kommer hit)
+- [ ] Review: Läs FUNGERANDE_CHALLENGE_ANALYS.md och CHALLENGE_LÄRDOMAR.md
+- [ ] Beslut: Välj approach (Legacy compatibility, Full refactor, eller Hybrid)
+- [ ] Implementera vald lösning baserat på dokumentationen
+- [ ] Testa GRUNDLIGT innan commit
 
 ---
 
@@ -348,11 +358,11 @@ it('SP-4: Single player fel på sista alternativet', () => {
 2. ~~**ID:2 Spelarhantering** ✅ KLART~~
 3. ~~**ID:3 Spelfrågornas rendering** ✅ KLART~~
 4. ~~**ID:4 Poänganimationer** ✅ KLART~~
-5. **ID:5 Spelkontroll och navigation** - ~20 min
-6. **ID:6 Challenge-systemet** - ~15 min
-7. **ID:7 UI-hantering** - ~15 min
-8. **ID:8 App-initialisering** - ~10 min
-9. **ID:9 Array-hantering** - ~5 min
+5. ~~**ID:5 Spelkontroll och navigation** ✅ KLART~~
+6. **ID:7 UI-hantering** - ~15 min
+7. **ID:8 App-initialisering** - ~10 min
+8. **ID:9 Array-hantering** - ~5 min
+9. **ID:6 Challenge-systemet** - FLYTTAD SIST (komplex, kräver stabil arkitektur)
 
 ### Fas 2: Refaktorering till testbar arkitektur
 10. **ID:10 REFAKTORERING** - Implementera GameState/GameEngine/UIController arkitektur med unit tests
