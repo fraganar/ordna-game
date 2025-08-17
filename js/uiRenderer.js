@@ -224,15 +224,26 @@ class UIRenderer {
     
     // Show correct answers for belongs questions
     showBelongsCorrectAnswers(question) {
+        console.log('DEBUG showBelongsCorrectAnswers called with question:', question);
         const correctOptions = question.tillhör_index.map(i => question.alternativ[i]);
+        console.log('DEBUG correctOptions:', correctOptions);
         const grid = this.get('optionsGrid');
-        if (!grid) return;
+        if (!grid) {
+            console.warn('No optionsGrid found in showBelongsCorrectAnswers');
+            return;
+        }
         const containers = grid.querySelectorAll('.belongs-option-container');
+        console.log('DEBUG found containers:', containers.length, containers);
 
         containers.forEach(container => {
             if (!container.dataset.decided || container.dataset.decided !== 'true') {
                 // This option wasn't answered
-                const optionText = container.querySelector('.option-text').textContent;
+                const optionTextElement = container.querySelector('.option-text');
+                if (!optionTextElement) {
+                    console.warn('Missing .option-text element in belongs container:', container);
+                    return; // Skip this container
+                }
+                const optionText = optionTextElement.textContent;
                 const isCorrect = correctOptions.includes(optionText);
                 
                 const indicator = container.querySelector('.answer-indicator');
