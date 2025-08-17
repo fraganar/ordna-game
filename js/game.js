@@ -234,6 +234,13 @@ function checkAndHandleQuestionCompletion() {
         // Update button states
         updateGameControls();
         
+        // Show challenger hint after question is completed
+        if (window.ChallengeSystem && typeof window.ChallengeSystem.showHint === 'function') {
+            setTimeout(() => {
+                window.ChallengeSystem.showHint(currentQuestionIndex);
+            }, 1500); // Delay so player sees correct answers first
+        }
+        
         // In single player we're done
         // In multiplayer we wait for all players to press next
     }
@@ -1221,13 +1228,8 @@ function loadQuestion() {
     UI.updateDifficultyBadge(question.svårighetsgrad);
     UI.setQuestionText(question.fråga);
     
-    // Show challenger hint if in challenge mode, hide otherwise
-    if (window.ChallengeSystem && typeof window.ChallengeSystem.showHint === 'function') {
-        window.ChallengeSystem.showHint(currentQuestionIndex);
-    } else {
-        // Ensure hint is hidden in non-challenge mode
-        UI?.hideHintElement();
-    }
+    // Hide challenger hint when loading new question (will be shown after player answers)
+    UI?.hideHintElement();
     
     const shuffledOptions = window.GameData.shuffleArray(question.alternativ);
 
