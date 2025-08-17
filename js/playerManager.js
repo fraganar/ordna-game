@@ -106,6 +106,8 @@ class PlayerManager {
         const currentPlayer = this.getCurrentPlayer();
         if (!currentPlayer) return;
         
+        console.log(`DEBUG: addPointToCurrentPlayer called - currentQuestionIndex: ${window.currentQuestionIndex}, challengeMode: ${window.ischallengeMode}`);
+        
         currentPlayer.roundPot++;
         
         // Save point for challenge mode (each correct answer = 1 point)
