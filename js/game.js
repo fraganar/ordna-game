@@ -235,11 +235,9 @@ function checkAndHandleQuestionCompletion() {
         // Update button states
         updateGameControls();
         
-        // Show challenger hint after question is completed
+        // Show challenger hint immediately with correct answers
         if (window.ChallengeSystem && typeof window.ChallengeSystem.showHint === 'function') {
-            setTimeout(() => {
-                window.ChallengeSystem.showHint(currentQuestionIndex);
-            }, 1500); // Delay so player sees correct answers first
+            window.ChallengeSystem.showHint(currentQuestionIndex);
         }
         
         // In single player we're done
@@ -1347,6 +1345,10 @@ function handleOrderClick(button, optionText) {
             }
             setTimeout(() => {
                 showCorrectAnswers();
+                // Show challenger hint immediately with correct answers
+                if (window.ChallengeSystem && typeof window.ChallengeSystem.showHint === 'function') {
+                    window.ChallengeSystem.showHint(currentQuestionIndex);
+                }
                 updateGameControls();
             }, 2000);
         } else {
@@ -1374,6 +1376,10 @@ function handleOrderClick(button, optionText) {
             }
             setTimeout(() => {
                 showCorrectAnswers();
+                // Show challenger hint immediately with correct answers
+                if (window.ChallengeSystem && typeof window.ChallengeSystem.showHint === 'function') {
+                    window.ChallengeSystem.showHint(currentQuestionIndex);
+                }
                 updateGameControls();
             }, 2000);
         }
@@ -1427,6 +1433,10 @@ function handleBelongsDecision(userDecision, container, yesBtn, noBtn) {
             }
             setTimeout(() => {
                 showCorrectAnswers();
+                // Show challenger hint immediately with correct answers
+                if (window.ChallengeSystem && typeof window.ChallengeSystem.showHint === 'function') {
+                    window.ChallengeSystem.showHint(currentQuestionIndex);
+                }
                 updateGameControls();
             }, 2000);
         } else {
@@ -1449,6 +1459,10 @@ function handleBelongsDecision(userDecision, container, yesBtn, noBtn) {
             }
             setTimeout(() => {
                 showCorrectAnswers();
+                // Show challenger hint immediately with correct answers
+                if (window.ChallengeSystem && typeof window.ChallengeSystem.showHint === 'function') {
+                    window.ChallengeSystem.showHint(currentQuestionIndex);
+                }
                 updateGameControls();
             }, 2000);
         }
