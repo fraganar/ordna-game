@@ -54,12 +54,17 @@ class ChallengeSystem {
         
         // Safety checks for challenge data
         if (!this.challengeData.challenger || !this.challengeData.challenger.questionScores) {
+            console.warn('Missing challenger data or questionScores:', this.challengeData.challenger);
             hintElement.classList.add('hidden');
             hintElement.innerHTML = '';
             return;
         }
         
+        console.log('Challenger data:', this.challengeData.challenger);
+        console.log('Challenger questionScores:', this.challengeData.challenger.questionScores);
+        
         const score = this.challengeData.challenger.questionScores[questionIndex];
+        console.log(`Score for question ${questionIndex}:`, score);
         
         if (score !== undefined) {
             hintElement.innerHTML = `

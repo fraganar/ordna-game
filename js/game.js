@@ -1015,7 +1015,11 @@ async function initializeGame() {
     // Collect player names first
     const playerNames = [];
     if (playerCount === 1) {
-        playerNames.push('Du');
+        // Check if name input has a value (for challenge mode), otherwise use 'Du'
+        const firstNameInput = nameInputs[0];
+        const playerName = firstNameInput?.value?.trim() || 'Du';
+        playerNames.push(playerName);
+        console.log('Single player mode: Using player name:', playerName);
     } else {
         nameInputs.forEach((input, index) => {
             playerNames.push(input.value || `Spelare ${index + 1}`);
