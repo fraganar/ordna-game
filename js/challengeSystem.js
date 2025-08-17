@@ -66,8 +66,8 @@ class ChallengeSystem {
         }
     }
     
-    // Create a new challenge
-    async createChallenge(playerName, questions, scores, totalScore) {
+    // Helper: Create challenge record in Firebase  
+    async createChallengeRecord(playerName, questions, scores, totalScore) {
         try {
             const challengeId = await FirebaseAPI.createChallenge({
                 challengerName: playerName,
@@ -91,6 +91,56 @@ class ChallengeSystem {
             return challengeId;
         } catch (error) {
             console.error('Failed to create challenge:', error);
+            throw error;
+        }
+    }
+    
+    // Complete challenge (when game ends) - MOVED from game.js endGame()
+    async completeChallenge() {
+        if (!window.ischallengeMode || window.challengeId) {
+            return; // Not challenge creation mode or challenge already exists
+        }
+        
+        try {
+            // Get final score from PlayerManager
+            const finalPlayer = window.PlayerManager.getCurrentPlayer();
+            const finalScore = finalPlayer ? finalPlayer.score : 0;
+            
+            // Create the challenge in Firebase with the results  
+            const playerName = finalPlayer ? finalPlayer.name : 'Unknown';
+            const playerId = finalPlayer ? finalPlayer.id : 'unknown_id';
+            
+            const newChallengeId = await FirebaseAPI.createChallenge(
+                playerName,
+                playerId,
+                window.challengeQuestions,
+                finalScore,
+                window.challengeQuestionScores,
+                window.selectedPack
+            );
+            
+            window.challengeId = newChallengeId;
+            
+            // Save to localStorage
+            const challengeInfo = {
+                id: newChallengeId,
+                role: 'challenger',
+                playerName: playerName,
+                createdAt: new Date().toISOString(),
+                hasSeenResult: false,
+                totalScore: finalScore,
+                questionScores: window.challengeQuestionScores
+            };
+            localStorage.setItem(`challenge_${newChallengeId}`, JSON.stringify(challengeInfo));
+            
+            // Show waiting for opponent view
+            if (window.UIController && window.UIController.showWaitingForOpponentView) {
+                window.UIController.showWaitingForOpponentView(newChallengeId);
+            }
+            
+            return newChallengeId;
+        } catch (error) {
+            console.error('Error completing challenge:', error);
             throw error;
         }
     }

@@ -491,21 +491,7 @@ function showNotifications(results) {
 }
 
 // Utility functions
-function showLoading(message) {
-    const createChallengeBtn = UI?.get('createChallengeBtn');
-    if (createChallengeBtn) {
-        createChallengeBtn.disabled = true;
-        createChallengeBtn.textContent = message;
-    }
-}
-
-function hideLoading() {
-    const createChallengeBtn = UI?.get('createChallengeBtn');
-    if (createChallengeBtn) {
-        createChallengeBtn.disabled = false;
-        createChallengeBtn.textContent = 'Skapa utmaning';
-    }
-}
+// REMOVED: showLoading/hideLoading - use UIRenderer.disableCreateChallengeButton/enableCreateChallengeButton
 
 function showError(message) {
     const challengeError = UI?.get('challengeError');
@@ -872,47 +858,12 @@ function endSinglePlayerQuestion(pointsToAdd) {
 async function endSinglePlayerGame() {
     UI?.hideGameScreen();
     
-    // If this is challenge creation mode
-    if (window.ischallengeMode && !challengeId) {
+    // If this is challenge creation mode, complete the challenge
+    if (window.ChallengeSystem && window.ischallengeMode && !challengeId) {
         try {
-            // Get final score from PlayerManager
-            const finalPlayer = window.PlayerManager.getCurrentPlayer();
-            const finalScore = finalPlayer ? finalPlayer.score : 0;
-            
-            // Create the challenge in Firebase with the results  
-            const playerName = finalPlayer ? finalPlayer.name : 'Unknown';
-            const playerId = finalPlayer ? finalPlayer.id : 'unknown_id';
-            
-            const newChallengeId = await FirebaseAPI.createChallenge(
-                playerName,
-                playerId,
-                challengeQuestions,
-                finalScore,
-                challengeQuestionScores,
-                selectedPack
-            );
-            
-            challengeId = newChallengeId;
-            
-            // Save to localStorage
-            const challengeInfo = {
-                id: newChallengeId,
-                role: 'challenger',
-                playerName: playerName,
-                createdAt: new Date().toISOString(),
-                hasSeenResult: false,
-                totalScore: finalScore,
-                questionScores: challengeQuestionScores
-            };
-            localStorage.setItem(`challenge_${newChallengeId}`, JSON.stringify(challengeInfo));
-            
-            // Show waiting for opponent view
-            if (window.UIController && window.UIController.showWaitingForOpponentView) {
-                window.UIController.showWaitingForOpponentView(newChallengeId);
-            }
-            
+            await window.ChallengeSystem.completeChallenge();
         } catch (error) {
-            console.error('Failed to create challenge:', error);
+            console.error('Failed to complete challenge:', error);
             UI?.showError('Kunde inte skapa utmaning. Försök igen.');
             const singlePlayerFinal = UI?.get('singlePlayerFinal');
             const finalScoreboard = UI?.get('finalScoreboard');

@@ -2,7 +2,7 @@
 
 Efter refaktoreringen finns det många funktioner som implementerats i både `game.js` och de nya modulfilerna. Detta dokument kartlägger alla dubbelimplementationer för att skapa ett underlag för att eliminera duplicerad kod.
 
-## Status: 🟢 Sanering nästan komplett (8/9 klart)
+## Status: 🎉 Sanering KOMPLETT (9/9 klart)
 Refaktoreringen har skapat en situation där `game.js` fortfarande innehåller mycket aktiv kod som duplicerar funktionalitet i de nya modulerna.
 
 ## Huvudproblem
@@ -175,35 +175,39 @@ Hanterar spelkontroller och navigation mellan frågor
 
 ---
 
-## ID:6 Challenge-systemet 🔴 FLYTTAD SIST
+## ID:6 Challenge-systemet ✅ KLART
 
-### ⚠️ VIKTIGT: Challenge fungerar INTE i nuvarande version
-Efter att vi backade från våra försök är challenge-systemet trasigt. Vi har dokumenterat den fungerande lösningen i:
-- **FUNGERANDE_CHALLENGE_ANALYS.md** - Exakt kod från commit 607106f som fungerade
-- **CHALLENGE_LÄRDOMAR.md** - Analys av varför det inte fungerade och möjliga lösningar
-
-### Dubbelimplementation
-- **game.js**: `createChallenge()`, `checkForChallenge()`, `showChallengeAcceptScreen()`, polling-funktioner
-- **challengeSystem.js**: `createChallenge()`, `loadChallenge()`, `acceptChallenge()`, `startPolling()`
+### Dubbelimplementation (LÖST)
+- **game.js**: Challenge completion logic i `endGame()` → BORTTAGET
+- **challengeSystem.js**: `createChallenge()` (2 versioner) → KONSOLIDERAT
+- **UI-hantering**: `showLoading/hideLoading` → FLYTTAT till UIRenderer
 
 ### Beskrivning
-Hanterar utmaningssystemet - KOMPLEXT på grund av:
+Hanterar utmaningssystemet - var komplext på grund av:
 - Kräver legacy `players` array istället för PlayerManager
-- Behöver direkta DOM-referenser
+- Behöver direkta DOM-referenser  
 - Firebase-integration
 - Polling-mekanismer
 
-### Varför flyttad sist
-1. **Arkitektur-konflikt**: Challenge kräver legacy-system som kolliderar med ny arkitektur
-2. **Tidskrävande**: Många försök misslyckades (se CHALLENGE_LÄRDOMAR.md)
-3. **Inte kärnfunktion**: Regular game viktigare än challenge
-4. **Bättre förutsättningar senare**: Efter ID:7-10 har vi renare arkitektur
+### Lösning
+**SMART MIGRATION** - Konsoliderat challenge-logik till ChallengeSystem:
 
-### Åtgärd (när vi kommer hit)
-- [ ] Review: Läs FUNGERANDE_CHALLENGE_ANALYS.md och CHALLENGE_LÄRDOMAR.md
-- [ ] Beslut: Välj approach (Legacy compatibility, Full refactor, eller Hybrid)
-- [ ] Implementera vald lösning baserat på dokumentationen
-- [ ] Testa GRUNDLIGT innan commit
+1. **Challenge completion** - Flyttat från game.js `endGame()` till `ChallengeSystem.completeChallenge()`
+2. **UI-hantering** - Använder UIRenderer istället för direkta DOM-manipulationer
+3. **Funktionsnamn** - Döpt om `createChallenge(params)` → `createChallengeRecord()` för klarhet
+4. **Event handlers** - Behållit ChallengeSystem som ansvarig för challenge creation
+5. **Enkelriktad dependencies** - game.js anropar ChallengeSystem (inte tvärtom)
+
+### Genomförda åtgärder
+- ✅ Flyttat challenge completion från game.js → ChallengeSystem.completeChallenge()
+- ✅ Tagit bort showLoading/hideLoading dubletter från game.js
+- ✅ Döpt om ChallengeSystem.createChallenge(params) → createChallengeRecord()
+- ✅ Använder UIRenderer för UI-hantering istället för direkta DOM-anrop
+- ✅ Behållit fungerande arkitektur (ChallengeSystem ansvarar för challenges)
+
+**Resultat:** Challenge-logik centraliserad, dubbelimplementationer eliminerade, ren ansvarsfördelning
+
+---
 
 ---
 
@@ -384,7 +388,7 @@ it('SP-4: Single player fel på sista alternativet', () => {
 7. ~~**ID:8 App-initialisering** ✅ KLART~~
 8. ~~**ID:9 Array-hantering** ✅ KLART~~
 9. ~~**ID:11 Complex UI-rendering** ✅ KLART~~
-10. **ID:6 Challenge-systemet** - FLYTTAD SIST (komplex, kräver stabil arkitektur)
+10. ~~**ID:6 Challenge-systemet** ✅ KLART~~
 
 ### Fas 2: Refaktorering till testbar arkitektur
 11. **ID:10 REFAKTORERING** - Implementera GameState/GameEngine/UIController arkitektur med unit tests
