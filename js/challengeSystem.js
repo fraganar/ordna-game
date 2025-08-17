@@ -60,8 +60,10 @@ class ChallengeSystem {
             return;
         }
         
+        console.log('Full challengeData:', this.challengeData);
         console.log('Challenger data:', this.challengeData.challenger);
         console.log('Challenger questionScores:', this.challengeData.challenger.questionScores);
+        console.log('Challenger name from data:', this.challengeData.challenger.name);
         
         const score = this.challengeData.challenger.questionScores[questionIndex];
         console.log(`Score for question ${questionIndex}:`, score);
@@ -128,12 +130,23 @@ class ChallengeSystem {
             const playerName = finalPlayer ? finalPlayer.name : 'Unknown';
             const playerId = finalPlayer ? finalPlayer.id : 'unknown_id';
             
+            // Ensure questionScores array has same length as questions (fill missing with 0)
+            const completeScores = [...window.challengeQuestionScores];
+            while (completeScores.length < window.challengeQuestions.length) {
+                completeScores.push(0);
+            }
+            
+            console.log('Challenge completion: playerName =', playerName);
+            console.log('Challenge completion: questions =', window.challengeQuestions.length);
+            console.log('Challenge completion: scores before =', window.challengeQuestionScores.length);
+            console.log('Challenge completion: scores after =', completeScores.length);
+            
             const newChallengeId = await FirebaseAPI.createChallenge(
                 playerName,
                 playerId,
                 window.challengeQuestions,
                 finalScore,
-                window.challengeQuestionScores,
+                completeScores,
                 window.selectedPack
             );
             
