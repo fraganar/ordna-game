@@ -377,7 +377,7 @@ it('SP-4: Single player fel på sista alternativet', () => {
 5. ~~**ID:5 Spelkontroll och navigation** ✅ KLART~~
 6. ~~**ID:7 UI-hantering** ✅ KLART~~
 7. ~~**ID:8 App-initialisering** ✅ KLART~~
-8. **ID:9 Array-hantering** - ~5 min
+8. ~~**ID:9 Array-hantering** ✅ KLART~~
 9. **ID:11 Complex UI-rendering** - ~20 min (options grid, pack selects, scoreboard)
 10. **ID:6 Challenge-systemet** - FLYTTAD SIST (komplex, kräver stabil arkitektur)
 

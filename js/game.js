@@ -839,12 +839,7 @@ function processQuestions(questions) {
     });
 }
 
-function shuffleArray(array) {
-    for (let i = array.length - 1; i > 0; i--) {
-        const j = Math.floor(Math.random() * (i + 1));
-        [array[i], array[j]] = [array[j], array[i]];
-    }
-}
+// REMOVED: shuffleArray - using GameData.shuffleArray for consistency
 // Single Player Functions (Star system removed - now using decision button for points)
 
 function updateSinglePlayerDisplay() {
@@ -1092,7 +1087,7 @@ async function initializeGame() {
     currentQuestionIndex = 0;
     currentPlayerIndex = 0;
     questionStarterIndex = 0;
-    shuffleArray(questionsToPlay);
+    questionsToPlay = window.GameData.shuffleArray(questionsToPlay);
     
     // Setup unified UI
     if (window.PlayerManager) {
@@ -1300,8 +1295,7 @@ function loadQuestion() {
         UI?.hideHintElement();
     }
     
-    const shuffledOptions = [...question.alternativ];
-    shuffleArray(shuffledOptions);
+    const shuffledOptions = window.GameData.shuffleArray(question.alternativ);
 
     if (optionsGrid) optionsGrid.className = 'grid grid-cols-1 gap-3 sm:gap-4 my-4 sm:my-6';
 

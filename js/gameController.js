@@ -70,10 +70,10 @@ class GameController {
             // Filter questions by pack
             if (this.allQuestions.length > 0) {
                 if (packToLoad === 'Alla') {
-                    this.questionsToPlay = this.shuffleArray([...this.allQuestions]);
+                    this.questionsToPlay = window.GameData.shuffleArray([...this.allQuestions]);
                 } else {
                     const filtered = this.allQuestions.filter(q => q.pack === packToLoad);
-                    this.questionsToPlay = this.shuffleArray(filtered);
+                    this.questionsToPlay = window.GameData.shuffleArray(filtered);
                 }
                 console.log(`Loaded ${this.questionsToPlay.length} questions from pack: ${packToLoad}`);
             }
@@ -142,8 +142,7 @@ class GameController {
     
     // Create order button - MOVED FROM game.js (working implementation)
     renderOrderOptions(question, optionsGrid) {
-        const shuffledOptions = [...question.alternativ];
-        this.shuffleArray(shuffledOptions);
+        const shuffledOptions = window.GameData.shuffleArray(question.alternativ);
         
         shuffledOptions.forEach(optionText => {
             const button = document.createElement('button');
@@ -156,8 +155,7 @@ class GameController {
     
     // Create belongs option - MOVED FROM game.js (working implementation) 
     renderBelongsOptions(question, optionsGrid) {
-        const shuffledOptions = [...question.alternativ];
-        this.shuffleArray(shuffledOptions);
+        const shuffledOptions = window.GameData.shuffleArray(question.alternativ);
         
         shuffledOptions.forEach(optionText => {
             const container = document.createElement('div');
@@ -189,13 +187,7 @@ class GameController {
         });
     }
     
-    // Utility: Shuffle array (needed for rendering)
-    shuffleArray(array) {
-        for (let i = array.length - 1; i > 0; i--) {
-            const j = Math.floor(Math.random() * (i + 1));
-            [array[i], array[j]] = [array[j], array[i]];
-        }
-    }
+    // Use GameData.shuffleArray for consistency
     
     // Handle correct answer for order questions
     handleCorrectAnswer(button, orderNumber) {
@@ -471,15 +463,7 @@ class GameController {
         }
     }
     
-    // Utility: Shuffle array
-    shuffleArray(array) {
-        const shuffled = [...array];
-        for (let i = shuffled.length - 1; i > 0; i--) {
-            const j = Math.floor(Math.random() * (i + 1));
-            [shuffled[i], shuffled[j]] = [shuffled[j], shuffled[i]];
-        }
-        return shuffled;
-    }
+    // REMOVED: shuffleArray - using GameData.shuffleArray for consistency
 }
 
 // Create global instance and make methods accessible
