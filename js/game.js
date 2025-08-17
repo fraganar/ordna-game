@@ -6,7 +6,7 @@ let currentPlayer = null; // Keep for compatibility, but PlayerManager is author
 
 // Challenge System State
 let ischallengeMode = false;
-let challengeId = null;
+// challengeId now managed globally as window.challengeId (set by app.js URL parsing)
 let challengeData = null;
 let challengeQuestions = [];
 let challengeQuestionScores = [];
@@ -397,7 +397,7 @@ function checkForChallenge() {
     const challengeParam = urlParams.get('challenge');
     
     if (challengeParam) {
-        challengeId = challengeParam;
+        window.challengeId = challengeParam;
         return true;
     }
     return false;
@@ -407,7 +407,7 @@ function checkForChallenge() {
 async function showChallengeAcceptScreen() {
     try {
         // Get challenge details from Firebase
-        challengeData = await FirebaseAPI.getChallenge(challengeId);
+        challengeData = await FirebaseAPI.getChallenge(window.challengeId);
         
         UI?.setChallengerDisplayName(challengeData.challengerName);
         
@@ -632,8 +632,12 @@ async function checkChallengeStatus(challengeId) {
 // Start challenge game for opponent
 async function startChallengeGame() {
     try {
+        console.log('=== CHALLENGE ACCEPT START ===');
+        console.log('Challenge ID from window:', window.challengeId);
+        
         // Get challenge data
-        challengeData = await FirebaseAPI.getChallenge(challengeId);
+        challengeData = await FirebaseAPI.getChallenge(window.challengeId);
+        console.log('Challenge data received:', challengeData);
         
         if (!challengeData) {
             throw new Error('Challenge not found');
@@ -641,17 +645,20 @@ async function startChallengeGame() {
         
         // Check if challenge is expired
         const expiresDate = challengeData.expires.toDate ? challengeData.expires.toDate() : new Date(challengeData.expires);
+        console.log('Challenge expires:', expiresDate);
         if (expiresDate < new Date()) {
             throw new Error('Challenge has expired');
         }
         
         // Check if already completed by this player
-        const storedChallenge = localStorage.getItem(`challenge_${challengeId}`);
+        const storedChallenge = localStorage.getItem(`challenge_${window.challengeId}`);
+        console.log('Stored challenge check:', storedChallenge);
         if (storedChallenge) {
             const info = JSON.parse(storedChallenge);
             if (info.role === 'opponent') {
+                console.log('Player already played this challenge');
                 UI?.showError('Du har redan spelat denna utmaning');
-                showChallengeResultView(challengeId);
+                showChallengeResultView(window.challengeId);
                 return;
             }
         }
@@ -859,7 +866,7 @@ async function endSinglePlayerGame() {
     UI?.hideGameScreen();
     
     // If this is challenge creation mode, complete the challenge
-    if (window.ChallengeSystem && window.ischallengeMode && !challengeId) {
+    if (window.ChallengeSystem && window.ischallengeMode && !window.challengeId) {
         try {
             await window.ChallengeSystem.completeChallenge();
         } catch (error) {
@@ -879,10 +886,10 @@ async function endSinglePlayerGame() {
         }
     }
     // If this is accepting a challenge
-    else if (ischallengeMode && challengeId) {
+    else if (ischallengeMode && window.challengeId) {
         try {
             await FirebaseAPI.completeChallenge(
-                challengeId,
+                window.challengeId,
                 currentPlayer.name,
                 players[0].score,
                 challengeQuestionScores
@@ -890,7 +897,7 @@ async function endSinglePlayerGame() {
             
             // Save to localStorage
             const challengeInfo = {
-                id: challengeId,
+                id: window.challengeId,
                 role: 'opponent',
                 playerName: currentPlayer.name,
                 completedAt: new Date().toISOString(),
@@ -898,10 +905,10 @@ async function endSinglePlayerGame() {
                 totalScore: players[0].score,
                 questionScores: challengeQuestionScores
             };
-            localStorage.setItem(`challenge_${challengeId}`, JSON.stringify(challengeInfo));
+            localStorage.setItem(`challenge_${window.challengeId}`, JSON.stringify(challengeInfo));
             
             // Show result comparison view
-            showChallengeResultView(challengeId);
+            showChallengeResultView(window.challengeId);
             
         } catch (error) {
             console.error('Failed to complete challenge:', error);

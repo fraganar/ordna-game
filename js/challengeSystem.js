@@ -97,7 +97,12 @@ class ChallengeSystem {
     
     // Complete challenge (when game ends) - MOVED from game.js endGame()
     async completeChallenge() {
+        console.log('=== CHALLENGE COMPLETION START ===');
+        console.log('ischallengeMode:', window.ischallengeMode);
+        console.log('existing challengeId:', window.challengeId);
+        
         if (!window.ischallengeMode || window.challengeId) {
+            console.log('Skipping challenge completion - not in creation mode or challenge already exists');
             return; // Not challenge creation mode or challenge already exists
         }
         
@@ -417,15 +422,25 @@ class ChallengeSystem {
         }
         
         try {
+            console.log('=== CHALLENGE CREATION START ===');
+            
             // Set selected pack from challenge dropdown before loading questions
             const challengePackSelect = window.UI?.get('challengePackSelect');
-            window.selectedPack = challengePackSelect?.value || null;
-            console.log('Debug Challenge: selectedPack:', window.selectedPack);
+            const selectedPack = challengePackSelect?.value || null;
+            window.selectedPack = selectedPack; // Also set global for compatibility
+            
+            console.log('Debug Challenge: challengePackSelect element:', challengePackSelect);
+            console.log('Debug Challenge: selectedPack value:', selectedPack);
+            console.log('Debug Challenge: window.selectedPack:', window.selectedPack);
             
             // Load questions using GameData (working implementation moved there)
             if (window.GameData && window.GameData.loadQuestionsForGame) {
+                console.log('Debug Challenge: Loading questions for pack:', selectedPack);
                 await window.GameData.loadQuestionsForGame(selectedPack);
-                console.log('Debug Challenge: allQuestions length:', window.allQuestions?.length);
+                console.log('Debug Challenge: allQuestions loaded, length:', window.allQuestions?.length);
+                if (window.allQuestions?.length > 0) {
+                    console.log('Debug Challenge: First question:', window.allQuestions[0]);
+                }
             } else {
                 console.error('GameData.loadQuestionsForGame not available');
             }
