@@ -671,7 +671,13 @@ async function startChallengeGame() {
         challengeQuestionScores = [];
         
         
-        // PlayerManager handles player initialization
+        // Initialize player for challenge accept (single player mode)
+        if (window.PlayerManager) {
+            const playerName = window.PlayerManager.getPlayerName() || 'Du';
+            window.PlayerManager.initializePlayers(1, [playerName]);
+            console.log('Challenge accept: Initialized PlayerManager with player:', playerName);
+        }
+        
         questionsToPlay = challengeQuestions;
         
         // Hide all screens and show game

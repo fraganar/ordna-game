@@ -345,14 +345,21 @@ class UIRenderer {
             // Multiplayer display
             const currentPlayer = players[currentPlayerIndex];
             
-            if (activePlayerDisplay) {
+            if (activePlayerDisplay && currentPlayer) {
                 activePlayerDisplay.textContent = `${currentPlayer.name}s tur`;
                 activePlayerDisplay.classList.add('active-player-highlight');
+            } else if (activePlayerDisplay) {
+                console.warn('updatePlayerDisplay: currentPlayer is undefined', {
+                    currentPlayerIndex,
+                    playersLength: players?.length,
+                    players
+                });
+                activePlayerDisplay.textContent = 'Spelares tur';
             }
             
             // Mini scoreboard
-            if (miniScores) {
-                const scores = players.map(p => `${p.name}: ${p.score}p`).join(' | ');
+            if (miniScores && players?.length > 0) {
+                const scores = players.map(p => `${p?.name || 'Spelare'}: ${p?.score || 0}p`).join(' | ');
                 miniScores.textContent = scores;
             }
             
