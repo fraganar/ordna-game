@@ -469,33 +469,29 @@ class ChallengeSystem {
             window.challengeQuestions = this.challengeQuestions;
             window.challengeQuestionScores = this.challengeQuestionScores;
             
-            // Start the game directly as single player using PlayerManager
-            if (window.PlayerManager) {
-                window.PlayerManager.initializePlayers(1, [playerName]);
-            }
-            window.questionsToPlay = this.challengeQuestions;
+            // Set questions in global scope where initializeGame expects them
+            window.allQuestions = this.challengeQuestions;
+            console.log('Debug Challenge: Set window.allQuestions to challengeQuestions, length:', window.allQuestions.length);
             
-            // Hide challenge form and show game
+            // Use the existing game initialization logic instead of duplicating it
+            console.log('Debug Challenge: Calling initializeGame() to use standard game flow');
+            
+            // Hide challenge form
             const challengeForm = window.UI?.get('challengeForm');
-            const singlePlayerScore = window.UI?.get('singlePlayerScore');
-            const singlePlayerProgress = window.UI?.get('singlePlayerProgress');
-            const scoreboard = window.UI?.get('scoreboard');
-            
             if (challengeForm) challengeForm.classList.add('hidden');
-            if (window.UI?.showScreen) {
-                window.UI.showScreen('gameScreen');
-            }
             
-            // Setup UI for single player
-            if (singlePlayerScore) singlePlayerScore.classList.remove('hidden');
-            if (singlePlayerProgress) singlePlayerProgress.classList.remove('hidden');
-            if (scoreboard) scoreboard.classList.add('hidden');
-            
-            window.currentQuestionIndex = 0;
-            console.log('Debug Challenge: currentQuestionIndex set to 0');
-            console.log('Debug Challenge: questionsToPlay length:', window.questionsToPlay?.length);
-            if (typeof window.loadQuestion === 'function') {
-                window.loadQuestion();
+            // Call standard game initialization which handles everything correctly
+            if (typeof window.initializeGame === 'function') {
+                // Override player setup for challenge mode
+                const nameInputs = document.querySelectorAll('.player-name-input');
+                if (nameInputs[0]) nameInputs[0].value = playerName;
+                
+                const playerCountSelect = window.UI?.get('playerCountSelect');
+                if (playerCountSelect) playerCountSelect.value = '1';
+                
+                await window.initializeGame();
+            } else {
+                console.error('initializeGame function not available');
             }
             
         } catch (error) {
