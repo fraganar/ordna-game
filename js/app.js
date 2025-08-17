@@ -221,12 +221,20 @@ class App {
     
     // Show challenge accept screen
     showChallengeAcceptScreen() {
-        const challengeData = ChallengeSystem?.challengeData;
-        if (!challengeData) return;
+        console.log('=== SHOWING CHALLENGE ACCEPT SCREEN ===');
+        const challengeData = window.ChallengeSystem?.challengeData;
+        console.log('Challenge data:', challengeData);
+        
+        if (!challengeData) {
+            console.warn('No challenge data available - cannot show accept screen');
+            return;
+        }
         
         const challengerDisplayName = UI?.get('challengerDisplayName');
-        if (challengerDisplayName) {
+        console.log('challengerDisplayName element:', challengerDisplayName);
+        if (challengerDisplayName && challengeData.challenger) {
             challengerDisplayName.textContent = challengeData.challenger.name;
+            console.log('Set challenger name to:', challengeData.challenger.name);
         }
         
         // Hide other screens and show challenge accept
@@ -235,10 +243,22 @@ class App {
         const challengeForm = UI?.get('challengeForm');
         const challengeAccept = UI?.get('challengeAccept');
         
+        console.log('UI elements:', {
+            startMain: !!startMain,
+            playerSetup: !!playerSetup, 
+            challengeForm: !!challengeForm,
+            challengeAccept: !!challengeAccept
+        });
+        
         if (startMain) startMain.classList.add('hidden');
         if (playerSetup) playerSetup.classList.add('hidden');
         if (challengeForm) challengeForm.classList.add('hidden');
-        if (challengeAccept) challengeAccept.classList.remove('hidden');
+        if (challengeAccept) {
+            challengeAccept.classList.remove('hidden');
+            console.log('Challenge accept screen should now be visible');
+        } else {
+            console.error('challengeAccept element not found - cannot show challenge accept screen');
+        }
     }
     
     // Show notifications
