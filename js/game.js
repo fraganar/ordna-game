@@ -158,6 +158,7 @@ const questionPacks = [
 
 // --- Game State ---
 let currentQuestionIndex = 0;
+window.currentQuestionIndex = 0; // Sync global variable
 let questionsToPlay = [];
 let userOrder = []; 
 let selectedPacks = questionPacks.map(p => p.name);
@@ -714,6 +715,8 @@ async function startChallengeGame() {
         if (scoreboard) scoreboard.classList.add('hidden');
         
         currentQuestionIndex = 0;
+    window.currentQuestionIndex = 0; // Sync global variable
+        window.currentQuestionIndex = 0; // Sync global variable
         loadQuestion();
         
     } catch (error) {
@@ -1069,6 +1072,7 @@ async function initializeGame() {
     
     // Initialize game state
     currentQuestionIndex = 0;
+    window.currentQuestionIndex = 0; // Sync global variable
     currentPlayerIndex = 0;
     questionStarterIndex = 0;
     questionsToPlay = window.GameData.shuffleArray(questionsToPlay);
@@ -1609,6 +1613,7 @@ function restartGame() {
     
     // Reset game state - PlayerManager handles player reset
     currentQuestionIndex = 0;
+    window.currentQuestionIndex = 0; // Sync global variable
     currentPlayerIndex = 0;
     questionStarterIndex = 0;
     // Reset challenge and game state
@@ -1790,6 +1795,7 @@ function initializeEventListeners() {
     if (nextSide) {
         nextSide.addEventListener('click', () => {
             currentQuestionIndex++;
+            window.currentQuestionIndex = currentQuestionIndex; // Sync global variable
             loadQuestion();
         });
     }
@@ -1797,6 +1803,7 @@ function initializeEventListeners() {
     if (nextQuestionBtn) {
         nextQuestionBtn.addEventListener('click', () => {
             currentQuestionIndex++;
+            window.currentQuestionIndex = currentQuestionIndex; // Sync global variable
             loadQuestion();
         });
     }
@@ -1804,6 +1811,7 @@ function initializeEventListeners() {
     if (largeNextQuestionBtn) {
         largeNextQuestionBtn.addEventListener('click', () => {
             currentQuestionIndex++;
+            window.currentQuestionIndex = currentQuestionIndex; // Sync global variable
             loadQuestion();
         });
     }
