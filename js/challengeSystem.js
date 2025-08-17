@@ -34,11 +34,19 @@ class ChallengeSystem {
     
     // Show challenger hint
     showHint(questionIndex) {
+        console.log('=== CHALLENGE HINT DEBUG ===');
+        console.log('questionIndex:', questionIndex);
+        console.log('this.isChallengeMode:', this.isChallengeMode);
+        console.log('this.challengeId:', this.challengeId);
+        console.log('this.challengeData:', this.challengeData);
+        
         const hintElement = document.getElementById('challenger-hint');
+        console.log('hintElement found:', !!hintElement);
         if (!hintElement) return;
         
         // ALWAYS hide if not in proper challenge mode
         if (!this.isChallengeMode || !this.challengeId || !this.challengeData) {
+            console.log('Hiding hint - not in proper challenge mode');
             hintElement.classList.add('hidden');
             hintElement.innerHTML = '';
             return;

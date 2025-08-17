@@ -670,6 +670,14 @@ async function startChallengeGame() {
         challengeQuestions = challengeData.questions;
         challengeQuestionScores = [];
         
+        // Sync ChallengeSystem state for hints
+        if (window.ChallengeSystem) {
+            window.ChallengeSystem.isChallengeMode = true;
+            window.ChallengeSystem.challengeId = window.challengeId;
+            window.ChallengeSystem.challengeData = challengeData;
+            console.log('Challenge accept: Synced ChallengeSystem state for hints');
+        }
+        
         
         // Initialize player for challenge accept (single player mode)
         if (window.PlayerManager) {
