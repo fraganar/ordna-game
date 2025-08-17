@@ -1332,7 +1332,7 @@ function handleOrderClick(button, optionText) {
         userOrder.push(optionText);
         
         // Add point using unified system
-        window.PlayerManager.addPointToCurrentPlayer(button);
+        window.PlayerManager.addPointToCurrentPlayer(button, currentQuestionIndex);
         
         // Update button appearance
         button.className = 'option-btn w-full text-left p-4 rounded-lg border-2 correct-step';
@@ -1413,7 +1413,7 @@ function handleBelongsDecision(userDecision, container, yesBtn, noBtn) {
 
     if (isCorrect) {
         // Add point using unified system
-        window.PlayerManager.addPointToCurrentPlayer(container);
+        window.PlayerManager.addPointToCurrentPlayer(container, currentQuestionIndex);
         
         container.classList.add('choice-made');
         container.classList.add('correct-choice'); // Add green background to entire container

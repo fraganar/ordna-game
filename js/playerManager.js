@@ -102,18 +102,21 @@ class PlayerManager {
     }
     
     // Add point to current player
-    addPointToCurrentPlayer(sourceElement) {
+    addPointToCurrentPlayer(sourceElement, questionIndex = null) {
         const currentPlayer = this.getCurrentPlayer();
         if (!currentPlayer) return;
         
-        console.log(`DEBUG: addPointToCurrentPlayer called - currentQuestionIndex: ${window.currentQuestionIndex}, challengeMode: ${window.ischallengeMode}`);
+        // Use provided questionIndex or fallback to global variable
+        const actualQuestionIndex = questionIndex !== null ? questionIndex : window.currentQuestionIndex;
+        
+        console.log(`DEBUG: addPointToCurrentPlayer called - questionIndex: ${actualQuestionIndex}, challengeMode: ${window.ischallengeMode}`);
         
         currentPlayer.roundPot++;
         
         // Save point for challenge mode (each correct answer = 1 point)
         if (window.ChallengeSystem && window.ischallengeMode) {
-            window.ChallengeSystem.saveScore(1, window.currentQuestionIndex);
-            console.log(`Challenge: Saved 1 point for question ${window.currentQuestionIndex}`);
+            window.ChallengeSystem.saveScore(1, actualQuestionIndex);
+            console.log(`Challenge: Saved 1 point for question ${actualQuestionIndex}`);
         }
         
         // Show animation

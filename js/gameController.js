@@ -208,7 +208,7 @@ class GameController {
         
         // Add point and show animation
         if (window.PlayerManager) {
-            PlayerManager.addPointToCurrentPlayer(button);
+            PlayerManager.addPointToCurrentPlayer(button, this.currentQuestionIndex);
         }
         
         // Check if question is complete
@@ -257,7 +257,7 @@ class GameController {
         
         // Add point
         if (window.PlayerManager) {
-            PlayerManager.addPointToCurrentPlayer(button);
+            PlayerManager.addPointToCurrentPlayer(button, this.currentQuestionIndex);
         }
         
         // Check if all belongs questions are answered
