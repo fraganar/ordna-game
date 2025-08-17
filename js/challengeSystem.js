@@ -506,24 +506,34 @@ class ChallengeSystem {
             const challengeForm = window.UI?.get('challengeForm');
             if (challengeForm) challengeForm.classList.add('hidden');
             
-            // Call standard game initialization which handles everything correctly
-            if (typeof window.initializeGame === 'function') {
-                // Override player setup for challenge mode
-                const nameInputs = document.querySelectorAll('.player-name-input');
-                if (nameInputs[0]) {
-                    nameInputs[0].value = playerName;
-                    console.log('Challenge: Set nameInputs[0].value to:', playerName);
-                    console.log('Challenge: Verify nameInputs[0].value is:', nameInputs[0].value);
-                } else {
-                    console.warn('Challenge: nameInputs[0] not found');
-                }
-                
-                const playerCountSelect = window.UI?.get('playerCountSelect');
-                if (playerCountSelect) playerCountSelect.value = '1';
-                
-                await window.initializeGame();
-            } else {
-                console.error('initializeGame function not available');
+            // Initialize PlayerManager directly with challenger's name instead of relying on DOM
+            if (window.PlayerManager) {
+                window.PlayerManager.initializePlayers(1, [playerName]);
+                console.log('Challenge: Initialized PlayerManager directly with:', playerName);
+            }
+            
+            // Set questions for game
+            window.questionsToPlay = this.challengeQuestions;
+            window.currentQuestionIndex = 0;
+            
+            // Show game screen
+            if (window.UI?.showScreen) {
+                window.UI.showScreen('gameScreen');
+            }
+            
+            // Setup UI for single player
+            const singlePlayerScore = window.UI?.get('singlePlayerScore');
+            const singlePlayerProgress = window.UI?.get('singlePlayerProgress');
+            const scoreboard = window.UI?.get('scoreboard');
+            
+            if (singlePlayerScore) singlePlayerScore.classList.remove('hidden');
+            if (singlePlayerProgress) singlePlayerProgress.classList.remove('hidden');
+            if (scoreboard) scoreboard.classList.add('hidden');
+            
+            // Load first question
+            if (typeof window.loadQuestion === 'function') {
+                window.loadQuestion();
+                console.log('Challenge: Started game with first question');
             }
             
         } catch (error) {
