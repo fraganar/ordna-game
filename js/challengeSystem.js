@@ -510,7 +510,13 @@ class ChallengeSystem {
             if (typeof window.initializeGame === 'function') {
                 // Override player setup for challenge mode
                 const nameInputs = document.querySelectorAll('.player-name-input');
-                if (nameInputs[0]) nameInputs[0].value = playerName;
+                if (nameInputs[0]) {
+                    nameInputs[0].value = playerName;
+                    console.log('Challenge: Set nameInputs[0].value to:', playerName);
+                    console.log('Challenge: Verify nameInputs[0].value is:', nameInputs[0].value);
+                } else {
+                    console.warn('Challenge: nameInputs[0] not found');
+                }
                 
                 const playerCountSelect = window.UI?.get('playerCountSelect');
                 if (playerCountSelect) playerCountSelect.value = '1';

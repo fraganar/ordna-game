@@ -1024,6 +1024,9 @@ async function initializeGame() {
     if (playerCount === 1) {
         // Check if name input has a value (for challenge mode), otherwise use 'Du'
         const firstNameInput = nameInputs[0];
+        console.log('initializeGame debug: firstNameInput found:', !!firstNameInput);
+        console.log('initializeGame debug: firstNameInput.value:', firstNameInput?.value);
+        console.log('initializeGame debug: firstNameInput.value.trim():', firstNameInput?.value?.trim());
         const playerName = firstNameInput?.value?.trim() || 'Du';
         playerNames.push(playerName);
         console.log('Single player mode: Using player name:', playerName);
