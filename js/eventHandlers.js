@@ -48,6 +48,7 @@ function initializeAllEventListeners() {
     if (nextSide) {
         nextSide.addEventListener('click', () => {
             currentQuestionIndex++;
+            window.currentQuestionIndex = currentQuestionIndex; // Sync global variable
             loadQuestion();
         });
     }
@@ -56,6 +57,7 @@ function initializeAllEventListeners() {
     if (nextQuestionBtn) {
         nextQuestionBtn.addEventListener('click', () => {
             currentQuestionIndex++;
+            window.currentQuestionIndex = currentQuestionIndex; // Sync global variable
             loadQuestion();
         });
     }
@@ -64,6 +66,7 @@ function initializeAllEventListeners() {
     if (largeNextQuestionBtn) {
         largeNextQuestionBtn.addEventListener('click', () => {
             currentQuestionIndex++;
+            window.currentQuestionIndex = currentQuestionIndex; // Sync global variable
             loadQuestion();
         });
     }
