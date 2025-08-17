@@ -155,6 +155,11 @@ class GameController {
     
     // Create belongs option - MOVED FROM game.js (working implementation) 
     renderBelongsOptions(question, optionsGrid) {
+        // Reset the answersShown flag for new question
+        if (optionsGrid) {
+            optionsGrid.dataset.answersShown = 'false';
+        }
+        
         const shuffledOptions = window.GameData.shuffleArray(question.alternativ);
         
         shuffledOptions.forEach(optionText => {
@@ -163,7 +168,7 @@ class GameController {
             
             const text = document.createElement('span');
             text.textContent = optionText;
-            text.className = 'flex-grow pr-2 sm:pr-4 text-sm sm:text-base';
+            text.className = 'option-text flex-grow pr-2 sm:pr-4 text-sm sm:text-base';
 
             const buttonWrapper = document.createElement('div');
             buttonWrapper.className = 'decision-buttons';
