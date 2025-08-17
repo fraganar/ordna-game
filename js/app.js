@@ -122,8 +122,8 @@ class App {
         if (typeof window.createPlayerInputs === 'function') {
             window.createPlayerInputs();
         }
-        if (typeof window.updateScoreboard === 'function') {
-            window.updateScoreboard();
+        if (window.UI && typeof UI.updateScoreboard === 'function') {
+            UI.updateScoreboard();
         }
         
         // Set default selected pack

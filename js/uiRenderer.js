@@ -184,6 +184,105 @@ class UIRenderer {
             grid.innerHTML = '';
         }
     }
+    
+    // Set options grid layout
+    setOptionsGridLayout() {
+        const grid = this.get('optionsGrid');
+        if (grid) {
+            grid.className = 'grid grid-cols-1 gap-3 sm:gap-4 my-4 sm:my-6';
+        }
+    }
+    
+    // Set all option buttons disabled/enabled - MOVED from game.js (ID:11)
+    setAllOptionsDisabled(disabled) {
+        const grid = this.get('optionsGrid');
+        if (!grid) return;
+        
+        grid.querySelectorAll('button').forEach(btn => {
+            // Only enable/disable buttons that haven't been answered yet
+            // Don't re-enable buttons that have been clicked in ordna questions
+            if (disabled) {
+                // Always disable when requested
+                btn.disabled = true;
+            } else {
+                // Only re-enable if button hasn't been permanently disabled
+                // Check if button has correct-step class (already answered in ordna)
+                const isAlreadyAnswered = btn.classList.contains('correct-step') || 
+                                        btn.classList.contains('incorrect-step');
+                if (!isAlreadyAnswered) {
+                    btn.disabled = false;
+                }
+                // For belongs-to questions, check if buttons inside containers are disabled
+                const container = btn.closest('.belongs-option-container');
+                if (container && container.dataset.decided === 'true') {
+                    // This belongs-to option is already decided, keep disabled
+                    btn.disabled = true;
+                }
+            }
+        });
+    }
+    
+    // Show correct answers for belongs questions
+    showBelongsCorrectAnswers(question) {
+        const correctOptions = question.tillhör_index.map(i => question.alternativ[i]);
+        const grid = this.get('optionsGrid');
+        if (!grid) return;
+        const containers = grid.querySelectorAll('.belongs-option-container');
+
+        containers.forEach(container => {
+            if (!container.dataset.decided || container.dataset.decided !== 'true') {
+                // This option wasn't answered
+                const optionText = container.querySelector('.option-text').textContent;
+                const isCorrect = correctOptions.includes(optionText);
+                
+                const indicator = container.querySelector('.answer-indicator');
+                if (indicator) {
+                    if (isCorrect) {
+                        indicator.textContent = '✓';
+                        indicator.className = 'answer-indicator text-lg font-bold text-green-600';
+                        container.classList.add('border-green-500', 'bg-green-50');
+                    } else {
+                        indicator.textContent = '✗';
+                        indicator.className = 'answer-indicator text-lg font-bold text-red-600';
+                        container.classList.add('border-red-500', 'bg-red-50');
+                    }
+                }
+            }
+        });
+    }
+    
+    // Show correct answers for order questions - UPDATED from game.js (ID:11)
+    showOrderCorrectAnswers(question) {
+        const grid = this.get('optionsGrid');
+        if (!grid) return;
+        
+        // Show correct order for all buttons
+        const buttons = grid.querySelectorAll('.option-btn');
+        
+        buttons.forEach((button) => {
+            const optionText = button.textContent;
+            const correctIndex = question.rätt_ordning.indexOf(optionText);
+            
+            // If not already shown as correct (green)
+            if (!button.classList.contains('correct-step') && correctIndex !== -1) {
+                // Show order number using same format as correct answers, but WITHOUT green background
+                button.innerHTML = `<span class="inline-flex items-center justify-center w-6 h-6 mr-3 bg-white text-green-600 rounded-full font-bold">${correctIndex + 1}</span> ${optionText}`;
+            }
+        });
+    }
+    
+    // Show correct answers based on question type
+    showCorrectAnswers(question) {
+        if (question.typ === 'ordna') {
+            this.showOrderCorrectAnswers(question);
+        } else if (question.typ === 'hör_till') {
+            // Run existing feedbackBelongsTo() which already handles this
+            if (typeof window.feedbackBelongsTo === 'function') {
+                window.feedbackBelongsTo();
+            }
+            this.showBelongsCorrectAnswers(question);
+        }
+    }
 
     // Player display update - MOVED from PlayerManager (ID:7)
     updatePlayerDisplay() {
@@ -238,9 +337,7 @@ class UIRenderer {
             if (singlePlayerScore) singlePlayerScore.classList.add('hidden');
             
             // Update main scoreboard
-            if (typeof window.updateScoreboard === 'function') {
-                window.updateScoreboard();
-            }
+            this.updateScoreboard();
         }
     }
 
@@ -614,12 +711,15 @@ class UIRenderer {
         });
     }
 
-    // Scoreboard - MOVED from game.js (ID:7)
-    updateScoreboard(players, currentPlayerIndex) {
+    // Scoreboard - UPDATED from game.js (ID:11) - complete working implementation
+    updateScoreboard() {
         const scoreboard = this.get('scoreboard');
         if (!scoreboard) return;
         
-        scoreboard.innerHTML = '';
+        this.clearElement('scoreboard');
+        const players = window.PlayerManager?.getPlayers() || [];
+        const currentPlayerIndex = window.currentPlayerIndex || 0;
+        
         players.forEach((player, index) => {
             const card = document.createElement('div');
             card.className = 'player-score-card p-3 border-2 rounded-lg flex flex-col justify-between min-h-[60px]';
@@ -631,19 +731,29 @@ class UIRenderer {
                 card.classList.add('active-player');
                 turnIndicatorHTML = `<div class="absolute -top-3 left-1/2 -translate-x-1/2 bg-blue-600 text-white text-xs font-bold px-2 py-0.5 rounded-full shadow-md">Din tur!</div>`;
             }
-            
-            const potText = player.roundPot > 0 ? ` (+${player.roundPot})` : '';
-            
+
+            let statusText = '';
+            if (player.completionReason === 'stopped') {
+                statusText = ' (Stannat)';
+            } else if (player.completionReason === 'wrong') {
+                statusText = ' (Fel)';
+            }
+
+            let roundPotHTML = '';
+            if (player.roundPot > 0 && !player.completedRound) {
+                roundPotHTML = `<span class="font-semibold text-green-600 ml-2">+${player.roundPot}</span>`;
+            } 
+            else if (player.completionReason === 'wrong') {
+                roundPotHTML = `<span class="font-semibold text-red-600 ml-2">+0</span>`;
+            }
+
             card.innerHTML = `
                 ${turnIndicatorHTML}
                 <div class="flex justify-between items-start gap-2 pt-2">
-                    <div class="flex-1">
-                        <div class="font-semibold text-slate-800">${player.name}</div>
-                        <div class="text-2xl font-bold text-slate-900">${player.score}<span class="text-lg text-blue-600">${potText}</span></div>
-                    </div>
+                    <div class="font-bold text-slate-800 truncate text-sm sm:text-base" title="${player.name}${statusText}">${player.name}<span class="text-slate-500 font-normal">${statusText}</span></div>
+                    <div class="text-base sm:text-lg font-bold text-slate-700 whitespace-nowrap flex items-center">${player.score} p ${roundPotHTML}</div>
                 </div>
             `;
-            
             scoreboard.appendChild(card);
         });
     }

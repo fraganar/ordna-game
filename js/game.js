@@ -1099,49 +1099,7 @@ async function initializeGame() {
     loadQuestion();
 }
 
-function updateScoreboard() {
-    const scoreboard = UI?.get('scoreboard');
-    if (!scoreboard) return;
-    
-    UI?.clearElement('scoreboard');
-    const players = window.PlayerManager?.getPlayers() || [];
-    players.forEach((player, index) => {
-        const card = document.createElement('div');
-        card.className = 'player-score-card p-3 border-2 rounded-lg flex flex-col justify-between min-h-[60px]';
-        
-        let turnIndicatorHTML = '';
-        if (player.completedRound) {
-            card.classList.add('completed');
-        } else if (index === currentPlayerIndex) {
-            card.classList.add('active-player');
-            turnIndicatorHTML = `<div class="absolute -top-3 left-1/2 -translate-x-1/2 bg-blue-600 text-white text-xs font-bold px-2 py-0.5 rounded-full shadow-md">Din tur!</div>`;
-        }
-
-        let statusText = '';
-        if (player.completionReason === 'stopped') {
-            statusText = ' (Stannat)';
-        } else if (player.completionReason === 'wrong') {
-            statusText = ' (Fel)';
-        }
-
-        let roundPotHTML = '';
-        if (player.roundPot > 0 && !player.completedRound) {
-            roundPotHTML = `<span class="font-semibold text-green-600 ml-2">+${player.roundPot}</span>`;
-        } 
-        else if (player.completionReason === 'wrong') {
-            roundPotHTML = `<span class="font-semibold text-red-600 ml-2">+0</span>`;
-        }
-
-        card.innerHTML = `
-            ${turnIndicatorHTML}
-            <div class="flex justify-between items-start gap-2 pt-2">
-                <div class="font-bold text-slate-800 truncate text-sm sm:text-base" title="${player.name}${statusText}">${player.name}<span class="text-slate-500 font-normal">${statusText}</span></div>
-                <div class="text-base sm:text-lg font-bold text-slate-700 whitespace-nowrap flex items-center">${player.score} p ${roundPotHTML}</div>
-            </div>
-        `;
-        scoreboard.appendChild(card);
-    });
-}
+// REMOVED: updateScoreboard - moved to UIRenderer.updateScoreboard()
 
 function updateGameControls() {
     // Always hide old buttons
@@ -1297,7 +1255,7 @@ function loadQuestion() {
     
     const shuffledOptions = window.GameData.shuffleArray(question.alternativ);
 
-    if (optionsGrid) optionsGrid.className = 'grid grid-cols-1 gap-3 sm:gap-4 my-4 sm:my-6';
+    UI?.setOptionsGridLayout();
 
     // Set instructions
     if (question.typ === 'ordna') {
@@ -1333,33 +1291,7 @@ function loadQuestion() {
     }, 100); // Small delay to ensure DOM is ready
 }
 
-function setAllOptionsDisabled(disabled) {
-    const optionsGrid = UI.get('optionsGrid');
-    if (!optionsGrid) return;
-    
-    optionsGrid.querySelectorAll('button').forEach(btn => {
-        // Only enable/disable buttons that haven't been answered yet
-        // Don't re-enable buttons that have been clicked in ordna questions
-        if (disabled) {
-            // Always disable when requested
-            btn.disabled = true;
-        } else {
-            // Only re-enable if button hasn't been permanently disabled
-            // Check if button has correct-step class (already answered in ordna)
-            const isAlreadyAnswered = btn.classList.contains('correct-step') || 
-                                    btn.classList.contains('incorrect-step');
-            if (!isAlreadyAnswered) {
-                btn.disabled = false;
-            }
-            // For belongs-to questions, check if buttons inside containers are disabled
-            const container = btn.closest('.belongs-option-container');
-            if (container && container.dataset.decided === 'true') {
-                // This belongs-to option is already decided, keep disabled
-                btn.disabled = true;
-            }
-        }
-    });
-}
+// REMOVED: setAllOptionsDisabled - moved to UIRenderer.setAllOptionsDisabled()
 
 
 function concludeQuestionRound() {
@@ -1373,10 +1305,10 @@ function concludeQuestionRound() {
     // Now check completion once after all players are marked complete
     checkAndHandleQuestionCompletion();
 
-    setAllOptionsDisabled(true);
+    UI?.setAllOptionsDisabled(true);
     questionStarterIndex = (questionStarterIndex + 1) % players.length;
     
-    updateScoreboard();
+    UI?.updateScoreboard();
     updateGameControls();
 
     // Correct answers already shown by checkAndHandleQuestionCompletion()
@@ -1410,7 +1342,7 @@ function handleOrderClick(button, optionText) {
 
     // Disable all options during processing (for multiplayer turn-based)
     if (!window.PlayerManager?.isSinglePlayerMode()) {
-        setAllOptionsDisabled(true);
+        UI?.setAllOptionsDisabled(true);
     }
 
     if (isCorrectStep) {
@@ -1493,7 +1425,7 @@ function handleBelongsDecision(userDecision, container, yesBtn, noBtn) {
 
     // Disable all options during processing (for multiplayer turn-based)
     if (!window.PlayerManager?.isSinglePlayerMode()) {
-        setAllOptionsDisabled(true);
+        UI?.setAllOptionsDisabled(true);
     }
 
     if (isCorrect) {
@@ -1615,35 +1547,9 @@ function hideExplanation() {
 
 function showCorrectAnswers() {
     const question = getCurrentQuestion();
-    const optionsGrid = UI?.get('optionsGrid');
-    if (!optionsGrid) return;
     
-    if (question.typ === 'ordna') {
-        // Show correct order for all buttons
-        const buttons = optionsGrid.querySelectorAll('.option-btn');
-        
-        buttons.forEach((button) => {
-            const optionText = button.textContent;
-            const correctIndex = question.rätt_ordning.indexOf(optionText);
-            
-            // If not already shown as correct (green)
-            if (!button.classList.contains('correct-step') && correctIndex !== -1) {
-                // Show order number using same format as correct answers, but WITHOUT green background
-                button.innerHTML = `<span class="inline-flex items-center justify-center w-6 h-6 mr-3 bg-white text-green-600 rounded-full font-bold">${correctIndex + 1}</span> ${optionText}`;
-            }
-        });
-    } else if (question.typ === 'hör_till') {
-        // Run existing feedbackBelongsTo() which already handles this
-        feedbackBelongsTo();
-        
-        // Mark unanswered options
-        const containers = optionsGrid.querySelectorAll('.belongs-option-container');
-        containers.forEach(container => {
-            if (!container.dataset.decided || container.dataset.decided !== 'true') {
-                // Could add visual feedback for unanswered options here if needed
-            }
-        });
-    }
+    // Use UIRenderer for showing correct answers
+    UI?.showCorrectAnswers(question);
     
     // Show explanation if available
     if (question.förklaring) {
