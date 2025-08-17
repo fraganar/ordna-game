@@ -148,13 +148,16 @@ class App {
             try {
                 console.log('=== CHALLENGE URL DETECTED ===');
                 console.log('Challenge ID from URL:', challengeParam);
+                console.log('ChallengeSystem available:', !!window.ChallengeSystem);
+                console.log('ChallengeSystem.loadChallenge type:', typeof window.ChallengeSystem.loadChallenge);
+                console.log('ChallengeSystem methods:', Object.getOwnPropertyNames(window.ChallengeSystem));
                 
                 // Set global challengeId for game.js compatibility
                 window.challengeId = challengeParam;
                 console.log('Set window.challengeId:', window.challengeId);
                 
                 // Load challenge data
-                await ChallengeSystem.loadChallenge(challengeParam);
+                await window.ChallengeSystem.loadChallenge(challengeParam);
                 console.log('Challenge data loaded successfully');
                 
                 // Show challenge accept screen
