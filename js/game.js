@@ -368,10 +368,8 @@ function secureCurrentPoints() {
     
     if (pointsToSecure <= 0) return;
     
-    // Save score for challenge mode when securing points
-    if (window.ChallengeSystem) {
-        window.ChallengeSystem.saveScore(pointsToSecure, currentQuestionIndex);
-    }
+    // Note: Individual scores are saved when each question is answered
+    // No need to save bulk scores when securing points in challenge mode
     
     // Show animations immediately
     if (window.AnimationEngine) {

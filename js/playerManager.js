@@ -108,6 +108,12 @@ class PlayerManager {
         
         currentPlayer.roundPot++;
         
+        // Save point for challenge mode (each correct answer = 1 point)
+        if (window.ChallengeSystem && window.ischallengeMode) {
+            window.ChallengeSystem.saveScore(1, window.currentQuestionIndex);
+            console.log(`Challenge: Saved 1 point for question ${window.currentQuestionIndex}`);
+        }
+        
         // Show animation
         if (window.AnimationEngine) {
             window.AnimationEngine?.showPointAnimation(sourceElement);
@@ -201,10 +207,8 @@ class PlayerManager {
             player.completedRound = true;
             player.completionReason = 'finished';
             
-            // Save for challenge mode if current player
-            if (player === currentPlayer && window.ChallengeSystem) {
-                window.ChallengeSystem.saveScore(points, window.currentQuestionIndex);
-            }
+            // Note: Challenge scores are saved individually when each question is answered
+            // No need to save bulk scores when game ends
         });
         
         // Update display immediately

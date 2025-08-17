@@ -26,10 +26,17 @@ class ChallengeSystem {
     saveScore(score, questionIndex) {
         if (!this.isChallengeMode) return;
         
-        // Only save if we haven't already saved for this question
-        if (this.challengeQuestionScores.length === questionIndex) {
-            this.challengeQuestionScores.push(score);
+        console.log(`ChallengeSystem.saveScore: score=${score}, questionIndex=${questionIndex}, current array length=${this.challengeQuestionScores.length}`);
+        
+        // Ensure array is large enough
+        while (this.challengeQuestionScores.length <= questionIndex) {
+            this.challengeQuestionScores.push(0);
         }
+        
+        // Add to existing score for this question (for multi-point questions)
+        this.challengeQuestionScores[questionIndex] += score;
+        
+        console.log(`ChallengeSystem.saveScore: updated array:`, this.challengeQuestionScores);
     }
     
     // Show challenger hint
