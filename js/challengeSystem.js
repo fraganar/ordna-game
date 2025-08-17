@@ -76,6 +76,8 @@ class ChallengeSystem {
             `;
             hintElement.classList.remove('hidden');
         } else {
+            // Challenger didn't play this question - don't show hint
+            console.log(`Question ${questionIndex}: Challenger didn't play this question`);
             hintElement.classList.add('hidden');
             hintElement.innerHTML = '';
         }
@@ -130,11 +132,8 @@ class ChallengeSystem {
             const playerName = finalPlayer ? finalPlayer.name : 'Unknown';
             const playerId = finalPlayer ? finalPlayer.id : 'unknown_id';
             
-            // Ensure questionScores array has same length as questions (fill missing with 0)
+            // Use the actual question scores as they were earned (don't pad with zeros)
             const completeScores = [...window.challengeQuestionScores];
-            while (completeScores.length < window.challengeQuestions.length) {
-                completeScores.push(0);
-            }
             
             console.log('Challenge completion: playerName =', playerName);
             console.log('Challenge completion: questions =', window.challengeQuestions.length);
