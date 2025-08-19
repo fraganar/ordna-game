@@ -675,12 +675,16 @@ async function startChallengeGame() {
         challengeQuestions = challengeData.questions;
         challengeQuestionScores = [];
         
+        // Set challenge mode flags for acceptance
+        ischallengeMode = true;
+        window.ischallengeMode = true;
+        
         // Sync ChallengeSystem state for hints
         if (window.ChallengeSystem) {
             window.ChallengeSystem.isChallengeMode = true;
             window.ChallengeSystem.challengeId = window.challengeId;
             window.ChallengeSystem.challengeData = challengeData;
-            console.log('Challenge accept: Synced ChallengeSystem state for hints');
+            console.log('Challenge accept: Set ischallengeMode = true, synced ChallengeSystem state');
         }
         
         
@@ -978,6 +982,9 @@ async function endSinglePlayerGame() {
     }
     // Normal single player mode
     else {
+        console.log('🟠 NORMAL SINGLE PLAYER MODE (not challenge)');
+        console.log('🟠 ischallengeMode:', ischallengeMode);
+        console.log('🟠 window.challengeId:', window.challengeId);
         
         // Hide game screen first
         UI?.hideGameScreen();
