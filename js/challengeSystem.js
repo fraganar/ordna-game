@@ -263,7 +263,7 @@ class ChallengeSystem {
     // Check challenge status (copied from game.js.backup)
     async checkChallengeStatus(challengeId) {
         try {
-            const challenge = await window.FirebaseAPI.getChallenge(challengeId);
+            const challenge = await FirebaseAPI.getChallenge(challengeId);
             
             if (challenge && challenge.status === 'complete') {
                 // Stop polling
@@ -466,7 +466,7 @@ class ChallengeSystem {
     // Helper function to check if challenge is complete
     async checkChallengeCompletionStatus(challengeId) {
         try {
-            const challenge = await window.FirebaseAPI.getChallenge(challengeId);
+            const challenge = await FirebaseAPI.getChallenge(challengeId);
             return challenge && challenge.status === 'complete';
         } catch (error) {
             return false;
@@ -632,7 +632,7 @@ class ChallengeSystem {
     async showChallengeResultView(challengeId) {
         try {
             // Get challenge data from Firebase
-            const challenge = await window.FirebaseAPI.getChallenge(challengeId);
+            const challenge = await FirebaseAPI.getChallenge(challengeId);
             
             if (!challenge) {
                 throw new Error('Challenge not found');
