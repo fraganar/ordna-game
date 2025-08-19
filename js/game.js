@@ -3,6 +3,7 @@ let allQuestions = [];
 
 // Player identity system now handled by PlayerManager module
 let currentPlayer = null; // Keep for compatibility, but PlayerManager is authoritative
+let players = []; // Synkad med PlayerManager för challenge-systemet
 
 // Challenge System State
 let ischallengeMode = false;
@@ -687,7 +688,12 @@ async function startChallengeGame() {
         if (window.PlayerManager) {
             const playerName = window.PlayerManager.getPlayerName() || 'Du';
             window.PlayerManager.initializePlayers(1, [playerName]);
-            console.log('Challenge accept: Initialized PlayerManager with player:', playerName);
+            
+            // Synka globala variabler för kompatibilitet
+            players = window.PlayerManager.getPlayers();
+            currentPlayer = players[0];
+            window.currentPlayer = currentPlayer; // För bakåtkompatibilitet
+            console.log('Challenge accept: Synced global vars - player:', currentPlayer.name);
         }
         
         questionsToPlay = challengeQuestions;
@@ -883,12 +889,19 @@ function endSinglePlayerQuestion(pointsToAdd) {
 }
 
 async function endSinglePlayerGame() {
+    console.log('🔥 ENDGAME DEBUG: endSinglePlayerGame anropad');
+    console.log('🔥 ischallengeMode:', window.ischallengeMode);
+    console.log('🔥 challengeId:', window.challengeId);
+    console.log('🔥 ChallengeSystem exists:', !!window.ChallengeSystem);
+    
     UI?.hideGameScreen();
     
     // If this is challenge creation mode, complete the challenge
     if (window.ChallengeSystem && window.ischallengeMode && !window.challengeId) {
+        console.log('🔥 ENTERING CHALLENGE CREATION MODE');
         try {
-            await window.ChallengeSystem.completeChallenge();
+            const result = await window.ChallengeSystem.completeChallenge();
+            console.log('🔥 ChallengeSystem.completeChallenge result:', result);
         } catch (error) {
             console.error('Failed to complete challenge:', error);
             UI?.showError('Kunde inte skapa utmaning. Försök igen.');
@@ -907,36 +920,60 @@ async function endSinglePlayerGame() {
     }
     // If this is accepting a challenge
     else if (ischallengeMode && window.challengeId) {
+        console.log('🔥 ENTERING CHALLENGE ACCEPTANCE MODE');
+        console.log('🔥 challengeId:', window.challengeId);
         try {
+            // Säkerställ att globala variabler är synkade
+            const player = window.PlayerManager?.getCurrentPlayer();
+            console.log('🔥 PlayerManager.getCurrentPlayer():', player);
+            if (player) {
+                currentPlayer = player;
+                players = window.PlayerManager.getPlayers();
+            }
+            
+            const playerName = player?.name || currentPlayer?.name || 'Unknown';
+            const playerScore = player?.score || 0;
+            console.log('🔥 Final playerName:', playerName, 'score:', playerScore);
+            
             await FirebaseAPI.completeChallenge(
                 window.challengeId,
-                currentPlayer.name,
-                players[0].score,
+                playerName,
+                playerScore,
                 challengeQuestionScores
             );
+            console.log('🔥 FirebaseAPI.completeChallenge SUCCESS');
             
             // Save to localStorage
             const challengeInfo = {
                 id: window.challengeId,
                 role: 'opponent',
-                playerName: currentPlayer.name,
+                playerName: playerName,
                 completedAt: new Date().toISOString(),
                 hasSeenResult: true,
-                totalScore: players[0].score,
+                totalScore: playerScore,
                 questionScores: challengeQuestionScores
             };
             localStorage.setItem(`challenge_${window.challengeId}`, JSON.stringify(challengeInfo));
             
             // Show result comparison view
-            showChallengeResultView(window.challengeId);
+            console.log('🔥 Calling ChallengeSystem.showChallengeResultView');
+            await window.ChallengeSystem.showChallengeResultView(window.challengeId);
+            console.log('🔥 ChallengeSystem.showChallengeResultView SUCCESS');
             
         } catch (error) {
             console.error('Failed to complete challenge:', error);
             UI?.showError('Kunde inte spara resultat. Försök igen.');
             UI?.showEndScreen();
-            singlePlayerFinal.classList.remove('hidden');
-            finalScoreboard.classList.add('hidden');
-            UI?.setFinalScore(players[0].score);
+            
+            // Använd PlayerManager för säker score-hämtning
+            const player = window.PlayerManager?.getCurrentPlayer();
+            const errorFallbackScore = player?.score || 0;
+            
+            const singlePlayerFinal = UI?.get('singlePlayerFinal');
+            const finalScoreboard = UI?.get('finalScoreboard');
+            if (singlePlayerFinal) singlePlayerFinal.classList.remove('hidden');
+            if (finalScoreboard) finalScoreboard.classList.add('hidden');
+            UI?.setFinalScore(errorFallbackScore);
         }
     }
     // Normal single player mode
@@ -1078,6 +1115,11 @@ async function initializeGame() {
     // Setup unified UI
     if (window.PlayerManager) {
         UI?.updatePlayerDisplay();
+        
+        // Synka globala variabler för kompatibilitet
+        players = window.PlayerManager.getPlayers();
+        currentPlayer = players[0] || null;
+        window.currentPlayer = currentPlayer; // För bakåtkompatibilitet
     }
     
     // Load first question using GameController if available
@@ -1154,8 +1196,16 @@ function setDifficultyBadge(difficulty) {
 }
 
 function loadQuestion() {
+    console.log('🚀🚀🚀 UPDATED GAME.JS loadQuestion() KÖRS NU! 🚀🚀🚀');
     userOrder = [];
     // Reset all players' active state for new question
+    
+    // Synka globala variabler för kompatibilitet (när anropad från challenges)
+    if (window.PlayerManager && ischallengeMode) {
+        players = window.PlayerManager.getPlayers();
+        currentPlayer = players[0] || null;
+        window.currentPlayer = currentPlayer;
+    }
     
     // Hide any existing explanation
     hideExplanation();
@@ -1198,15 +1248,18 @@ function loadQuestion() {
     
     // Check if game should end - use window.questionsToPlay if available
     const questions = window.questionsToPlay || questionsToPlay;
-    console.log('Debug loadQuestion: currentQuestionIndex:', currentQuestionIndex);
-    console.log('Debug loadQuestion: questions.length:', questions?.length);
-    console.log('Debug loadQuestion: local questionsToPlay.length:', questionsToPlay?.length);
-    console.log('Debug loadQuestion: window.questionsToPlay.length:', window.questionsToPlay?.length);
+    console.log('🟢 GAME.JS loadQuestion: currentQuestionIndex =', currentQuestionIndex);
+    console.log('🟢 GAME.JS loadQuestion: questions.length =', questions.length);
+    console.log('🟢 GAME.JS loadQuestion: Should end?', currentQuestionIndex >= questions.length);
+    
     if (currentQuestionIndex >= questions.length) {
-        console.log('Debug loadQuestion: Ending game - no more questions');
+        console.log('🟢 GAME.JS: Game should end');
+        console.log('🟢 isSinglePlayerMode():', window.PlayerManager?.isSinglePlayerMode());
         if (window.PlayerManager?.isSinglePlayerMode()) {
+            console.log('🟢 GAME.JS: Calling endSinglePlayerGame()');
             endSinglePlayerGame();
         } else {
+            console.log('🟢 GAME.JS: Calling endGame()');
             endGame();
         }
         return;
@@ -1838,6 +1891,7 @@ function initializeEventListeners() {
 
 // Event listeners removed - now in eventHandlers.js
 // UI waiting functionality moved to App.js module
+
 
 // App initialization functions removed - now handled by App.js module
 // App initialization now handled exclusively by App.js module

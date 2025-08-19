@@ -85,8 +85,13 @@ class GameController {
     
     // Load and display current question
     loadQuestion() {
+        console.log('🟡 GAMECONTROLLER.loadQuestion() körs');
+        console.log('🟡 currentQuestionIndex:', this.currentQuestionIndex);
+        console.log('🟡 questionsToPlay.length:', this.questionsToPlay.length);
+        
         // Check if game should end
         if (this.currentQuestionIndex >= this.questionsToPlay.length) {
+            console.log('🟡 GAMECONTROLLER: Calling this.endGame()');
             this.endGame();
             return;
         }
@@ -408,10 +413,14 @@ class GameController {
     
     // End single player game
     endSinglePlayerGame() {
+        console.log('🚨 GAMECONTROLLER.endSinglePlayerGame anropad - DETTA ÄR FEL FÖR CHALLENGES!');
+        console.log('🚨 ischallengeMode:', window.ischallengeMode);
+        console.log('🚨 challengeId:', window.challengeId);
+        
         const player = window.PlayerManager?.getPlayers()[0];
         if (!player) return;
         
-        // Show result screen
+        // Normal single player end screen - challenges handled by game.js
         if (window.UI) {
             UI.showScreen('endScreen');
             const singlePlayerFinal = UI.get('singlePlayerFinal');
