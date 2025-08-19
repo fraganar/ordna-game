@@ -40,7 +40,9 @@ class App {
             }
             
             // Load my challenges (but don't show notifications automatically)
-            this.loadMyChallenges();
+            if (window.ChallengeSystem) {
+                await window.ChallengeSystem.loadMyChallenges();
+            }
             
             this.initialized = true;
             console.log('Ordna Game initialized successfully!');
@@ -146,8 +148,6 @@ class App {
         
         if (challengeParam && window.ChallengeSystem) {
             try {
-                console.log('=== CHALLENGE URL DETECTED ===');
-                console.log('Challenge ID from URL:', challengeParam);
                 console.log('ChallengeSystem available:', !!window.ChallengeSystem);
                 console.log('ChallengeSystem.loadChallenge type:', typeof window.ChallengeSystem.loadChallenge);
                 console.log('ChallengeSystem methods:', Object.getOwnPropertyNames(window.ChallengeSystem));
@@ -187,46 +187,12 @@ class App {
         }
     }
     
-    // Load user's challenges
-    loadMyChallenges() {
-        if (!window.ChallengeSystem) return;
-        
-        const challenges = window.ChallengeSystem ? window.ChallengeSystem.getMyChallenges() : [];
-        if (challenges.length === 0) return;
-        
-        // Show my challenges section
-        const section = document.getElementById('my-challenges-section');
-        const list = document.getElementById('my-challenges-list');
-        
-        if (section && list) {
-            section.classList.remove('hidden');
-            list.innerHTML = '';
-            
-            challenges.forEach(challenge => {
-                const item = document.createElement('div');
-                item.className = 'challenge-item p-2 bg-slate-50 rounded flex justify-between items-center';
-                
-                const statusText = challenge.status === 'waiting' ? '⏳ Väntar på svar' :
-                                  challenge.status === 'completed' ? '✅ Avslutad' : '❓ Okänd';
-                
-                item.innerHTML = `
-                    <span class="text-sm">vs ${challenge.opponentName || 'Väntar...'}</span>
-                    <span class="text-xs text-slate-500">${statusText}</span>
-                `;
-                
-                list.appendChild(item);
-            });
-        }
-    }
     
     // Show challenge accept screen
     showChallengeAcceptScreen() {
-        console.log('=== SHOWING CHALLENGE ACCEPT SCREEN ===');
         const challengeData = window.ChallengeSystem?.challengeData;
-        console.log('Challenge data:', challengeData);
         
         if (!challengeData) {
-            console.warn('No challenge data available - cannot show accept screen');
             return;
         }
         

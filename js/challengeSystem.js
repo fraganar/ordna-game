@@ -103,18 +103,13 @@ class ChallengeSystem {
     
     // Complete challenge (when game ends) - MOVED from game.js endGame()
     async completeChallenge() {
-        console.log('🔥 ChallengeSystem.completeChallenge ENTRY');
-        console.log('🔥 window.ischallengeMode:', window.ischallengeMode);
-        console.log('🔥 window.challengeId:', window.challengeId);
         
         if (!window.ischallengeMode) {
-            console.log('🔥 EARLY RETURN: Not in challenge mode');
             return; // Not in challenge mode at all
         }
         
         // Handle CHALLENGER mode (creating new challenge)
         if (!window.challengeId) {
-            console.log('🔥 CHALLENGER MODE: Creating new challenge');
         
         try {
             // Get final score from PlayerManager
@@ -152,9 +147,7 @@ class ChallengeSystem {
             localStorage.setItem(`challenge_${newChallengeId}`, JSON.stringify(challengeInfo));
             
             // Show waiting for opponent view
-            console.log('🔥 Calling showWaitingForOpponentView with ID:', newChallengeId);
             this.showWaitingForOpponentView(newChallengeId);
-            console.log('🔥 CHALLENGER MODE SUCCESS');
             
             return newChallengeId;
         } catch (error) {
@@ -163,7 +156,6 @@ class ChallengeSystem {
         }
         } else {
             // Handle OPPONENT mode (accepting existing challenge)
-            console.log('🔥 OPPONENT MODE: Letting game.js handle completion');
             return false; // Let game.js handle opponent completion
         }
     }

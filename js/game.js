@@ -511,138 +511,14 @@ function showError(message) {
 
 
 // Show challenge result comparison view
-async function showChallengeResultView(challengeId) {
-    try {
-        // Get challenge data from Firebase
-        const challenge = await FirebaseAPI.getChallenge(challengeId);
-        
-        if (!challenge) {
-            throw new Error('Challenge not found');
-        }
-        
-        const isChallenger = challenge.challenger.name === currentPlayer.name;
-        const myData = isChallenger ? challenge.challenger : challenge.opponent;
-        const opponentData = isChallenger ? challenge.opponent : challenge.challenger;
-        
-        // Create result view HTML
-        const resultHTML = `
-            <div class="p-6 sm:p-8 lg:p-12">
-                <h2 class="text-2xl sm:text-3xl font-bold text-slate-900 mb-6 text-center">Utmaning avslutad!</h2>
-                
-                <div class="grid grid-cols-2 gap-4 mb-6">
-                    <div class="text-center">
-                        <h3 class="font-bold text-lg mb-2">${myData.name}</h3>
-                        <p class="text-3xl font-bold ${myData.totalScore > opponentData.totalScore ? 'text-green-600' : 'text-slate-600'}">${myData.totalScore} p</p>
-                        <div class="mt-2 text-sm text-slate-500">
-                            ${myData.questionScores.map((score, i) => `F${i+1}: ${score}p`).join(' | ')}
-                        </div>
-                    </div>
-                    <div class="text-center">
-                        <h3 class="font-bold text-lg mb-2">${opponentData.name}</h3>
-                        <p class="text-3xl font-bold ${opponentData.totalScore > myData.totalScore ? 'text-green-600' : 'text-slate-600'}">${opponentData.totalScore} p</p>
-                        <div class="mt-2 text-sm text-slate-500">
-                            ${opponentData.questionScores.map((score, i) => `F${i+1}: ${score}p`).join(' | ')}
-                        </div>
-                    </div>
-                </div>
-                
-                <div class="bg-slate-100 rounded-lg p-4 mb-6 text-center">
-                    ${myData.totalScore > opponentData.totalScore ? 
-                        '<p class="text-xl font-bold text-green-600">🎉 Du vann!</p>' :
-                        myData.totalScore < opponentData.totalScore ?
-                        '<p class="text-xl font-bold text-red-600">Du förlorade!</p>' :
-                        '<p class="text-xl font-bold text-blue-600">Oavgjort!</p>'
-                    }
-                </div>
-                
-                <button id="new-challenge-btn" class="w-full bg-blue-600 text-white font-bold py-3 px-6 rounded-lg text-lg hover:bg-blue-700 transition-colors mb-3">
-                    Revansch!
-                </button>
-                
-                <button id="back-to-start-result" class="w-full bg-slate-200 text-slate-800 font-bold py-3 px-6 rounded-lg text-lg hover:bg-slate-300 transition-colors">
-                    Tillbaka till start
-                </button>
-            </div>
-        `;
-        
-        endScreen.innerHTML = resultHTML;
-        endScreen.classList.remove('hidden');
-        
-        // Update localStorage to mark as seen
-        const storedChallenge = localStorage.getItem(`challenge_${challengeId}`);
-        if (storedChallenge) {
-            const challengeInfo = JSON.parse(storedChallenge);
-            challengeInfo.hasSeenResult = true;
-            localStorage.setItem(`challenge_${challengeId}`, JSON.stringify(challengeInfo));
-        }
-        
-        // Add event listeners
-        document.getElementById('new-challenge-btn').addEventListener('click', () => {
-            restartGame();
-            showChallengeFormBtn.click();
-        });
-        
-        document.getElementById('back-to-start-result').addEventListener('click', () => {
-            // Go directly to start screen without showing end screen
-            stopChallengePolling();
-            
-            // Hide all screens first
-            const gameScreen = UI?.get('gameScreen');
-    if (gameScreen) gameScreen.classList.add('hidden');
-            endScreen.classList.add('hidden');
-            playerSetup.classList.add('hidden');
-            challengeForm.classList.add('hidden');
-            
-            // Show start screen
-            startScreen.classList.remove('hidden');
-            startMain.classList.remove('hidden');
-            
-            // Reset game state
-            if (window.ChallengeSystem) {
-            window.ChallengeSystem.reset();
-        }
-            
-            // Reload my challenges
-            if (window.ChallengeSystem) {
-                window.ChallengeSystem.loadMyChallenges();
-            }
-        });
-        
-    } catch (error) {
-        console.error('Failed to show challenge result:', error);
-        showError('Kunde inte ladda resultat');
-        restartGame();
-    }
-}
 
-// Check challenge status
-async function checkChallengeStatus(challengeId) {
-    try {
-        const challenge = await FirebaseAPI.getChallenge(challengeId);
-        
-        if (challenge && challenge.status === 'complete') {
-            // Stop polling
-            stopChallengePolling();
-            // Show result view
-            showChallengeResultView(challengeId);
-        } else {
-            // Show status message
-            UI?.updateStatusButton('Väntar fortfarande...', 'Kolla status');
-        }
-    } catch (error) {
-        console.error('Failed to check challenge status:', error);
-    }
-}
 
 // Start challenge game for opponent
 async function startChallengeGame() {
     try {
-        console.log('=== CHALLENGE ACCEPT START ===');
-        console.log('Challenge ID from window:', window.challengeId);
         
         // Get challenge data
         challengeData = await FirebaseAPI.getChallenge(window.challengeId);
-        console.log('Challenge data received:', challengeData);
         
         if (!challengeData) {
             throw new Error('Challenge not found');
@@ -650,18 +526,15 @@ async function startChallengeGame() {
         
         // Check if challenge is expired
         const expiresDate = challengeData.expires.toDate ? challengeData.expires.toDate() : new Date(challengeData.expires);
-        console.log('Challenge expires:', expiresDate);
         if (expiresDate < new Date()) {
             throw new Error('Challenge has expired');
         }
         
         // Check if already completed by this player
         const storedChallenge = localStorage.getItem(`challenge_${window.challengeId}`);
-        console.log('Stored challenge check:', storedChallenge);
         if (storedChallenge) {
             const info = JSON.parse(storedChallenge);
             if (info.role === 'opponent') {
-                console.log('Player already played this challenge');
                 UI?.showError('Du har redan spelat denna utmaning');
                 showChallengeResultView(window.challengeId);
                 return;
@@ -684,7 +557,6 @@ async function startChallengeGame() {
             window.ChallengeSystem.isChallengeMode = true;
             window.ChallengeSystem.challengeId = window.challengeId;
             window.ChallengeSystem.challengeData = challengeData;
-            console.log('Challenge accept: Set ischallengeMode = true, synced ChallengeSystem state');
         }
         
         
@@ -697,7 +569,6 @@ async function startChallengeGame() {
             players = window.PlayerManager.getPlayers();
             currentPlayer = players[0];
             window.currentPlayer = currentPlayer; // För bakåtkompatibilitet
-            console.log('Challenge accept: Synced global vars - player:', currentPlayer.name);
         }
         
         questionsToPlay = challengeQuestions;
@@ -738,43 +609,6 @@ async function startChallengeGame() {
 }
 
 // Polling mechanism
-let pollingInterval = null;
-let pollingCount = 0;
-
-function startChallengePolling(challengeId) {
-    // Stop any existing polling
-    stopChallengePolling();
-    
-    // Start with 10 second interval
-    let currentInterval = 10000;
-    
-    const poll = async () => {
-        pollingCount++;
-        
-        // Increase interval after 5 minutes (30 polls at 10s)
-        if (pollingCount > 30) {
-            currentInterval = 60000; // 60 seconds
-            stopChallengePolling();
-            pollingInterval = setInterval(poll, currentInterval);
-        }
-        
-        await checkChallengeStatus(challengeId);
-    };
-    
-    // Start polling
-    pollingInterval = setInterval(poll, currentInterval);
-    
-    // Also check immediately
-    checkChallengeStatus(challengeId);
-}
-
-function stopChallengePolling() {
-    if (pollingInterval) {
-        clearInterval(pollingInterval);
-        pollingInterval = null;
-    }
-    pollingCount = 0;
-}
 
 // Show result screen for regular games (pack and standard)
 function showGameResultScreen(score, gameType, totalQuestions) {
@@ -893,19 +727,13 @@ function endSinglePlayerQuestion(pointsToAdd) {
 }
 
 async function endSinglePlayerGame() {
-    console.log('🔥 ENDGAME DEBUG: endSinglePlayerGame anropad');
-    console.log('🔥 ischallengeMode:', window.ischallengeMode);
-    console.log('🔥 challengeId:', window.challengeId);
-    console.log('🔥 ChallengeSystem exists:', !!window.ChallengeSystem);
     
     UI?.hideGameScreen();
     
     // If this is challenge creation mode, complete the challenge
     if (window.ChallengeSystem && window.ischallengeMode && !window.challengeId) {
-        console.log('🔥 ENTERING CHALLENGE CREATION MODE');
         try {
             const result = await window.ChallengeSystem.completeChallenge();
-            console.log('🔥 ChallengeSystem.completeChallenge result:', result);
         } catch (error) {
             console.error('Failed to complete challenge:', error);
             UI?.showError('Kunde inte skapa utmaning. Försök igen.');
@@ -924,12 +752,9 @@ async function endSinglePlayerGame() {
     }
     // If this is accepting a challenge
     else if (ischallengeMode && window.challengeId) {
-        console.log('🔥 ENTERING CHALLENGE ACCEPTANCE MODE');
-        console.log('🔥 challengeId:', window.challengeId);
         try {
             // Säkerställ att globala variabler är synkade
             const player = window.PlayerManager?.getCurrentPlayer();
-            console.log('🔥 PlayerManager.getCurrentPlayer():', player);
             if (player) {
                 currentPlayer = player;
                 players = window.PlayerManager.getPlayers();
@@ -937,7 +762,6 @@ async function endSinglePlayerGame() {
             
             const playerName = player?.name || currentPlayer?.name || 'Unknown';
             const playerScore = player?.score || 0;
-            console.log('🔥 Final playerName:', playerName, 'score:', playerScore);
             
             await FirebaseAPI.completeChallenge(
                 window.challengeId,
@@ -945,7 +769,6 @@ async function endSinglePlayerGame() {
                 playerScore,
                 challengeQuestionScores
             );
-            console.log('🔥 FirebaseAPI.completeChallenge SUCCESS');
             
             // Save to localStorage
             const challengeInfo = {
@@ -960,9 +783,7 @@ async function endSinglePlayerGame() {
             localStorage.setItem(`challenge_${window.challengeId}`, JSON.stringify(challengeInfo));
             
             // Show result comparison view
-            console.log('🔥 Calling ChallengeSystem.showChallengeResultView');
             await window.ChallengeSystem.showChallengeResultView(window.challengeId);
-            console.log('🔥 ChallengeSystem.showChallengeResultView SUCCESS');
             
         } catch (error) {
             console.error('Failed to complete challenge:', error);
@@ -982,9 +803,6 @@ async function endSinglePlayerGame() {
     }
     // Normal single player mode
     else {
-        console.log('🟠 NORMAL SINGLE PLAYER MODE (not challenge)');
-        console.log('🟠 ischallengeMode:', ischallengeMode);
-        console.log('🟠 window.challengeId:', window.challengeId);
         
         // Hide game screen first
         UI?.hideGameScreen();
@@ -1005,24 +823,18 @@ async function endSinglePlayerGame() {
 
 // Populate pack selection dropdown
 function populatePackSelect() {
-    console.log('populatePackSelect called');
     // Use GameData if available, otherwise fall back to old method
     if (window.GameData && GameData.packMetadata) {
-        console.log('Using GameData.populatePackSelectors');
         GameData.populatePackSelectors();
     } else {
-        console.log('Using fallback method, GameData available:', !!window.GameData, 'packMetadata available:', !!(window.GameData && GameData.packMetadata));
         // Fallback to old method
         const packSelect = UI?.get('packSelect');
         const challengePackSelect = UI?.get('challengePackSelect');
         const selects = [packSelect, challengePackSelect];
         
-        console.log('Found selects:', selects.map(s => s ? s.id : 'null'));
-        console.log('questionPacks:', questionPacks);
         
         selects.forEach(select => {
             if (select) {
-                console.log('Populating select:', select.id);
                 select.innerHTML = '';
                 
                 questionPacks.forEach(pack => {
@@ -1067,12 +879,8 @@ async function initializeGame() {
     if (playerCount === 1) {
         // Check if name input has a value (for challenge mode), otherwise use 'Du'
         const firstNameInput = nameInputs[0];
-        console.log('initializeGame debug: firstNameInput found:', !!firstNameInput);
-        console.log('initializeGame debug: firstNameInput.value:', firstNameInput?.value);
-        console.log('initializeGame debug: firstNameInput.value.trim():', firstNameInput?.value?.trim());
         const playerName = firstNameInput?.value?.trim() || 'Du';
         playerNames.push(playerName);
-        console.log('Single player mode: Using player name:', playerName);
     } else {
         nameInputs.forEach((input, index) => {
             playerNames.push(input.value || `Spelare ${index + 1}`);
@@ -1203,7 +1011,6 @@ function setDifficultyBadge(difficulty) {
 }
 
 function loadQuestion() {
-    console.log('🚀🚀🚀 UPDATED GAME.JS loadQuestion() KÖRS NU! 🚀🚀🚀');
     userOrder = [];
     // Reset all players' active state for new question
     
@@ -1255,7 +1062,6 @@ function loadQuestion() {
     
     // Check if game should end - use window.questionsToPlay if available
     const questions = window.questionsToPlay || questionsToPlay;
-    console.log('🟢 GAME.JS loadQuestion: currentQuestionIndex =', currentQuestionIndex);
     console.log('🟢 GAME.JS loadQuestion: questions.length =', questions.length);
     console.log('🟢 GAME.JS loadQuestion: Should end?', currentQuestionIndex >= questions.length);
     

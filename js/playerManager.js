@@ -109,7 +109,6 @@ class PlayerManager {
         // Use provided questionIndex or fallback to global variable
         const actualQuestionIndex = questionIndex !== null ? questionIndex : window.currentQuestionIndex;
         
-        console.log(`DEBUG: addPointToCurrentPlayer called - questionIndex: ${actualQuestionIndex}, challengeMode: ${window.ischallengeMode}`);
         
         currentPlayer.roundPot++;
         

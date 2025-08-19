@@ -234,14 +234,11 @@ class UIRenderer {
         }
         
         if (grid.dataset.answersShown === 'true') {
-            console.log('DEBUG: Answers already shown, skipping');
             return;
         }
         
         const correctOptions = question.tillhör_index.map(i => question.alternativ[i]);
-        console.log('DEBUG correctOptions:', correctOptions);
         const containers = grid.querySelectorAll('.belongs-option-container');
-        console.log('DEBUG found containers:', containers.length);
 
         containers.forEach(container => {
             if (!container.dataset.decided || container.dataset.decided !== 'true') {
@@ -271,7 +268,6 @@ class UIRenderer {
         
         // Mark as processed to prevent multiple calls
         grid.dataset.answersShown = 'true';
-        console.log('DEBUG: Set answersShown flag');
     }
     
     // Show correct answers for order questions - UPDATED from game.js (ID:11)
