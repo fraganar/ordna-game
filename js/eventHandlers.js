@@ -147,7 +147,9 @@ async function handleSavePlayerName() {
     const name = playerNameInput?.value.trim();
     if (!name) return;
     
-    setPlayerName(name);
+    if (window.PlayerManager) {
+        window.PlayerManager.setPlayerName(name);
+    }
     if (playerNameSetup) playerNameSetup.classList.add('hidden');
     
     // Check if user was trying to create a challenge
