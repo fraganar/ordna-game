@@ -630,13 +630,18 @@ class ChallengeSystem {
                 throw new Error('Challenge not found');
             }
             
-            const currentPlayerName = window.PlayerManager?.getPlayerName() || window.currentPlayer?.name;
-            console.log('DEBUG: showChallengeResultView - currentPlayerName:', currentPlayerName);
-            console.log('DEBUG: showChallengeResultView - challenge.challenger.name:', challenge.challenger.name);
-            console.log('DEBUG: showChallengeResultView - challenge.opponent?.name:', challenge.opponent?.name);
+            // Use role-based identification instead of name matching
+            const storedChallenge = localStorage.getItem(`challenge_${challengeId}`);
+            const challengeInfo = storedChallenge ? JSON.parse(storedChallenge) : null;
             
-            const isChallenger = challenge.challenger.name === currentPlayerName;
-            console.log('DEBUG: showChallengeResultView - isChallenger:', isChallenger);
+            // Determine role from localStorage (more reliable than name matching)
+            const isChallenger = challengeInfo?.role === 'challenger';
+            
+            console.log('DEBUG: Using role-based identification');
+            console.log('DEBUG: storedChallenge role:', challengeInfo?.role);
+            console.log('DEBUG: isChallenger:', isChallenger);
+            console.log('DEBUG: challenge.challenger.name:', challenge.challenger.name);
+            console.log('DEBUG: challenge.opponent?.name:', challenge.opponent?.name);
             
             const myData = isChallenger ? challenge.challenger : challenge.opponent;
             const opponentData = isChallenger ? challenge.opponent : challenge.challenger;
