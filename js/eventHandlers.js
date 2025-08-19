@@ -125,7 +125,7 @@ function initializeAllEventListeners() {
     
     const acceptChallengeBtn = UI.get('acceptChallengeBtn');
     if (acceptChallengeBtn) {
-        acceptChallengeBtn.addEventListener('click', startChallengeGame);
+        acceptChallengeBtn.addEventListener('click', handleAcceptChallenge);
     }
     
     const declineChallengeBtn = UI.get('declineChallengeBtn');
@@ -163,6 +163,12 @@ async function handleSavePlayerName() {
         if (challengeSuccess) challengeSuccess.classList.add('hidden');
         if (createChallengeBtn) createChallengeBtn.classList.remove('hidden');
     }
+    // Check if user was trying to accept a challenge
+    else if (window.pendingChallengeAccept) {
+        window.pendingChallengeAccept = false;
+        // Start the challenge with opponent's name now set
+        startChallengeGame();
+    }
     // Check if there's a pending challenge to accept
     else if (localStorage.getItem('pendingChallenge')) {
         const pendingChallenge = localStorage.getItem('pendingChallenge');
@@ -176,6 +182,27 @@ async function handleSavePlayerName() {
         if (startMain) startMain.classList.remove('hidden');
         if (challengerNameDisplay) challengerNameDisplay.textContent = name;
     }
+}
+
+function handleAcceptChallenge() {
+    // Check if opponent has a name set
+    const opponentName = window.PlayerManager ? window.PlayerManager.getPlayerName() : null;
+    if (!opponentName) {
+        // Show name setup for opponent
+        const challengeAccept = UI.get('challengeAccept');
+        const playerNameSetup = UI.get('playerNameSetup');
+        
+        if (challengeAccept) challengeAccept.classList.add('hidden');
+        if (playerNameSetup) {
+            playerNameSetup.classList.remove('hidden');
+            // Set flag so we know to start challenge after name input
+            window.pendingChallengeAccept = true;
+        }
+        return;
+    }
+    
+    // Opponent has name, start challenge directly
+    startChallengeGame();
 }
 
 function handleShowChallengeForm() {

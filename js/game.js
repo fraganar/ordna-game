@@ -414,7 +414,7 @@ async function showChallengeAcceptScreen() {
         // Get challenge details from Firebase
         challengeData = await FirebaseAPI.getChallenge(window.challengeId);
         
-        UI?.setChallengerDisplayName(challengeData.challengerName);
+        UI?.setChallengerDisplayName(challengeData.challenger?.name || 'Någon');
         
         const startMain = UI.get('startMain');
         const playerSetup = UI.get('playerSetup');

@@ -631,9 +631,18 @@ class ChallengeSystem {
             }
             
             const currentPlayerName = window.PlayerManager?.getPlayerName() || window.currentPlayer?.name;
+            console.log('DEBUG: showChallengeResultView - currentPlayerName:', currentPlayerName);
+            console.log('DEBUG: showChallengeResultView - challenge.challenger.name:', challenge.challenger.name);
+            console.log('DEBUG: showChallengeResultView - challenge.opponent?.name:', challenge.opponent?.name);
+            
             const isChallenger = challenge.challenger.name === currentPlayerName;
+            console.log('DEBUG: showChallengeResultView - isChallenger:', isChallenger);
+            
             const myData = isChallenger ? challenge.challenger : challenge.opponent;
             const opponentData = isChallenger ? challenge.opponent : challenge.challenger;
+            
+            console.log('DEBUG: showChallengeResultView - myData:', myData);
+            console.log('DEBUG: showChallengeResultView - opponentData:', opponentData);
             
             // Create result view HTML
             const resultHTML = `

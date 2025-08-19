@@ -148,17 +148,12 @@ class App {
         
         if (challengeParam && window.ChallengeSystem) {
             try {
-                console.log('ChallengeSystem available:', !!window.ChallengeSystem);
-                console.log('ChallengeSystem.loadChallenge type:', typeof window.ChallengeSystem.loadChallenge);
-                console.log('ChallengeSystem methods:', Object.getOwnPropertyNames(window.ChallengeSystem));
                 
                 // Set global challengeId for game.js compatibility
                 window.challengeId = challengeParam;
-                console.log('Set window.challengeId:', window.challengeId);
                 
                 // Load challenge data
                 await window.ChallengeSystem.loadChallenge(challengeParam);
-                console.log('Challenge data loaded successfully');
                 
                 // Show challenge accept screen
                 this.showChallengeAcceptScreen();
@@ -197,10 +192,8 @@ class App {
         }
         
         const challengerDisplayName = UI?.get('challengerDisplayName');
-        console.log('challengerDisplayName element:', challengerDisplayName);
         if (challengerDisplayName && challengeData.challenger) {
             challengerDisplayName.textContent = challengeData.challenger.name;
-            console.log('Set challenger name to:', challengeData.challenger.name);
         }
         
         // Hide other screens and show challenge accept
@@ -209,19 +202,12 @@ class App {
         const challengeForm = UI?.get('challengeForm');
         const challengeAccept = UI?.get('challengeAccept');
         
-        console.log('UI elements:', {
-            startMain: !!startMain,
-            playerSetup: !!playerSetup, 
-            challengeForm: !!challengeForm,
-            challengeAccept: !!challengeAccept
-        });
         
         if (startMain) startMain.classList.add('hidden');
         if (playerSetup) playerSetup.classList.add('hidden');
         if (challengeForm) challengeForm.classList.add('hidden');
         if (challengeAccept) {
             challengeAccept.classList.remove('hidden');
-            console.log('Challenge accept screen should now be visible');
         } else {
             console.error('challengeAccept element not found - cannot show challenge accept screen');
         }
