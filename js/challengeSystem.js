@@ -696,10 +696,8 @@ class ChallengeSystem {
                 endScreen.classList.remove('hidden');
             }
             
-            // Update localStorage to mark as seen
-            const storedChallenge = localStorage.getItem(`challenge_${challengeId}`);
-            if (storedChallenge) {
-                const challengeInfo = JSON.parse(storedChallenge);
+            // Update localStorage to mark as seen (reuse existing challengeInfo)
+            if (challengeInfo) {
                 challengeInfo.hasSeenResult = true;
                 localStorage.setItem(`challenge_${challengeId}`, JSON.stringify(challengeInfo));
             }
