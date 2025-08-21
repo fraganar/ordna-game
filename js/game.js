@@ -320,7 +320,7 @@ function determineNextAction() {
                 }
                 
                 // Re-enable options for new player
-                setAllOptionsDisabled(false);
+                UI?.setAllOptionsDisabled(false);
             }
         } else {
             determineNextAction(); // Re-evaluate
@@ -1648,63 +1648,8 @@ function createPlayerInputs() {
     }
 }
 
-// Event listeners moved to eventHandlers.js
-// Legacy function kept for compatibility
-function initializeEventListeners() {
-    const showPlayerSetupBtn = UI.get('showPlayerSetupBtn');
-    const playerCountSelect = UI.get('playerCountSelect');
-    const startGameBtn = UI.get('startGameBtn');
-    const restartBtn = UI.get('restartBtn');
-    const stopBtn = UI.get('stopBtn');
-    const stopSide = UI.get('stopSide');
-    const nextSide = UI.get('nextSide');
-    const nextQuestionBtn = UI.get('nextQuestionBtn');
-    const largeNextQuestionBtn = UI.get('largeNextQuestionBtn');
-    const openPackShopBtn = UI.get('openPackShopBtn');
-    const closePackShopBtn = UI.get('closePackShopBtn');
-    const confirmPacksBtn = UI.get('confirmPacksBtn');
-    
-    if (showPlayerSetupBtn) showPlayerSetupBtn.addEventListener('click', showPlayerSetup);
-    if (playerCountSelect) playerCountSelect.addEventListener('change', createPlayerInputs);
-    if (startGameBtn) startGameBtn.addEventListener('click', initializeGame);
-    if (restartBtn) restartBtn.addEventListener('click', restartGame);
-    if (stopBtn) stopBtn.addEventListener('click', playerStops);
-    
-    // New decision button event handlers
-    if (stopSide) stopSide.addEventListener('click', playerStops);
-    if (nextSide) {
-        nextSide.addEventListener('click', () => {
-            currentQuestionIndex++;
-            window.currentQuestionIndex = currentQuestionIndex; // Sync global variable
-            loadQuestion();
-        });
-    }
-    
-    if (nextQuestionBtn) {
-        nextQuestionBtn.addEventListener('click', () => {
-            currentQuestionIndex++;
-            window.currentQuestionIndex = currentQuestionIndex; // Sync global variable
-            loadQuestion();
-        });
-    }
-    
-    if (largeNextQuestionBtn) {
-        largeNextQuestionBtn.addEventListener('click', () => {
-            currentQuestionIndex++;
-            window.currentQuestionIndex = currentQuestionIndex; // Sync global variable
-            loadQuestion();
-        });
-    }
-    
-    // Pack Shop Listeners
-    if (openPackShopBtn) openPackShopBtn.addEventListener('click', openPackShop);
-    if (closePackShopBtn) closePackShopBtn.addEventListener('click', closePackShop);
-    if (confirmPacksBtn) confirmPacksBtn.addEventListener('click', closePackShop);
-}
+// Expose functions globally for gameController.js
+window.handleOrderClick = handleOrderClick;
+window.handleBelongsDecision = handleBelongsDecision;
 
-// Event listeners removed - now in eventHandlers.js
-// UI waiting functionality moved to App.js module
-
-
-// App initialization functions removed - now handled by App.js module
 // App initialization now handled exclusively by App.js module

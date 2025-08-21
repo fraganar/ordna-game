@@ -481,145 +481,6 @@ class ChallengeSystem {
         return date.toLocaleDateString('sv-SE');
     }
     
-    // Show waiting for opponent view (moved from game.js.backup)
-    showWaitingForOpponentView(challengeId) {
-        const challengeUrl = window.location.origin + window.location.pathname + 
-            '?challenge=' + challengeId;
-        
-        // Get player score from PlayerManager
-        const players = window.PlayerManager?.getPlayers() || [];
-        const playerScore = players[0]?.score || 0;
-        const playerName = window.PlayerManager?.getPlayerName() || 'Spelare';
-        
-        // Create waiting view HTML
-        const waitingHTML = `
-            <div class="p-6 sm:p-8 lg:p-12 text-center">
-                <h2 class="text-2xl sm:text-3xl font-bold text-slate-900 mb-6">Utmaning skapad!</h2>
-                <div class="bg-blue-50 border border-blue-200 rounded-lg p-4 mb-6">
-                    <p class="text-lg font-semibold text-blue-800 mb-2">Ditt resultat: ${playerScore} poäng</p>
-                    <p class="text-sm text-blue-600">Väntar på att din vän ska spela...</p>
-                </div>
-                
-                <div class="bg-slate-50 border border-slate-200 rounded-lg p-4 mb-6">
-                    <p class="text-sm text-slate-600 mb-3">Dela denna länk:</p>
-                    <div class="bg-white border border-slate-300 rounded p-2 mb-3">
-                        <input type="text" id="challenge-link-waiting" value="${challengeUrl}" readonly class="w-full text-xs text-gray-600 bg-transparent border-none outline-none">
-                    </div>
-                    <div class="flex space-x-2">
-                        <button id="copy-link-waiting" class="flex-1 bg-blue-600 text-white py-2 px-3 rounded text-sm hover:bg-blue-700">
-                            Kopiera länk
-                        </button>
-                        <button id="share-waiting" class="flex-1 bg-slate-600 text-white py-2 px-3 rounded text-sm hover:bg-slate-700">
-                            Dela
-                        </button>
-                    </div>
-                </div>
-                
-                <button id="check-status-btn" class="w-full bg-slate-600 text-white font-bold py-3 px-6 rounded-lg text-lg hover:bg-slate-700 transition-colors mb-4">
-                    Kolla status
-                </button>
-                
-                <button id="back-to-start-waiting" class="w-full bg-slate-200 text-slate-800 font-bold py-3 px-6 rounded-lg text-lg hover:bg-slate-300 transition-colors">
-                    Tillbaka till start
-                </button>
-            </div>
-        `;
-        
-        const endScreen = window.UI?.get('endScreen');
-        if (endScreen) {
-            endScreen.innerHTML = waitingHTML;
-            endScreen.classList.remove('hidden');
-        }
-        
-        // Add event listeners (copied from game.js.backup)
-        document.getElementById('copy-link-waiting').addEventListener('click', async () => {
-            const input = document.getElementById('challenge-link-waiting');
-            try {
-                await navigator.clipboard.writeText(input.value);
-                document.getElementById('copy-link-waiting').textContent = 'Kopierad!';
-                setTimeout(() => {
-                    document.getElementById('copy-link-waiting').textContent = 'Kopiera länk';
-                }, 2000);
-            } catch (err) {
-                input.select();
-                document.execCommand('copy');
-            }
-        });
-        
-        document.getElementById('share-waiting').addEventListener('click', async () => {
-            const shareText = `${playerName} utmanar dig i spelet Ordna!`;
-            
-            // Check if Web Share API is available (mobile and some desktop browsers)
-            if (navigator.share) {
-                try {
-                    await navigator.share({
-                        title: `${playerName} utmanar dig i spelet Ordna!`,
-                        text: `${shareText} ${challengeUrl}`
-                    });
-                } catch (err) {
-                    // User cancelled sharing - do nothing
-                    console.log('Delning avbruten');
-                }
-            } else {
-                // Desktop fallback - copy link with message
-                const fullMessage = `${shareText} ${challengeUrl}`;
-                try {
-                    await navigator.clipboard.writeText(fullMessage);
-                    const btn = document.getElementById('share-waiting');
-                    btn.innerHTML = '✓ Länk kopierad!';
-                    setTimeout(() => {
-                        btn.textContent = 'Dela';
-                    }, 2000);
-                } catch (err) {
-                    // Fallback for older browsers
-                    const input = document.getElementById('challenge-link-waiting');
-                    input.select();
-                    document.execCommand('copy');
-                    const btn = document.getElementById('share-waiting');
-                    btn.innerHTML = '✓ Länk kopierad!';
-                    setTimeout(() => {
-                        btn.textContent = 'Dela';
-                    }, 2000);
-                }
-            }
-        });
-        
-        document.getElementById('check-status-btn').addEventListener('click', async () => {
-            await this.checkChallengeStatus(challengeId);
-        });
-        
-        document.getElementById('back-to-start-waiting').addEventListener('click', () => {
-            // Go directly to start screen without showing end screen
-            this.stopChallengePolling();
-            
-            // Hide all screens first
-            const gameScreen = window.UI?.get('gameScreen');
-            const endScreen = window.UI?.get('endScreen');
-            const playerSetup = window.UI?.get('playerSetup');
-            const challengeForm = window.UI?.get('challengeForm');
-            const startScreen = window.UI?.get('startScreen');
-            const startMain = window.UI?.get('startMain');
-            
-            if (gameScreen) gameScreen.classList.add('hidden');
-            if (endScreen) endScreen.classList.add('hidden');
-            if (playerSetup) playerSetup.classList.add('hidden');
-            if (challengeForm) challengeForm.classList.add('hidden');
-            
-            // Show start screen
-            if (startScreen) startScreen.classList.remove('hidden');
-            if (startMain) startMain.classList.remove('hidden');
-            
-            // Reset game state
-            this.reset();
-            
-            // Reload my challenges
-            this.loadMyChallenges();
-        });
-        
-        // Start polling
-        this.startChallengePolling(challengeId);
-    }
-    
     // Show challenge result comparison view
     async showChallengeResultView(challengeId) {
         try {
@@ -846,6 +707,160 @@ class ChallengeSystem {
             if (typeof window.showError === 'function') {
                 window.showError('Kunde inte skapa utmaning. Försök igen.');
             }
+        }
+    }
+
+    // Show waiting for opponent view (moved from uiController.js)
+    showWaitingForOpponentView(challengeId) {
+        const challengeUrl = window.location.origin + window.location.pathname + 
+            '?challenge=' + challengeId;
+        
+        // Get player score - use PlayerManager if available
+        const playerScore = window.PlayerManager ? 
+            window.PlayerManager.getPlayers()[0]?.score : 0;
+        const playerName = window.PlayerManager ? 
+            window.PlayerManager.getPlayerName() : 'Spelare';
+        
+        // Create waiting view HTML
+        const waitingHTML = `
+            <div class="p-6 sm:p-8 lg:p-12 text-center">
+                <h2 class="text-2xl sm:text-3xl font-bold text-slate-900 mb-6">Utmaning skapad!</h2>
+                <div class="bg-blue-50 border border-blue-200 rounded-lg p-4 mb-6">
+                    <p class="text-lg font-semibold text-blue-800 mb-2">Ditt resultat: ${playerScore} poäng</p>
+                    <p class="text-sm text-blue-600">Väntar på att din vän ska spela...</p>
+                </div>
+                
+                <div class="bg-slate-50 border border-slate-200 rounded-lg p-4 mb-6">
+                    <p class="text-sm text-slate-600 mb-3">Dela denna länk:</p>
+                    <div class="bg-white border border-slate-300 rounded p-2 mb-3">
+                        <input type="text" id="challenge-link-waiting" value="${challengeUrl}" readonly class="w-full text-xs text-gray-600 bg-transparent border-none outline-none">
+                    </div>
+                    <div class="flex space-x-2">
+                        <button id="copy-link-waiting" class="flex-1 bg-blue-600 text-white py-2 px-3 rounded text-sm hover:bg-blue-700">
+                            Kopiera länk
+                        </button>
+                        <button id="share-waiting" class="flex-1 bg-slate-600 text-white py-2 px-3 rounded text-sm hover:bg-slate-700">
+                            Dela
+                        </button>
+                    </div>
+                </div>
+                
+                <button id="check-status-btn" class="w-full bg-slate-600 text-white font-bold py-3 px-6 rounded-lg text-lg hover:bg-slate-700 transition-colors mb-4">
+                    Kolla status
+                </button>
+                
+                <button id="back-to-start-waiting" class="w-full bg-slate-200 text-slate-800 font-bold py-3 px-6 rounded-lg text-lg hover:bg-slate-300 transition-colors">
+                    Tillbaka till start
+                </button>
+            </div>
+        `;
+        
+        const endScreen = UI?.get('endScreen');
+        if (endScreen) {
+            endScreen.innerHTML = waitingHTML;
+            endScreen.classList.remove('hidden');
+        }
+        
+        // Add event listeners
+        this.setupWaitingViewListeners(challengeId, challengeUrl, playerName);
+        
+        // Start polling if ChallengeSystem available
+        if (this.startPolling) {
+            this.startPolling(challengeId, (challenge) => {
+                // Handle challenge completion
+                if (typeof window.showChallengeResultView === 'function') {
+                    window.showChallengeResultView(challengeId);
+                }
+            });
+        }
+    }
+    
+    // Setup event listeners for waiting view (moved from uiController.js)
+    setupWaitingViewListeners(challengeId, challengeUrl, playerName) {
+        const copyBtn = document.getElementById('copy-link-waiting');
+        const shareBtn = document.getElementById('share-waiting');
+        const checkBtn = document.getElementById('check-status-btn');
+        const backBtn = document.getElementById('back-to-start-waiting');
+        
+        if (copyBtn) {
+            copyBtn.addEventListener('click', async () => {
+                const input = document.getElementById('challenge-link-waiting');
+                try {
+                    await navigator.clipboard.writeText(input.value);
+                    copyBtn.textContent = 'Kopierad!';
+                    setTimeout(() => {
+                        copyBtn.textContent = 'Kopiera länk';
+                    }, 2000);
+                } catch (err) {
+                    input.select();
+                    document.execCommand('copy');
+                }
+            });
+        }
+        
+        if (shareBtn) {
+            shareBtn.addEventListener('click', async () => {
+                const shareText = `${playerName} utmanar dig i spelet Ordna!`;
+                
+                if (navigator.share) {
+                    try {
+                        await navigator.share({
+                            title: `${playerName} utmanar dig i spelet Ordna!`,
+                            text: `${shareText} ${challengeUrl}`
+                        });
+                    } catch (err) {
+                        // User cancelled
+                    }
+                } else {
+                    // Desktop fallback
+                    const fullMessage = `${shareText} ${challengeUrl}`;
+                    try {
+                        await navigator.clipboard.writeText(fullMessage);
+                        shareBtn.innerHTML = '✓ Länk kopierad!';
+                        setTimeout(() => {
+                            shareBtn.textContent = 'Dela';
+                        }, 2000);
+                    } catch (err) {
+                        const input = document.getElementById('challenge-link-waiting');
+                        input.select();
+                        document.execCommand('copy');
+                        shareBtn.innerHTML = '✓ Länk kopierad!';
+                        setTimeout(() => {
+                            shareBtn.textContent = 'Dela';
+                        }, 2000);
+                    }
+                }
+            });
+        }
+        
+        if (checkBtn) {
+            checkBtn.addEventListener('click', async () => {
+                if (typeof window.checkChallengeStatus === 'function') {
+                    await window.checkChallengeStatus(challengeId);
+                }
+            });
+        }
+        
+        if (backBtn) {
+            backBtn.addEventListener('click', () => {
+                // Stop polling
+                if (this.stopPolling) {
+                    this.stopPolling();
+                }
+                
+                // Go back to start - use UI or fallback
+                if (window.UI && typeof window.UI.showStartScreen === 'function') {
+                    window.UI.showStartScreen();
+                } else if (typeof window.showStartScreen === 'function') {
+                    window.showStartScreen();
+                }
+                
+                // Reset challenge state
+                this.reset();
+                
+                // Reload challenges if function exists
+                this.loadMyChallenges();
+            });
         }
     }
 }

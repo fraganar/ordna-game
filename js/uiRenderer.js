@@ -823,6 +823,151 @@ class UIRenderer {
             notificationsArea.classList.add('hidden');
         }, 10000);
     }
+
+    // Show player setup screen (moved from uiController.js)
+    showPlayerSetup() {
+        const startMain = this.get('startMain');
+        const playerSetup = this.get('playerSetup');
+        
+        if (startMain) startMain.classList.add('hidden');
+        if (playerSetup) playerSetup.classList.remove('hidden');
+    }
+
+    // Create player input fields based on selected count (moved from uiController.js)
+    createPlayerInputs() {
+        const playerCount = parseInt(this.get('playerCountSelect')?.value || '1');
+        const container = this.get('playerNamesContainer');
+        
+        if (!container) return;
+        
+        container.innerHTML = '';
+        
+        for (let i = 0; i < playerCount; i++) {
+            const div = document.createElement('div');
+            div.innerHTML = `
+                <label for="player-${i}" class="block text-base sm:text-lg font-medium text-slate-700 mb-2">
+                    ${playerCount === 1 ? 'Ditt namn' : `Spelare ${i + 1}`}
+                </label>
+                <input type="text" id="player-${i}" placeholder="${playerCount === 1 ? 'Ditt namn' : `Spelare ${i + 1}`}" 
+                       class="w-full p-3 border border-slate-300 rounded-lg text-base sm:text-lg" maxlength="20">
+            `;
+            container.appendChild(div);
+        }
+        
+        // Set default name for single player
+        if (playerCount === 1 && window.PlayerManager) {
+            const savedName = window.PlayerManager.getPlayerName();
+            if (savedName) {
+                const input = container.querySelector('#player-0');
+                if (input) input.value = savedName;
+            }
+        }
+    }
+
+    // Show start screen (moved from uiController.js)
+    showStartScreen() {
+        const startScreen = this.get('startScreen');
+        const gameScreen = this.get('gameScreen');
+        const endScreen = this.get('endScreen');
+        const startMain = this.get('startMain');
+        const playerSetup = this.get('playerSetup');
+        
+        if (startScreen) startScreen.classList.remove('hidden');
+        if (gameScreen) gameScreen.classList.add('hidden');
+        if (endScreen) endScreen.classList.add('hidden');
+        if (startMain) startMain.classList.remove('hidden');
+        if (playerSetup) playerSetup.classList.add('hidden');
+    }
+
+    // Challenge related UI functions (moved from uiController.js)
+    handleShowChallengeForm() {
+        const startMain = this.get('startMain');
+        const challengeForm = this.get('challengeForm');
+        
+        if (startMain) startMain.classList.add('hidden');
+        if (challengeForm) challengeForm.classList.remove('hidden');
+        
+        // Set challenger name
+        const challengerNameDisplay = this.get('challengerNameDisplay');
+        if (challengerNameDisplay && window.PlayerManager) {
+            const playerName = window.PlayerManager.getPlayerName();
+            challengerNameDisplay.textContent = playerName || 'Ditt namn';
+        }
+    }
+
+    handleBackToStart() {
+        this.showStartScreen();
+    }
+
+    handleDeclineChallenge() {
+        if (window.ChallengeSystem) {
+            window.ChallengeSystem.reset();
+        }
+        this.showStartScreen();
+    }
+
+    handleSavePlayerName() {
+        const input = this.get('playerNameInput');
+        const name = input?.value?.trim();
+        
+        if (name && window.PlayerManager) {
+            window.PlayerManager.setPlayerName(name);
+        }
+        
+        this.showStartScreen();
+    }
+
+    // Pack shop functions (moved from uiController.js)
+    openPackShop() {
+        const modal = this.get('packShopModal');
+        if (modal) {
+            modal.classList.remove('hidden');
+        }
+    }
+
+    closePackShop() {
+        const modal = this.get('packShopModal');
+        if (modal) {
+            modal.classList.add('hidden');
+        }
+    }
+}
+
+// Global functions for backward compatibility (moved from uiController.js)
+function showPlayerSetup() {
+    if (window.UI) window.UI.showPlayerSetup();
+}
+
+function createPlayerInputs() {
+    if (window.UI) window.UI.createPlayerInputs();
+}
+
+function showStartScreen() {
+    if (window.UI) window.UI.showStartScreen();
+}
+
+function handleShowChallengeForm() {
+    if (window.UI) window.UI.handleShowChallengeForm();
+}
+
+function handleBackToStart() {
+    if (window.UI) window.UI.handleBackToStart();
+}
+
+function handleDeclineChallenge() {
+    if (window.UI) window.UI.handleDeclineChallenge();
+}
+
+function handleSavePlayerName() {
+    if (window.UI) window.UI.handleSavePlayerName();
+}
+
+function openPackShop() {
+    if (window.UI) window.UI.openPackShop();
+}
+
+function closePackShop() {
+    if (window.UI) window.UI.closePackShop();
 }
 
 // Create global UI instance when DOM is ready
