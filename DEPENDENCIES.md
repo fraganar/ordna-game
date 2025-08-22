@@ -91,26 +91,62 @@ En validator i `app.js:validateDependencies()` kontrollerar vid uppstart att all
 
 ## Historik och Lärdomar
 
-### BL-002: Multiplayer Hör-till Bugg  
-- **Analys #1 (fel):** Trodde det handlade bara om `playerStops` exponering
-- **Analys #2 (fel):** Trodde det var `updateGameControls` exponering  
-- **VERKLIG rotorsak:** **Script loading race condition** + **UI-objektet inte tillgängligt**
+### BL-002: Multiplayer Hör-till Bugg (KOMPLETT ANALYS - 7 FÖRSÖK)
+- **Analys #1-6 (fel):** Trodde det var globala funktioner, script loading, race conditions
+- **Analys #7 (VERKLIG rotorsak):** **AnimationEngine setTimeout konflikt med PlayerManager state changes**
 - **Symptom:** Spelare kunde inte klicka "Stanna" efter att annan spelare eliminerats
-- **Teknisk förklaring:** 
-  - `uiRenderer.js` laddades utan `defer`, andra scripts med `defer`
-  - Race condition: `app.js` körde innan `UI` var etablerat
-  - PlayerManager.nextTurn() → updateGameControls() → `UI?.configureStopButtonForMultiplayer()` 
-  - Men `UI` var `undefined` → "tyst" misslyckande → knappen uppdaterades aldrig
-- **DEFINITIV lösning:** 
-  - ✅ Lagt till `defer` på uiRenderer.js script-tag
-  - ✅ Lagt till UI-tillgänglighets guard i updateGameControls() 
-  - ✅ Exponerat alla nödvändiga funktioner globalt
-  - ✅ Race condition protection med retry-logik
+- **Teknisk rotorsakskedja (SLUTGILTIG):** 
+  - Player elimineras → `AnimationEngine.enableNextButtonAfterMistake()` anropas
+  - AnimationEngine sätter setTimeout för att disabla knapp EFTER animation
+  - Men PlayerManager.nextTurn() sker parallellt → updateGameControls() kallas
+  - AnimationEngine setTimeout triggar EFTER spelarbyte → disablar knapp för ny spelare
+- **SLUTGILTIG lösning (2025-08-22):** 
+  - ✅ **Animation Callback Pattern**: `enableNextButtonAfterMistake(points, onComplete)`
+  - ✅ **Sequential Flow**: Elimination → Animation → Callback → State Change → UI Update
+  - ✅ **Visual Feedback First**: Knapp blir grå omedelbart, grön efter spelarbyte
+  - ✅ **Eliminerar timing conflicts**: Inga parallella setTimeout, allt sekventiellt
 
 ### Förebyggande Åtgärder
 1. **Startup validator** kontrollerar alla beroenden vid uppstart
 2. **Detta dokument** kartlägger alla globala beroenden
 3. **Klar separation** mellan moduler och globala exponeringar
+4. **Animation Callback Pattern** förhindrar timing conflicts mellan animationer och state changes
+
+## Animation Coordination Architecture
+*Utvecklad under BL-002 fix och UX-förbättringar.*
+
+### Callback-baserade Animationer
+```javascript
+// NYTT PATTERN: Animationer med completion callbacks
+AnimationEngine.enableNextButtonAfterMistake(pointsToLose, onComplete)
+AnimationEngine.showSecureAnimation(points, onComplete)  // Framtida utbyggnad
+```
+
+### UX Timing Coordination Principles
+1. **Visual Feedback First**: Disable buttons immediately för omedelbar feedback
+2. **Sequential Flow**: Animation → Callback → State Change → UI Update
+3. **No Parallel setTimeout**: Undvik parallella timers, använd callbacks
+4. **State Protection**: Animationer får inte störa state changes
+
+### Implementation Pattern
+```javascript
+function eliminateCurrentPlayer() {
+    // 1. Update state immediately
+    completePlayerRound(currentPlayer, 'wrong', 0);
+    
+    // 2. Visual feedback first (gray button)
+    // 3. Animation with callback
+    AnimationEngine.enableNextButtonAfterMistake(pointsToLose, () => {
+        // 4. State change AFTER animation
+        determineNextAction(); // → PlayerManager.nextTurn() → updateGameControls()
+    });
+}
+```
+
+### Animation Dependencies (Nya sedan BL-002 fix)
+- `eliminateCurrentPlayer()` → `AnimationEngine.enableNextButtonAfterMistake(points, callback)`
+- `callback` → `determineNextAction()` → `PlayerManager.nextTurn()` → `updateGameControls()`
+- **Kritiskt**: UI state changes måste vänta på animation completion
 
 ## Underhåll
 
@@ -118,12 +154,20 @@ En validator i `app.js:validateDependencies()` kontrollerar vid uppstart att all
 1. **Ny event listener i eventHandlers.js?** → Exponera funktionen globalt i game.js
 2. **Ny modul som andra moduler ska använda?** → Lägg till i startup validator
 3. **Ändrar global funktion?** → Uppdatera detta dokument
+4. **Ny animation som påverkar state?** → Använd callback pattern, dokumentera i Animation Dependencies
 
 ### När du refaktorerar:
 1. **Flyttar funktioner mellan moduler?** → Uppdatera globala exponeringar
 2. **Tar bort funktioner?** → Ta bort från startup validator och detta dokument
-3. **Testar alltid** startup validator efter ändringar
+3. **Ändrar animation timing?** → Verifiera callback coordination fungerar
+4. **Testar alltid** startup validator efter ändringar
+
+### Animation Coordination Guidelines:
+1. **Nya animationer**: Lägg till optional `onComplete` parameter om de påverkar game state
+2. **State changes under animation**: Använd callbacks, aldrig parallella setTimeout
+3. **Visual feedback**: Disable UI immediately, re-enable via callback efter state change
+4. **Testing**: Testa elimination scenarios i både single och multiplayer
 
 ---
 
-*Senast uppdaterad: 2025-08-22 (efter BL-002 fix)*
+*Senast uppdaterad: 2025-08-22 (efter BL-002 slutgiltig fix och UX-förbättringar)*

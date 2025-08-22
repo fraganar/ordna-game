@@ -47,8 +47,8 @@ Vågar du chansa? Stanna eller fortsätt - valet är ditt! Ett fel och rundans p
 - `git add . && git commit -m "message"`: Commit changes
 - `git push`: Deploy to production (automatic via Netlify)
 - `./deploy.sh`: Quick deploy script (commit + push)
-- **Before committing**: Test both single and multiplayer modes thoroughly
-- **Code review question**: Does this change fit the architecture or am I patching?
+- **Before committing**: Test both single and multiplayer modes thoroughly, including elimination scenarios
+- **Code review question**: Does this change fit the architecture or am I patching? Are animations coordinated with state changes?
 
 ## Local Development
 1. Start local server: `python3 -m http.server 8000`
@@ -100,6 +100,7 @@ Vågar du chansa? Stanna eller fortsätt - valet är ditt! Ett fel och rundans p
 - **Keep functions focused**: One responsibility per function
 - **Use unified architecture**: Leverage the player-based system for both single/multiplayer
 - **Avoid quick fixes**: Short-term patches often become long-term technical debt
+- **For technical architecture patterns**: See `DEPENDENCIES.md` for animation coordination, callback patterns, and debugging insights
 
 ## Detaljerad Dokumentation
 För djup teknisk specifikation av spelmekanik, UI-flöden och datastrukturer, se `planning/GAME_SPECIFICATION.md`
