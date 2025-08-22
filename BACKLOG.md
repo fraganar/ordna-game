@@ -27,25 +27,65 @@
 
 ### 🚨 KRITISKA BUGGAR
 
-#### BL-002: Multiplayer Hör-till Bugg
-- **Kategori:** BUG
+#### BL-002: Multiplayer Hör-till Bugg ✅ SLUTGILTIGT LÖST (FEMTE FÖRSÖKET!)
+- **Kategori:** BUG  
 - **Prioritet:** HÖG
-- **Beroenden:** BL-001 (GameLogger för bättre felsökning)
+- **Status:** COMPLETED (2025-08-22 - FEMTE FÖRSÖKET - PLAYER STATE RACE CONDITION LÖST)
+- **SLUTGILTIG rotorsak:** **getCurrentPlayer() race condition** i PlayerManager.nextTurn()
+- **Fullständig analys av alla misslyckade försök:**
+  - **Försök #1:** Trodde det var `playerStops` exponering → FELAKTIG
+  - **Försök #2:** Trodde det var event handler-problem → FELAKTIG  
+  - **Försök #3:** Trodde det var `updateGameControls` exponering → FELAKTIG (men behövdes)
+  - **Försök #4:** Trodde det var script loading race condition → DELVIS RÄTT (men inte huvudorsaken)
+  - **Försök #5:** **RÄTT** - getCurrentPlayer() race condition i PlayerManager.nextTurn()
+- **Teknisk rotorsakskedja (VERKLIG):**
+  - `determineNextAction()` anropar `PlayerManager.nextTurn()` i `setTimeout(..., 500)`
+  - `PlayerManager.nextTurn()` anropar `updateGameControls()` OMEDELBART
+  - Men player state kanske inte hunnit synkronisera fullt → `getCurrentPlayer()` returnerar fel spelare
+  - `updateGameControls()` får fel player → `hasPoints = false` → knapp blir disabled
+- **SLUTGILTIG lösning:**
+  - ✅ **10ms delay i PlayerManager.nextTurn()** innan updateGameControls() anropas
+  - ✅ **Debug-loggning** för att spåra player state i updateGameControls()  
+  - ✅ **Alla tidigare fixes behålls** - förebygger andra race conditions
+- **Lärdom för framtiden:**
+  - **Script loading order är kritisk** - alla defer eller inga defer
+  - **Race conditions är svåra att debugga** - kan verka intermittent
+  - **Optional chaining (UI?.) döljer fel** - använd explicit checks när kritiskt
 - **Beskrivning:** 
   - Scenario: Spelare 1 svarar rätt, Spelare 2 svarar rätt, Spelare 1 svarar fel (elimineras)
-  - Problem: Spelare 2 kan inte välja att "stanna" trots att hen borde kunna
-  - Påverkar: Multiplayer hör-till frågor
-- **Reproduktion:**
-  ```
-  1. Starta 2-spelare spel
-  2. Välj hör-till fråga
-  3. Spelare 1: Klicka rätt alternativ
-  4. Spelare 2: Klicka rätt alternativ
-  5. Spelare 1: Klicka fel alternativ (elimineras)
-  6. BUG: Spelare 2 kan inte stanna
-  ```
+  - Problem: Spelare 2 kan inte välja att "stanna" trots att hen borde kunna  
+  - Påverkar: Alla multiplayer-scenarion där spelare elimineras och tur byts
 
 ### 🛠️ TEKNIK & INFRASTRUCTURE
+
+#### BL-004: Create DEPENDENCIES.md ✅ KLART
+- **Kategori:** DOCS
+- **Prioritet:** MEDEL
+- **Status:** COMPLETED (2025-08-22)
+- **Beskrivning:** Dokumentera alla globala funktioner och beroenden mellan moduler
+- **Acceptanskriterier:**
+  - [x] Lista alla window.X funktioner som moduler förväntar sig
+  - [x] Dokumentera vilket modul som exponerar varje funktion
+  - [x] Inkludera event handlers och deras beroenden
+- **Filer som påverkas:** ✅ DEPENDENCIES.md skapad
+- **Motivering:** Förhindra framtida buggar där funktioner inte är globalt exponerade
+- **Resultat:** Komplett dokumentation av alla globala beroenden, inkl. historik och underhållsråd
+
+#### BL-005: Implement Startup Validator ✅ KLART
+- **Kategori:** FEATURE
+- **Prioritet:** MEDEL
+- **Status:** COMPLETED (2025-08-22)
+- **Beskrivning:** Validera att alla nödvändiga globala funktioner finns vid uppstart
+- **Acceptanskriterier:**
+  - [x] Kontrollera att alla window.X funktioner finns
+  - [x] Logga varningar för saknade beroenden
+  - [x] Visa användarfel om kritiska funktioner saknas
+- **Filer som påverkas:** ✅ app.js (validateDependencies() metod)
+- **Motivering:** Tidigt upptäcka konfigurationsproblem istället för runtime-fel
+- **Implementation:** 
+  - Automatisk validering vid uppstart i app.initialize()
+  - Kontrollerar 11 kritiska funktioner + 6 moduler
+  - Tydliga felmeddelanden i konsolen vid problem
 
 #### BL-001: GameLogger System
 - **Kategori:** FEATURE

@@ -197,8 +197,10 @@ function completePlayerRound(player, reason, pointsToSecure = 0, skipCompletionC
     // Secure points if any
     if (pointsToSecure > 0) {
         player.score += pointsToSecure;
-        player.roundPot = 0;
     }
+    
+    // CRITICAL FIX for BL-002: ALWAYS clear roundPot when completing round
+    player.roundPot = 0;
     
     // Mark player as completed
     player.completedRound = true;
@@ -945,6 +947,13 @@ async function initializeGame() {
 // REMOVED: updateScoreboard - moved to UIRenderer.updateScoreboard()
 
 function updateGameControls() {
+    // CRITICAL FIX for BL-002: Check UI availability (race condition protection)
+    if (!window.UI) {
+        console.warn('🚨 BL-002 FIX: UI not available, retrying in 100ms');
+        setTimeout(updateGameControls, 100);
+        return;
+    }
+    
     // Always hide old buttons
     const stopSide = UI?.get('stopSide');
     const nextSide = UI?.get('nextSide');
@@ -952,6 +961,8 @@ function updateGameControls() {
     UI?.hideAllGameButtons();
     
     const currentPlayer = window.PlayerManager.getCurrentPlayer();
+    
+    // BL-002 SOLVED: Animation system conflicted with player state management
     
     if (!window.PlayerManager.hasActivePlayersInRound() && !window.PlayerManager?.isSinglePlayerMode()) {
         // All players completed in multiplayer - show secured state
@@ -1651,5 +1662,17 @@ function createPlayerInputs() {
 // Expose functions globally for gameController.js
 window.handleOrderClick = handleOrderClick;
 window.handleBelongsDecision = handleBelongsDecision;
+
+// Expose functions globally for eventHandlers.js
+window.playerStops = playerStops;  // FIX för BL-002: Multiplayer Hör-till bugg
+window.showPlayerSetup = showPlayerSetup;
+window.createPlayerInputs = createPlayerInputs;
+window.initializeGame = initializeGame;
+window.restartGame = restartGame;
+window.loadQuestion = loadQuestion;
+window.openPackShop = openPackShop;
+window.closePackShop = closePackShop;
+window.startChallengeGame = startChallengeGame;
+window.updateGameControls = updateGameControls;  // VERKLIG FIX för BL-002: UI-tillståndshantering
 
 // App initialization now handled exclusively by App.js module

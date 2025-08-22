@@ -314,20 +314,25 @@ class AnimationEngine {
         // Drain points if any
         if (pointsToLose > 0) {
             this.animatePointsDrain(pointsToLose);
-            // Disable stop button after animation
-            const stopSide = UI?.get('stopSide');
-            if (stopSide) {
-                setTimeout(() => {
-                    stopSide.classList.add('disabled');
-                    stopSide.disabled = true;
-                }, pointsToLose * 400 + 300);
+            // CRITICAL FIX for BL-002: Don't disable stop button in multiplayer!
+            // The button state will be managed by updateGameControls() after player turn change
+            if (window.PlayerManager && window.PlayerManager.isSinglePlayerMode()) {
+                const stopSide = UI?.get('stopSide');
+                if (stopSide) {
+                    setTimeout(() => {
+                        stopSide.classList.add('disabled');
+                        stopSide.disabled = true;
+                    }, pointsToLose * 400 + 300);
+                }
             }
         } else {
-            // Disable immediately if no points
-            const stopSide = UI?.get('stopSide');
-            if (stopSide) {
-                stopSide.classList.add('disabled');
-                stopSide.disabled = true;
+            // CRITICAL FIX for BL-002: Only disable immediately if single player
+            if (window.PlayerManager && window.PlayerManager.isSinglePlayerMode()) {
+                const stopSide = UI?.get('stopSide');
+                if (stopSide) {
+                    stopSide.classList.add('disabled');
+                    stopSide.disabled = true;
+                }
             }
         }
     }

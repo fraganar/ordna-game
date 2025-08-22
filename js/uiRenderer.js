@@ -522,6 +522,11 @@ class UIRenderer {
         // COPIED from working code in game.js:1253-1270
         const stopSide = this.get('stopSide');
         if (stopSide) {
+            const willEnable = isActive && hasPoints;
+            const buttonDisabledBefore = stopSide.disabled;
+            
+            // BL-002 SOLVED: Fixed AnimationEngine interference in multiplayer
+            
             if (isActive && hasPoints) {
                 // Active player with points - enable stop button
                 stopSide.classList.remove('hidden');

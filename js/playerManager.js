@@ -267,6 +267,12 @@ class PlayerManager {
             attempts++;
         } while (this.players[this.currentPlayerIndex].completedRound && attempts < maxAttempts);
         
+        // CRITICAL FIX: Clear completionReason for the new active player
+        const nextPlayer = this.players[this.currentPlayerIndex];
+        if (nextPlayer && !nextPlayer.completedRound) {
+            nextPlayer.completionReason = null;  // Clear for new active player
+        }
+        
         // Reset UI for new turn
         this.resetPlayerUIForTurn();
         
@@ -274,8 +280,11 @@ class PlayerManager {
         UI?.updatePlayerDisplay();
         
         // Update game controls to handle stop button enable/disable based on player points
+        // CRITICAL FIX for BL-002: Add small delay to ensure player state is fully synchronized
         if (typeof window.updateGameControls === 'function') {
-            window.updateGameControls();
+            setTimeout(() => {
+                window.updateGameControls();
+            }, 10); // Minimal delay to ensure state consistency
         }
         
         // Show turn transition effect

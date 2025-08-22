@@ -22,6 +22,9 @@ class App {
             // Setup UI
             this.setupUI();
             
+            // Validate startup dependencies
+            this.validateDependencies();
+            
             // Check for challenge in URL
             await this.checkForChallenge();
             
@@ -138,6 +141,55 @@ class App {
         if (notificationsArea) {
             notificationsArea.classList.add('hidden');
             notificationsArea.innerHTML = '';
+        }
+    }
+    
+    // Validate that all required global dependencies are available
+    validateDependencies() {
+        console.log('Validating startup dependencies...');
+        
+        const requiredFunctions = [
+            // Functions required by eventHandlers.js
+            'playerStops',
+            'showPlayerSetup', 
+            'createPlayerInputs',
+            'initializeGame',
+            'restartGame',
+            'loadQuestion',
+            'openPackShop',
+            'closePackShop',
+            'startChallengeGame',
+            // Functions required by gameController.js
+            'handleOrderClick',
+            'handleBelongsDecision',
+            // Functions required by playerManager.js
+            'updateGameControls'  // KRITISK för BL-002: UI-tillståndshantering vid spelarbyte
+        ];
+        
+        const missingFunctions = [];
+        
+        for (const funcName of requiredFunctions) {
+            if (typeof window[funcName] !== 'function') {
+                missingFunctions.push(funcName);
+            }
+        }
+        
+        if (missingFunctions.length > 0) {
+            console.error('🚨 CRITICAL: Missing required global functions:', missingFunctions);
+            console.error('This can cause runtime errors when event handlers are triggered.');
+            console.error('Check that these functions are properly exposed in game.js');
+        } else {
+            console.log('✅ All required global functions are available');
+        }
+        
+        // Log available modules for debugging
+        const modules = ['PlayerManager', 'GameData', 'GameController', 'UI', 'AnimationEngine', 'ChallengeSystem'];
+        const availableModules = modules.filter(mod => window[mod]);
+        const missingModules = modules.filter(mod => !window[mod]);
+        
+        console.log('Available modules:', availableModules);
+        if (missingModules.length > 0) {
+            console.warn('Missing modules:', missingModules);
         }
     }
     
