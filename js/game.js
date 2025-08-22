@@ -260,18 +260,22 @@ function eliminateCurrentPlayer() {
     // Use centralized function to complete round (no points to secure when wrong)
     completePlayerRound(currentPlayer, 'wrong', 0);
     
-    // Use AnimationEngine for animations
-    if (window.AnimationEngine) {
-        window.AnimationEngine.enableNextButtonAfterMistake(pointsToLose);
-    }
-    
     // Update displays
     if (window.PlayerManager) {
         UI?.updatePlayerDisplay();
     }
     
-    // Use the ROBUST determineNextAction to handle ALL cases correctly
-    determineNextAction();
+    // Use AnimationEngine for animations with callback for better UX timing
+    if (window.AnimationEngine) {
+        window.AnimationEngine.enableNextButtonAfterMistake(pointsToLose, () => {
+            // Use the ROBUST determineNextAction to handle ALL cases correctly
+            // This is called AFTER the elimination animation completes
+            determineNextAction();
+        });
+    } else {
+        // Fallback if AnimationEngine not available
+        determineNextAction();
+    }
 }
 
 // REPLACED progressToNextPlayerOrConclude with more robust design

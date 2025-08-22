@@ -310,30 +310,26 @@ class AnimationEngine {
     }
     
     // Enable next button after mistake
-    enableNextButtonAfterMistake(pointsToLose = 0) {
+    enableNextButtonAfterMistake(pointsToLose = 0, onComplete = null) {
+        // Immediately disable stop button for visual feedback (gray state)
+        const stopSide = UI?.get('stopSide');
+        if (stopSide) {
+            stopSide.classList.add('disabled');
+            stopSide.disabled = true;
+        }
+        
         // Drain points if any
         if (pointsToLose > 0) {
             this.animatePointsDrain(pointsToLose);
-            // CRITICAL FIX for BL-002: Don't disable stop button in multiplayer!
-            // The button state will be managed by updateGameControls() after player turn change
-            if (window.PlayerManager && window.PlayerManager.isSinglePlayerMode()) {
-                const stopSide = UI?.get('stopSide');
-                if (stopSide) {
-                    setTimeout(() => {
-                        stopSide.classList.add('disabled');
-                        stopSide.disabled = true;
-                    }, pointsToLose * 400 + 300);
-                }
-            }
+            
+            // Call completion callback after drain animation finishes
+            const totalDrainTime = pointsToLose * 400 + 300;
+            setTimeout(() => {
+                if (onComplete) onComplete();
+            }, totalDrainTime);
         } else {
-            // CRITICAL FIX for BL-002: Only disable immediately if single player
-            if (window.PlayerManager && window.PlayerManager.isSinglePlayerMode()) {
-                const stopSide = UI?.get('stopSide');
-                if (stopSide) {
-                    stopSide.classList.add('disabled');
-                    stopSide.disabled = true;
-                }
-            }
+            // No drain animation, call callback immediately
+            if (onComplete) onComplete();
         }
     }
     
