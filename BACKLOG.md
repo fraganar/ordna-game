@@ -14,7 +14,6 @@
 3. **BL-008** - Visa poäng i utmaningsresultat
 4. **BL-009** - Poänganimering före totalpoäng
 5. **BL-010** - Utmana-knapp efter alla spellägen
-6. **BL-011** - Release-agent för dokumentation
 
 ---
 
@@ -46,10 +45,12 @@
 - **Stackrank:** 5
 - **Beskrivning:** Utmana borde man alltid få välja i slutet på alla spel, singelspel och kanske multispel också
 
-### BL-011: Release-agent för dokumentation
+### BL-012: Code Review Regression Guard Agent
 - **Kategori:** FEATURE
 - **Stackrank:** 6
-- **Beskrivning:** Skapa en agent som uppdaterar alla dokument vid release
+- **Beskrivning:** Agent för kodgranskning med fokus på regressionsrisker och design-konsistens
+- **Status:** ✅ COMPLETED 2025-08-23
+- **Detaljer:** Agenten skapad och testad framgångsrikt
 
 ---
 
@@ -60,6 +61,7 @@ Se LOG.md för detaljer om slutförda items:
 - BL-003: Slutför uiController Refaktorering ✅
 - BL-004: Create DEPENDENCIES.md ✅
 - BL-005: Implement Startup Validator ✅
+- BL-012: Code Review Regression Guard Agent ✅
 
 ## ❌ Kasserade Items (endast rubriker)
 
