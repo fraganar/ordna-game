@@ -434,6 +434,42 @@ myChallenges = [
 ]
 ```
 
+## ⚠️ Kritiska scenarier - Testa ALLTID dessa före commit
+
+Dessa scenarier har historiskt orsakat flest buggar och måste alltid verifieras:
+
+### 1. Multiplayer elimination
+**Scenario:** Spelare 1 svarar fel och elimineras
+**Kritiskt test:** Kan spelare 2 fortsätta spela? Är "Stanna"-knappen aktiv?
+**Vanlig bugg:** Animation timing conflicts, knapp blir inaktiv för nästa spelare
+
+### 2. Auto-säkring vid sista alternativet
+**Scenario:** Alla alternativ besvaras rätt (ingen spelare eliminerad)
+**Kritiskt test:** Säkras ALLA aktiva spelares poäng automatiskt?
+**Vanlig bugg:** Endast aktiv spelare säkras, andra förlorar poäng
+
+### 3. Turordning efter händelser
+**Scenario:** Spelare stannar eller elimineras
+**Kritiskt test:** Växlar turen korrekt till nästa spelare?
+**Vanlig bugg:** Fel spelare blir aktiv eller turordning bryts
+
+### 4. Animation callback coordination
+**Scenario:** State changes under pågående animationer
+**Kritiskt test:** Väntar state changes på att animationer slutförs?
+**Vanlig bugg:** setTimeout conflicts, race conditions mellan moduler
+
+### 5. Button states för olika spelare
+**Scenario:** Multiplayer med olika spelartillstånd
+**Kritiskt test:** Har rätt spelare rätt knappar aktiva?
+**Vanlig bugg:** Inaktiv spelare kan påverka spelet
+
+**Speciellt känsliga filer:**
+- `playerManager.js` - turordning och spelarstate
+- `animationEngine.js` - callback patterns
+- `gameController.js` - elimination och auto-säkring
+
+---
+
 ### Challenge Lifecycle
 
 #### 1. Creation Phase

@@ -73,7 +73,7 @@ Vågar du chansa? Stanna eller fortsätt - valet är ditt! Ett fel och rundans p
 - `css/styles.css`: All styling including responsive design
 - `data/questions-grund.json`: Game questions with pack assignments
 - `data/`: Directory for additional question files
-- `planning/GAME_SPECIFICATION.md`: Complete technical game specification
+- `GAME_SPECIFICATION.md`: Complete technical game specification with critical test scenarios
 
 ## Challenge System
 - **Blind Challenge**: Players compete on same 5 questions without seeing opponent's score
@@ -102,5 +102,15 @@ Vågar du chansa? Stanna eller fortsätt - valet är ditt! Ett fel och rundans p
 - **Avoid quick fixes**: Short-term patches often become long-term technical debt
 - **For technical architecture patterns**: See `DEPENDENCIES.md` for animation coordination, callback patterns, and debugging insights
 
+## Före commit - Kritisk checklista
+**Se "⚠️ Kritiska scenarier" i GAME_SPECIFICATION.md** - dessa 5 scenarier måste alltid testas.
+
+Speciellt viktigt vid ändringar i:
+- `playerManager.js` - turordning och spelarstate
+- `animationEngine.js` - animation callbacks
+- `gameController.js` - elimination och auto-säkring
+
+Snabbtest multiplayer: Kan spelare 2 fortsätta efter att spelare 1 eliminerats?
+
 ## Detaljerad Dokumentation
-För djup teknisk specifikation av spelmekanik, UI-flöden och datastrukturer, se `planning/GAME_SPECIFICATION.md`
+För djup teknisk specifikation av spelmekanik, UI-flöden och datastrukturer, se `GAME_SPECIFICATION.md`
