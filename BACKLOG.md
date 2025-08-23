@@ -9,24 +9,41 @@
 
 ### Kommande arbete (sorterat efter stackrank - högst första)
 
-1. **BL-014** (110) - Teknisk skuld: Duplicerad singelspel-uppdatering och död kod
-2. **BL-006** (90) - Slutskärm till startmeny (multispel)
-3. **BL-007** (80) - Revanschknapp utmaning 
-4. **BL-008** (70) - Visa poäng i utmaningsresultat
-5. **BL-009** (60) - Poänganimering före totalpoäng
-6. **BL-010** (50) - Utmana-knapp efter alla spellägen
+1. **BL-015** (120) - State Corruption mellan spellägen
+2. **BL-016** (115) - UI Cleanup mellan spellägen  
+3. **BL-017** (105) - Challenge State Persistence Bug
+4. **BL-006** (90) - Slutskärm till startmeny (multispel)
+5. **BL-007** (80) - Revanschknapp utmaning 
+6. **BL-008** (70) - Visa poäng i utmaningsresultat
+7. **BL-009** (60) - Poänganimering före totalpoäng
+8. **BL-010** (50) - Utmana-knapp efter alla spellägen
 
 ---
 
 ## 📝 Backlog Items
 
-### BL-014: Teknisk skuld: Duplicerad singelspel-uppdatering och död kod
-- **Kategori:** REFACTOR
-- **Stackrank:** 110
-- **Beskrivning:** Code review efter BL-013 fix identifierade teknisk skuld i singelspel-hantering
-- **Ursprungligt omdöme:** Code review agent identifierade arkitektonisk duplicering där både `game.js:updateSinglePlayerDisplay()` och `uiRenderer.js:updatePlayerDisplay()` uppdaterar samma UI-element, vilket bryter mot DRY-principen och skapar potentiella race conditions
-- **Uppdaterat omdöme:** Efter djupanalys - dupliceringen är harmlös och funktionaliteten fungerar perfekt i alla lägen. `endSinglePlayerQuestion()` är död kod som aldrig anropas. Cleanup kan göras säkert som separat refaktorering när tid finns för noggrann testning
-- **Åtgärd:** Ta bort `updateSinglePlayerDisplay()` och `endSinglePlayerQuestion()` från game.js, ersätt anropet på rad 739 med `UI?.updatePlayerDisplay()`. Kräver testning av alla edge cases
+### BL-015: State Corruption mellan spellägen
+- **Kategori:** BUG
+- **Stackrank:** 120
+- **Beskrivning:** State från tidigare spellägen (challenge/singelspel) visas i multiplayer-resultat
+- **Symptom:** Multiplayer visar namn och poäng från tidigare challenge eller singelspel-UI
+- **Root cause:** Challenge state och UI-element rensas aldrig mellan spellägen
+- **Åtgärd:** Implementera proper state cleanup vid övergång mellan spellägen
+- **Dokumentation:** Se BL-014_STATE_CORRUPTION_ANALYSIS.md för fullständig analys
+
+### BL-016: UI Cleanup mellan spellägen
+- **Kategori:** BUG  
+- **Stackrank:** 115
+- **Beskrivning:** UI-element från olika spellägen staplas på varandra istället för att ersättas
+- **Symptom:** Challenge-UI synlig under multiplayer, singelspel-UI synlig under multiplayer
+- **Åtgärd:** Force hide konkurrerande UI-element i början av endMultiplayerGame() och endSinglePlayerGame()
+
+### BL-017: Challenge State Persistence Bug  
+- **Kategori:** BUG
+- **Stackrank:** 105 
+- **Beskrivning:** Challenge skapas med 0 poäng och hoppar direkt till resultat
+- **Symptom:** Vid challenge-skapande: "Should end? true" från första frågan
+- **Root cause:** Game state inte korrekt rensat från föregående spel
 
 ### BL-006: Slutskärm till startmeny (multispel)
 - **Kategori:** BUG
@@ -72,6 +89,7 @@ Se LOG.md för detaljer om slutförda items:
 - BL-005: Implement Startup Validator ✅
 - BL-012: Code Review Regression Guard Agent ✅
 - BL-013: Dubbel totalpoäng-visning i singelspel ✅
+- BL-014: Teknisk skuld - Duplicerad singelspel-uppdatering och död kod ✅
 
 ## ❌ Kasserade Items (endast rubriker)
 

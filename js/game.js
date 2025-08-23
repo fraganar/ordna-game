@@ -705,50 +705,7 @@ function processQuestions(questions) {
 // REMOVED: shuffleArray - using GameData.shuffleArray for consistency
 // Single Player Functions (Star system removed - now using decision button for points)
 
-function updateSinglePlayerDisplay() {
-    const singlePlayerScore = UI?.get('singlePlayerScore');
-    const progressBar = UI?.get('progressBar');
-    
-    // Get the current player from PlayerManager for consistency
-    const player = window.PlayerManager?.getCurrentPlayer();
-    const score = player ? player.score : 0;
-    
-    if (singlePlayerScore) {
-        singlePlayerScore.textContent = `Totalpoäng: ${score}`;
-    }
-    if (progressBar) {
-        const progressPercentage = (currentQuestionIndex / questionsToPlay.length) * 100;
-        progressBar.style.width = `${progressPercentage}%`;
-    }
-}
 
-function endSinglePlayerQuestion(pointsToAdd) {
-    // Use PlayerManager's player object to ensure consistency
-    const player = window.PlayerManager.getCurrentPlayer();
-    if (player) {
-        player.score += pointsToAdd;
-        player.completedRound = true; // Lock interactions for single player
-        
-        // Update the local players array to keep it in sync
-        players[0] = player;
-    }
-    
-    // NOTE: Score saving for challenge mode is now handled in secureCurrentPoints
-    // to ensure it happens at the right time
-    
-    updateSinglePlayerDisplay();
-    UI?.hideStopButton();
-    UI?.hideDecisionButton();
-    UI?.showNextQuestionButton();
-    
-    const question = getCurrentQuestion();
-
-    if (question.typ === 'ordna') {
-        feedbackOrder();
-    } else {
-        feedbackBelongsTo();
-    }
-}
 
 async function endSinglePlayerGame() {
     
@@ -1095,17 +1052,11 @@ function loadQuestion() {
     
     // Check if game should end - use window.questionsToPlay if available
     const questions = window.questionsToPlay || questionsToPlay;
-    console.log('🟢 GAME.JS loadQuestion: questions.length =', questions.length);
-    console.log('🟢 GAME.JS loadQuestion: Should end?', currentQuestionIndex >= questions.length);
     
     if (currentQuestionIndex >= questions.length) {
-        console.log('🟢 GAME.JS: Game should end');
-        console.log('🟢 isSinglePlayerMode():', window.PlayerManager?.isSinglePlayerMode());
         if (window.PlayerManager?.isSinglePlayerMode()) {
-            console.log('🟢 GAME.JS: Calling endSinglePlayerGame()');
             endSinglePlayerGame();
         } else {
-            console.log('🟢 GAME.JS: Calling endGame()');
             endGame();
         }
         return;
