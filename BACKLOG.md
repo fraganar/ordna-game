@@ -7,47 +7,53 @@
 ### Pågående arbete
 *Inget pågående arbete just nu*
 
-### Kommande arbete (i prioritetsordning)
+### Kommande arbete (sorterat efter stackrank - högst först)
 
-1. **BL-006** - Slutskärm till startmeny (multispel)
-2. **BL-007** - Revanschknapp utmaning 
-3. **BL-008** - Visa poäng i utmaningsresultat
-4. **BL-009** - Poänganimering före totalpoäng
-5. **BL-010** - Utmana-knapp efter alla spellägen
+1. **BL-013** (100) - Dubbel totalpoäng-visning i singelspel
+2. **BL-006** (90) - Slutskärm till startmeny (multispel)
+3. **BL-007** (80) - Revanschknapp utmaning 
+4. **BL-008** (70) - Visa poäng i utmaningsresultat
+5. **BL-009** (60) - Poänganimering före totalpoäng
+6. **BL-010** (50) - Utmana-knapp efter alla spellägen
 
 ---
 
 ## 📝 Backlog Items
 
+### BL-013: Dubbel totalpoäng-visning i singelspel
+- **Kategori:** BUG
+- **Stackrank:** 100
+- **Beskrivning:** I singelspelläge visas två totalpoäng-element, varav ett alltid visar 0 poäng. Detta är förvirrande för användaren
+
 ### BL-006: Slutskärm till startmeny (multispel)
 - **Kategori:** BUG
-- **Stackrank:** 1
+- **Stackrank:** 90
 - **Beskrivning:** Knappen på sista skärmen efter multiplayer-läget går inte tillbaka till startskärmen
 
 ### BL-007: Revanschknapp utmaning
 - **Kategori:** BUG  
-- **Stackrank:** 2
+- **Stackrank:** 80
 - **Beskrivning:** Revanschknappen fungerar inte för utmaning
 
 ### BL-008: Visa poäng i utmaningsresultat
 - **Kategori:** FEATURE
-- **Stackrank:** 3
+- **Stackrank:** 70
 - **Beskrivning:** Man ser inte poängen för den som tog emot utmaningen i visning av resultat
 - **Fråga:** Ska poäng för varje fråga visas? Tillför det något?
 
 ### BL-009: Poänganimering före totalpoäng
 - **Kategori:** BUG
-- **Stackrank:** 4
+- **Stackrank:** 60
 - **Beskrivning:** Totalpoäng ökar före animationen landar i multi och kanske i singel också
 
 ### BL-010: Utmana-knapp efter alla spellägen
 - **Kategori:** FEATURE
-- **Stackrank:** 5
+- **Stackrank:** 50
 - **Beskrivning:** Utmana borde man alltid få välja i slutet på alla spel, singelspel och kanske multispel också
 
 ### BL-012: Code Review Regression Guard Agent
 - **Kategori:** FEATURE
-- **Stackrank:** 6
+- **Stackrank:** 40
 - **Beskrivning:** Agent för kodgranskning med fokus på regressionsrisker och design-konsistens
 - **Status:** ✅ COMPLETED 2025-08-23
 - **Detaljer:** Agenten skapad och testad framgångsrikt
@@ -75,7 +81,7 @@ Se LOG.md för detaljer om kasserade items:
 ```markdown
 ### BL-XXX: Titel
 - **Kategori:** [BUG/FEATURE/REFACTOR/DOCS]
-- **Stackrank:** [Nummer]
+- **Stackrank:** [Högre nummer = högre prioritet, använd 10-steg för flexibilitet]
 - **Beskrivning:** [Kort beskrivning av problemet/funktionen]
 ```
 
