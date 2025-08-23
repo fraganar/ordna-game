@@ -416,14 +416,20 @@ function checkForChallenge() {
 
 // 🔧 BL-015 FIX: Central function to reset challenge state
 function resetChallengeState() {
+    console.log('DEBUG resetChallengeState: BEFORE reset - challengeId:', window.challengeId, 'ischallengeMode:', window.ischallengeMode);
     window.challengeId = null;
     window.ischallengeMode = false;
     ischallengeMode = false;
     challengeQuestionScores = [];
+    
+    // BL-015 FIX: Clear localStorage items that can cause challenge state to persist
+    localStorage.removeItem('pendingChallenge');
+    
     // Stop any challenge polling if exists
     if (typeof stopChallengePolling === 'function') {
         stopChallengePolling();
     }
+    console.log('DEBUG resetChallengeState: AFTER reset - challengeId:', window.challengeId, 'ischallengeMode:', window.ischallengeMode);
 }
 
 // Show challenge acceptance screen
@@ -855,6 +861,7 @@ function populatePackSelect() {
     }
 }
 async function initializeGame() {
+    console.log('DEBUG initializeGame: Called - about to reset challenge state');
     // 🔧 BL-015: Reset challenge state when starting normal game
     resetChallengeState();
     
