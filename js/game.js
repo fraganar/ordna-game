@@ -706,14 +706,32 @@ function processQuestions(questions) {
 // Single Player Functions (Star system removed - now using decision button for points)
 
 function updateSinglePlayerDisplay() {
-    singlePlayerScore.textContent = `Totalpoäng: ${players[0].score}`;
-    const progressPercentage = (currentQuestionIndex / questionsToPlay.length) * 100;
-    progressBar.style.width = `${progressPercentage}%`;
+    const singlePlayerScore = UI?.get('singlePlayerScore');
+    const progressBar = UI?.get('progressBar');
+    
+    // Get the current player from PlayerManager for consistency
+    const player = window.PlayerManager?.getCurrentPlayer();
+    const score = player ? player.score : 0;
+    
+    if (singlePlayerScore) {
+        singlePlayerScore.textContent = `Totalpoäng: ${score}`;
+    }
+    if (progressBar) {
+        const progressPercentage = (currentQuestionIndex / questionsToPlay.length) * 100;
+        progressBar.style.width = `${progressPercentage}%`;
+    }
 }
 
 function endSinglePlayerQuestion(pointsToAdd) {
-    players[0].score += pointsToAdd;
-    players[0].completedRound = true; // Lock interactions for single player
+    // Use PlayerManager's player object to ensure consistency
+    const player = window.PlayerManager.getCurrentPlayer();
+    if (player) {
+        player.score += pointsToAdd;
+        player.completedRound = true; // Lock interactions for single player
+        
+        // Update the local players array to keep it in sync
+        players[0] = player;
+    }
     
     // NOTE: Score saving for challenge mode is now handled in secureCurrentPoints
     // to ensure it happens at the right time

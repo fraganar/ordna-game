@@ -105,7 +105,7 @@ class AnimationEngine {
         
         // Get target element - smart selection like original (single vs multiplayer)
         const totalScoreElement = window.PlayerManager?.isSinglePlayerMode() ? 
-            UI?.get('activePlayerDisplay') : // Single player target
+            UI?.get('singlePlayerScore') : // Single player target - use the correct header element
             UI?.get('miniScores'); // Multiplayer target
         
         // Fallback if target not found

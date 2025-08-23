@@ -323,8 +323,9 @@ class UIRenderer {
         
         if (window.PlayerManager.isSinglePlayerMode()) {
             // Single player display
+            // Don't show anything in activePlayerDisplay for single player - totalpoäng shown in header
             if (activePlayerDisplay) {
-                activePlayerDisplay.textContent = `Totalpoäng: ${players[0].score}`;
+                activePlayerDisplay.textContent = '';
             }
             if (miniScores) miniScores.textContent = '';
             
@@ -335,7 +336,14 @@ class UIRenderer {
             }
             
             if (singlePlayerProgress) singlePlayerProgress.classList.remove('hidden');
-            if (singlePlayerScore) singlePlayerScore.classList.remove('hidden');
+            if (singlePlayerScore) {
+                singlePlayerScore.classList.remove('hidden');
+                // Update the score content for single player
+                const player = players[0];
+                if (player) {
+                    singlePlayerScore.textContent = `Totalpoäng: ${player.score}`;
+                }
+            }
             if (scoreboard) scoreboard.classList.add('hidden');
         } else {
             // Multiplayer display
