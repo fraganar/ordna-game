@@ -76,7 +76,7 @@ Vågar du chansa? Stanna eller fortsätt - valet är ditt! Ett fel och rundans p
 - `GAME_SPECIFICATION.md`: Complete technical game specification with critical test scenarios
 
 ## Challenge System
-- **Blind Challenge**: Players compete on same 5 questions without seeing opponent's score
+- **Blind Challenge**: Players compete on same 12 questions without seeing opponent's score
 - **Flow**: Challenger plays → Gets shareable link → Opponent plays same questions → Results compared
 - **Data**: Firebase stores questions + scores, localStorage tracks user's challenges
 - **Views**: Waiting screen (with polling), Result comparison, "My Challenges" list

@@ -9,7 +9,7 @@ Detta dokument kartlägger alla globala funktioner och beroenden mellan moduler 
 Dessa funktioner MÅSTE finnas som `window.functionName` för att event listeners ska fungera:
 
 ```javascript
-// Exponerade i game.js rad ~1656-1665
+// Exponerade i game.js rad ~1671-1681
 window.playerStops = playerStops;          // KRITISK för BL-002 fix
 window.showPlayerSetup = showPlayerSetup;
 window.createPlayerInputs = createPlayerInputs;
@@ -23,13 +23,13 @@ window.startChallengeGame = startChallengeGame;
 
 ### För playerManager.js
 ```javascript
-// Exponerade i game.js rad ~1665
+// Exponerade i game.js rad ~1680
 window.updateGameControls = updateGameControls;  // KRITISK för BL-002: UI-tillståndshantering vid spelarbyte
 ```
 
 ### För gameController.js
 ```javascript
-// Exponerade i game.js rad ~1652-1653
+// Exponerade i game.js rad ~1667-1668
 window.handleOrderClick = handleOrderClick;
 window.handleBelongsDecision = handleBelongsDecision;
 ```

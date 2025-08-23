@@ -222,7 +222,7 @@ questionStarterIndex = 0;      // Vem som börjar nästa fråga (roterar)
 ### 3. Challenge Mode
 
 #### Koncept
-Asynkron tävling mellan två spelare på exakt samma 5 frågor. En "blind" tävling där spelarna inte ser varandras resultat förrän båda spelat klart.
+Asynkron tävling mellan två spelare på exakt samma 12 frågor. En "blind" tävling där spelarna inte ser varandras resultat förrän båda spelat klart.
 
 #### Teknisk Implementation
 - **Firebase Integration:** Lagrar challenge-data i molnet
@@ -231,7 +231,7 @@ Asynkron tävling mellan två spelare på exakt samma 5 frågor. En "blind" täv
 
 #### Spelflöde
 1. **Challenger Spelar:**
-   - Spelar 5 frågor i single player-läge
+   - Spelar 12 frågor i single player-läge
    - `challengeQuestionScores` array lagrar poäng per fråga
    - Firebase lagrar: frågor, poäng, challenger-data
 
@@ -241,7 +241,7 @@ Asynkron tävling mellan två spelare på exakt samma 5 frågor. En "blind" täv
    - "Väntar på svar"-skärm för challenger
 
 3. **Opponent Spelar:**
-   - Samma 5 frågor laddas från Firebase
+   - Samma 12 frågor laddas från Firebase
    - Spelar i single player-läge
    - Kan inte se challenger's resultat
 
@@ -413,7 +413,7 @@ Names   Order    P1 Plays   P2 Plays   Results    Rotate Start
     totalScore: 8,
     questionScores: [2, 1, 0, 3, 2]
   },
-  questions: [...], // Samma 5 frågor för båda
+  questions: [...], // Samma 12 frågor för båda
   status: "completed",
   createdAt: timestamp,
   expiresAt: timestamp + 7days
@@ -474,7 +474,7 @@ Dessa scenarier har historiskt orsakat flest buggar och måste alltid verifieras
 
 #### 1. Creation Phase
 ```
-Alice spelar → 5 frågor → 12 poäng → Skapa utmaning
+Alice spelar → 12 frågor → 28 poäng → Skapa utmaning
                                           ↓
 Firebase: Lagra questions + Alice's score
                                           ↓  
@@ -489,12 +489,12 @@ Alice ser: "Väntar på Bob..."
            [Polling Firebase for updates]
            
 Bob öppnar länken → Ser: "Alice utmanar dig!" 
-                           "Spela samma 5 frågor"
+                           "Spela samma 12 frågor"
 ```
 
 #### 3. Playing Phase
 ```
-Bob spelar → Samma 5 frågor → 8 poäng → Automatisk submission
+Bob spelar → Samma 12 frågor → 20 poäng → Automatisk submission
                                               ↓
 Firebase: Uppdatera med Bob's score
                                               ↓
@@ -542,7 +542,7 @@ Aktiva Utmaningar:
 ```
 Automatisk meddelande-mall:
 "Hej! Jag utmanar dig i Ordna Game! 
-Klicka här för att spela samma 5 frågor: 
+Klicka här för att spela samma 12 frågor: 
 https://game.com/challenge/abc123
 
 Lycka till! 🎯"
