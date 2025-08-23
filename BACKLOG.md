@@ -7,9 +7,9 @@
 ### Pågående arbete
 *Inget pågående arbete just nu*
 
-### Kommande arbete (sorterat efter stackrank - högst först)
+### Kommande arbete (sorterat efter stackrank - högst första)
 
-1. **BL-013** (100) - Dubbel totalpoäng-visning i singelspel
+1. **BL-014** (110) - Teknisk skuld: Duplicerad singelspel-uppdatering och död kod
 2. **BL-006** (90) - Slutskärm till startmeny (multispel)
 3. **BL-007** (80) - Revanschknapp utmaning 
 4. **BL-008** (70) - Visa poäng i utmaningsresultat
@@ -20,10 +20,13 @@
 
 ## 📝 Backlog Items
 
-### BL-013: Dubbel totalpoäng-visning i singelspel
-- **Kategori:** BUG
-- **Stackrank:** 100
-- **Beskrivning:** I singelspelläge visas två totalpoäng-element, varav ett alltid visar 0 poäng. Detta är förvirrande för användaren
+### BL-014: Teknisk skuld: Duplicerad singelspel-uppdatering och död kod
+- **Kategori:** REFACTOR
+- **Stackrank:** 110
+- **Beskrivning:** Code review efter BL-013 fix identifierade teknisk skuld i singelspel-hantering
+- **Ursprungligt omdöme:** Code review agent identifierade arkitektonisk duplicering där både `game.js:updateSinglePlayerDisplay()` och `uiRenderer.js:updatePlayerDisplay()` uppdaterar samma UI-element, vilket bryter mot DRY-principen och skapar potentiella race conditions
+- **Uppdaterat omdöme:** Efter djupanalys - dupliceringen är harmlös och funktionaliteten fungerar perfekt i alla lägen. `endSinglePlayerQuestion()` är död kod som aldrig anropas. Cleanup kan göras säkert som separat refaktorering när tid finns för noggrann testning
+- **Åtgärd:** Ta bort `updateSinglePlayerDisplay()` och `endSinglePlayerQuestion()` från game.js, ersätt anropet på rad 739 med `UI?.updatePlayerDisplay()`. Kräver testning av alla edge cases
 
 ### BL-006: Slutskärm till startmeny (multispel)
 - **Kategori:** BUG
@@ -68,6 +71,7 @@ Se LOG.md för detaljer om slutförda items:
 - BL-004: Create DEPENDENCIES.md ✅
 - BL-005: Implement Startup Validator ✅
 - BL-012: Code Review Regression Guard Agent ✅
+- BL-013: Dubbel totalpoäng-visning i singelspel ✅
 
 ## ❌ Kasserade Items (endast rubriker)
 
