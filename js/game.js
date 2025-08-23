@@ -414,6 +414,18 @@ function checkForChallenge() {
     return false;
 }
 
+// 🔧 BL-015 FIX: Central function to reset challenge state
+function resetChallengeState() {
+    window.challengeId = null;
+    window.ischallengeMode = false;
+    ischallengeMode = false;
+    challengeQuestionScores = [];
+    // Stop any challenge polling if exists
+    if (typeof stopChallengePolling === 'function') {
+        stopChallengePolling();
+    }
+}
+
 // Show challenge acceptance screen
 async function showChallengeAcceptScreen() {
     try {
@@ -522,6 +534,9 @@ function showError(message) {
 // Start challenge game for opponent
 async function startChallengeGame() {
     try {
+        // 🔧 BL-017 FIX: Reset question index BEFORE checking anything
+        currentQuestionIndex = 0;
+        window.currentQuestionIndex = 0;
         
         // Get challenge data
         challengeData = await FirebaseAPI.getChallenge(window.challengeId);
@@ -708,6 +723,11 @@ function processQuestions(questions) {
 
 
 async function endSinglePlayerGame() {
+    // 🔧 BL-016 FIX: Force hide competing UI elements
+    const finalScoreboard = UI?.get('finalScoreboard');
+    const challengeResult = UI?.get('challengeResult');
+    if (finalScoreboard) finalScoreboard.classList.add('hidden');
+    if (challengeResult) challengeResult.classList.add('hidden');
     
     UI?.hideGameScreen();
     
@@ -835,6 +855,9 @@ function populatePackSelect() {
     }
 }
 async function initializeGame() {
+    // 🔧 BL-015: Reset challenge state when starting normal game
+    resetChallengeState();
+    
     // Set selected pack from dropdown
     const packSelect = UI?.get('packSelect');
     selectedPack = packSelect?.value || null;
@@ -1434,6 +1457,12 @@ function endGame() {
 
 // Handle end of multiplayer game  
 function endMultiplayerGame() {
+    // 🔧 BL-016 FIX: Force hide competing UI elements
+    const singlePlayerFinal = UI?.get('singlePlayerFinal');
+    const challengeResult = UI?.get('challengeResult');
+    if (singlePlayerFinal) singlePlayerFinal.classList.add('hidden');
+    if (challengeResult) challengeResult.classList.add('hidden');
+    
     UI?.showEndScreen();
     
     players.sort((a, b) => b.score - a.score);

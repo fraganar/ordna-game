@@ -22,6 +22,11 @@ class ChallengeSystem {
         this.pendingChallengeCreation = false;
         this.stopPolling();
         this.stopChallengePolling();
+        
+        // BL-015 FIX: Call global challenge state reset
+        if (typeof window.resetChallengeState === 'function') {
+            window.resetChallengeState();
+        }
     }
     
     // Save score for current question
