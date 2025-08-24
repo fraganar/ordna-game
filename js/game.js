@@ -416,7 +416,6 @@ function checkForChallenge() {
 
 // 🔧 BL-015 FIX: Central function to reset challenge state
 function resetChallengeState() {
-    console.log('DEBUG resetChallengeState: BEFORE reset - challengeId:', window.challengeId, 'ischallengeMode:', window.ischallengeMode);
     window.challengeId = null;
     window.ischallengeMode = false;
     ischallengeMode = false;
@@ -429,7 +428,6 @@ function resetChallengeState() {
     if (typeof stopChallengePolling === 'function') {
         stopChallengePolling();
     }
-    console.log('DEBUG resetChallengeState: AFTER reset - challengeId:', window.challengeId, 'ischallengeMode:', window.ischallengeMode);
 }
 
 // Show challenge acceptance screen
@@ -861,7 +859,6 @@ function populatePackSelect() {
     }
 }
 async function initializeGame() {
-    console.log('DEBUG initializeGame: Called - about to reset challenge state');
     
     // Simple UI transition - no need to reset endScreen structure anymore!
     UI?.showStartScreen();
@@ -1468,71 +1465,61 @@ function endGame() {
 
 // Handle end of multiplayer game  
 function endMultiplayerGame() {
-    console.log('🔥 DEBUG: endMultiplayerGame() CALLED in game.js');
-    
-    // 🔧 BL-016 FIX: Force hide competing UI elements
-    const singlePlayerFinal = UI?.get('singlePlayerFinal');
-    const challengeResult = UI?.get('challengeResult');
-    console.log('🔥 DEBUG: singlePlayerFinal element:', singlePlayerFinal);
-    console.log('🔥 DEBUG: singlePlayerFinal hidden?', singlePlayerFinal?.classList.contains('hidden'));
-    if (singlePlayerFinal) singlePlayerFinal.classList.add('hidden');
-    if (challengeResult) challengeResult.classList.add('hidden');
-    
-    // Manually handle screen transitions - DON'T use UI.showEndScreen() as it resets content
-    const startScreen = UI?.get('startScreen');
-    const gameScreen = UI?.get('gameScreen');
-    const endScreen = UI?.get('endScreen');
-    
-    if (startScreen) startScreen.classList.add('hidden');
-    if (gameScreen) gameScreen.classList.add('hidden');
-    if (endScreen) endScreen.classList.remove('hidden');
-    
-    console.log('🔥 DEBUG: endScreen full HTML content:');
-    console.log(endScreen?.innerHTML);
-    
-    // Get players from PlayerManager (not the possibly stale global variable)
+    // Get players from PlayerManager and sort by score
     const currentPlayers = window.PlayerManager?.getPlayers() || [];
-    console.log('🔥 DEBUG: currentPlayers:', currentPlayers);
     currentPlayers.sort((a, b) => b.score - a.score);
-    const finalScoreboard = UI?.get('finalScoreboard');
-    console.log('🔥 DEBUG: finalScoreboard element:', finalScoreboard);
-    console.log('🔥 DEBUG: finalScoreboard hidden?', finalScoreboard?.classList.contains('hidden'));
-    if (finalScoreboard) {
-        finalScoreboard.innerHTML = '';
-        // 🔧 CRITICAL: Remove hidden class that showStartScreen() might have added
-        finalScoreboard.classList.remove('hidden');
-        console.log('🔥 DEBUG: Removed hidden class from finalScoreboard');
-    }
-
+    
+    // Generate scoreboard HTML
+    let scoreboardHTML = '';
     currentPlayers.forEach((player, index) => {
-        const rankDiv = document.createElement('div');
-        rankDiv.className = 'flex items-center gap-4 p-3 sm:p-4 bg-slate-100 rounded-lg';
-        
-        let rankContent;
         if (index === 0) {
-            rankDiv.classList.add('border-2', 'border-amber-400');
-            rankContent = `<div class="text-2xl sm:text-3xl">🥇</div> 
-                           <h3 class="text-lg sm:text-xl font-bold text-amber-600">${player.name}</h3> 
-                           <p class="ml-auto text-lg sm:text-xl font-bold text-amber-600">${player.score} poäng</p>`;
+            scoreboardHTML += `
+                <div class="flex items-center gap-4 p-3 sm:p-4 bg-slate-100 rounded-lg border-2 border-amber-400">
+                    <div class="text-2xl sm:text-3xl">🥇</div>
+                    <h3 class="text-lg sm:text-xl font-bold text-amber-600">${player.name}</h3>
+                    <p class="ml-auto text-lg sm:text-xl font-bold text-amber-600">${player.score} poäng</p>
+                </div>`;
         } else if (index === 1) {
-            rankDiv.classList.add('border-2', 'border-slate-300');
-            rankContent = `<div class="text-2xl sm:text-3xl">🥈</div> 
-                           <h3 class="text-base sm:text-lg font-semibold text-slate-500">${player.name}</h3> 
-                           <p class="ml-auto text-base sm:text-lg font-semibold text-slate-500">${player.score} poäng</p>`;
+            scoreboardHTML += `
+                <div class="flex items-center gap-4 p-3 sm:p-4 bg-slate-100 rounded-lg border-2 border-slate-300">
+                    <div class="text-2xl sm:text-3xl">🥈</div>
+                    <h3 class="text-base sm:text-lg font-semibold text-slate-500">${player.name}</h3>
+                    <p class="ml-auto text-base sm:text-lg font-semibold text-slate-500">${player.score} poäng</p>
+                </div>`;
         } else if (index === 2) {
-             rankDiv.classList.add('border-2', 'border-amber-700');
-             rankContent = `<div class="text-2xl sm:text-3xl">🥉</div> 
-                            <h3 class="text-base sm:text-lg font-medium text-amber-800">${player.name}</h3> 
-                            <p class="ml-auto text-base sm:text-lg font-medium text-amber-800">${player.score} poäng</p>`;
+            scoreboardHTML += `
+                <div class="flex items-center gap-4 p-3 sm:p-4 bg-slate-100 rounded-lg border-2 border-amber-700">
+                    <div class="text-2xl sm:text-3xl">🥉</div>
+                    <h3 class="text-base sm:text-lg font-medium text-amber-800">${player.name}</h3>
+                    <p class="ml-auto text-base sm:text-lg font-medium text-amber-800">${player.score} poäng</p>
+                </div>`;
         } else {
-            rankContent = `<span class="font-bold w-6 text-center">${index + 1}.</span> 
-                           <span class="text-slate-700">${player.name}</span> 
-                           <span class="ml-auto text-slate-700">${player.score} poäng</span>`;
+            scoreboardHTML += `
+                <div class="flex items-center gap-4 p-3 sm:p-4 bg-slate-100 rounded-lg">
+                    <span class="font-bold w-6 text-center">${index + 1}.</span>
+                    <span class="text-slate-700">${player.name}</span>
+                    <span class="ml-auto text-slate-700">${player.score} poäng</span>
+                </div>`;
         }
-        rankDiv.innerHTML = rankContent;
-        if (finalScoreboard) finalScoreboard.appendChild(rankDiv);
     });
-
+    
+    // Generate complete end screen HTML
+    const resultHTML = `
+        <h2 class="text-3xl sm:text-4xl font-bold text-slate-900 mb-2">Spelet är slut!</h2>
+        <p class="text-slate-600 mb-6 text-base sm:text-lg">Bra kämpat allihopa!</p>
+        
+        <div class="space-y-3 sm:space-y-4 mb-8">
+            ${scoreboardHTML}
+        </div>
+        
+        <button id="restart-btn" class="w-full bg-blue-600 text-white font-bold py-3 px-6 rounded-lg text-lg sm:text-xl hover:bg-blue-700 transition-colors shadow-md">
+            Spela igen
+        </button>
+    `;
+    
+    // Use same mechanism as singleplayer to replace entire innerHTML
+    UI?.setEndScreenContent(resultHTML);
+    UI?.showEndScreen();
 }
 
 function restartGame() {

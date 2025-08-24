@@ -356,40 +356,28 @@ class ChallengeSystem {
     
     // Load and display my challenges (moved from game.js)
     async loadMyChallenges() {
-        console.log('🔍 DEBUG: loadMyChallenges() called');
         const myChallengesSection = document.getElementById('my-challenges-section');
         const myChallengesList = document.getElementById('my-challenges-list');
-        
-        console.log('🔍 DEBUG: Elements found:', {
-            myChallengesSection: !!myChallengesSection,
-            myChallengesList: !!myChallengesList
-        });
         
         // Load all challenges from localStorage regardless of current player
         // This allows users to see all their challenges even when no active game
         
         // Get all challenges from localStorage
         const allChallenges = [];
-        console.log('🔍 DEBUG: localStorage.length:', localStorage.length);
         
         for (let i = 0; i < localStorage.length; i++) {
             const key = localStorage.key(i);
             if (key.startsWith('challenge_')) {
-                console.log('🔍 DEBUG: Found challenge key:', key);
                 try {
                     const challenge = JSON.parse(localStorage.getItem(key));
                     allChallenges.push(challenge);
-                    console.log('🔍 DEBUG: Added challenge:', challenge.id);
                 } catch (e) {
-                    console.log('🔍 DEBUG: Invalid challenge data for key:', key);
+                    // Invalid challenge data, skip
                 }
             }
         }
         
-        console.log('🔍 DEBUG: Total challenges found:', allChallenges.length);
-        
         if (allChallenges.length === 0) {
-            console.log('🔍 DEBUG: No challenges found, hiding section');
             if (myChallengesSection) myChallengesSection.classList.add('hidden');
             return;
         }
@@ -402,10 +390,8 @@ class ChallengeSystem {
         });
         
         // Show the section when there are challenges
-        console.log('🔍 DEBUG: Showing challenges section');
         if (myChallengesSection) {
             myChallengesSection.classList.remove('hidden');
-            console.log('🔍 DEBUG: Removed hidden class from section');
         }
         
         // Display challenges
