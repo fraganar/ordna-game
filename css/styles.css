@@ -689,4 +689,73 @@ body {
     animation: darkPulse 1.5s ease-out;
 }
 
+/* Challenge list expandable items */
+.challenge-list-item {
+    transition: all 0.3s ease-in-out;
+}
+
+.challenge-list-item .challenge-summary {
+    transition: background-color 0.2s ease;
+}
+
+.challenge-list-item .challenge-summary:hover {
+    background-color: #f1f5f9; /* slate-100 */
+}
+
+.challenge-list-item .expand-icon {
+    transition: transform 0.3s ease;
+    display: inline-block;
+    font-size: 0.75rem;
+}
+
+.challenge-list-item .challenge-details {
+    max-height: 0;
+    overflow: hidden;
+    transition: max-height 0.3s ease-in-out, padding 0.3s ease-in-out;
+}
+
+.challenge-list-item .challenge-details:not(.hidden) {
+    max-height: 300px; /* Adjust based on content */
+    animation: slideDown 0.3s ease-out;
+}
+
+@keyframes slideDown {
+    from {
+        opacity: 0;
+        transform: translateY(-10px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* Status badge animations */
+.challenge-list-item .status-badge span {
+    animation: fadeIn 0.3s ease-in;
+}
+
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: scale(0.9);
+    }
+    to {
+        opacity: 1;
+        transform: scale(1);
+    }
+}
+
+/* Hover effects for buttons in challenge details */
+.challenge-list-item .rematch-btn,
+.challenge-list-item .share-result-btn {
+    transition: all 0.2s ease;
+}
+
+.challenge-list-item .rematch-btn:hover,
+.challenge-list-item .share-result-btn:hover {
+    transform: translateY(-1px);
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
 

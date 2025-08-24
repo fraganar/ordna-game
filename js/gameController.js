@@ -428,7 +428,13 @@ class GameController {
     
     // End multiplayer game
     endMultiplayerGame() {
+        // Manually handle screen transitions - DON'T use UI.showEndScreen() as it resets content
+        const startScreen = UI?.get('startScreen');
+        const gameScreen = UI?.get('gameScreen');
         const endScreen = UI?.get('endScreen');
+        
+        if (startScreen) startScreen.classList.add('hidden');
+        if (gameScreen) gameScreen.classList.add('hidden');
         if (endScreen) endScreen.classList.remove('hidden');
         
         const players = window.PlayerManager?.getPlayers() || [];

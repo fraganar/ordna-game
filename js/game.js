@@ -862,7 +862,11 @@ function populatePackSelect() {
 }
 async function initializeGame() {
     console.log('DEBUG initializeGame: Called - about to reset challenge state');
-    // 🔧 BL-015: Reset challenge state when starting normal game
+    
+    // Simple UI transition - no need to reset endScreen structure anymore!
+    UI?.showStartScreen();
+    
+    // Reset challenge state when starting normal game
     resetChallengeState();
     
     // Set selected pack from dropdown
@@ -1464,19 +1468,43 @@ function endGame() {
 
 // Handle end of multiplayer game  
 function endMultiplayerGame() {
+    console.log('🔥 DEBUG: endMultiplayerGame() CALLED in game.js');
+    
     // 🔧 BL-016 FIX: Force hide competing UI elements
     const singlePlayerFinal = UI?.get('singlePlayerFinal');
     const challengeResult = UI?.get('challengeResult');
+    console.log('🔥 DEBUG: singlePlayerFinal element:', singlePlayerFinal);
+    console.log('🔥 DEBUG: singlePlayerFinal hidden?', singlePlayerFinal?.classList.contains('hidden'));
     if (singlePlayerFinal) singlePlayerFinal.classList.add('hidden');
     if (challengeResult) challengeResult.classList.add('hidden');
     
-    UI?.showEndScreen();
+    // Manually handle screen transitions - DON'T use UI.showEndScreen() as it resets content
+    const startScreen = UI?.get('startScreen');
+    const gameScreen = UI?.get('gameScreen');
+    const endScreen = UI?.get('endScreen');
     
-    players.sort((a, b) => b.score - a.score);
+    if (startScreen) startScreen.classList.add('hidden');
+    if (gameScreen) gameScreen.classList.add('hidden');
+    if (endScreen) endScreen.classList.remove('hidden');
+    
+    console.log('🔥 DEBUG: endScreen full HTML content:');
+    console.log(endScreen?.innerHTML);
+    
+    // Get players from PlayerManager (not the possibly stale global variable)
+    const currentPlayers = window.PlayerManager?.getPlayers() || [];
+    console.log('🔥 DEBUG: currentPlayers:', currentPlayers);
+    currentPlayers.sort((a, b) => b.score - a.score);
     const finalScoreboard = UI?.get('finalScoreboard');
-    if (finalScoreboard) finalScoreboard.innerHTML = '';
+    console.log('🔥 DEBUG: finalScoreboard element:', finalScoreboard);
+    console.log('🔥 DEBUG: finalScoreboard hidden?', finalScoreboard?.classList.contains('hidden'));
+    if (finalScoreboard) {
+        finalScoreboard.innerHTML = '';
+        // 🔧 CRITICAL: Remove hidden class that showStartScreen() might have added
+        finalScoreboard.classList.remove('hidden');
+        console.log('🔥 DEBUG: Removed hidden class from finalScoreboard');
+    }
 
-    players.forEach((player, index) => {
+    currentPlayers.forEach((player, index) => {
         const rankDiv = document.createElement('div');
         rankDiv.className = 'flex items-center gap-4 p-3 sm:p-4 bg-slate-100 rounded-lg';
         

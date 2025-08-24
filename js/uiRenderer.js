@@ -424,6 +424,38 @@ class UIRenderer {
         const playerSetup = this.get('playerSetup');
         const challengeForm = this.get('challengeForm');
         
+        // 🚫 TEMPORARILY DISABLED: innerHTML reset destroys multiplayer structure  
+        // This bandaid prevents contamination but doesn't fix root architectural problem
+        if (false && endScreen) {
+            console.log('🚨 WARNING: showStartScreen() is RESETTING endScreen.innerHTML!');
+            console.trace('Call stack showing WHO called showStartScreen:');
+            endScreen.innerHTML = `
+        <h2 class="text-3xl sm:text-4xl font-bold text-slate-900 mb-2">Spelet är slut!</h2>
+        <p id="end-screen-subtitle" class="text-slate-600 mb-6 text-base sm:text-lg">Bra kämpat allihopa!</p>
+        
+        <!-- Single Player Final Score -->
+        <div id="single-player-final" class="hidden bg-blue-100 text-blue-800 rounded-lg p-6 mb-8">
+            <p class="text-xl">Din slutpoäng:</p>
+            <p id="single-final-score" class="text-6xl font-bold"></p>
+        </div>
+        
+        <!-- Multiplayer Final Scoreboard -->
+        <div id="final-scoreboard" class="space-y-3 sm:space-y-4 mb-8">
+            <!-- Final player scores will be listed here -->
+        </div>
+        
+        <button id="restart-btn" class="w-full bg-blue-600 text-white font-bold py-3 px-6 rounded-lg text-lg sm:text-xl hover:bg-blue-700 transition-colors shadow-md">
+            Spela igen
+        </button>
+    `;
+            
+            // Re-attach restart button listener
+            const restartBtn = document.getElementById('restart-btn');
+            if (restartBtn && typeof window.restartGame === 'function') {
+                restartBtn.addEventListener('click', window.restartGame);
+            }
+        }
+        
         if (endScreen) endScreen.classList.add('hidden');
         if (startScreen) startScreen.classList.remove('hidden');
         if (startMain) startMain.classList.remove('hidden');
@@ -884,6 +916,38 @@ class UIRenderer {
         const endScreen = this.get('endScreen');
         const startMain = this.get('startMain');
         const playerSetup = this.get('playerSetup');
+        
+        // 🚫 TEMPORARILY DISABLED: innerHTML reset destroys multiplayer structure  
+        // This bandaid prevents contamination but doesn't fix root architectural problem
+        if (false && endScreen) {
+            console.log('🚨 WARNING: showStartScreen() is RESETTING endScreen.innerHTML!');
+            console.trace('Call stack showing WHO called showStartScreen:');
+            endScreen.innerHTML = `
+        <h2 class="text-3xl sm:text-4xl font-bold text-slate-900 mb-2">Spelet är slut!</h2>
+        <p id="end-screen-subtitle" class="text-slate-600 mb-6 text-base sm:text-lg">Bra kämpat allihopa!</p>
+        
+        <!-- Single Player Final Score -->
+        <div id="single-player-final" class="hidden bg-blue-100 text-blue-800 rounded-lg p-6 mb-8">
+            <p class="text-xl">Din slutpoäng:</p>
+            <p id="single-final-score" class="text-6xl font-bold"></p>
+        </div>
+        
+        <!-- Multiplayer Final Scoreboard -->
+        <div id="final-scoreboard" class="space-y-3 sm:space-y-4 mb-8">
+            <!-- Final player scores will be listed here -->
+        </div>
+        
+        <button id="restart-btn" class="w-full bg-blue-600 text-white font-bold py-3 px-6 rounded-lg text-lg sm:text-xl hover:bg-blue-700 transition-colors shadow-md">
+            Spela igen
+        </button>
+    `;
+            
+            // Re-attach restart button listener
+            const restartBtn = document.getElementById('restart-btn');
+            if (restartBtn && typeof window.restartGame === 'function') {
+                restartBtn.addEventListener('click', window.restartGame);
+            }
+        }
         
         if (startScreen) startScreen.classList.remove('hidden');
         if (gameScreen) gameScreen.classList.add('hidden');
