@@ -1512,14 +1512,30 @@ function endMultiplayerGame() {
             ${scoreboardHTML}
         </div>
         
-        <button id="restart-btn" class="w-full bg-blue-600 text-white font-bold py-3 px-6 rounded-lg text-lg sm:text-xl hover:bg-blue-700 transition-colors shadow-md">
-            Spela igen
+        <button id="back-to-start-final" class="w-full bg-blue-600 text-white font-bold py-3 px-6 rounded-lg text-lg sm:text-xl hover:bg-blue-700 transition-colors shadow-md">
+            Tillbaka till start
         </button>
     `;
     
     // Use same mechanism as singleplayer to replace entire innerHTML
     UI?.setEndScreenContent(resultHTML);
     UI?.showEndScreen();
+    
+    // Add event listener for back button (same as singleplayer)
+    const backButton = document.getElementById('back-to-start-final');
+    if (backButton) {
+        backButton.addEventListener('click', () => {
+            // Go back to start screen
+            const endScreen = UI?.get('endScreen');
+            const startScreen = UI?.get('startScreen');
+            
+            if (endScreen) endScreen.classList.add('hidden');
+            if (startScreen) startScreen.classList.remove('hidden');
+            
+            // Reset challenge state when going back to start
+            resetChallengeState();
+        });
+    }
 }
 
 function restartGame() {

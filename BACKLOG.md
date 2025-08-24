@@ -17,6 +17,7 @@
 6. **BL-008** (70) - Visa poäng i utmaningsresultat
 7. **BL-009** (60) - Poänganimering före totalpoäng
 8. **BL-010** (50) - Utmana-knapp efter alla spellägen
+9. **BL-018** (30) - Unificera slutskärmsfunktioner
 
 ---
 
@@ -71,6 +72,20 @@
 - **Stackrank:** 50
 - **Beskrivning:** Utmana borde man alltid få välja i slutet på alla spel, singelspel och kanske multispel också
 
+### BL-018: Unificera slutskärmsfunktioner
+- **Kategori:** REFACTOR
+- **Stackrank:** 30
+- **Beskrivning:** Inkonsekvent namngivning och parameterhantering för slutskärmsfunktioner
+- **Problem:** 
+  - `showGameResultScreen()` tar parametrar, `end*Game()` använder global state
+  - Olika namnkonventioner för liknande funktioner (Verb+Objekt vs Verb+Spelläge)
+  - Duplicerad logik mellan funktionerna
+- **Förslag:** 
+  - Alt 1: Unificera till en funktion `showEndScreen(gameMode, players, config)`
+  - Alt 2: Konsekvent namngivning `showSinglePlayerEndScreen()`, `showMultiplayerEndScreen()`
+  - Använd konsekvent antingen parametrar eller state-hämtning
+- **Nytta:** Enklare att underhålla, mer förutsägbar kod
+
 ### BL-012: Code Review Regression Guard Agent
 - **Kategori:** FEATURE
 - **Stackrank:** 40
@@ -109,4 +124,4 @@ Se LOG.md för detaljer om kasserade items:
 
 ---
 
-*Senast uppdaterad: 2025-08-23*
+*Senast uppdaterad: 2025-08-24*
