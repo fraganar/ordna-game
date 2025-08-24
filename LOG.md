@@ -39,6 +39,50 @@ Detta dokument innehåller historisk information om slutförda och kasserade bac
 - **Implementation:** Automatisk validering vid uppstart i app.initialize()
 - **Resultat:** Kontrollerar 11 kritiska funktioner + 6 moduler
 
+### BL-006: Slutskärm till startmeny (multispel)
+- **Status:** SLUTFÖRD (2025-08-24)
+- **Kategori:** BUG
+- **Prioritet:** HÖG
+- **Problem:** Knappen på sista skärmen efter multiplayer-läget gick inte tillbaka till startskärmen
+- **Lösning:** Ändrade från "Spela igen" till "Tillbaka till start" med samma mönster som singleplayer
+
+### BL-012: Code Review Regression Guard Agent
+- **Status:** SLUTFÖRD (2025-08-23)
+- **Kategori:** FEATURE
+- **Prioritet:** MEDEL
+- **Beskrivning:** Agent för kodgranskning med fokus på regressionsrisker och design-konsistens
+- **Resultat:** Agenten skapad och testad framgångsrikt
+
+### BL-013: Dubbel totalpoäng-visning i singelspel
+- **Status:** SLUTFÖRD (2025-08-23)
+- **Kategori:** BUG
+- **Problem:** Totalpoäng visades två gånger i singleplayer UI
+- **Lösning:** Tog bort duplikat från player-status-bar
+
+### BL-014: Teknisk skuld - Duplicerad singelspel-uppdatering och död kod
+- **Status:** SLUTFÖRD (2025-08-23)
+- **Kategori:** REFACTOR
+- **Problem:** Duplicerad kod för singleplayer-uppdatering, död kod
+- **Lösning:** Refaktorering och borttagning av död kod
+
+### BL-015: State Corruption mellan spellägen
+- **Status:** SLUTFÖRD (2025-08-24)
+- **Kategori:** BUG
+- **Problem:** State från tidigare spellägen visades i multiplayer-resultat
+- **Lösning:** Unifierad slutskärmshantering med setEndScreenContent()
+
+### BL-016: UI Cleanup mellan spellägen
+- **Status:** SLUTFÖRD (2025-08-24)
+- **Kategori:** BUG
+- **Problem:** Challenge-UI synlig under multiplayer slutskärm
+- **Lösning:** Ersätter hela innerHTML istället för DOM-manipulation
+
+### BL-017: Challenge State Persistence Bug
+- **Status:** SLUTFÖRD (2025-08-24)
+- **Kategori:** BUG
+- **Problem:** Challenge skapades med 0 poäng och hoppade direkt till resultat
+- **Lösning:** resetChallengeState() rensar nu pendingChallenge från localStorage
+
 ## ❌ Kasserade Items
 
 ### BL-001: GameLogger System
@@ -55,10 +99,10 @@ Detta dokument innehåller historisk information om slutförda och kasserade bac
 
 ## 📊 Statistik
 
-- **Totalt slutförda:** 4
+- **Totalt slutförda:** 12
 - **Totalt kasserade:** 1
-- **Framgångsgrad:** 80%
+- **Framgångsgrad:** 92%
 
 ---
 
-*Senast uppdaterad: 2025-08-23*
+*Senast uppdaterad: 2025-08-24*

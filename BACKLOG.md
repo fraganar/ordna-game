@@ -14,6 +14,8 @@
 3. **BL-009** (60) - Poänganimering före totalpoäng
 4. **BL-010** (50) - Utmana-knapp efter alla spellägen
 5. **BL-018** (30) - Unificera slutskärmsfunktioner
+6. **BL-019** (25) - Duplicerad showChallengeAcceptScreen implementation
+7. **BL-020** (20) - Duplicerad difficulty badge implementation
 
 ---
 
@@ -43,23 +45,43 @@
 ### BL-018: Unificera slutskärmsfunktioner
 - **Kategori:** REFACTOR
 - **Stackrank:** 30
-- **Beskrivning:** Inkonsekvent namngivning och parameterhantering för slutskärmsfunktioner
-- **Problem:** 
-  - `showGameResultScreen()` tar parametrar, `end*Game()` använder global state
-  - Olika namnkonventioner för liknande funktioner (Verb+Objekt vs Verb+Spelläge)
-  - Duplicerad logik mellan funktionerna
+- **Beskrivning:** Förvirrande namn på `showGameResultScreen` som låter generell men används bara för normal singleplayer
+- **Egentliga problemet:** Namnet är missvisande - strukturen är faktiskt ganska symmetrisk som den är
+- **Nuvarande struktur:**
+  - `endSinglePlayerGame()` → `showGameResultScreen()` för normal, ChallengeSystem för utmaningar
+  - `endMultiplayerGame()` → genererar HTML direkt
 - **Förslag:** 
-  - Alt 1: Unificera till en funktion `showEndScreen(gameMode, players, config)`
-  - Alt 2: Konsekvent namngivning `showSinglePlayerEndScreen()`, `showMultiplayerEndScreen()`
-  - Använd konsekvent antingen parametrar eller state-hämtning
-- **Nytta:** Enklare att underhålla, mer förutsägbar kod
+  - Alt 1: Byt namn till `showSinglePlayerResultScreen` för tydlighet
+  - Alt 2: Behåll som det är men dokumentera bättre vad funktionen gör
+- **Nytta:** Mindre förvirring kring vad funktionerna faktiskt gör
 
-### BL-012: Code Review Regression Guard Agent
-- **Kategori:** FEATURE
-- **Stackrank:** 40
-- **Beskrivning:** Agent för kodgranskning med fokus på regressionsrisker och design-konsistens
-- **Status:** ✅ COMPLETED 2025-08-23
-- **Detaljer:** Agenten skapad och testad framgångsrikt
+### BL-019: Duplicerad showChallengeAcceptScreen implementation
+- **Kategori:** REFACTOR
+- **Stackrank:** 25
+- **Beskrivning:** Tre olika implementationer av showChallengeAcceptScreen finns i kodbasen
+- **Problem:**
+  - `game.js:433` - Global async funktion (används ej)
+  - `app.js` - App-klassens metod (detta är den som används)
+  - `uiRenderer.js` - UIRenderer metod (används ej)
+- **Åtgärd:**
+  - Ta bort de oanvända versionerna i game.js och uiRenderer.js
+  - Behåll endast app.js versionen som faktiskt används
+- **Nytta:** Minskar förvirring, tar bort död kod, tydligare ansvarsseparation
+
+### BL-020: Duplicerad difficulty badge implementation
+- **Kategori:** REFACTOR
+- **Stackrank:** 20
+- **Beskrivning:** Tre olika funktioner för att uppdatera difficulty badge
+- **Problem:**
+  - `setDifficultyBadge(difficulty)` i game.js - global funktion som anropar UI.updateDifficultyBadge
+  - `UI.updateDifficultyBadge(difficulty)` i uiRenderer.js - huvudimplementationen
+  - `UI.updateDifficultyBadgeText(difficulty)` i uiRenderer.js - ytterligare en variant
+  - Onödig indirektion: game.js anropar UI-metoden via wrapper-funktion
+- **Åtgärd:**
+  - Ta bort `setDifficultyBadge` från game.js
+  - Använd `UI.updateDifficultyBadge` direkt överallt
+  - Undersök om `updateDifficultyBadgeText` behövs eller kan slås ihop
+- **Nytta:** Enklare kodflöde, mindre förvirring
 
 ---
 
