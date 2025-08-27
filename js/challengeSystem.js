@@ -438,7 +438,7 @@ class ChallengeSystem {
                         }
                         
                         statusText = `Du: ${myData.totalScore}p vs ${opponentData.name}: ${opponentData.totalScore}p ${resultEmoji}`;
-                        statusBadge = '<span class="bg-green-100 text-green-800 text-xs font-semibold px-2 py-1 rounded">Klar</span>';
+                        statusBadge = '<span class="bg-teal-100 text-teal-800 text-xs font-semibold px-2 py-1 rounded">Klar</span>';
                         
                         // Create expandable details
                         const timeAgo = this.getTimeAgo(challenge.createdAt || challenge.completedAt);
@@ -578,7 +578,7 @@ class ChallengeSystem {
                             '<span class="bg-blue-100 text-blue-800 text-xs font-semibold px-2 py-1 rounded">Väntar</span>';
                         statusText = `Du: ${challenge.totalScore}p`;
                     } else {
-                        statusBadge = '<span class="bg-green-100 text-green-800 text-xs font-semibold px-2 py-1 rounded">Spelad</span>';
+                        statusBadge = '<span class="bg-teal-100 text-teal-800 text-xs font-semibold px-2 py-1 rounded">Spelad</span>';
                         statusText = `Du: ${challenge.totalScore}p`;
                     }
                     

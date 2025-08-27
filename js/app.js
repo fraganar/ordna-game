@@ -275,7 +275,7 @@ class App {
         
         results.forEach(challenge => {
             const notification = document.createElement('div');
-            notification.className = 'bg-green-50 border border-green-200 rounded-lg p-3 mb-2 cursor-pointer';
+            notification.className = 'bg-teal-50 border border-teal-200 rounded-lg p-3 mb-2 cursor-pointer';
             
             const winner = challenge.opponent.totalScore > challenge.challenger.totalScore ? challenge.opponent.name :
                           challenge.opponent.totalScore < challenge.challenger.totalScore ? 'Du' : 'Oavgjort';
@@ -283,10 +283,10 @@ class App {
             notification.innerHTML = `
                 <div class="flex items-center justify-between">
                     <div>
-                        <p class="font-semibold text-green-800">🔔 ${challenge.opponent.name} har spelat klart!</p>
-                        <p class="text-sm text-green-600">Vinnare: ${winner} (${challenge.opponent.totalScore} vs ${challenge.challenger.totalScore} poäng)</p>
+                        <p class="font-semibold text-teal-800">🔔 ${challenge.opponent.name} har spelat klart!</p>
+                        <p class="text-sm text-teal-600">Vinnare: ${winner} (${challenge.opponent.totalScore} vs ${challenge.challenger.totalScore} poäng)</p>
                     </div>
-                    <button class="text-blue-600 hover:text-blue-800 text-sm font-medium">Se resultat →</button>
+                    <button class="text-primary hover:text-primary-dark text-sm font-medium">Se resultat →</button>
                 </div>
             `;
             

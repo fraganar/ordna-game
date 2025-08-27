@@ -147,7 +147,7 @@ class GameController {
         
         shuffledOptions.forEach(optionText => {
             const button = document.createElement('button');
-            button.className = 'option-btn w-full text-left p-3 sm:p-4 rounded-lg border-2 border-slate-300 bg-white hover:bg-slate-50 hover:border-blue-400 text-sm sm:text-base';
+            button.className = 'option-btn w-full text-left p-3 sm:p-4 rounded-lg border-2 border-slate-300 bg-white hover:bg-slate-50 hover:border-purple-400 text-sm sm:text-base';
             button.textContent = optionText;
             button.addEventListener('click', () => window.handleOrderClick(button, optionText));
             optionsGrid.appendChild(button);
@@ -198,7 +198,7 @@ class GameController {
     // Handle correct answer for order questions
     handleCorrectAnswer(button, orderNumber) {
         button.disabled = true;
-        button.classList.add('correct', 'bg-green-100', 'border-green-500');
+        button.classList.add('correct', 'bg-teal-100', 'border-teal-500');
         
         const orderBadge = document.createElement('span');
         orderBadge.className = 'order-number';
@@ -218,7 +218,7 @@ class GameController {
     
     // Handle wrong answer for order questions
     handleWrongAnswer(button) {
-        button.classList.add('wrong', 'bg-red-100', 'border-red-500');
+        button.classList.add('wrong', 'bg-rose-100', 'border-rose-500');
         this.mistakeMade = true;
         
         const currentPlayer = window.PlayerManager?.getCurrentPlayer();
@@ -245,7 +245,7 @@ class GameController {
     
     // Handle correct belongs answer
     handleCorrectBelongsAnswer(button, container) {
-        button.classList.add('bg-green-500', 'text-white');
+        button.classList.add('bg-teal-500', 'text-white');
         button.disabled = true;
         
         const otherButton = button.classList.contains('yes-btn') 
@@ -254,7 +254,7 @@ class GameController {
         otherButton.disabled = true;
         otherButton.classList.add('opacity-50');
         
-        container.classList.add('decided', 'bg-green-50');
+        container.classList.add('decided', 'bg-teal-50');
         
         // Add point
         if (window.PlayerManager) {
@@ -267,7 +267,7 @@ class GameController {
     
     // Handle wrong belongs answer
     handleWrongBelongsAnswer(button, container) {
-        button.classList.add('bg-red-500', 'text-white');
+        button.classList.add('bg-rose-500', 'text-white');
         button.disabled = true;
         
         const otherButton = button.classList.contains('yes-btn')
@@ -275,7 +275,7 @@ class GameController {
             : container.querySelector('.yes-btn');
         otherButton.disabled = true;
         
-        container.classList.add('wrong', 'bg-red-50');
+        container.classList.add('wrong', 'bg-rose-50');
         this.mistakeMade = true;
         
         const currentPlayer = window.PlayerManager?.getCurrentPlayer();

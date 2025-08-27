@@ -647,14 +647,14 @@ function showGameResultScreen(score, gameType, totalQuestions) {
             <p class="text-slate-600 mb-6 text-base sm:text-lg">Bra kämpat!</p>
             
             <!-- Game Result -->
-            <div class="bg-blue-100 text-blue-800 rounded-lg p-6 mb-8">
+            <div class="bg-purple-100 text-purple-800 rounded-lg p-6 mb-8">
                 <h3 class="text-xl font-semibold mb-2">${gameTypeName}</h3>
-                <p class="text-sm text-blue-600 mb-3">${totalQuestions} frågor</p>
+                <p class="text-sm text-purple-600 mb-3">${totalQuestions} frågor</p>
                 <p class="text-6xl font-bold">${score}</p>
                 <p class="text-lg">poäng</p>
             </div>
             
-            <button id="back-to-start-final" class="w-full bg-blue-600 text-white font-bold py-3 px-6 rounded-lg text-lg sm:text-xl hover:bg-blue-700 transition-colors shadow-md">
+            <button id="back-to-start-final" class="w-full bg-gradient-to-r from-magic to-primary text-white font-bold py-3 px-6 rounded-lg text-lg sm:text-xl hover:from-primary hover:to-magic-dark transition-colors shadow-md">
                 Tillbaka till start
             </button>
         </div>
@@ -1026,9 +1026,9 @@ function setDifficultyBadge(difficulty) {
     badge.textContent = difficulty.charAt(0).toUpperCase() + difficulty.slice(1);
     let baseClasses = 'text-xs font-bold px-2 py-1 rounded-full ';
     
-    if (difficulty === 'lätt') badge.className = baseClasses + 'bg-green-100 text-green-800';
+    if (difficulty === 'lätt') badge.className = baseClasses + 'bg-teal-100 text-teal-800';
     else if (difficulty === 'medel') badge.className = baseClasses + 'bg-yellow-100 text-yellow-800';
-    else badge.className = baseClasses + 'bg-red-100 text-red-800';
+    else badge.className = baseClasses + 'bg-rose-100 text-rose-800';
 }
 
 function loadQuestion() {
@@ -1215,7 +1215,7 @@ function handleOrderClick(button, optionText) {
         
         // Update button appearance
         button.className = 'option-btn w-full text-left p-4 rounded-lg border-2 correct-step';
-        button.innerHTML = `<span class="inline-flex items-center justify-center w-6 h-6 mr-3 bg-white text-green-600 rounded-full font-bold">${userOrder.length}</span> ${optionText}`;
+        button.innerHTML = `<span class="inline-flex items-center justify-center w-6 h-6 mr-3 bg-white text-teal-600 rounded-full font-bold">${userOrder.length}</span> ${optionText}`;
         button.disabled = true;
 
         // Check if this was the LAST alternative
@@ -1402,7 +1402,7 @@ function showExplanation(explanationText) {
     if (!explanationDiv) {
         explanationDiv = document.createElement('div');
         explanationDiv.id = 'explanation-div';
-        explanationDiv.className = 'p-4 bg-blue-50 border border-blue-200 rounded-lg text-sm text-blue-800 max-w-2xl mx-auto';
+        explanationDiv.className = 'p-4 bg-purple-50 border border-purple-200 rounded-lg text-sm text-purple-800 max-w-2xl mx-auto';
         
         // Insert after the controls box
         const footerArea = document.getElementById('footer-area');
@@ -1512,7 +1512,7 @@ function endMultiplayerGame() {
             ${scoreboardHTML}
         </div>
         
-        <button id="back-to-start-final" class="w-full bg-blue-600 text-white font-bold py-3 px-6 rounded-lg text-lg sm:text-xl hover:bg-blue-700 transition-colors shadow-md">
+        <button id="back-to-start-final" class="w-full bg-gradient-to-r from-magic to-primary text-white font-bold py-3 px-6 rounded-lg text-lg sm:text-xl hover:from-primary hover:to-magic-dark transition-colors shadow-md">
             Tillbaka till start
         </button>
     `;
@@ -1564,7 +1564,7 @@ function restartGame() {
         <p id="end-screen-subtitle" class="text-slate-600 mb-6 text-base sm:text-lg">Bra kämpat allihopa!</p>
         
         <!-- Single Player Final Score -->
-        <div id="single-player-final" class="hidden bg-blue-100 text-blue-800 rounded-lg p-6 mb-8">
+        <div id="single-player-final" class="hidden bg-purple-100 text-purple-800 rounded-lg p-6 mb-8">
             <p class="text-xl">Din slutpoäng:</p>
             <p id="single-final-score" class="text-6xl font-bold"></p>
         </div>
@@ -1574,7 +1574,7 @@ function restartGame() {
             <!-- Final player scores will be listed here -->
         </div>
         
-        <button id="restart-btn" class="w-full bg-blue-600 text-white font-bold py-3 px-6 rounded-lg text-lg sm:text-xl hover:bg-blue-700 transition-colors shadow-md">
+        <button id="restart-btn" class="w-full bg-gradient-to-r from-magic to-primary text-white font-bold py-3 px-6 rounded-lg text-lg sm:text-xl hover:from-primary hover:to-magic-dark transition-colors shadow-md">
             Spela igen
         </button>
     `;
@@ -1622,7 +1622,7 @@ function populatePackShop() {
         const isSelected = selectedPacks.includes(pack.name);
         
         card.className = `pack-card border-2 rounded-lg p-4 flex flex-col justify-between ${
-            isAvailable ? 'cursor-pointer bg-slate-50 border-slate-200 hover:border-blue-400 hover:bg-white' : 
+            isAvailable ? 'cursor-pointer bg-slate-50 border-slate-200 hover:border-purple-400 hover:bg-white' : 
             'cursor-not-allowed bg-slate-100 border-slate-300 opacity-75'
         }`;
         card.dataset.packName = pack.name;
@@ -1631,7 +1631,7 @@ function populatePackShop() {
             card.classList.add('selected');
         }
 
-        const priceColor = pack.status === 'available' ? 'text-green-600' : 'text-slate-400';
+        const priceColor = pack.status === 'available' ? 'text-teal-600' : 'text-slate-400';
         const statusIcon = pack.status === 'available' ? '✅' : '🔒';
 
         card.innerHTML = `

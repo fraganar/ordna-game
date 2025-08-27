@@ -5,6 +5,26 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Hur Ordna fungerar</title>
     <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        'primary': '#7C3AED',
+                        'primary-dark': '#6D28D9',
+                        'action': '#FB923C',
+                        'action-dark': '#EA580C',
+                        'success': '#14B8A6',
+                        'success-dark': '#0D9488',
+                        'danger': '#F87171',
+                        'danger-dark': '#EF4444',
+                        'magic': '#EC4899',
+                        'magic-dark': '#DB2777'
+                    }
+                }
+            }
+        }
+    </script>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&family=Poppins:wght@700&display=swap" rel="stylesheet">
@@ -13,16 +33,16 @@
 <body class="bg-slate-100 text-slate-800 min-h-screen p-4">
     <div class="max-w-2xl mx-auto bg-white rounded-xl shadow-lg p-6 sm:p-8">
         <div class="mb-6">
-            <a href="index.html" class="text-blue-600 hover:text-blue-800 text-base">← Tillbaka till spelet</a>
+            <a href="index.html" class="text-primary hover:text-primary-dark text-base">← Tillbaka till spelet</a>
         </div>
         
-        <h1 class="font-poppins text-3xl sm:text-4xl font-bold text-blue-600 mb-6">Hur Ordna fungerar</h1>
+        <h1 class="font-poppins text-3xl sm:text-4xl font-bold text-primary mb-6">Hur Ordna fungerar</h1>
         
         <div class="mb-8">
             <h2 class="text-xl font-bold text-slate-800 mb-3">Frågetyper</h2>
             <div class="space-y-4">
-                <div class="bg-blue-50 border border-blue-200 rounded-lg p-4">
-                    <h3 class="font-semibold text-blue-800 mb-2">Ordna-frågor</h3>
+                <div class="bg-purple-50 border border-purple-200 rounded-lg p-4">
+                    <h3 class="font-semibold text-primary-dark mb-2">Ordna-frågor</h3>
                     <p class="text-sm text-slate-700 mb-2">Klicka på alternativen i rätt ordning (t.ex. minst till störst, äldst till nyast).</p>
                     <p class="text-xs text-slate-600"><strong>Obs:</strong> Du måste klicka i rätt ordning - ett fel och du är ute!</p>
                 </div>
@@ -80,7 +100,7 @@
         </div>
         
         <div class="text-center mt-8">
-            <a href="index.html" class="inline-block bg-blue-600 text-white font-bold py-3 px-6 rounded-lg hover:bg-blue-700 transition-colors">
+            <a href="index.html" class="inline-block bg-gradient-to-r from-magic to-primary text-white font-bold py-3 px-6 rounded-lg hover:from-primary hover:to-magic-dark transition-colors">
                 Börja spela!
             </a>
         </div>

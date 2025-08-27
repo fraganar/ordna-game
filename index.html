@@ -7,7 +7,7 @@
     
     <!-- PWA Manifest -->
     <link rel="manifest" href="manifest.json">
-    <meta name="theme-color" content="#3b82f6">
+    <meta name="theme-color" content="#7C3AED">
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="default">
     <meta name="apple-mobile-web-app-title" content="Ordna">
@@ -16,6 +16,26 @@
     <link rel="apple-touch-icon" href="icon-192.png">
     <link rel="icon" type="image/png" sizes="192x192" href="icon-192.png">
     <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        'primary': '#7C3AED',
+                        'primary-dark': '#6D28D9',
+                        'action': '#FB923C',
+                        'action-dark': '#EA580C',
+                        'success': '#14B8A6',
+                        'success-dark': '#0D9488',
+                        'danger': '#F87171',
+                        'danger-dark': '#EF4444',
+                        'magic': '#EC4899',
+                        'magic-dark': '#DB2777'
+                    }
+                }
+            }
+        }
+    </script>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&family=Poppins:wght@700&display=swap" rel="stylesheet">
@@ -52,22 +72,22 @@
         <!-- Start Screen -->
         <div id="start-screen" class="p-6 sm:p-8 lg:p-12">
             <div id="start-main">
-                <h1 class="font-poppins text-5xl sm:text-6xl md:text-7xl font-bold text-blue-600 mb-4 text-center">Ordna</h1>
+                <h1 class="font-poppins text-5xl sm:text-6xl md:text-7xl font-bold text-primary mb-4 text-center">Ordna</h1>
                 <p class="text-slate-600 mb-6 sm:mb-8 text-base sm:text-lg text-center">Vågar du chansa? Samla poäng på varje rätt svar – men ett fel och rundan är över!</p>
 
                 <div class="bg-slate-100 text-left p-4 sm:p-6 rounded-lg mb-6 sm:mb-8 border border-slate-200">
                     <h2 class="font-bold text-lg text-slate-800 mb-4 text-center">Hur det fungerar</h2>
                     <ul class="space-y-3 text-slate-700 text-sm sm:text-base">
                         <li class="flex items-start">
-                            <svg class="w-5 h-5 sm:w-6 sm:h-6 mr-3 text-blue-500 flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+                            <svg class="w-5 h-5 sm:w-6 sm:h-6 mr-3 text-primary flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
                             <span><strong>Rätt svar = +1 poäng</strong> till din pott</span>
                         </li>
                         <li class="flex items-start">
-                            <svg class="w-5 h-5 sm:w-6 sm:h-6 mr-3 text-green-500 flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+                            <svg class="w-5 h-5 sm:w-6 sm:h-6 mr-3 text-success flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
                             <span><strong>"Stanna" = Säkra poängen!</strong> Ta hem din pott när som helst</span>
                         </li>
                         <li class="flex items-start">
-                            <svg class="w-5 h-5 sm:w-6 sm:h-6 mr-3 text-red-500 flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 14l2-2m0 0l2-2m-2 2l-2-2m2 2l2 2m7-2a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+                            <svg class="w-5 h-5 sm:w-6 sm:h-6 mr-3 text-danger flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 14l2-2m0 0l2-2m-2 2l-2-2m2 2l2 2m7-2a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
                             <span><strong>Fel svar = Potten förloras!</strong> Men säkrade poäng är kvar</span>
                         </li>
                         <li class="flex items-start">
@@ -77,14 +97,14 @@
                     </ul>
                     
                     <div class="mt-4 pt-4 border-t border-slate-300">
-                        <a href="hur-det-fungerar.html" class="text-blue-600 hover:text-blue-800 underline text-base font-medium">
+                        <a href="hur-det-fungerar.html" class="text-primary hover:text-primary-dark underline text-base font-medium">
                             Läs mer om hur spelet fungerar →
                         </a>
                     </div>
                 </div>
 
                 <div class="space-y-4">
-                    <button id="show-player-setup-btn" class="w-full bg-blue-600 text-white font-bold py-3 sm:py-4 px-6 rounded-lg text-lg sm:text-xl hover:bg-blue-700 transition-all duration-300 shadow-lg hover:shadow-xl transform hover:-translate-y-1">
+                    <button id="show-player-setup-btn" class="w-full bg-gradient-to-r from-magic to-primary text-white font-bold py-3 sm:py-4 px-6 rounded-lg text-lg sm:text-xl hover:from-primary hover:to-magic-dark transition-all duration-300 shadow-lg hover:shadow-xl transform hover:-translate-y-1">
                         Starta Spelet
                     </button>
                     <button id="show-challenge-form-btn" class="w-full bg-slate-500 text-white font-bold py-3 sm:py-4 px-6 rounded-lg text-lg sm:text-xl hover:bg-slate-600 transition-all duration-300 shadow-lg hover:shadow-xl transform hover:-translate-y-1">
@@ -130,7 +150,7 @@
                  <div id="player-names-container" class="space-y-4 mb-8">
                     <!-- Player name inputs will be generated here -->
                  </div>
-                 <button id="start-game-btn" class="w-full bg-green-600 text-white font-bold py-3 sm:py-4 px-6 rounded-lg text-lg sm:text-xl hover:bg-green-700 transition-colors">
+                 <button id="start-game-btn" class="w-full bg-gradient-to-r from-success to-success-dark text-white font-bold py-3 sm:py-4 px-6 rounded-lg text-lg sm:text-xl hover:from-success-dark hover:to-success transition-colors">
                     Kör igång!
                 </button>
             </div>
@@ -143,13 +163,13 @@
                     <input type="text" id="player-name-input" placeholder="Ditt namn" class="w-full p-3 border border-slate-300 rounded-lg text-base sm:text-lg" maxlength="20">
                 </div>
                 <div class="space-y-4">
-                    <button id="save-player-name-btn" class="w-full bg-blue-600 text-white font-bold py-3 sm:py-4 px-6 rounded-lg text-lg sm:text-xl hover:bg-blue-700 transition-colors">
+                    <button id="save-player-name-btn" class="w-full bg-gradient-to-r from-magic to-primary text-white font-bold py-3 sm:py-4 px-6 rounded-lg text-lg sm:text-xl hover:from-primary hover:to-magic-dark transition-colors">
                         Fortsätt
                     </button>
                 </div>
-                <div class="mt-6 p-4 bg-blue-50 border border-blue-200 rounded-lg">
-                    <p class="text-sm text-blue-700">💡 <strong>Tips:</strong> Lägg till Ordna på din hemskärm för bästa upplevelse!</p>
-                    <p class="text-xs text-blue-600 mt-1">iPhone: Dela → Lägg till på hemskärm<br>Android: Meny → Lägg till på hemskärm</p>
+                <div class="mt-6 p-4 bg-purple-50 border border-purple-200 rounded-lg">
+                    <p class="text-sm text-primary-dark">💡 <strong>Tips:</strong> Lägg till Ordna på din hemskärm för bästa upplevelse!</p>
+                    <p class="text-xs text-primary mt-1">iPhone: Dela → Lägg till på hemskärm<br>Android: Meny → Lägg till på hemskärm</p>
                 </div>
             </div>
 
@@ -170,21 +190,21 @@
                 </div>
                 
                 <div class="space-y-4">
-                    <button id="create-challenge-btn" class="w-full bg-blue-600 text-white font-bold py-3 sm:py-4 px-6 rounded-lg text-lg sm:text-xl hover:bg-blue-700 transition-colors">
+                    <button id="create-challenge-btn" class="w-full bg-gradient-to-r from-magic to-primary text-white font-bold py-3 sm:py-4 px-6 rounded-lg text-lg sm:text-xl hover:from-primary hover:to-magic-dark transition-colors">
                         Skapa utmaning
                     </button>
                     <button id="back-to-start-btn" class="w-full bg-slate-200 text-slate-800 font-bold py-3 sm:py-4 px-6 rounded-lg text-lg sm:text-xl hover:bg-slate-300 transition-colors">
                         Tillbaka
                     </button>
                 </div>
-                <div id="challenge-success" class="hidden mt-6 p-4 bg-green-50 border border-green-200 rounded-lg">
-                    <p class="text-green-800 font-semibold mb-2">✅ Utmaning skapad!</p>
-                    <p class="text-sm text-green-700 mb-3">Dela denna länk med din vän:</p>
-                    <div class="bg-white border border-green-300 rounded p-2 mb-3">
+                <div id="challenge-success" class="hidden mt-6 p-4 bg-teal-50 border border-teal-200 rounded-lg">
+                    <p class="text-success-dark font-semibold mb-2">✅ Utmaning skapad!</p>
+                    <p class="text-sm text-success mb-3">Dela denna länk med din vän:</p>
+                    <div class="bg-white border border-teal-300 rounded p-2 mb-3">
                         <input type="text" id="challenge-link" readonly class="w-full text-xs text-gray-600 bg-transparent border-none outline-none">
                     </div>
                     <div class="flex space-x-2">
-                        <button id="copy-link-btn" class="flex-1 bg-blue-600 text-white py-2 px-3 rounded text-sm hover:bg-blue-700">
+                        <button id="copy-link-btn" class="flex-1 bg-gradient-to-r from-primary to-primary-dark text-white py-2 px-3 rounded text-sm hover:from-primary-dark hover:to-primary">
                             Kopiera länk
                         </button>
                         <button id="share-btn" class="flex-1 bg-slate-600 text-white py-2 px-3 rounded text-sm hover:bg-slate-700">
@@ -192,18 +212,18 @@
                         </button>
                     </div>
                 </div>
-                <p id="challenge-error" class="hidden text-center mt-4 text-red-600 font-semibold">Något gick fel. Försök igen.</p>
+                <p id="challenge-error" class="hidden text-center mt-4 text-danger-dark font-semibold">Något gick fel. Försök igen.</p>
             </div>
             
             <!-- Challenge Acceptance Screen (Hidden by default) -->
             <div id="challenge-accept" class="hidden">
                 <h2 class="text-2xl sm:text-3xl font-bold text-slate-900 mb-6 text-center">Du har fått en utmaning!</h2>
-                <div class="bg-blue-50 border border-blue-200 rounded-lg p-4 mb-6">
+                <div class="bg-purple-50 border border-purple-200 rounded-lg p-4 mb-6">
                     <p class="text-lg text-center mb-2"><strong id="challenger-display-name">Någon</strong> har utmanat dig till Ordna!</p>
-                    <p class="text-sm text-blue-600 text-center">Spela spelet och ditt resultat skickas automatiskt tillbaka</p>
+                    <p class="text-sm text-primary text-center">Spela spelet och ditt resultat skickas automatiskt tillbaka</p>
                 </div>
                 <div class="space-y-4">
-                    <button id="accept-challenge-btn" class="w-full bg-green-600 text-white font-bold py-3 sm:py-4 px-6 rounded-lg text-lg sm:text-xl hover:bg-green-700 transition-colors">
+                    <button id="accept-challenge-btn" class="w-full bg-gradient-to-r from-success to-success-dark text-white font-bold py-3 sm:py-4 px-6 rounded-lg text-lg sm:text-xl hover:from-success-dark hover:to-success transition-colors">
                         Acceptera utmaning
                     </button>
                     <button id="decline-challenge-btn" class="w-full bg-slate-200 text-slate-800 font-bold py-3 sm:py-4 px-6 rounded-lg text-lg sm:text-xl hover:bg-slate-300 transition-colors">
@@ -224,12 +244,12 @@
                     <div id="question-counter" class="text-sm font-semibold text-slate-500">Fråga 1 / 30</div>
                     <div id="difficulty-badge"></div>
                 </div>
-                <div id="single-player-score" class="hidden text-sm font-semibold bg-blue-100 text-blue-800 px-3 py-1 rounded-full">Totalpoäng: 0</div>
+                <div id="single-player-score" class="hidden text-sm font-semibold bg-purple-100 text-primary-dark px-3 py-1 rounded-full">Totalpoäng: 0</div>
             </div>
 
             <!-- Single Player Progress Bar -->
             <div id="single-player-progress" class="hidden w-full bg-slate-200 rounded-full h-2.5 mb-4">
-                <div id="progress-bar" class="bg-blue-600 h-2.5 rounded-full" style="width: 0%"></div>
+                <div id="progress-bar" class="bg-gradient-to-r from-magic to-primary h-2.5 rounded-full" style="width: 0%"></div>
             </div>
             
             <!-- Unified Player Status Bar (for both single and multiplayer) -->
@@ -272,7 +292,7 @@
                     <button id="stop-btn" class="hidden w-full max-w-xs bg-amber-500 text-white font-bold py-3 px-6 rounded-lg text-lg hover:bg-amber-600 transition-colors shadow-md">
                         Stanna
                     </button>
-                    <button id="next-question-btn" class="hidden w-full max-w-xs bg-blue-600 text-white font-bold py-3 px-6 rounded-lg text-lg hover:bg-blue-700 transition-colors shadow-md">
+                    <button id="next-question-btn" class="hidden w-full max-w-xs bg-gradient-to-r from-magic to-primary text-white font-bold py-3 px-6 rounded-lg text-lg hover:from-primary hover:to-magic-dark transition-colors shadow-md">
                         Nästa fråga
                     </button>
                     
@@ -307,7 +327,7 @@
             <p id="end-screen-subtitle" class="text-slate-600 mb-6 text-base sm:text-lg">Bra kämpat allihopa!</p>
             
             <!-- Single Player Final Score -->
-            <div id="single-player-final" class="hidden bg-blue-100 text-blue-800 rounded-lg p-6 mb-8">
+            <div id="single-player-final" class="hidden bg-purple-100 text-primary-dark rounded-lg p-6 mb-8">
                 <p class="text-xl">Din slutpoäng:</p>
                 <p id="single-final-score" class="text-6xl font-bold"></p>
             </div>
@@ -317,7 +337,7 @@
                 <!-- Final player scores will be listed here -->
             </div>
             
-            <button id="restart-btn" class="w-full bg-blue-600 text-white font-bold py-3 px-6 rounded-lg text-lg sm:text-xl hover:bg-blue-700 transition-colors shadow-md">
+            <button id="restart-btn" class="w-full bg-gradient-to-r from-magic to-primary text-white font-bold py-3 px-6 rounded-lg text-lg sm:text-xl hover:from-primary hover:to-magic-dark transition-colors shadow-md">
                 Spela igen
             </button>
         </div>
@@ -339,7 +359,7 @@
                 <!-- Pack cards will be inserted here by JS -->
             </div>
             <div class="p-6 border-t border-slate-200 mt-auto bg-slate-50 rounded-b-2xl">
-                 <button id="confirm-packs-btn" class="w-full bg-blue-600 text-white font-bold py-3 px-6 rounded-lg text-lg hover:bg-blue-700 transition-colors">
+                 <button id="confirm-packs-btn" class="w-full bg-gradient-to-r from-magic to-primary text-white font-bold py-3 px-6 rounded-lg text-lg hover:from-primary hover:to-magic-dark transition-colors">
                     Bekräfta val & Stäng
                 </button>
             </div>
