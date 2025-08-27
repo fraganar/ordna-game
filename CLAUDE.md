@@ -113,4 +113,5 @@ Speciellt viktigt vid ändringar i:
 Snabbtest multiplayer: Kan spelare 2 fortsätta efter att spelare 1 eliminerats?
 
 ## Detaljerad Dokumentation
-För djup teknisk specifikation av spelmekanik, UI-flöden och datastrukturer, se `GAME_SPECIFICATION.md`
+- **Spelspecifikation**: För djup teknisk specifikation av spelmekanik, UI-flöden och datastrukturer, se `GAME_SPECIFICATION.md`
+- **Styling & Design**: För komplett styling-dokumentation, färgschema och CSS-arkitektur, se `STYLING_MAP.md`

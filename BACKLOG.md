@@ -16,6 +16,8 @@
 5. **BL-018** (30) - Unificera slutskärmsfunktioner
 6. **BL-019** (25) - Duplicerad showChallengeAcceptScreen implementation
 7. **BL-020** (20) - Duplicerad difficulty badge implementation
+8. **BL-021** (15) - Komplettera CSS variables implementation
+9. **BL-022** (12) - Lägg till browser fallbacks för moderna CSS-effekter
 
 ---
 
@@ -83,6 +85,35 @@
   - Undersök om `updateDifficultyBadgeText` behövs eller kan slås ihop
 - **Nytta:** Enklare kodflöde, mindre förvirring
 
+### BL-021: Komplettera CSS variables implementation
+- **Kategori:** REFACTOR
+- **Stackrank:** 15
+- **Beskrivning:** Vissa CSS-delar använder fortfarande hårdkodade färger istället för CSS variables
+- **Problem:**
+  - Rad 425-465 i styles.css har hårdkodade färger (#4b5563, #f3f4f6 etc.)
+  - Inkonsekvent användning av CSS variables vs rgba() värden
+  - Blandat 12px och 16px border-radius utan tydligt mönster
+- **Åtgärd:**
+  - Migrera alla hårdkodade färger till CSS variables
+  - Standardisera border-radius värden (skapa variables för dessa)
+  - Gå igenom hela styles.css och säkerställ konsekvent användning
+- **Nytta:** Enklare underhåll, konsekvent design, lättare att ändra tema
+
+### BL-022: Lägg till browser fallbacks för moderna CSS-effekter
+- **Kategori:** ENHANCEMENT
+- **Stackrank:** 12
+- **Beskrivning:** backdrop-filter och andra moderna effekter saknar fallbacks för äldre browsers
+- **Problem:**
+  - backdrop-filter stöds inte i Firefox < v103
+  - Kan ge dålig upplevelse i äldre browsers
+  - Ingen graceful degradation implementerad
+- **Åtgärd:**
+  - Lägg till @supports queries för backdrop-filter
+  - Skapa fallback-styles för äldre browsers
+  - Testa i olika browsers och versioner
+- **Nytta:** Bättre browser-kompatibilitet, fungerar för fler användare
+
+
 ---
 
 ## ✅ Slutförda Items (endast rubriker)
@@ -118,4 +149,4 @@ Se LOG.md för detaljer om kasserade items:
 
 ---
 
-*Senast uppdaterad: 2025-08-24*
+*Senast uppdaterad: 2025-08-27*
