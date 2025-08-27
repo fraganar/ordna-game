@@ -1,0 +1,645 @@
+/* ===============================================
+   ORDNA GAME - MODERN PREMIUM DESIGN SYSTEM
+   Design Philosophy: Playful Sophistication
+   Inspired by: Duolingo, Kahoot, Trivia Crack
+   =============================================== */
+
+/* ===============================================
+   ROOT VARIABLES - Design Tokens
+   =============================================== */
+:root {
+  /* Primary Brand Colors - Vibrant Purple/Magenta Gradient */
+  --primary-400: #e879f9;
+  --primary-500: #d946ef;
+  --primary-600: #c026d3;
+  --primary-700: #a21caf;
+  
+  /* Secondary - Electric Blue */
+  --secondary-400: #60a5fa;
+  --secondary-500: #3b82f6;
+  --secondary-600: #2563eb;
+  --secondary-700: #1d4ed8;
+  
+  /* Success - Emerald Green */
+  --success-400: #4ade80;
+  --success-500: #22c55e;
+  --success-600: #16a34a;
+  --success-700: #15803d;
+  
+  /* Warning - Sunset Orange */
+  --warning-400: #fb923c;
+  --warning-500: #f97316;
+  --warning-600: #ea580c;
+  
+  /* Danger - Coral Red */
+  --danger-400: #f87171;
+  --danger-500: #ef4444;
+  --danger-600: #dc2626;
+  
+  /* Neutral - Modern Grays */
+  --neutral-50: #fafafa;
+  --neutral-100: #f4f4f5;
+  --neutral-200: #e4e4e7;
+  --neutral-300: #d4d4d8;
+  --neutral-600: #52525b;
+  --neutral-700: #3f3f46;
+  --neutral-800: #27272a;
+  --neutral-900: #18181b;
+  
+  /* Glassmorphism Background */
+  --glass-white: rgba(255, 255, 255, 0.85);
+  --glass-light: rgba(255, 255, 255, 0.6);
+  
+  /* Shadows */
+  --shadow-sm: 0 2px 8px rgba(0, 0, 0, 0.06);
+  --shadow-md: 0 4px 16px rgba(0, 0, 0, 0.08);
+  --shadow-lg: 0 8px 32px rgba(0, 0, 0, 0.12);
+  --shadow-xl: 0 16px 48px rgba(0, 0, 0, 0.16);
+  --shadow-glow: 0 0 32px rgba(217, 70, 239, 0.3);
+}
+
+/* ===============================================
+   BASE STYLES
+   =============================================== */
+body {
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  min-height: 100vh;
+  position: relative;
+  overflow-x: hidden;
+}
+
+/* Animated background pattern */
+body::before {
+  content: '';
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-image: 
+    radial-gradient(circle at 20% 50%, rgba(120, 119, 198, 0.3) 0%, transparent 50%),
+    radial-gradient(circle at 80% 80%, rgba(255, 119, 198, 0.3) 0%, transparent 50%),
+    radial-gradient(circle at 40% 20%, rgba(255, 219, 88, 0.2) 0%, transparent 50%);
+  animation: backgroundFloat 20s ease-in-out infinite;
+  pointer-events: none;
+  z-index: 0;
+}
+
+@keyframes backgroundFloat {
+  0%, 100% { transform: translate(0, 0) rotate(0deg); }
+  33% { transform: translate(-20px, -20px) rotate(1deg); }
+  66% { transform: translate(20px, -10px) rotate(-1deg); }
+}
+
+/* ===============================================
+   GAME CONTAINER - Glassmorphism Card
+   =============================================== */
+#game-container {
+  background: var(--glass-white);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  border: 1px solid rgba(255, 255, 255, 0.3);
+  box-shadow: var(--shadow-xl), var(--shadow-glow);
+  border-radius: 24px;
+  position: relative;
+  z-index: 1;
+  animation: slideUpFadeIn 0.6s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
+@keyframes slideUpFadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(30px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* ===============================================
+   TYPOGRAPHY ENHANCEMENT
+   =============================================== */
+.font-poppins {
+  font-family: 'Poppins', sans-serif;
+  font-weight: 700;
+  background: linear-gradient(135deg, var(--primary-600), var(--secondary-600));
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  text-shadow: 0 2px 8px rgba(217, 70, 239, 0.2);
+}
+
+h1, h2, h3 {
+  font-weight: 700;
+  letter-spacing: -0.02em;
+}
+
+/* ===============================================
+   BUTTON STYLES - Modern & Playful
+   =============================================== */
+.btn-primary {
+  background: linear-gradient(135deg, var(--primary-500), var(--primary-600));
+  color: white;
+  border: none;
+  border-radius: 16px;
+  padding: 14px 28px;
+  font-weight: 600;
+  font-size: 16px;
+  box-shadow: 0 4px 12px rgba(217, 70, 239, 0.3);
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  position: relative;
+  overflow: hidden;
+}
+
+.btn-primary::before {
+  content: '';
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 0;
+  height: 0;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.3);
+  transform: translate(-50%, -50%);
+  transition: width 0.6s, height 0.6s;
+}
+
+.btn-primary:hover {
+  transform: translateY(-2px) scale(1.02);
+  box-shadow: 0 6px 20px rgba(217, 70, 239, 0.4);
+}
+
+.btn-primary:hover::before {
+  width: 300px;
+  height: 300px;
+}
+
+.btn-primary:active {
+  transform: translateY(0) scale(0.98);
+}
+
+/* ===============================================
+   OPTION BUTTONS - Question Choices
+   =============================================== */
+.option-btn, .belongs-option-container {
+  background: var(--glass-white);
+  backdrop-filter: blur(10px);
+  border: 2px solid var(--neutral-200);
+  border-radius: 16px;
+  padding: 16px 24px;
+  font-size: 16px;
+  font-weight: 500;
+  color: var(--neutral-800);
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  position: relative;
+  overflow: hidden;
+  box-shadow: var(--shadow-sm);
+}
+
+.option-btn:hover:not(:disabled):not(.correct-step):not(.incorrect-step) {
+  background: linear-gradient(135deg, var(--glass-white), rgba(217, 70, 239, 0.05));
+  border-color: var(--primary-400);
+  transform: translateY(-2px) scale(1.02);
+  box-shadow: var(--shadow-md), 0 0 20px rgba(217, 70, 239, 0.15);
+}
+
+/* Correct Answer Style */
+.correct-step, .correct-choice {
+  background: linear-gradient(135deg, #dcfce7, #bbf7d0) !important;
+  border: 2px solid var(--success-500) !important;
+  color: var(--success-700) !important;
+  font-weight: 600;
+  animation: correctPulse 0.6s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+  box-shadow: 0 4px 16px rgba(34, 197, 94, 0.25);
+}
+
+@keyframes correctPulse {
+  0% { transform: scale(1); }
+  50% { transform: scale(1.05); }
+  100% { transform: scale(1); }
+}
+
+/* Incorrect Answer Style */
+.incorrect-step, .incorrect-choice {
+  background: linear-gradient(135deg, #fee2e2, #fecaca) !important;
+  border: 2px solid var(--danger-500) !important;
+  color: var(--danger-600) !important;
+  animation: shake 0.5s cubic-bezier(0.36, 0.07, 0.19, 0.97);
+  box-shadow: 0 4px 16px rgba(239, 68, 68, 0.25);
+}
+
+@keyframes shake {
+  10%, 90% { transform: translateX(-2px); }
+  20%, 80% { transform: translateX(4px); }
+  30%, 50%, 70% { transform: translateX(-6px); }
+  40%, 60% { transform: translateX(6px); }
+}
+
+/* Order Selected Style */
+.order-selected {
+  background: linear-gradient(135deg, var(--secondary-500), var(--secondary-600));
+  color: white;
+  border-color: var(--secondary-600);
+  transform: scale(0.95);
+  font-weight: 600;
+  box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.2);
+}
+
+/* ===============================================
+   DECISION BUTTON - Two-Part Premium Style
+   =============================================== */
+.decision-button {
+  display: flex;
+  gap: 16px;
+  max-width: 540px;
+  width: 100%;
+  margin: 24px auto;
+  position: relative;
+}
+
+/* Stop Side - Safe Choice */
+.decision-button .stop-side {
+  flex: 1;
+  padding: 20px 24px;
+  background: linear-gradient(135deg, var(--success-400), var(--success-500));
+  border: none;
+  border-radius: 20px;
+  color: white;
+  font-weight: 700;
+  font-size: 18px;
+  cursor: pointer;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  box-shadow: 0 4px 16px rgba(34, 197, 94, 0.3);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+  position: relative;
+  overflow: hidden;
+}
+
+.decision-button .stop-side::before {
+  content: '';
+  position: absolute;
+  top: -2px;
+  left: -2px;
+  right: -2px;
+  bottom: -2px;
+  background: linear-gradient(45deg, #4ade80, #22c55e, #16a34a);
+  border-radius: 20px;
+  opacity: 0;
+  z-index: -1;
+  transition: opacity 0.3s;
+}
+
+.decision-button .stop-side:hover:not(:disabled) {
+  transform: translateY(-3px) scale(1.02);
+  box-shadow: 0 6px 24px rgba(34, 197, 94, 0.4);
+}
+
+.decision-button .stop-side:hover:not(:disabled)::before {
+  opacity: 1;
+}
+
+.decision-button .stop-side:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+  transform: none;
+}
+
+/* Stop Side - Waiting State (0 points) */
+.decision-button .stop-side.waiting {
+  background: linear-gradient(135deg, var(--neutral-200), var(--neutral-300));
+  color: var(--neutral-600);
+  box-shadow: var(--shadow-sm);
+}
+
+/* Stop Side - Wake Up Animation */
+.decision-button .stop-side.wake-up {
+  animation: wakeUpGlow 0.6s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+}
+
+@keyframes wakeUpGlow {
+  0% {
+    background: linear-gradient(135deg, var(--neutral-200), var(--neutral-300));
+    box-shadow: var(--shadow-sm);
+  }
+  50% {
+    transform: scale(1.08);
+    box-shadow: 0 0 30px rgba(34, 197, 94, 0.6);
+  }
+  100% {
+    background: linear-gradient(135deg, var(--success-400), var(--success-500));
+    box-shadow: 0 4px 16px rgba(34, 197, 94, 0.3);
+  }
+}
+
+/* Next Side - Continue/Risk */
+.decision-button .next-side {
+  flex: 1;
+  padding: 20px 24px;
+  background: linear-gradient(135deg, var(--secondary-500), var(--secondary-600));
+  border: none;
+  border-radius: 20px;
+  color: white;
+  font-weight: 700;
+  font-size: 18px;
+  cursor: pointer;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  box-shadow: 0 4px 16px rgba(59, 130, 246, 0.3);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+  position: relative;
+  overflow: hidden;
+}
+
+.decision-button .next-side::after {
+  content: '→';
+  position: absolute;
+  right: 24px;
+  font-size: 24px;
+  transition: transform 0.3s;
+}
+
+.decision-button .next-side:hover:not(:disabled) {
+  background: linear-gradient(135deg, var(--secondary-600), var(--secondary-700));
+  transform: translateY(-3px) scale(1.02);
+  box-shadow: 0 6px 24px rgba(59, 130, 246, 0.4);
+}
+
+.decision-button .next-side:hover:not(:disabled)::after {
+  transform: translateX(4px);
+}
+
+/* ===============================================
+   PROGRESS INDICATORS
+   =============================================== */
+.progress-bar {
+  height: 8px;
+  background: var(--neutral-200);
+  border-radius: 100px;
+  overflow: hidden;
+  margin: 20px 0;
+  box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.06);
+}
+
+.progress-bar-fill {
+  height: 100%;
+  background: linear-gradient(90deg, var(--primary-500), var(--secondary-500));
+  border-radius: 100px;
+  transition: width 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+  box-shadow: 0 2px 8px rgba(217, 70, 239, 0.4);
+  position: relative;
+  overflow: hidden;
+}
+
+.progress-bar-fill::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.3), transparent);
+  animation: shimmer 2s infinite;
+}
+
+@keyframes shimmer {
+  0% { transform: translateX(-100%); }
+  100% { transform: translateX(100%); }
+}
+
+/* ===============================================
+   SCORE DISPLAY - Modern Badge Style
+   =============================================== */
+.total-score {
+  background: linear-gradient(135deg, var(--primary-500), var(--primary-600));
+  color: white;
+  padding: 8px 20px;
+  border-radius: 100px;
+  font-weight: 700;
+  font-size: 18px;
+  box-shadow: 0 4px 12px rgba(217, 70, 239, 0.3);
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  position: relative;
+}
+
+.total-score::before {
+  content: '🏆';
+  font-size: 20px;
+}
+
+/* Score update animation */
+.total-score.updating {
+  animation: scoreUpdate 0.5s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+}
+
+@keyframes scoreUpdate {
+  0% { transform: scale(1); }
+  50% { transform: scale(1.2); }
+  100% { transform: scale(1); }
+}
+
+/* ===============================================
+   FLYING ANIMATIONS
+   =============================================== */
+.flying-point {
+  position: fixed;
+  font-size: 28px;
+  font-weight: 900;
+  background: linear-gradient(135deg, var(--success-400), var(--success-600));
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  z-index: 2000;
+  pointer-events: none;
+  filter: drop-shadow(0 4px 12px rgba(34, 197, 94, 0.4));
+  animation: bounce 0.6s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+}
+
+@keyframes bounce {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-10px); }
+}
+
+/* Particle explosion on point landing */
+.point-explosion {
+  position: fixed;
+  width: 4px;
+  height: 4px;
+  background: var(--success-500);
+  border-radius: 50%;
+  pointer-events: none;
+  z-index: 1999;
+  animation: explode 0.8s cubic-bezier(0.4, 0, 1, 1) forwards;
+}
+
+@keyframes explode {
+  0% {
+    transform: translate(0, 0) scale(1);
+    opacity: 1;
+  }
+  100% {
+    transform: translate(var(--x), var(--y)) scale(0);
+    opacity: 0;
+  }
+}
+
+/* ===============================================
+   MULTIPLAYER SCOREBOARD
+   =============================================== */
+.scoreboard {
+  background: var(--glass-white);
+  backdrop-filter: blur(10px);
+  border-radius: 16px;
+  padding: 16px;
+  margin: 20px 0;
+  box-shadow: var(--shadow-md);
+}
+
+.player-card {
+  background: white;
+  border-radius: 12px;
+  padding: 12px 16px;
+  margin: 8px 0;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  border: 2px solid transparent;
+}
+
+.player-card.active {
+  border-color: var(--primary-500);
+  background: linear-gradient(135deg, white, rgba(217, 70, 239, 0.05));
+  box-shadow: 0 4px 16px rgba(217, 70, 239, 0.2);
+  transform: scale(1.02);
+}
+
+.player-card.eliminated {
+  opacity: 0.5;
+  background: var(--neutral-100);
+}
+
+.player-score {
+  font-weight: 700;
+  font-size: 20px;
+  color: var(--primary-600);
+}
+
+/* ===============================================
+   MOBILE OPTIMIZATIONS
+   =============================================== */
+@media (max-width: 640px) {
+  #game-container {
+    border-radius: 20px;
+    margin: 12px;
+  }
+  
+  .decision-button {
+    gap: 12px;
+  }
+  
+  .decision-button .stop-side,
+  .decision-button .next-side {
+    padding: 16px 20px;
+    font-size: 16px;
+    border-radius: 16px;
+  }
+  
+  .option-btn,
+  .belongs-option-container {
+    padding: 14px 20px;
+    font-size: 15px;
+  }
+}
+
+/* ===============================================
+   SPECIAL EFFECTS & POLISH
+   =============================================== */
+/* Confetti animation for wins */
+@keyframes confetti-fall {
+  0% {
+    transform: translateY(-100vh) rotate(0deg);
+    opacity: 1;
+  }
+  100% {
+    transform: translateY(100vh) rotate(720deg);
+    opacity: 0;
+  }
+}
+
+.confetti {
+  position: fixed;
+  width: 10px;
+  height: 10px;
+  top: -10px;
+  z-index: 3000;
+  animation: confetti-fall 3s linear forwards;
+}
+
+/* Subtle hover effects */
+button:not(:disabled) {
+  position: relative;
+  overflow: hidden;
+}
+
+button:not(:disabled)::before {
+  content: '';
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 0;
+  height: 0;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.2);
+  transform: translate(-50%, -50%);
+  transition: width 0.6s, height 0.6s;
+}
+
+button:not(:disabled):active::before {
+  width: 300px;
+  height: 300px;
+}
+
+/* Loading spinner */
+.spinner {
+  width: 40px;
+  height: 40px;
+  border: 4px solid var(--neutral-200);
+  border-top-color: var(--primary-500);
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+  to { transform: rotate(360deg); }
+}
+
+/* Smooth transitions for all interactive elements */
+button, input, select, .card {
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+/* Focus states for accessibility */
+button:focus-visible,
+input:focus-visible,
+select:focus-visible {
+  outline: 3px solid var(--primary-400);
+  outline-offset: 2px;
+}
+
+/* Print styles */
+@media print {
+  body::before { display: none; }
+  #game-container {
+    background: white;
+    box-shadow: none;
+  }
+}

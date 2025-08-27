@@ -19,7 +19,7 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&family=Poppins:wght@700&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="css/styles.css?v=22">
+    <link rel="stylesheet" href="css/styles.css?v=23">
     
     <!-- Firebase CDN -->
     <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-app-compat.js"></script>
@@ -35,6 +35,9 @@
     <script src="js/animationEngine.js" defer></script>
     <script src="js/challengeSystem.js" defer></script>
     <script src="js/gameController.js" defer></script>
+    
+    <!-- Visual Effects Enhancement -->
+    <script src="js/visualEffects.js" defer></script>
     
     <!-- Main Game script -->
     <script src="js/game.js" defer></script>
@@ -84,13 +87,13 @@
                 </div>
 
                 <div class="space-y-4">
-                    <button id="show-player-setup-btn" class="w-full bg-blue-600 text-white font-bold py-3 sm:py-4 px-6 rounded-lg text-lg sm:text-xl hover:bg-blue-700 transition-all duration-300 shadow-lg hover:shadow-xl transform hover:-translate-y-1">
+                    <button id="show-player-setup-btn" class="w-full btn-primary text-lg sm:text-xl">
                         Starta Spelet
                     </button>
-                    <button id="show-challenge-form-btn" class="w-full bg-slate-500 text-white font-bold py-3 sm:py-4 px-6 rounded-lg text-lg sm:text-xl hover:bg-slate-600 transition-all duration-300 shadow-lg hover:shadow-xl transform hover:-translate-y-1">
+                    <button id="show-challenge-form-btn" class="w-full btn-secondary text-lg sm:text-xl">
                         Utmana en vän!
                     </button>
-                    <button id="open-pack-shop-btn" class="w-full bg-slate-400 text-white font-bold py-3 sm:py-4 px-6 rounded-lg text-lg sm:text-xl cursor-not-allowed opacity-75" disabled>
+                    <button id="open-pack-shop-btn" class="w-full btn-disabled text-lg sm:text-xl" disabled>
                         Välj Frågepaket (Kommande)
                     </button>
                 </div>
@@ -130,7 +133,7 @@
                  <div id="player-names-container" class="space-y-4 mb-8">
                     <!-- Player name inputs will be generated here -->
                  </div>
-                 <button id="start-game-btn" class="w-full bg-green-600 text-white font-bold py-3 sm:py-4 px-6 rounded-lg text-lg sm:text-xl hover:bg-green-700 transition-colors">
+                 <button id="start-game-btn" class="w-full btn-success text-lg sm:text-xl">
                     Kör igång!
                 </button>
             </div>
@@ -143,7 +146,7 @@
                     <input type="text" id="player-name-input" placeholder="Ditt namn" class="w-full p-3 border border-slate-300 rounded-lg text-base sm:text-lg" maxlength="20">
                 </div>
                 <div class="space-y-4">
-                    <button id="save-player-name-btn" class="w-full bg-blue-600 text-white font-bold py-3 sm:py-4 px-6 rounded-lg text-lg sm:text-xl hover:bg-blue-700 transition-colors">
+                    <button id="save-player-name-btn" class="w-full btn-primary text-lg sm:text-xl">
                         Fortsätt
                     </button>
                 </div>
@@ -170,10 +173,10 @@
                 </div>
                 
                 <div class="space-y-4">
-                    <button id="create-challenge-btn" class="w-full bg-blue-600 text-white font-bold py-3 sm:py-4 px-6 rounded-lg text-lg sm:text-xl hover:bg-blue-700 transition-colors">
+                    <button id="create-challenge-btn" class="w-full btn-primary text-lg sm:text-xl">
                         Skapa utmaning
                     </button>
-                    <button id="back-to-start-btn" class="w-full bg-slate-200 text-slate-800 font-bold py-3 sm:py-4 px-6 rounded-lg text-lg sm:text-xl hover:bg-slate-300 transition-colors">
+                    <button id="back-to-start-btn" class="w-full btn-light text-lg sm:text-xl">
                         Tillbaka
                     </button>
                 </div>
@@ -184,10 +187,10 @@
                         <input type="text" id="challenge-link" readonly class="w-full text-xs text-gray-600 bg-transparent border-none outline-none">
                     </div>
                     <div class="flex space-x-2">
-                        <button id="copy-link-btn" class="flex-1 bg-blue-600 text-white py-2 px-3 rounded text-sm hover:bg-blue-700">
+                        <button id="copy-link-btn" class="flex-1 btn-primary btn-small">
                             Kopiera länk
                         </button>
-                        <button id="share-btn" class="flex-1 bg-slate-600 text-white py-2 px-3 rounded text-sm hover:bg-slate-700">
+                        <button id="share-btn" class="flex-1 btn-secondary btn-small">
                             Dela
                         </button>
                     </div>
@@ -203,10 +206,10 @@
                     <p class="text-sm text-blue-600 text-center">Spela spelet och ditt resultat skickas automatiskt tillbaka</p>
                 </div>
                 <div class="space-y-4">
-                    <button id="accept-challenge-btn" class="w-full bg-green-600 text-white font-bold py-3 sm:py-4 px-6 rounded-lg text-lg sm:text-xl hover:bg-green-700 transition-colors">
+                    <button id="accept-challenge-btn" class="w-full btn-success text-lg sm:text-xl">
                         Acceptera utmaning
                     </button>
-                    <button id="decline-challenge-btn" class="w-full bg-slate-200 text-slate-800 font-bold py-3 sm:py-4 px-6 rounded-lg text-lg sm:text-xl hover:bg-slate-300 transition-colors">
+                    <button id="decline-challenge-btn" class="w-full btn-light text-lg sm:text-xl">
                         Spela vanligt spel istället
                     </button>
                 </div>
@@ -269,10 +272,10 @@
             <div id="footer-area" class="min-h-[72px] flex flex-col items-center justify-center">
                  <div id="controls-box" class="w-full flex justify-center space-x-4">
                     <!-- Old buttons (hidden by default, will be removed later) -->
-                    <button id="stop-btn" class="hidden w-full max-w-xs bg-amber-500 text-white font-bold py-3 px-6 rounded-lg text-lg hover:bg-amber-600 transition-colors shadow-md">
+                    <button id="stop-btn" class="hidden w-full max-w-xs btn-warning text-lg">
                         Stanna
                     </button>
-                    <button id="next-question-btn" class="hidden w-full max-w-xs bg-blue-600 text-white font-bold py-3 px-6 rounded-lg text-lg hover:bg-blue-700 transition-colors shadow-md">
+                    <button id="next-question-btn" class="hidden w-full max-w-xs btn-primary text-lg">
                         Nästa fråga
                     </button>
                     
@@ -317,7 +320,7 @@
                 <!-- Final player scores will be listed here -->
             </div>
             
-            <button id="restart-btn" class="w-full bg-blue-600 text-white font-bold py-3 px-6 rounded-lg text-lg sm:text-xl hover:bg-blue-700 transition-colors shadow-md">
+            <button id="restart-btn" class="w-full btn-primary text-lg sm:text-xl">
                 Spela igen
             </button>
         </div>
@@ -339,7 +342,7 @@
                 <!-- Pack cards will be inserted here by JS -->
             </div>
             <div class="p-6 border-t border-slate-200 mt-auto bg-slate-50 rounded-b-2xl">
-                 <button id="confirm-packs-btn" class="w-full bg-blue-600 text-white font-bold py-3 px-6 rounded-lg text-lg hover:bg-blue-700 transition-colors">
+                 <button id="confirm-packs-btn" class="w-full btn-primary text-lg">
                     Bekräfta val & Stäng
                 </button>
             </div>

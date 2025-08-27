@@ -23,6 +23,14 @@ class AnimationEngine {
     showPointAnimation(sourceElement) {
         // Always show the flying point animation, regardless of game mode
         this.showFlyingPointToButton(sourceElement);
+        
+        // Add particle explosion effect if available
+        if (window.visualEffects && window.visualEffects.createParticleExplosion) {
+            const rect = sourceElement.getBoundingClientRect();
+            const x = rect.left + rect.width / 2;
+            const y = rect.top + rect.height / 2;
+            window.visualEffects.createParticleExplosion(x, y, '#22c55e');
+        }
     }
     
     // Flying point animation for all game modes (unified)

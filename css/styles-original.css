@@ -1,0 +1,761 @@
+body {
+    font-family: 'Inter', sans-serif;
+    background-color: #f8fafc; /* bg-slate-50 */
+}
+
+#game-container {
+    background: linear-gradient(145deg, #ffffff, #e6e9f0);
+}
+
+.font-poppins {
+    font-family: 'Poppins', sans-serif;
+}
+
+.option-btn, .belongs-option-container {
+    transition: all 0.2s ease-in-out;
+}
+
+/* Star system removed - points now shown in decision button */
+
+.correct-step, .correct-choice {
+    background-color: #dcfce7 !important; /* green-100 */
+    border-color: #22c55e !important; /* green-500 */
+    color: #15803d !important; /* green-700 */
+}
+
+.incorrect-step, .incorrect-choice {
+    background-color: #fee2e2 !important; /* red-100 */
+    border-color: #ef4444 !important; /* red-500 */
+    color: #b91c1c !important; /* red-700 */
+    animation: shake 0.5s;
+}
+
+.order-selected {
+    background-color: #3b82f6; /* blue-500 */
+    color: white;
+    border-color: #2563eb; /* blue-600 */
+    transform: scale(0.95);
+}
+
+/* Two-part decision button styles */
+.decision-button {
+    display: flex;
+    gap: 12px;
+    max-width: 480px;
+    width: 100%;
+    margin: 0 auto;
+    position: relative;
+}
+
+.decision-button .stop-side,
+.decision-button .next-side {
+    flex: 1;
+    padding: 20px 28px;
+    border: none;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 16px;
+    font-weight: bold;
+    font-size: 20px;
+    color: white;
+    position: relative;
+}
+
+.decision-button .stop-side {
+    background: linear-gradient(135deg, #f0fdf4 0%, #dcfce7 50%, #bbf7d0 100%);
+    border: 1px solid #86efac;
+    color: #15803d;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1), 0 2px 4px rgba(134, 239, 172, 0.2);
+    border-radius: 12px;
+}
+
+.decision-button .stop-side:hover {
+    background: linear-gradient(135deg, #dcfce7 0%, #bbf7d0 50%, #86efac 100%);
+    border-color: #22c55e;
+    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15), 0 3px 6px rgba(34, 197, 94, 0.3);
+    transform: translateX(-2px) translateY(-1px);
+}
+
+.decision-button .next-side {
+    background: linear-gradient(135deg, #3b82f6 0%, #2563eb 100%);
+    border-radius: 12px;
+}
+
+.decision-button .next-side:hover:not(:disabled) {
+    background: linear-gradient(135deg, #2563eb 0%, #1d4ed8 100%);
+    transform: translateX(2px);
+}
+
+
+.decision-icon {
+    font-size: 28px;
+}
+
+.decision-text {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    line-height: 1.2;
+}
+
+.decision-action {
+    font-size: 20px;
+    font-weight: 700;
+}
+
+.decision-points {
+    font-size: 16px;
+    opacity: 0.9;
+    font-weight: 500;
+    color: #15803d !important;
+}
+
+.decision-risk {
+    font-size: 16px;
+    opacity: 0.9;
+    font-weight: 500;
+}
+
+/* Challenger hint box styles */
+.challenger-hint-box {
+    background: linear-gradient(135deg, #f0f9ff 0%, #e0f2fe 100%);
+    border: 1px solid #0284c7;
+    border-radius: 8px;
+    padding: 12px 16px;
+    margin-bottom: 16px;
+    font-size: 14px;
+    color: #0c4a6e;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+    animation: slideDown 0.3s ease-out;
+}
+
+@keyframes slideDown {
+    from {
+        opacity: 0;
+        transform: translateY(-10px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* Attention animation */
+@keyframes pulse-glow {
+    0%, 100% { 
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15), 0 0 20px rgba(59, 130, 246, 0.4);
+        transform: scale(1);
+    }
+    50% { 
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15), 0 0 40px rgba(59, 130, 246, 0.8);
+        transform: scale(1.02);
+    }
+}
+
+.decision-button.attention {
+    animation: pulse-glow 0.8s ease-in-out 3;
+}
+
+/* Mobile responsiveness */
+@media (max-width: 640px) {
+    .decision-button {
+        max-width: 100%;
+    }
+    
+    .decision-button .stop-side,
+    .decision-button .next-side {
+        padding: 16px 20px;
+        gap: 12px;
+    }
+    
+    .decision-icon {
+        font-size: 24px;
+    }
+    
+    .decision-action {
+        font-size: 18px;
+    }
+    
+    .decision-points,
+    .decision-risk {
+        font-size: 14px;
+    }
+}
+
+/* Flying points animation */
+.flying-point {
+    position: fixed;
+    font-size: 24px;
+    font-weight: bold;
+    color: #22c55e;
+    z-index: 1000;
+    pointer-events: none;
+    text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+}
+
+/* Flying points to total score animation */
+.flying-point-to-total {
+    position: fixed;
+    font-size: 24px;
+    font-weight: bold;
+    color: #15803d;
+    z-index: 1000;
+    pointer-events: none;
+    text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+    transition: opacity 0.3s ease, transform 0.3s ease;
+}
+
+@keyframes flyToButton {
+    0% {
+        transform: scale(1.5) translateY(0);
+        opacity: 1;
+    }
+    70% {
+        transform: scale(1.2) translateY(20px);
+        opacity: 1;
+    }
+    100% {
+        transform: scale(0.8) translateY(40px);
+        opacity: 0;
+    }
+}
+
+/* Glow effect when point lands */
+@keyframes pointLanded {
+    0% {
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15), 0 0 0 0 rgba(220, 252, 231, 0.8);
+    }
+    50% {
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15), 0 0 0 15px rgba(187, 247, 208, 0);
+    }
+    100% {
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15), 0 0 0 0 rgba(187, 247, 208, 0);
+    }
+}
+
+.decision-button.point-landing {
+    animation: pointLanded 0.6s ease-out;
+}
+
+/* Enhanced stop button glow based on points */
+.decision-button .stop-side.has-points {
+    background: linear-gradient(135deg, #f0fdf4 0%, #dcfce7 50%, #bbf7d0 100%);
+    border-color: #22c55e;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1), 0 2px 8px rgba(34, 197, 94, 0.3), 0 0 0 2px rgba(34, 197, 94, 0.1);
+}
+
+.decision-button .stop-side.has-points:hover {
+    box-shadow: 0 6px 16px rgba(0, 0, 0, 0.15), 0 3px 10px rgba(34, 197, 94, 0.4), 0 0 0 3px rgba(34, 197, 94, 0.2);
+}
+
+/* Disabled state for stop button */
+.decision-button .stop-side.disabled {
+    background: linear-gradient(135deg, #f3f4f6 0%, #e5e7eb 50%, #d1d5db 100%);
+    border: 1px solid #9ca3af;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+    cursor: not-allowed;
+    opacity: 0.7;
+}
+
+/* Make only the "Stanna" action text gray when disabled */
+.decision-button .stop-side.disabled .decision-action {
+    color: #9ca3af !important;
+}
+
+.decision-button .stop-side.disabled:hover {
+    background: linear-gradient(135deg, #f3f4f6 0%, #e5e7eb 50%, #d1d5db 100%);
+    border: 1px solid #9ca3af;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+    transform: none;
+}
+
+/* Completed/Secured state for stop button */
+.decision-button .stop-side.completed {
+    background: linear-gradient(135deg, #f0fdf4 0%, #dcfce7 50%, #bbf7d0 100%);
+    border: 1px solid #86efac;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1), 0 2px 4px rgba(134, 239, 172, 0.2);
+    cursor: default; /* Not clickable anymore */
+}
+
+.decision-button .stop-side.completed:hover {
+    background: linear-gradient(135deg, #f0fdf4 0%, #dcfce7 50%, #bbf7d0 100%);
+    border: 1px solid #86efac;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1), 0 2px 4px rgba(134, 239, 172, 0.2);
+    transform: none; /* No hover transform */
+}
+
+/* Animation for points disappearing */
+@keyframes pointsDisappear {
+    0% {
+        opacity: 1;
+        transform: scale(1);
+    }
+    50% {
+        opacity: 0.5;
+        transform: scale(1.2);
+    }
+    100% {
+        opacity: 0;
+        transform: scale(0.8);
+    }
+}
+
+.decision-points.disappearing {
+    animation: pointsDisappear 0.6s ease-out forwards;
+}
+
+/* Disabled state for next button */
+.decision-button .next-side:disabled {
+    background: linear-gradient(135deg, #e5e7eb 0%, #d1d5db 100%);
+    cursor: not-allowed;
+    opacity: 0.7;
+}
+
+.decision-button .next-side:disabled:hover {
+    background: linear-gradient(135deg, #e5e7eb 0%, #d1d5db 100%);
+    transform: none;
+}
+
+/* Large blue next question button for multiplayer */
+.large-next-question-btn {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    max-width: 480px;
+    width: 100%;
+    margin: 0 auto;
+    padding: 20px 28px;
+    border: none;
+    cursor: pointer;
+    border-radius: 12px;
+    background: linear-gradient(135deg, #3b82f6 0%, #2563eb 100%);
+    color: white;
+    font-size: 20px;
+    font-weight: bold;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+    transition: all 0.3s ease;
+}
+
+.large-next-question-btn:hover {
+    background: linear-gradient(135deg, #2563eb 0%, #1d4ed8 100%);
+    box-shadow: 0 4px 16px rgba(59, 130, 246, 0.3);
+}
+
+@media (max-width: 640px) {
+    .large-next-question-btn {
+        padding: 16px 20px;
+        font-size: 18px;
+    }
+}
+
+#progress-bar {
+    transition: width 0.5s ease-in-out;
+}
+
+@keyframes shake {
+    0%, 100% { transform: translateX(0); }
+    25% { transform: translateX(-5px); }
+    75% { transform: translateX(5px); }
+}
+
+/* --- STYLES for "Hör till" questions --- */
+.belongs-option-container {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.choice-made .decision-buttons {
+    border-color: #7dd3fc; /* sky-300 */
+}
+
+.decision-buttons {
+    border: none; /* REMOVE ALL BORDERS - was causing green lines */
+    border-radius: 0.5rem; /* rounded-lg */
+    overflow: hidden;
+    display: flex;
+    flex-shrink: 0;
+    background-color: #f3f4f6; /* Add subtle background instead */
+}
+
+/* Mobile-first button size */
+.decision-buttons button {
+    width: 2.25rem; /* 36px */
+    height: 2.25rem; /* 36px */
+    transition: all 0.2s ease;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background-color: #f9fafb; /* gray-50 */
+    border: 1px solid #d1d5db; /* Add subtle gray border for clarity */
+}
+
+/* Larger size for bigger screens */
+@media (min-width: 640px) {
+     .decision-buttons button {
+        width: 2.5rem; /* 40px */
+        height: 2.5rem; /* 40px */
+    }
+}
+
+.decision-buttons button:first-child {
+    border-right: 1px solid #e5e7eb; /* gray-200 */
+}
+
+.decision-buttons button:hover:not(:disabled) {
+    background-color: #f3f4f6; /* gray-100 */
+}
+
+.decision-buttons button.selected {
+    background-color: #4b5563; /* gray-600 */
+}
+
+.decision-buttons button.selected .icon {
+    stroke: white;
+}
+
+.decision-buttons button:disabled {
+    cursor: not-allowed;
+    background-color: #f9fafb;
+}
+
+#stop-btn:disabled {
+    background-color: #fcd34d; /* amber-300 */
+    cursor: not-allowed;
+    opacity: 0.7;
+}
+
+.decision-buttons button .icon {
+    width: 1.125rem; /* 18px */
+    height: 1.125rem; /* 18px */
+    stroke-width: 2.5;
+    color: #8E99A5; /* Custom gray */
+    stroke: #8E99A5; /* Custom gray */
+    transition: color 0.2s, stroke 0.2s;
+}
+
+.decision-buttons button.correct-selection {
+    background-color: #dcfce7; /* green-100 */
+    border-color: #86efac; /* green-300 */
+}
+
+.decision-buttons button.correct-selection .icon {
+    stroke: #166534; /* green-800 */
+    color: #166534; /* green-800 */
+}
+
+.decision-buttons button.deselected {
+    opacity: 0.2;
+    transform: scale(0.8);
+}
+
+.correct-answer-highlight {
+    background-color: #dcfce7 !important; /* green-100 - subtle highlight instead of box-shadow */
+    opacity: 1 !important;
+    transform: scale(1) !important;
+}
+
+.decision-buttons button:first-child {
+    border-right: none; /* Remove middle line completely - was causing green lines */
+}
+
+/* --- STYLES for Question Pack Shop --- */
+#pack-shop-modal {
+    transition: opacity 0.3s ease-in-out;
+}
+
+#pack-shop-modal.hidden {
+    pointer-events: none;
+    opacity: 0;
+}
+
+.pack-card {
+    transition: all 0.2s ease-in-out;
+    position: relative;
+}
+
+.pack-card.selected {
+    transform: translateY(-4px);
+    box-shadow: 0 0 0 3px #3b82f6; /* blue-500 */
+    border-color: #3b82f6;
+}
+
+.pack-card .selected-check {
+    display: none;
+    position: absolute;
+    top: 0.75rem;
+    right: 0.75rem;
+    background-color: #3b82f6;
+    color: white;
+    border-radius: 9999px;
+    width: 1.75rem;
+    height: 1.75rem;
+    align-items: center;
+    justify-content: center;
+}
+
+.pack-card.selected .selected-check {
+    display: flex;
+}
+
+/* --- MULTIPLAYER STYLES --- */
+.player-score-card {
+    transition: all 0.3s ease-in-out;
+    background-color: #ffffff;
+    border-color: #d1d5db; /* gray-300 */
+    position: relative; /* Needed for animations and labels */
+}
+
+.player-score-card.active-player {
+    background-color: #bfdbfe; /* blue-200 */
+    border-color: #3b82f6; /* blue-500 */
+    transform: scale(1.05);
+    box-shadow: 0 4px 14px 0 rgba(59, 130, 246, 0.25);
+}
+
+.player-score-card.completed {
+    opacity: 0.6;
+    background-color: #f3f4f6; /* gray-100 */
+    transform: scale(1);
+}
+
+/* --- NEW: POINT ANIMATION --- */
+@keyframes float-up {
+    from {
+        opacity: 1;
+        transform: translateY(0) scale(1);
+    }
+    to {
+        opacity: 0;
+        transform: translateY(-30px) scale(0.8);
+    }
+}
+
+.point-float {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    font-size: 1.5rem; /* text-2xl */
+    font-weight: bold;
+    color: #16a34a; /* green-600 */
+    pointer-events: none;
+    animation: float-up 1s ease-out forwards;
+    text-shadow: 0 1px 2px rgba(0,0,0,0.1);
+}
+
+.point-float.banked {
+     color: #ca8a04; /* amber-600 */
+}
+
+/* Decision button states */
+.decision-button.inactive .stop-side {
+    opacity: 0.5;
+    cursor: not-allowed;
+    background-color: #e5e7eb;
+    color: #9ca3af;
+}
+
+.decision-button.inactive .stop-side:hover {
+    background-color: #e5e7eb;
+    transform: none;
+}
+
+/* Wake up animation for stop button */
+@keyframes wakeUp {
+    0% {
+        opacity: 0.5;
+        transform: scale(0.95);
+    }
+    50% {
+        transform: scale(1.05);
+    }
+    100% {
+        opacity: 1;
+        transform: scale(1);
+    }
+}
+
+.decision-button.awakening .stop-side {
+    animation: wakeUp 0.6s ease-out forwards, subtleGlow 1s ease-out 0.3s;
+}
+
+@keyframes subtleGlow {
+    0%, 100% {
+        box-shadow: 0 0 0 rgba(251, 191, 36, 0);
+    }
+    50% {
+        box-shadow: 0 0 20px rgba(251, 191, 36, 0.4);
+    }
+}
+
+/* Unified Player Status Bar */
+#player-status-bar {
+    transition: all 0.3s ease;
+}
+
+#player-status-bar .active-player-name {
+    color: #3b82f6;
+    font-weight: 600;
+}
+
+#mini-scores span {
+    transition: all 0.3s ease;
+}
+
+/* Turn transition effect */
+#player-status-bar.turn-transition {
+    transform: scale(1.02);
+    box-shadow: 0 0 20px rgba(59, 130, 246, 0.3);
+}
+
+/* Shimmer effect for new options */
+@keyframes optionShimmer {
+    0% {
+        box-shadow: 0 0 0 0 rgba(59, 130, 246, 0);
+    }
+    50% {
+        box-shadow: 0 0 25px 3px rgba(59, 130, 246, 0.5), 
+                    0 0 15px 1px rgba(147, 197, 253, 0.3);
+    }
+    100% {
+        box-shadow: 0 0 0 0 rgba(59, 130, 246, 0);
+    }
+}
+
+.option-shimmer {
+    animation: optionShimmer 0.8s ease-out;
+}
+
+/* Points drain animation when answering wrong */
+@keyframes pointsDrain {
+    0% { 
+        color: #15803d; 
+        transform: scale(1);
+    }
+    25% { 
+        color: #dc2626; 
+        transform: scale(1.1);
+    }
+    50% { 
+        color: #dc2626; 
+        transform: scale(1.05);
+    }
+    100% { 
+        color: #dc2626; 
+        transform: scale(1);
+    }
+}
+
+@keyframes buttonShake {
+    0%, 100% { transform: translateX(0); }
+    10% { transform: translateX(-5px); }
+    30% { transform: translateX(5px); }
+    50% { transform: translateX(-3px); }
+    70% { transform: translateX(3px); }
+    90% { transform: translateX(-1px); }
+}
+
+/* Dark pulse effect for wrong answer */
+@keyframes darkPulse {
+    0% {
+        box-shadow: 0 0 0 0 rgba(220, 38, 38, 0.7);
+    }
+    50% {
+        box-shadow: 0 0 30px 10px rgba(220, 38, 38, 0.3);
+    }
+    100% {
+        box-shadow: 0 0 0 0 rgba(220, 38, 38, 0);
+    }
+}
+
+.points-draining {
+    animation: pointsDrain 0.3s ease-out;
+    color: #dc2626 !important; /* Ensure red color during animation */
+}
+
+.points-failed {
+    color: #dc2626 !important; /* Red color for failed points */
+}
+
+.button-shake {
+    animation: buttonShake 0.6s ease-out;
+}
+
+.button-dark-pulse {
+    animation: darkPulse 1.5s ease-out;
+}
+
+/* Challenge list expandable items */
+.challenge-list-item {
+    transition: all 0.3s ease-in-out;
+}
+
+.challenge-list-item .challenge-summary {
+    transition: background-color 0.2s ease;
+}
+
+.challenge-list-item .challenge-summary:hover {
+    background-color: #f1f5f9; /* slate-100 */
+}
+
+.challenge-list-item .expand-icon {
+    transition: transform 0.3s ease;
+    display: inline-block;
+    font-size: 0.75rem;
+}
+
+.challenge-list-item .challenge-details {
+    max-height: 0;
+    overflow: hidden;
+    transition: max-height 0.3s ease-in-out, padding 0.3s ease-in-out;
+}
+
+.challenge-list-item .challenge-details:not(.hidden) {
+    max-height: 300px; /* Adjust based on content */
+    animation: slideDown 0.3s ease-out;
+}
+
+@keyframes slideDown {
+    from {
+        opacity: 0;
+        transform: translateY(-10px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* Status badge animations */
+.challenge-list-item .status-badge span {
+    animation: fadeIn 0.3s ease-in;
+}
+
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: scale(0.9);
+    }
+    to {
+        opacity: 1;
+        transform: scale(1);
+    }
+}
+
+/* Hover effects for buttons in challenge details */
+.challenge-list-item .rematch-btn,
+.challenge-list-item .share-result-btn {
+    transition: all 0.2s ease;
+}
+
+.challenge-list-item .rematch-btn:hover,
+.challenge-list-item .share-result-btn:hover {
+    transform: translateY(-1px);
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+
