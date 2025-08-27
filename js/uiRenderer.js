@@ -480,7 +480,6 @@ class UIRenderer {
 
     // Game controls - MOVED from game.js (ID:7)
     hideAllGameButtons() {
-        // COPIED from working code in game.js:1190-1192
         const stopBtn = this.get('stopBtn');
         const nextQuestionBtn = this.get('nextQuestionBtn');
         const largeNextQuestionBtn = this.get('largeNextQuestionBtn');
@@ -491,25 +490,21 @@ class UIRenderer {
     }
 
     showDecisionButton() {
-        // COPIED from working code in game.js:1198, 1219, 1247
         const decisionButton = this.get('decisionButton');
         if (decisionButton) decisionButton.classList.remove('hidden');
     }
-
+    
     hideDecisionButton() {
-        // COPIED from working code in game.js:901
         const decisionButton = this.get('decisionButton');
         if (decisionButton) decisionButton.classList.add('hidden');
     }
 
     showNextQuestionButton() {
-        // COPIED from working code in game.js:902
         const nextQuestionBtn = this.get('nextQuestionBtn');
         if (nextQuestionBtn) nextQuestionBtn.classList.remove('hidden');
     }
 
     hideStopButton() {
-        // COPIED from working code in game.js:900, 1346
         const stopBtn = this.get('stopBtn');
         if (stopBtn) stopBtn.classList.add('hidden');
     }

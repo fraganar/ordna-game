@@ -1435,6 +1435,25 @@ function showCorrectAnswers() {
     }
 }
 function endGame() {
+    // Trigger confetti celebration if available
+    if (window.visualEffects && window.visualEffects.triggerConfetti) {
+        // Trigger confetti for multiplayer winner or single player completion
+        const isSinglePlayer = window.PlayerManager?.isSinglePlayerMode();
+        const players = window.PlayerManager?.getAllPlayers() || [];
+        
+        // In multiplayer, confetti for winner with high score
+        if (!isSinglePlayer && players.length > 0) {
+            const winner = players.reduce((a, b) => a.score > b.score ? a : b);
+            if (winner.score > 0) {
+                window.visualEffects.triggerConfetti();
+            }
+        } 
+        // In single player, confetti if score is good
+        else if (isSinglePlayer && players[0]?.score >= 10) {
+            window.visualEffects.triggerConfetti();
+        }
+    }
+    
     // Save any remaining points for challenge mode before ending
     if (ischallengeMode && window.PlayerManager?.isSinglePlayerMode()) {
         const currentPlayer = window.PlayerManager.getCurrentPlayer();

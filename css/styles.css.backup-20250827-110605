@@ -196,10 +196,10 @@ body::before {
     overflow: hidden;
 }
 
-/* Stop Side - Safe Choice (Orange warning color) */
+/* Stop Side - Safe Choice */
 .decision-button .stop-side {
-    background: linear-gradient(135deg, var(--warning-500), var(--warning-600));
-    box-shadow: 0 4px 16px rgba(249, 115, 22, 0.3);
+    background: linear-gradient(135deg, var(--success-400), var(--success-500));
+    box-shadow: 0 4px 16px rgba(34, 197, 94, 0.3);
 }
 
 .decision-button .stop-side::before {
@@ -209,7 +209,7 @@ body::before {
     left: -2px;
     right: -2px;
     bottom: -2px;
-    background: linear-gradient(45deg, #fb923c, #f97316, #ea580c);
+    background: linear-gradient(45deg, #4ade80, #22c55e, #16a34a);
     border-radius: 20px;
     opacity: 0;
     z-index: -1;
@@ -218,23 +218,23 @@ body::before {
 
 .decision-button .stop-side:hover:not(:disabled):not(.disabled) {
     transform: translateY(-3px) scale(1.02);
-    box-shadow: 0 6px 24px rgba(249, 115, 22, 0.4);
+    box-shadow: 0 6px 24px rgba(34, 197, 94, 0.4);
 }
 
 .decision-button .stop-side:hover:not(:disabled)::before {
     opacity: 1;
 }
 
-/* Next Side - Continue/Risk (Purple/Magenta primary color) */
+/* Next Side - Continue/Risk */
 .decision-button .next-side {
-    background: linear-gradient(135deg, var(--primary-500), var(--primary-600));
-    box-shadow: 0 4px 16px rgba(217, 70, 239, 0.3);
+    background: linear-gradient(135deg, var(--secondary-500), var(--secondary-600));
+    box-shadow: 0 4px 16px rgba(59, 130, 246, 0.3);
 }
 
 .decision-button .next-side:hover:not(:disabled) {
-    background: linear-gradient(135deg, var(--primary-600), var(--primary-700));
+    background: linear-gradient(135deg, var(--secondary-600), var(--secondary-700));
     transform: translateY(-3px) scale(1.02);
-    box-shadow: 0 6px 24px rgba(217, 70, 239, 0.4);
+    box-shadow: 0 6px 24px rgba(59, 130, 246, 0.4);
 }
 
 .decision-icon {
@@ -355,28 +355,6 @@ body::before {
     50% { transform: translateY(-10px); }
 }
 
-/* Particle explosion effect */
-.point-explosion {
-    position: fixed;
-    width: 4px;
-    height: 4px;
-    background: var(--success-500);
-    border-radius: 50%;
-    pointer-events: none;
-    z-index: 1999;
-}
-
-@keyframes explode {
-    0% {
-        transform: translate(0, 0) scale(1);
-        opacity: 1;
-    }
-    100% {
-        transform: translate(var(--x), var(--y)) scale(0);
-        opacity: 0;
-    }
-}
-
 /* Flying points to total score animation */
 .flying-point-to-total {
     position: fixed;
@@ -426,12 +404,12 @@ body::before {
 
 /* Enhanced stop button glow based on points */
 .decision-button .stop-side.has-points {
-    background: linear-gradient(135deg, var(--warning-500), var(--warning-600));
-    box-shadow: 0 4px 16px rgba(249, 115, 22, 0.3), 0 0 20px rgba(249, 115, 22, 0.2);
+    background: linear-gradient(135deg, var(--success-400), var(--success-500));
+    box-shadow: 0 4px 16px rgba(34, 197, 94, 0.3), 0 0 20px rgba(34, 197, 94, 0.2);
 }
 
 .decision-button .stop-side.has-points:hover {
-    box-shadow: 0 6px 24px rgba(249, 115, 22, 0.4), 0 0 30px rgba(249, 115, 22, 0.3);
+    box-shadow: 0 6px 24px rgba(34, 197, 94, 0.4), 0 0 30px rgba(34, 197, 94, 0.3);
 }
 
 /* Disabled state for stop button */
@@ -454,7 +432,7 @@ body::before {
 
 /* Completed/Secured state for stop button */
 .decision-button .stop-side.completed {
-    background: linear-gradient(135deg, var(--warning-500), var(--warning-600));
+    background: linear-gradient(135deg, var(--success-400), var(--success-500));
     cursor: default;
 }
 
@@ -769,12 +747,12 @@ body::before {
     }
     50% {
         transform: scale(1.08);
-        box-shadow: 0 0 40px rgba(249, 115, 22, 0.5);
+        box-shadow: 0 0 40px rgba(34, 197, 94, 0.5);
     }
     100% {
         opacity: 1;
         transform: scale(1);
-        background: linear-gradient(135deg, var(--warning-500), var(--warning-600));
+        background: linear-gradient(135deg, var(--success-400), var(--success-500));
     }
 }
 
@@ -784,10 +762,10 @@ body::before {
 
 @keyframes subtleGlow {
     0%, 100% {
-        box-shadow: 0 4px 16px rgba(249, 115, 22, 0.3);
+        box-shadow: 0 4px 16px rgba(34, 197, 94, 0.3);
     }
     50% {
-        box-shadow: 0 4px 16px rgba(249, 115, 22, 0.3), 0 0 30px rgba(249, 115, 22, 0.4);
+        box-shadow: 0 4px 16px rgba(34, 197, 94, 0.3), 0 0 30px rgba(34, 197, 94, 0.4);
     }
 }
 
@@ -980,24 +958,24 @@ button, input, select, .card {
    MODERN BUTTON STYLES - Replace Tailwind Classes
    =============================================== */
 
-/* Primary Button (Purple/Magenta - main action) */
+/* Primary Button (Replace bg-blue-600) */
 .btn-primary {
-    background: linear-gradient(135deg, var(--primary-500), var(--primary-600));
+    background: linear-gradient(135deg, var(--secondary-500), var(--secondary-600));
     color: white;
     border: none;
     border-radius: 16px;
     padding: 16px 24px;
     font-weight: 700;
     font-size: 18px;
-    box-shadow: 0 4px 16px rgba(217, 70, 239, 0.3);
+    box-shadow: 0 4px 16px rgba(59, 130, 246, 0.3);
     transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
     cursor: pointer;
 }
 
 .btn-primary:hover:not(:disabled) {
-    background: linear-gradient(135deg, var(--primary-600), var(--primary-700));
+    background: linear-gradient(135deg, var(--secondary-600), var(--secondary-700));
     transform: translateY(-3px) scale(1.02);
-    box-shadow: 0 6px 24px rgba(217, 70, 239, 0.4);
+    box-shadow: 0 6px 24px rgba(59, 130, 246, 0.4);
 }
 
 .btn-primary:disabled {

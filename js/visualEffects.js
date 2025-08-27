@@ -6,6 +6,25 @@
 
     // Particle effect on correct answers
     function createParticleExplosion(x, y, color = '#22c55e') {
+        // Ensure explode animation exists
+        if (!document.querySelector('#particle-explode-styles')) {
+            const style = document.createElement('style');
+            style.id = 'particle-explode-styles';
+            style.textContent = `
+                @keyframes explode {
+                    0% {
+                        transform: translate(0, 0) scale(1);
+                        opacity: 1;
+                    }
+                    100% {
+                        transform: translate(var(--x), var(--y)) scale(0);
+                        opacity: 0;
+                    }
+                }
+            `;
+            document.head.appendChild(style);
+        }
+        
         const particleCount = 12;
         const container = document.createElement('div');
         container.style.position = 'fixed';

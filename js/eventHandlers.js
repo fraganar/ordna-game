@@ -42,6 +42,10 @@ function initializeAllEventListeners() {
     const stopSide = UI.get('stopSide');
     if (stopSide) {
         stopSide.addEventListener('click', playerStops);
+        // Add ripple effect if visual effects available
+        if (window.visualEffects && window.visualEffects.addRippleEffect) {
+            window.visualEffects.addRippleEffect(stopSide);
+        }
     }
     
     const nextSide = UI.get('nextSide');
@@ -51,6 +55,10 @@ function initializeAllEventListeners() {
             window.currentQuestionIndex = currentQuestionIndex; // Sync global variable
             loadQuestion();
         });
+        // Add ripple effect if visual effects available
+        if (window.visualEffects && window.visualEffects.addRippleEffect) {
+            window.visualEffects.addRippleEffect(nextSide);
+        }
     }
     
     const nextQuestionBtn = UI.get('nextQuestionBtn');

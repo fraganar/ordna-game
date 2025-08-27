@@ -150,6 +150,12 @@ class GameController {
             button.className = 'option-btn w-full text-left p-3 sm:p-4 rounded-lg border-2 border-slate-300 bg-white hover:bg-slate-50 hover:border-blue-400 text-sm sm:text-base';
             button.textContent = optionText;
             button.addEventListener('click', () => window.handleOrderClick(button, optionText));
+            
+            // Add ripple effect if available
+            if (window.visualEffects && window.visualEffects.addRippleEffect) {
+                window.visualEffects.addRippleEffect(button);
+            }
+            
             optionsGrid.appendChild(button);
         });
     }
