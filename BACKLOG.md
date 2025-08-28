@@ -13,11 +13,12 @@
 2. **BL-008** (70) - Visa poäng i utmaningsresultat
 3. **BL-009** (60) - Poänganimering före totalpoäng
 4. **BL-010** (50) - Utmana-knapp efter alla spellägen
-5. **BL-018** (30) - Unificera slutskärmsfunktioner
-6. **BL-019** (25) - Duplicerad showChallengeAcceptScreen implementation
-7. **BL-020** (20) - Duplicerad difficulty badge implementation
-8. **BL-021** (15) - Komplettera CSS variables implementation
-9. **BL-022** (12) - Lägg till browser fallbacks för moderna CSS-effekter
+5. **BL-023** (35) - Säkra Firebase med autentisering
+6. **BL-018** (30) - Unificera slutskärmsfunktioner
+7. **BL-019** (25) - Duplicerad showChallengeAcceptScreen implementation
+8. **BL-020** (20) - Duplicerad difficulty badge implementation
+9. **BL-021** (15) - Komplettera CSS variables implementation
+10. **BL-022** (12) - Lägg till browser fallbacks för moderna CSS-effekter
 
 ---
 
@@ -112,6 +113,51 @@
   - Skapa fallback-styles för äldre browsers
   - Testa i olika browsers och versioner
 - **Nytta:** Bättre browser-kompatibilitet, fungerar för fler användare
+
+### BL-023: Säkra Firebase med autentisering
+- **Kategori:** SECURITY
+- **Stackrank:** 35
+- **Beskrivning:** Implementera Firebase Authentication så bara appen kan läsa/skriva till databasen
+- **Problem:**
+  - Firebase security rules är för närvarande helt öppna
+  - Firebase varnar om osäkra regler och hotar med att stänga databasen
+  - Vem som helst kan teoretiskt läsa/skriva data
+- **Åtgärd - Firebase Console:**
+  1. Gå till Firebase Console → Authentication → Sign-in method
+  2. Aktivera "Anonymous" och klicka Save
+  3. Gå till Firestore Database → Rules
+  4. Ersätt med följande security rules:
+     ```javascript
+     rules_version = '2';
+     service cloud.firestore {
+       match /databases/{database}/documents {
+         match /{document=**} {
+           allow read, write: if request.auth != null;
+         }
+       }
+     }
+     ```
+  5. Klicka "Publish" för att aktivera reglerna
+- **Åtgärd - Kodändringar:**
+  1. **index.html** (rad 47, efter firebase-firestore script):
+     ```html
+     <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-auth-compat.js"></script>
+     ```
+  2. **js/firebase-config.js**:
+     - Lägg till variabel efter rad 15: `let authInitialized = false;`
+     - Gör `initializeFirebase()` async på rad 17: `async function initializeFirebase() {`
+     - Lägg till efter rad 35 (efter `firebaseInitialized = true;`):
+       ```javascript
+       // Initialize anonymous authentication
+       try {
+           await firebase.auth().signInAnonymously();
+           authInitialized = true;
+           console.log('Firebase Auth initialized (anonymous)');
+       } catch (authError) {
+           console.error('Auth initialization failed:', authError);
+       }
+       ```
+- **Nytta:** Säkrare databas, uppfyller Firebase krav, förhindrar missbruk utan att kräva användarregistrering
 
 
 ---
