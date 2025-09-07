@@ -2,8 +2,7 @@
     /* New Playful Premium Color Palette */
     --color-primary: #7C3AED;        /* Hero Purple */
     --color-primary-dark: #6D28D9;   /* Hero Purple Dark */
-    --color-action: #FB923C;         /* Energy Orange */
-    --color-action-dark: #EA580C;    /* Energy Orange Dark */
+    /* Action colors removed - using mango colors instead */
     --color-success: #14B8A6;        /* Success Teal */
     --color-success-dark: #0D9488;   /* Success Teal Dark */
     --color-danger: #F87171;         /* Danger Coral */
@@ -22,10 +21,22 @@
     --color-soft-cloud: #F8FAFC;     /* Soft Cloud */
     --color-pearl: #FFFFFF;          /* Pearl White */
     
-    /* Legacy colors for fallback */
-    --color-legacy-blue: #3b82f6;
-    --color-legacy-green: #22c55e;
-    --color-legacy-red: #ef4444;
+    /* Gray scale colors */
+    --color-gray-100: #f3f4f6;
+    --color-gray-200: #e5e7eb;
+    --color-gray-300: #d1d5db;
+    --color-gray-400: #9ca3af;
+    --color-gray-500: #6b7280;
+    
+    /* Additional accent colors */
+    --color-amber: #fcd34d;
+    --color-sky: #7dd3fc;
+    --color-slate: #f1f5f9;
+    
+    /* Legacy colors - removed as they are no longer used */
+    /* --color-legacy-blue: #3b82f6; */
+    /* --color-legacy-green: #22c55e; */
+    /* --color-legacy-red: #ef4444; */
 }
 
 body {
@@ -298,8 +309,8 @@ body {
 
 /* Enhanced stop button glow based on points */
 .decision-button .stop-side.has-points {
-    background: linear-gradient(135deg, var(--color-action) 0%, var(--color-action-dark) 100%);
-    border-color: var(--color-action-dark);
+    background: linear-gradient(135deg, var(--color-mango) 0%, var(--color-mango-dark) 100%);
+    border-color: var(--color-mango-dark);
     box-shadow: 0 4px 15px rgba(251, 146, 60, 0.4), 0 2px 8px rgba(0, 0, 0, 0.1), 0 0 0 2px rgba(251, 146, 60, 0.2);
     animation: subtleGlow 2s ease-in-out infinite;
 }
@@ -310,8 +321,8 @@ body {
 
 /* Disabled state for stop button */
 .decision-button .stop-side.disabled {
-    background: linear-gradient(135deg, #f3f4f6 0%, #e5e7eb 50%, #d1d5db 100%);
-    border: 1px solid #9ca3af;
+    background: linear-gradient(135deg, var(--color-gray-100) 0%, var(--color-gray-200) 50%, var(--color-gray-300) 100%);
+    border: 1px solid var(--color-gray-400);
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
     cursor: not-allowed;
     opacity: 0.7;
@@ -319,12 +330,12 @@ body {
 
 /* Make only the "Stanna" action text gray when disabled */
 .decision-button .stop-side.disabled .decision-action {
-    color: #9ca3af !important;
+    color: var(--color-gray-400) !important;
 }
 
 .decision-button .stop-side.disabled:hover {
-    background: linear-gradient(135deg, #f3f4f6 0%, #e5e7eb 50%, #d1d5db 100%);
-    border: 1px solid #9ca3af;
+    background: linear-gradient(135deg, var(--color-gray-100) 0%, var(--color-gray-200) 50%, var(--color-gray-300) 100%);
+    border: 1px solid var(--color-gray-400);
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
     transform: none;
 }
@@ -367,13 +378,13 @@ body {
 
 /* Disabled state for next button */
 .decision-button .next-side:disabled {
-    background: linear-gradient(135deg, #e5e7eb 0%, #d1d5db 100%);
+    background: linear-gradient(135deg, var(--color-gray-200) 0%, var(--color-gray-300) 100%);
     cursor: not-allowed;
     opacity: 0.7;
 }
 
 .decision-button .next-side:disabled:hover {
-    background: linear-gradient(135deg, #e5e7eb 0%, #d1d5db 100%);
+    background: linear-gradient(135deg, var(--color-gray-200) 0%, var(--color-gray-300) 100%);
     transform: none;
 }
 
@@ -428,7 +439,7 @@ body {
 }
 
 .choice-made .decision-buttons {
-    border-color: #7dd3fc; /* sky-300 */
+    border-color: var(--color-sky);
 }
 
 .decision-buttons {
@@ -463,11 +474,11 @@ body {
 }
 
 .decision-buttons button:first-child {
-    border-right: 1px solid #e5e7eb; /* gray-200 */
+    border-right: 1px solid var(--color-gray-200);
 }
 
 .decision-buttons button:hover:not(:disabled) {
-    background-color: #f3f4f6; /* gray-100 */
+    background-color: var(--color-gray-100);
 }
 
 .decision-buttons button.selected {
@@ -485,7 +496,7 @@ body {
 }
 
 #stop-btn:disabled {
-    background-color: #fcd34d; /* amber-300 */
+    background-color: var(--color-amber);
     cursor: not-allowed;
     opacity: 0.7;
 }
@@ -543,8 +554,8 @@ body {
 
 .pack-card.selected {
     transform: translateY(-4px);
-    box-shadow: 0 0 0 3px #3b82f6; /* blue-500 */
-    border-color: #3b82f6;
+    box-shadow: 0 0 0 3px var(--color-primary);
+    border-color: var(--color-primary);
 }
 
 .pack-card .selected-check {
@@ -552,7 +563,7 @@ body {
     position: absolute;
     top: 0.75rem;
     right: 0.75rem;
-    background-color: #3b82f6;
+    background-color: var(--color-primary);
     color: white;
     border-radius: 9999px;
     width: 1.75rem;
@@ -585,7 +596,7 @@ body {
 
 .player-score-card.completed {
     opacity: 0.6;
-    background-color: #f3f4f6; /* gray-100 */
+    background-color: var(--color-gray-100);
     transform: scale(1);
 }
 
@@ -615,7 +626,7 @@ body {
 }
 
 .point-float.banked {
-     color: var(--color-action-dark);
+     color: var(--color-mango-dark);
      text-shadow: 0 2px 6px rgba(251, 146, 60, 0.6), 0 1px 3px rgba(0,0,0,0.2);
 }
 
@@ -623,12 +634,12 @@ body {
 .decision-button.inactive .stop-side {
     opacity: 0.5;
     cursor: not-allowed;
-    background-color: #e5e7eb;
-    color: #9ca3af;
+    background-color: var(--color-gray-200);
+    color: var(--color-gray-400);
 }
 
 .decision-button.inactive .stop-side:hover {
-    background-color: #e5e7eb;
+    background-color: var(--color-gray-200);
     transform: none;
 }
 
@@ -666,7 +677,7 @@ body {
 }
 
 #player-status-bar .active-player-name {
-    color: #3b82f6;
+    color: var(--color-primary);
     font-weight: 600;
 }
 
@@ -768,7 +779,7 @@ body {
 }
 
 .challenge-list-item .challenge-summary:hover {
-    background-color: #f1f5f9; /* slate-100 */
+    background-color: var(--color-slate);
 }
 
 .challenge-list-item .expand-icon {
