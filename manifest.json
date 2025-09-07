@@ -1,11 +1,11 @@
 {
-  "name": "Ordna - Frågesport",
-  "short_name": "Ordna",
+  "name": "Tres Mangos - Frågesport",
+  "short_name": "Tres Mangos",
   "description": "Ett klurigt frågespel där ni tävlar om vem som vågar chansa mest",
   "start_url": "/",
   "display": "standalone",
-  "background_color": "#f8fafc",
-  "theme_color": "#3b82f6",
+  "background_color": "#FEF3C7",
+  "theme_color": "#FB923C",
   "orientation": "portrait-primary",
   "icons": [
     {
