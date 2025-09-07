@@ -1,7 +1,7 @@
-# Ordna Game - Complete Styling Map
+# Tres Mangos - Complete Styling Map
 
 ## 📋 Översikt
-Detta dokument kartlägger all styling i Ordna-spelet. Styling sätts på tre primära sätt:
+Detta dokument kartlägger all styling i Tres Mangos-spelet. Styling sätts på tre primära sätt:
 1. **CSS-filer** (css/styles.css)
 2. **Tailwind CSS-klasser** (inline i HTML och via JavaScript)
 3. **JavaScript dynamisk styling** (classList, style properties, animations)
@@ -29,6 +29,12 @@ Detta dokument kartlägger all styling i Ordna-spelet. Styling sätts på tre pr
 --color-soft-cloud: #F8FAFC;     /* Soft Cloud */
 --color-pearl: #FFFFFF;          /* Pearl White */
 
+/* Mango-inspired colors */
+--color-mango: #FFB74D;          /* Warm Mango Orange */
+--color-mango-light: #FFE0B2;    /* Light Mango */
+--color-mango-dark: #FF9800;     /* Deep Mango */
+--color-tropical-green: #66BB6A; /* Tropical Leaf Green */
+
 /* Legacy colors (för backward compatibility) */
 --color-legacy-blue: #3b82f6;    /* Gamla primärblå */
 --color-legacy-green: #22c55e;   /* Gamla framgångsgröna */
@@ -47,7 +53,7 @@ Detta dokument kartlägger all styling i Ordna-spelet. Styling sätts på tre pr
 
 ### Färganvändning per kontext (NYA DESIGNEN)
 - **Huvudfärg/Aktiv spelare**: Purple (--color-primary, --color-primary-dark)
-- **Action/Stanna-knapp**: Orange (--color-action, --color-action-dark) 
+- **Action/Stanna-knapp**: Mango gradient (--color-mango, --color-mango-dark) 
 - **Rätt svar/Poäng**: Teal (--color-success, --color-success-dark)
 - **Fel svar**: Coral (--color-danger, --color-danger-dark)
 - **Fortsätt/Nästa fråga**: Pink-Purple gradient (--color-magic + --color-primary)

@@ -1,4 +1,4 @@
-# Ordna Game - Project Documentation
+# Tres Mangos - Project Documentation
 
 ## About the Game
 Ett klurigt frågespel där spelare tävlar om vem som vågar chansa mest. Spela ensam eller med vänner (2-6 spelare) i denna interaktiva quiz där strategiskt risktagande är nyckeln till framgång.

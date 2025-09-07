@@ -1,8 +1,8 @@
-# Ordna Game - Komplett Spelspecifikation
+# Tres Mangos - Komplett Spelspecifikation
 
 ## Översikt
 
-**Ordna Game** är ett svenskt riskbaserat quiz-spel som kombinerar kunskap med strategiskt risktagande. Spelkonceptet bygger på "push your luck"-mekaniken där spelaren måste balansera potentiell vinst mot risk för förlust.
+**Tres Mangos** är ett svenskt riskbaserat quiz-spel som kombinerar kunskap med strategiskt risktagande. Spelkonceptet bygger på "push your luck"-mekaniken där spelaren måste balansera potentiell vinst mot risk för förlust.
 
 **Skapad:** 2025-08-05  
 **Källa:** Baserat på djup kodanalys och datastruktur  
@@ -541,7 +541,7 @@ Aktiva Utmaningar:
 #### WhatsApp Integration
 ```
 Automatisk meddelande-mall:
-"Hej! Jag utmanar dig i Ordna Game! 
+"Hej! Jag utmanar dig i Tres Mangos! 
 Klicka här för att spela samma 12 frågor: 
 https://game.com/challenge/abc123
 
@@ -767,7 +767,7 @@ function concludeQuestionRound() {
 
 ## Slutsats
 
-**Ordna Game** är ett sofistikerat spelkoncept som kombinerar kunskap, strategi och psikologi. Det grundläggande "push your luck"-mekaniken är tidlös och engagerande, medan de olika spellägena (single, multiplayer, challenge) erbjuder varierande upplevelser för olika situationer.
+**Tres Mangos** är ett sofistikerat spelkoncept som kombinerar kunskap, strategi och psikologi. Det grundläggande "push your luck"-mekaniken är tidlös och engagerande, medan de olika spellägena (single, multiplayer, challenge) erbjuder varierande upplevelser för olika situationer.
 
 ### Kärnstyrkor
 - **Universellt Tiltalande:** Fungerar för alla åldrar och kunskapsnivåer
@@ -789,7 +789,7 @@ Med rätt refaktorering och fortsatt utveckling kan detta bli ett riktigt starkt
 
 ---
 
-**Detta dokument utgör grunden för all framtida utveckling och refaktorering av Ordna Game.**
+**Detta dokument utgör grunden för all framtida utveckling och refaktorering av Tres Mangos.**
 
 ---
 

@@ -11,6 +11,12 @@
     --color-magic: #EC4899;          /* Magic Pink */
     --color-magic-dark: #DB2777;     /* Magic Pink Dark */
     
+    /* Mango-inspired colors */
+    --color-mango: #FFB74D;          /* Warm Mango Orange */
+    --color-mango-light: #FFE0B2;    /* Light Mango */
+    --color-mango-dark: #FF9800;     /* Deep Mango */
+    --color-tropical-green: #66BB6A; /* Tropical Leaf Green */
+    
     /* Backgrounds & Neutrals */
     --color-deep-space: #0F172A;     /* Deep Space */
     --color-soft-cloud: #F8FAFC;     /* Soft Cloud */
@@ -109,18 +115,18 @@ body {
 }
 
 .decision-button .stop-side {
-    background: linear-gradient(135deg, var(--color-action) 0%, var(--color-action-dark) 100%);
-    border: 1px solid rgba(251, 146, 60, 0.3);
+    background: linear-gradient(135deg, var(--color-mango-light) 0%, var(--color-mango) 50%, var(--color-mango-dark) 100%);
+    border: 1px solid rgba(255, 183, 77, 0.3);
     color: white;
-    box-shadow: 0 4px 15px rgba(251, 146, 60, 0.3), 0 2px 8px rgba(0, 0, 0, 0.1);
+    box-shadow: 0 4px 15px rgba(255, 183, 77, 0.3), 0 2px 8px rgba(0, 0, 0, 0.1);
     border-radius: 16px;
     font-weight: 600;
 }
 
 .decision-button .stop-side:hover {
-    background: linear-gradient(135deg, var(--color-action-dark) 0%, var(--color-action) 100%);
-    border-color: var(--color-action-dark);
-    box-shadow: 0 6px 20px rgba(251, 146, 60, 0.4), 0 3px 10px rgba(0, 0, 0, 0.15);
+    background: linear-gradient(135deg, var(--color-mango-dark) 0%, var(--color-mango) 100%);
+    border-color: var(--color-mango-dark);
+    box-shadow: 0 6px 20px rgba(255, 183, 77, 0.4), 0 3px 10px rgba(0, 0, 0, 0.15);
     transform: translateX(-2px) translateY(-2px);
 }
 
@@ -819,6 +825,45 @@ body {
 .challenge-list-item .share-result-btn:hover {
     transform: translateY(-1px);
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+/* Mango title styling */
+.mango-title {
+    background: linear-gradient(135deg, var(--color-primary) 0%, var(--color-mango) 50%, var(--color-primary-dark) 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    position: relative;
+}
+
+.mango-emoji {
+    -webkit-text-fill-color: initial;
+    font-size: 0.85em;
+    display: inline-block;
+    animation: gentleBounce 3s ease-in-out infinite;
+}
+
+@keyframes gentleBounce {
+    0%, 100% { transform: translateY(0) rotate(0deg); }
+    25% { transform: translateY(-3px) rotate(-5deg); }
+    75% { transform: translateY(-3px) rotate(5deg); }
+}
+
+/* Subtle tropical pattern in background */
+body::before {
+    content: '';
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-image: 
+        radial-gradient(circle at 20% 80%, var(--color-mango-light) 0%, transparent 50%),
+        radial-gradient(circle at 80% 20%, var(--color-tropical-green) 0%, transparent 50%),
+        radial-gradient(circle at 50% 10%, var(--color-mango) 0%, transparent 40%);
+    opacity: 0.08;
+    pointer-events: none;
+    z-index: -1;
 }
 
 
