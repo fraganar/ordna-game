@@ -840,13 +840,18 @@ body {
 
 /* Mango title styling */
 .mango-title {
-    background: linear-gradient(135deg, 
-        var(--color-primary) 0%,
-        var(--color-primary) 30%,
-        var(--color-mango-dark) 55%,
-        var(--color-primary-dark) 100%);
+    /* extra glans i själva bandet */
+    background: linear-gradient(
+        135deg,
+        var(--color-primary) 0 44%,
+        var(--color-mango-dark) 48%,
+        var(--color-mango) 52%,
+        var(--color-mango-dark) 56%,
+        var(--color-primary-dark) 100%
+    );
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
+    -webkit-text-stroke: 0.5px rgba(0,0,0,0.06); /* diskret skärpehjälp */
     background-clip: text;
     position: relative;
     line-height: 1.25;
