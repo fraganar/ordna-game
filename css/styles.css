@@ -840,8 +840,8 @@ body {
 
 /* Mango title styling */
 .mango-title {
-    --band: 12px;     /* halva tjockleken på det mörka bandet */
-    --glow: 8px;      /* liten ljus highlight */
+    --band: 20px;     /* halva tjockleken på det mörka bandet */
+    --glow: 12px;      /* liten ljus highlight */
     background: linear-gradient(
         90deg,
         var(--color-primary) 0,
