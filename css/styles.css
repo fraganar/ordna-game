@@ -840,7 +840,11 @@ body {
 
 /* Mango title styling */
 .mango-title {
-    background: linear-gradient(135deg, var(--color-primary) 0%, var(--color-mango) 50%, var(--color-primary-dark) 100%);
+    background: linear-gradient(135deg, 
+        var(--color-primary) 0%,
+        var(--color-primary) 30%,
+        var(--color-mango-dark) 55%,
+        var(--color-primary-dark) 100%);
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
     background-clip: text;
