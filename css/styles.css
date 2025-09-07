@@ -856,8 +856,14 @@ body {
 /* Mobile-specific adjustments for title */
 @media (max-width: 640px) {
     .mango-title {
-        white-space: nowrap;
-        font-size: clamp(2.5rem, 9vw, 3rem);
+        font-size: min(2.25rem, 11vw) !important;  /* Dynamic with max limit */
+        letter-spacing: -0.02em;
+        word-spacing: -0.05em;
+    }
+    
+    .mango-emoji {
+        font-size: 0.75em;
+        margin-left: -0.05em;  /* Subtle pull closer */
     }
 }
 
