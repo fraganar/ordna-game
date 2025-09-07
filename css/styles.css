@@ -834,6 +834,9 @@ body {
     -webkit-text-fill-color: transparent;
     background-clip: text;
     position: relative;
+    line-height: 1.25;
+    padding-bottom: 0.15em;
+    overflow: visible;
 }
 
 .mango-emoji {
