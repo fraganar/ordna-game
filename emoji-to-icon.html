@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html lang="sv">
+<head>
+    <meta charset="UTF-8">
+    <title>Emoji to Icon Converter</title>
+    <style>
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 20px;
+            background: #f8f9fa;
+        }
+        .canvas-container {
+            margin: 20px;
+            border: 1px solid #ddd;
+            background: white;
+            padding: 10px;
+            border-radius: 8px;
+        }
+        canvas {
+            display: block;
+        }
+        button {
+            margin: 10px;
+            padding: 10px 20px;
+            font-size: 16px;
+            background: #FB923C;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+        button:hover {
+            background: #EA580C;
+        }
+        .instructions {
+            max-width: 600px;
+            background: white;
+            padding: 20px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+        }
+        h1 {
+            color: #333;
+        }
+        .download-links {
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+        }
+    </style>
+</head>
+<body>
+    <div class="instructions">
+        <h1>🥭 Mango Emoji till Ikon</h1>
+        <p>Detta verktyg skapar PNG-ikoner från mango-emojin för Tres Mangos-appen.</p>
+        <ol>
+            <li>Klicka på knapparna nedan för att generera ikoner</li>
+            <li>Högerklicka på varje canvas och välj "Spara bild som..."</li>
+            <li>Spara som <strong>icon-192.png</strong> och <strong>icon-512.png</strong></li>
+        </ol>
+    </div>
+
+    <div class="download-links">
+        <button onclick="generateIcon(192)">Generera 192x192</button>
+        <button onclick="generateIcon(512)">Generera 512x512</button>
+    </div>
+
+    <div id="canvases"></div>
+
+    <script>
+        function generateIcon(size) {
+            // Create canvas
+            const canvas = document.createElement('canvas');
+            canvas.width = size;
+            canvas.height = size;
+            const ctx = canvas.getContext('2d');
+
+            // White background with rounded corners effect
+            ctx.fillStyle = '#FAFAFA';
+            ctx.fillRect(0, 0, size, size);
+
+            // Optional: Add subtle gradient background
+            const gradient = ctx.createLinearGradient(0, 0, size, size);
+            gradient.addColorStop(0, '#FEF3C7');
+            gradient.addColorStop(1, '#FBBF24');
+            ctx.fillStyle = gradient;
+            
+            // Draw rounded rectangle background
+            const radius = size * 0.15;
+            ctx.beginPath();
+            ctx.moveTo(radius, 0);
+            ctx.lineTo(size - radius, 0);
+            ctx.quadraticCurveTo(size, 0, size, radius);
+            ctx.lineTo(size, size - radius);
+            ctx.quadraticCurveTo(size, size, size - radius, size);
+            ctx.lineTo(radius, size);
+            ctx.quadraticCurveTo(0, size, 0, size - radius);
+            ctx.lineTo(0, radius);
+            ctx.quadraticCurveTo(0, 0, radius, 0);
+            ctx.closePath();
+            ctx.fill();
+
+            // Draw emoji
+            ctx.font = `${size * 0.7}px -apple-system, BlinkMacSystemFont, "Segoe UI Emoji", "Apple Color Emoji", "Noto Color Emoji", sans-serif`;
+            ctx.textAlign = 'center';
+            ctx.textBaseline = 'middle';
+            
+            // Add shadow for depth
+            ctx.shadowColor = 'rgba(0, 0, 0, 0.2)';
+            ctx.shadowBlur = size * 0.02;
+            ctx.shadowOffsetY = size * 0.01;
+            
+            ctx.fillText('🥭', size / 2, size / 2);
+
+            // Create container
+            const container = document.createElement('div');
+            container.className = 'canvas-container';
+            
+            // Add label
+            const label = document.createElement('p');
+            label.textContent = `${size}x${size} - Högerklicka och spara som icon-${size}.png`;
+            container.appendChild(label);
+            container.appendChild(canvas);
+
+            // Add to page
+            document.getElementById('canvases').appendChild(container);
+        }
+
+        // Auto-generate both sizes on load
+        window.onload = () => {
+            generateIcon(192);
+            generateIcon(512);
+        };
+    </script>
+</body>
+</html>
