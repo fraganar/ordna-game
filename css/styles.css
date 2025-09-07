@@ -857,7 +857,7 @@ body {
     
     .mango-emoji {
         font-size: 0.75em;
-        margin-left: -0.05em;  /* Subtle pull closer */
+        margin-left: -0.08em;  /* Pull mango closer to text */
     }
 }
 
