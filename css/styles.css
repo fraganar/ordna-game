@@ -840,13 +840,16 @@ body {
 
 /* Mango title styling */
 .mango-title {
-    /* extra glans i själva bandet */
+    --band: 12px;     /* halva tjockleken på det mörka bandet */
+    --glow: 8px;      /* liten ljus highlight */
     background: linear-gradient(
-        135deg,
-        var(--color-primary) 0 44%,
-        var(--color-mango-dark) 48%,
-        var(--color-mango) 52%,
-        var(--color-mango-dark) 56%,
+        90deg,
+        var(--color-primary) 0,
+        var(--color-primary) calc(50% - var(--band) - var(--glow)),
+        var(--color-mango-dark) calc(50% - var(--band)),
+        var(--color-mango) 50%,
+        var(--color-mango-dark) calc(50% + var(--band)),
+        var(--color-primary-dark) calc(50% + var(--band) + var(--glow)),
         var(--color-primary-dark) 100%
     );
     -webkit-background-clip: text;
