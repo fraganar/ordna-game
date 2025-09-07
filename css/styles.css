@@ -844,19 +844,13 @@ body {
     font-size: 0.85em;
     display: inline;
     white-space: nowrap;
-    animation: gentleBounce 3s ease-in-out infinite;
-}
-
-@keyframes gentleBounce {
-    0%, 100% { transform: translateY(0) rotate(0deg); }
-    25% { transform: translateY(-3px) rotate(-5deg); }
-    75% { transform: translateY(-3px) rotate(5deg); }
+    /* Animation removed - wasn't visible enough to add value */
 }
 
 /* Mobile-specific adjustments for title */
 @media (max-width: 640px) {
     .mango-title {
-        font-size: min(2.25rem, 11vw) !important;  /* Dynamic with max limit */
+        font-size: min(2.5rem, 13vw) !important;  /* Increased for better readability */
         letter-spacing: -0.02em;
         word-spacing: -0.05em;
     }
