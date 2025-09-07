@@ -838,28 +838,16 @@ body {
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
 }
 
-/* Mango title styling */
+/* Mango title styling - simple diagonal gradient like the buttons */
 .mango-title {
-    --band: 8%;     /* halva tjockleken på det mörka bandet - skalas med textbredd */
-    --glow: 5%;     /* liten ljus highlight - skalas med textbredd */
-    background: linear-gradient(
-        90deg,
-        var(--color-primary) 0,
-        var(--color-primary) calc(50% - var(--band) - var(--glow)),
-        var(--color-mango-dark) calc(50% - var(--band)),
-        var(--color-mango) 50%,
-        var(--color-mango-dark) calc(50% + var(--band)),
-        var(--color-primary-dark) calc(50% + var(--band) + var(--glow)),
+    background: linear-gradient(135deg, 
+        var(--color-primary) 0%, 
+        var(--color-mango) 50%, 
         var(--color-primary-dark) 100%
     );
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
-    -webkit-text-stroke: 0.5px rgba(0,0,0,0.06); /* diskret skärpehjälp */
     background-clip: text;
-    position: relative;
-    line-height: 1.25;
-    padding-bottom: 0.15em;
-    overflow: visible;
 }
 
 .mango-emoji {
@@ -870,19 +858,6 @@ body {
     /* Animation removed - wasn't visible enough to add value */
 }
 
-/* Mobile-specific adjustments for title */
-@media (max-width: 640px) {
-    .mango-title {
-        font-size: min(2.5rem, 12.5vw) !important;  /* Slightly smaller to allow for better spacing */
-        letter-spacing: 0.01em;  /* More breathing room between letters */
-        word-spacing: 0.1em;  /* Space between words */
-    }
-    
-    .mango-emoji {
-        font-size: 0.75em;
-        margin-left: 0.05em;  /* Small positive margin for breathing room */
-    }
-}
 
 /* Subtle tropical pattern in background */
 body::before {
