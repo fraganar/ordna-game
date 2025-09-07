@@ -842,7 +842,8 @@ body {
 .mango-emoji {
     -webkit-text-fill-color: initial;
     font-size: 0.85em;
-    display: inline-block;
+    display: inline;
+    white-space: nowrap;
     animation: gentleBounce 3s ease-in-out infinite;
 }
 
@@ -850,6 +851,14 @@ body {
     0%, 100% { transform: translateY(0) rotate(0deg); }
     25% { transform: translateY(-3px) rotate(-5deg); }
     75% { transform: translateY(-3px) rotate(5deg); }
+}
+
+/* Mobile-specific adjustments for title */
+@media (max-width: 640px) {
+    .mango-title {
+        white-space: nowrap;
+        font-size: clamp(2.5rem, 9vw, 3rem);
+    }
 }
 
 /* Subtle tropical pattern in background */
