@@ -17,9 +17,36 @@ async function convertSvgToPng() {
         .png()
         .toFile('icon-512.png');
     console.log('✅ Generated icon-512.png from SVG');
+    
+    // Generate Apple Touch Icons
+    await sharp(svgBuffer)
+        .resize(180, 180)
+        .png()
+        .toFile('apple-touch-icon.png');
+    console.log('✅ Generated apple-touch-icon.png (180x180) from SVG');
+    
+    // Additional iOS sizes
+    await sharp(svgBuffer)
+        .resize(152, 152)
+        .png()
+        .toFile('apple-touch-icon-152x152.png');
+    console.log('✅ Generated apple-touch-icon-152x152.png from SVG');
+    
+    await sharp(svgBuffer)
+        .resize(167, 167)
+        .png()
+        .toFile('apple-touch-icon-167x167.png');
+    console.log('✅ Generated apple-touch-icon-167x167.png from SVG');
+    
+    // Open Graph image (larger for sharing)
+    await sharp(svgBuffer)
+        .resize(1200, 1200)
+        .png()
+        .toFile('og-image.png');
+    console.log('✅ Generated og-image.png (1200x1200) for Open Graph');
 }
 
 console.log('🥭 Converting mango.svg to PNG icons...');
 convertSvgToPng()
-    .then(() => console.log('✨ Done! Icons have been generated from SVG.'))
+    .then(() => console.log('✨ Done! All icons have been generated from SVG.'))
     .catch(err => console.error('Error:', err));
