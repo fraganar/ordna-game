@@ -273,13 +273,13 @@ async function handleShare() {
     
     const challengeUrl = challengeLink.value;
     const playerName = window.PlayerManager ? window.PlayerManager.getPlayerName() : 'Någon';
-    const shareText = `${playerName} utmanar dig i spelet Ordna!`;
+    const shareText = `${playerName} utmanar dig i spelet Tres Mangos!`;
     
     // Check if Web Share API is available
     if (navigator.share) {
         try {
             await navigator.share({
-                title: `${playerName} utmanar dig i spelet Ordna!`,
+                title: `${playerName} utmanar dig i spelet Tres Mangos!`,
                 text: `${shareText} ${challengeUrl}`
             });
         } catch (err) {

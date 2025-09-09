@@ -1,4 +1,4 @@
-// Firebase Configuration for Ordna Game
+// Firebase Configuration for Tres Mangos
 // Note: Replace with actual config values from Firebase Console
 
 const firebaseConfig = {

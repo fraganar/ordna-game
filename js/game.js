@@ -43,7 +43,7 @@ async function loadPackMetadata() {
 const questionPacks = [
     { 
         name: "Grund", 
-        description: "Grundläggande frågor för Ordna-spelet", 
+        description: "Grundläggande frågor för Tres Mangos", 
         status: "available", 
         file: "questions-grund.json",
         price: "INKLUDERAT"

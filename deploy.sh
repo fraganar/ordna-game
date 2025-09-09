@@ -1,6 +1,6 @@
 #!/bin/bash
 
-echo "🚀 Deploying Ordna Game..."
+echo "🚀 Deploying Tres Mangos..."
 echo ""
 
 # Check if there are changes to commit

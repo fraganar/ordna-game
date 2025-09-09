@@ -323,7 +323,7 @@ class ChallengeSystem {
     shareViaWhatsApp(challengeId, playerName) {
         const link = this.generateShareLink(challengeId);
         const message = encodeURIComponent(
-            `${playerName} utmanar dig i spelet Ordna!\n\n` +
+            `${playerName} utmanar dig i spelet Tres Mangos!\n\n` +
             `Klicka här för att acceptera utmaningen:\n` +
             `${link}`
         );
@@ -334,7 +334,7 @@ class ChallengeSystem {
     // Share via Web Share API
     async shareViaWebShare(challengeId, playerName) {
         const link = this.generateShareLink(challengeId);
-        const shareText = `${playerName} utmanar dig i spelet Ordna!`;
+        const shareText = `${playerName} utmanar dig i spelet Tres Mangos!`;
         
         if (navigator.share) {
             try {
@@ -538,12 +538,12 @@ class ChallengeSystem {
                                 e.stopPropagation();
                                 const winner = myData.totalScore > opponentData.totalScore ? 'Jag vann!' : 
                                              myData.totalScore < opponentData.totalScore ? `${opponentData.name} vann!` : 'Oavgjort!';
-                                const shareText = `${winner} ${myData.name}: ${myData.totalScore}p vs ${opponentData.name}: ${opponentData.totalScore}p i Ordna!`;
+                                const shareText = `${winner} ${myData.name}: ${myData.totalScore}p vs ${opponentData.name}: ${opponentData.totalScore}p i Tres Mangos!`;
                                 
                                 if (navigator.share) {
                                     try {
                                         await navigator.share({
-                                            title: 'Ordna - Resultat',
+                                            title: 'Tres Mangos - Resultat',
                                             text: shareText
                                         });
                                     } catch (err) {
@@ -610,12 +610,12 @@ class ChallengeSystem {
                         shareBtn.addEventListener('click', async (e) => {
                             e.stopPropagation();
                             const challengeUrl = window.location.origin + window.location.pathname + '?challenge=' + challenge.id;
-                            const shareText = `Jag utmanar dig i spelet Ordna! ${challengeUrl}`;
+                            const shareText = `Jag utmanar dig i spelet Tres Mangos! ${challengeUrl}`;
                             
                             if (navigator.share) {
                                 try {
                                     await navigator.share({
-                                        title: 'Ordna - Utmaning',
+                                        title: 'Tres Mangos - Utmaning',
                                         text: shareText
                                     });
                                 } catch (err) {
@@ -1015,7 +1015,7 @@ class ChallengeSystem {
         // Share functionality
         if (shareBtn) {
             shareBtn.addEventListener('click', async () => {
-                const shareText = `${playerName} utmanar dig i spelet Ordna!`;
+                const shareText = `${playerName} utmanar dig i spelet Tres Mangos!`;
                 
                 if (navigator.share) {
                     try {

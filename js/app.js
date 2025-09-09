@@ -7,7 +7,7 @@ class App {
     
     // Initialize the application
     async initialize() {
-        console.log('Initializing Ordna Game...');
+        console.log('Initializing Tres Mangos...');
         
         try {
             // Wait for DOM to be ready
@@ -48,7 +48,7 @@ class App {
             }
             
             this.initialized = true;
-            console.log('Ordna Game initialized successfully!');
+            console.log('Tres Mangos initialized successfully!');
             
         } catch (error) {
             console.error('Failed to initialize app:', error);
