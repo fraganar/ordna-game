@@ -1,0 +1,134 @@
+{
+  "name": "Konstnärer & Mästerverk",
+  "description": "Berömda konstnärer, konstperioder och ikoniska konstverk genom historien",
+  "questions": [
+    {
+      "typ": "ordna",
+      "svårighetsgrad": "lätt",
+      "fråga": "Ordna dessa konstperioder i kronologisk ordning, från äldst till nyast.",
+      "alternativ": [
+        "Impressionism",
+        "Renässans",
+        "Kubism",
+        "Barock"
+      ],
+      "rätt_ordning": [
+        "Renässans",
+        "Barock",
+        "Impressionism",
+        "Kubism"
+      ],
+      "förklaring": "Renässans 1400-1600, Barock 1600-1750, Impressionism 1860s-1886, Kubism 1907-1921."
+    },
+    {
+      "typ": "hör_till",
+      "svårighetsgrad": "medel",
+      "fråga": "Vilka av följande påståenden om Vincent van Gogh är sanna?",
+      "kategori": "Hör till: sanna påståenden om Vincent van Gogh",
+      "alternativ": [
+        "Han sålde endast en målning under sin livstid",
+        "Han målade Stjärnenatt vid 36 års ålder",
+        "Han skapade över 900 konstverk under hela sin karriär",
+        "Han dog efter att ha blivit skjuten av en polis"
+      ],
+      "tillhör_index": [0, 1],
+      "förklaring": "Van Gogh sålde bara 'The Red Vineyard' 1888 och målade Starry Night juni 1889 vid 36 års ålder. Han skapade faktiskt över 2100 verk (inte bara 900), och han dog av skottskada men sköt sig själv - han sköts inte av polis."
+    },
+    {
+      "typ": "ordna",
+      "svårighetsgrad": "svår",
+      "fråga": "Ordna dessa berömda konstverk efter när de skapades, från äldst till nyast.",
+      "alternativ": [
+        "David (Michelangelo)",
+        "Mona Lisa (Leonardo da Vinci)",
+        "Guernica (Picasso)",
+        "Starry Night (van Gogh)"
+      ],
+      "rätt_ordning": [
+        "David (Michelangelo)",
+        "Mona Lisa (Leonardo da Vinci)",
+        "Starry Night (van Gogh)",
+        "Guernica (Picasso)"
+      ],
+      "förklaring": "David skapades 1501-1504, Mona Lisa 1503-1506, Starry Night juni 1889, Guernica 1937."
+    },
+    {
+      "typ": "hör_till",
+      "svårighetsgrad": "medel",
+      "fråga": "Vilka av följande påståenden om Rembrandt är sanna?",
+      "kategori": "Hör till: sanna påståenden om Rembrandt",
+      "alternativ": [
+        "Han målade cirka 100 självporträtt totalt",
+        "Han använde sig själv som modell för att spara pengar",
+        "Hans självporträtt visar honom från 20 till 63 års ålder",
+        "Han målade självporträtt bara när han var ung"
+      ],
+      "tillhör_index": [0],
+      "förklaring": "Rembrandt skapade cirka 100 självporträtt totalt. Han använde sig själv som modell av konstnärliga skäl, inte för att spara pengar. Hans självporträtt spänner faktiskt från 22 till 63 års ålder. Han målade självporträtt genom hela sin karriär, inte bara som ung."
+    },
+    {
+      "typ": "hör_till",
+      "svårighetsgrad": "lätt",
+      "fråga": "Vilka av följande påståenden om Mona Lisa-stölden 1911 är sanna?",
+      "kategori": "Hör till: sanna påståenden om Mona Lisa-stölden",
+      "alternativ": [
+        "Tjuven hette Vincenzo Peruggia och var italiensk glasmästare",
+        "Målningen stals från Louvren 21 augusti 1911",
+        "Pablo Picasso var initialt misstänkt för stölden",
+        "Stölden gjorde Mona Lisa världsberömd"
+      ],
+      "tillhör_index": [0, 1, 2, 3],
+      "förklaring": "Alla påståenden är sanna. Peruggia var italiensk patriot och glasmästare som arbetat på Louvren, stöld skedde 21 augusti 1911, Picasso misstänktes initialt pga tidigare inblandning i konststölder, och stölden gjorde målningen globalt känd utanför konstkretsar."
+    },
+    {
+      "typ": "ordna",
+      "svårighetsgrad": "medel",
+      "fråga": "Ordna dessa konstnärer efter hur gamla de blev, från yngst till äldst.",
+      "alternativ": [
+        "Claude Monet",
+        "Vincent van Gogh",
+        "Pablo Picasso",
+        "Frida Kahlo"
+      ],
+      "rätt_ordning": [
+        "Vincent van Gogh",
+        "Frida Kahlo",
+        "Pablo Picasso",
+        "Claude Monet"
+      ],
+      "förklaring": "Van Gogh dog vid 37 år (1853-1890), Kahlo vid 47 år (1907-1954), Picasso vid 91 år (1881-1973), Monet vid 86 år (1840-1926)."
+    },
+    {
+      "typ": "hör_till",
+      "svårighetsgrad": "svår",
+      "fråga": "Vilka av följande påståenden om konsthistoriska milstolpar är korrekta?",
+      "kategori": "Hör till: korrekta fakta om konsthistoriska milstolpar",
+      "alternativ": [
+        "Impressionistutställningen 15 april 1874 startade en ny era",
+        "Picassos 'Les Demoiselles d'Avignon' 1907 grundade kubismen",
+        "Monet gav namn åt impressionismen med 'Impression, Sunrise' 1872",
+        "Andy Warhol skapade Pop Art-genren med sitt verk 1956"
+      ],
+      "tillhör_index": [0, 1, 2],
+      "förklaring": "Impressionistutställningen 1874 på Nadars fotostudio startade rörelsen, Les Demoiselles d'Avignon 1907 grundade kubismen, Impression Sunrise 1872 gav namn åt impressionismen. Men Pop Art startades av Richard Hamilton 1956, inte Warhol."
+    },
+    {
+      "typ": "ordna",
+      "svårighetsgrad": "medel",
+      "fråga": "Ordna dessa Leonardo da Vinci-verk efter när han började arbeta på dem, från äldst till nyast.",
+      "alternativ": [
+        "Mona Lisa",
+        "Nattvarden (The Last Supper)",
+        "Vitruvius-mannen",
+        "Dame med hermelin"
+      ],
+      "rätt_ordning": [
+        "Vitruvius-mannen",
+        "Dame med hermelin",
+        "Nattvarden (The Last Supper)",
+        "Mona Lisa"
+      ],
+      "förklaring": "Vitruvius-mannen c.1490, Dame med hermelin 1489-1491, Nattvarden 1495-1498, Mona Lisa 1503-1506 (möjligen till 1517)."
+    }
+  ]
+}

@@ -1,0 +1,116 @@
+{
+  "name": "Historia och Upptäckter",
+  "description": "Viktiga historiska upptäckter, uppfinningar och utforskningar genom tiderna",
+  "questions": [
+    {
+      "typ": "hör_till",
+      "svårighetsgrad": "medel",
+      "fråga": "Vilka av följande påståenden om vikingarnas upptäckter är sanna?",
+      "kategori": "Hör till: sanna påståenden om vikingarnas upptäckter",
+      "alternativ": [
+        "Leif Eriksson upptäckte Amerika omkring år 1000",
+        "Vikingarna kallade Amerika för Vinland, Markland och Helluland",
+        "Erik den röde grundade kolonier på Grönland 985 e.Kr.",
+        "Vikingarna grundade permanenta städer i Amerika som finns kvar idag"
+      ],
+      "tillhör_index": [0, 1, 2],
+      "förklaring": "Leif Eriksson nådde Amerika ca 1000, vikingarna namngav de tre länderna, och Erik den röde grundade grönlandskolonierna 985. Men vikingarna grundade inga permanenta städer i Amerika - deras bosättningar var tillfälliga och övergavs."
+    },
+    {
+      "typ": "ordna",
+      "svårighetsgrad": "lätt",
+      "fråga": "Ordna dessa rymdhistoriska händelser i kronologisk ordning, från äldst till nyast.",
+      "alternativ": [
+        "Första människan i rymden (Yuri Gagarin)",
+        "Första satelliten (Sputnik 1)",
+        "Första månlandningen (Apollo 11)",
+        "Första rymdpromenaden"
+      ],
+      "rätt_ordning": [
+        "Första satelliten (Sputnik 1)",
+        "Första människan i rymden (Yuri Gagarin)",
+        "Första rymdpromenaden",
+        "Första månlandningen (Apollo 11)"
+      ],
+      "förklaring": "Sputnik 1 sköts upp 4 oktober 1957, Yuri Gagarin blev första människan i rymden 12 april 1961, första rymdpromenaden gjordes av Aleksei Leonov 18 mars 1965, och Apollo 11 landade på månen 20 juli 1969."
+    },
+    {
+      "typ": "hör_till",
+      "svårighetsgrad": "svår",
+      "fråga": "Vilka av följande påståenden om viktiga uppfinningar är sanna?",
+      "kategori": "Hör till: sanna påståenden om viktiga uppfinningar",
+      "alternativ": [
+        "Alexander Fleming upptäckte penicillin genom en ren slump 1928",
+        "Wright-bröderna flög högre än 100 meter vid första flygningen",
+        "Första telefonsamtalet skedde 10 mars 1876",
+        "Edison testade över 6000 material innan han hittade rätt glödlampstråd"
+      ],
+      "tillhör_index": [0, 2, 3],
+      "förklaring": "Fleming upptäckte penicillin av misstag när han kom tillbaka från semester 3 september 1928. Wright-brödernas första flygning nådde bara 3 meter höjd och 36,5 meter längd. Bell genomförde första telefonsamtalet 10 mars 1876. Edison testade verkligen över 6000 olika material för glödlampstråden."
+    },
+    {
+      "typ": "ordna",
+      "svårighetsgrad": "medel",
+      "fråga": "Ordna dessa medicinska upptäckter efter när de gjordes, från äldst till nyast.",
+      "alternativ": [
+        "Vaccination (Edward Jenner)",
+        "DNA:ts struktur",
+        "Penicillin (Alexander Fleming)",
+        "Röntgenstrålning"
+      ],
+      "rätt_ordning": [
+        "Vaccination (Edward Jenner)",
+        "Röntgenstrålning",
+        "Penicillin (Alexander Fleming)",
+        "DNA:ts struktur"
+      ],
+      "förklaring": "Edward Jenner utvecklade vaccination 1796, Wilhelm Röntgen upptäckte röntgenstrålning 1895, Alexander Fleming upptäckte penicillin 1928, Watson & Crick beskrev DNA:ts struktur 1953."
+    },
+    {
+      "typ": "hör_till",
+      "svårighetsgrad": "lätt",
+      "fråga": "Vilka av följande påståenden om kända uppfinnare är sanna?",
+      "kategori": "Hör till: sanna påståenden om kända uppfinnare",
+      "alternativ": [
+        "Thomas Edison registrerade cirka 1100 patent under sin karriär",
+        "Alexander Graham Bell grundade AT&T-bolaget",
+        "Nikola Tesla uppfann växelström och hade över 300 patent",
+        "Marie Curie var första person att vinna två Nobelpris"
+      ],
+      "tillhör_index": [0, 1],
+      "förklaring": "Edison hade cirka 1100 patent och Bell var medgrundare av AT&T. Tesla hade faktiskt cirka 300 patent men uppfann inte växelström (han utvecklade AC-systemet). Marie Curie var första kvinnan med två Nobelpris, men inte första personen (det var Linus Pauling)."
+    },
+    {
+      "typ": "ordna",
+      "svårighetsgrad": "medel",
+      "fråga": "Ordna dessa transportrevolutioner efter när de först introducerades, från äldst till nyast.",
+      "alternativ": [
+        "Karl Benz första bil",
+        "Hjulets uppfinning",
+        "Wright-brödernas första flygplan",
+        "Första ångmaskinen"
+      ],
+      "rätt_ordning": [
+        "Hjulets uppfinning",
+        "Första ångmaskinen",
+        "Karl Benz första bil",
+        "Wright-brödernas första flygplan"
+      ],
+      "förklaring": "Hjulet uppfanns av mesopotamierna omkring 3500 f.Kr., Thomas Savery utvecklade första praktiska ångmaskinen 1698, Karl Benz byggde sin första bil 1885, och Wright-bröderna genomförde första flygningen 1903."
+    },
+    {
+      "typ": "hör_till",
+      "svårighetsgrad": "svår",
+      "fråga": "Vilka av följande påståenden om historiska genombrott är korrekta?",
+      "kategori": "Hör till: korrekta fakta om historiska genombrott",
+      "alternativ": [
+        "ARPANET-meddelandet 1969 blev bara 'LO' när systemet kraschade",
+        "Wilhelm Röntgen demonstrerade sin upptäckt med frus hand",
+        "Edward Jenner vaccinerade 8-åriga James Phipps 1796",
+        "Alexander Graham Bell sa 'Mary Had a Little Lamb' i telefonen"
+      ],
+      "tillhör_index": [0, 1, 2],
+      "förklaring": "ARPANET kraschade efter 'LO' (skulle varit 'LOGIN') 29 oktober 1969. Röntgen röntgade sin frus hand med vigselring som demonstration. Jenner vaccinerade James Phipps 14 maj 1796. Men Bells första telefonmeddelande var 'Mr. Watson—come here—I want to see you', inte Mary Had a Little Lamb."
+    }
+  ]
+}
