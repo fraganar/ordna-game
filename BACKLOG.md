@@ -19,6 +19,7 @@
 8. **BL-020** (20) - Duplicerad difficulty badge implementation
 9. **BL-021** (15) - Komplettera CSS variables implementation
 10. **BL-022** (12) - Lägg till browser fallbacks för moderna CSS-effekter
+11. **BL-024** (10) - Redesigna "Hör till"-knappar enligt ny mockup
 
 ---
 
@@ -113,6 +114,23 @@
   - Skapa fallback-styles för äldre browsers
   - Testa i olika browsers och versioner
 - **Nytta:** Bättre browser-kompatibilitet, fungerar för fler användare
+
+### BL-024: Lägg till subtil färgad ram runt "Hör till"-knappar
+- **Kategori:** ENHANCEMENT
+- **Stackrank:** 10
+- **Beskrivning:** Lägg till en mycket subtil färgad ram runt ja/nej-knapparna enligt mockup
+- **Detaljer:**
+  - VIKTIGT: Endast en subtil färgändring på ramen runt knapparna
+  - Mycket lätt grön ton för ja-knappen
+  - Mycket lätt röd ton för nej-knappen
+  - Behåll nuvarande layout och struktur - knapparna är redan integrerade
+  - Se mockup: `./docs/images/ide_för_hör_till_knappar.png`
+- **Fördelar:**
+  - Ger lite mer visuell vägledning utan att störa designen
+  - Bibehåller den minimalistiska estetiken
+- **Nytta:** Subtilt förbättrad tydlighet för "Hör till"-knappar
+
+![Mockup för subtil färg på "Hör till"-knappar](./docs/images/ide_för_hör_till_knappar.png)
 
 ### BL-023: Säkra Firebase med autentisering
 - **Kategori:** SECURITY
