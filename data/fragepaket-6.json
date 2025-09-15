@@ -1,7 +1,43 @@
 {
-  "name": "Blandat 1",
-  "description": "Varierade frågor om geografi, historia, teknik och allmänbildning",
+  "name": "Frågepaket 6 - Sport, medicin och teknik",
+  "description": "Sport, medicinska upptäckter, tekniska uppfinningar och svenska fakta",
   "questions": [
+    {
+      "typ": "ordna",
+      "svårighetsgrad": "medel",
+      "fråga": "Ordna dessa medicinska upptäckter efter när de gjordes, från äldst till nyast.",
+      "alternativ": [
+        "Vaccination (Edward Jenner)",
+        "DNA:ts struktur",
+        "Penicillin (Alexander Fleming)",
+        "Röntgenstrålning"
+      ],
+      "rätt_ordning": [
+        "Vaccination (Edward Jenner)",
+        "Röntgenstrålning",
+        "Penicillin (Alexander Fleming)",
+        "DNA:ts struktur"
+      ],
+      "förklaring": "Edward Jenner utvecklade vaccination 1796, Wilhelm Röntgen upptäckte röntgenstrålning 1895, Alexander Fleming upptäckte penicillin 1928, Watson & Crick beskrev DNA:ts struktur 1953."
+    },
+    {
+      "typ": "ordna",
+      "svårighetsgrad": "medel",
+      "fråga": "Ordna dessa transportrevolutioner efter när de först introducerades, från äldst till nyast.",
+      "alternativ": [
+        "Karl Benz första bil",
+        "Hjulets uppfinning",
+        "Wright-brödernas första flygplan",
+        "Första ångmaskinen"
+      ],
+      "rätt_ordning": [
+        "Hjulets uppfinning",
+        "Första ångmaskinen",
+        "Karl Benz första bil",
+        "Wright-brödernas första flygplan"
+      ],
+      "förklaring": "Hjulet uppfanns av mesopotamierna omkring 3500 f.Kr., Thomas Savery utvecklade första praktiska ångmaskinen 1698, Karl Benz byggde sin första bil 1885, och Wright-bröderna genomförde första flygningen 1903."
+    },
     {
       "typ": "ordna",
       "svårighetsgrad": "medel",
@@ -58,42 +94,6 @@
     },
     {
       "typ": "ordna",
-      "svårighetsgrad": "lätt",
-      "fråga": "Ordna dessa städer efter geografisk latitud, från nordligast till sydligast.",
-      "alternativ": [
-        "Kairo",
-        "Stockholm",
-        "Kapstaden",
-        "London"
-      ],
-      "rätt_ordning": [
-        "Stockholm",
-        "London",
-        "Kairo",
-        "Kapstaden"
-      ],
-      "förklaring": "Stockholm ligger ca 59°N, London ca 51°N, Kairo ca 30°N, och Kapstaden ca 34°S (söder om ekvatorn)."
-    },
-    {
-      "typ": "ordna",
-      "svårighetsgrad": "lätt",
-      "fråga": "Ordna dessa djur efter topphastighet, från långsammaste till snabbaste.",
-      "alternativ": [
-        "Gepard",
-        "Elefant",
-        "Sengångare",
-        "Struts"
-      ],
-      "rätt_ordning": [
-        "Sengångare",
-        "Elefant",
-        "Struts",
-        "Gepard"
-      ],
-      "förklaring": "Sengångare rör sig omkring 0,2 km/h; en elefant kan springa ca 40 km/h; en struts upp till 70 km/h; en gepard runt 120 km/h på korta sträckor."
-    },
-    {
-      "typ": "ordna",
       "svårighetsgrad": "svår",
       "fråga": "Ordna dessa språk efter antal modersmålstalare, från färst till flest.",
       "alternativ": [
@@ -121,11 +121,7 @@
         "Argentina",
         "Tyskland"
       ],
-      "tillhör_index": [
-        0,
-        2,
-        3
-      ],
+      "tillhör_index": [0, 2, 3],
       "förklaring": "Brasilien (5 titlar), Tyskland (4) och Argentina (3) har vunnit VM-guld. Nederländerna har däremot aldrig vunnit (de har förlorat tre finaler)."
     },
     {
@@ -139,11 +135,7 @@
         "Emil i Lönneberga",
         "Pippi Långstrump"
       ],
-      "tillhör_index": [
-        0,
-        2,
-        3
-      ],
+      "tillhör_index": [0, 2, 3],
       "förklaring": "Karlsson på taket, Emil i Lönneberga och Pippi Långstrump är alla karaktärer i Astrid Lindgrens berättelser. Lilla My är en figur ur Mumintrollen av Tove Jansson, alltså inte skapad av Lindgren."
     },
     {
@@ -157,9 +149,7 @@
         "Jupiter",
         "Venus"
       ],
-      "tillhör_index": [
-        1
-      ],
+      "tillhör_index": [1],
       "förklaring": "Mars, Jupiter och Venus är alla bland de åtta planeterna i solsystemet. Pluto räknas sedan 2006 som en dvärgplanet och är inte längre en av de huvudsakliga planeterna."
     },
     {
@@ -173,10 +163,7 @@
         "Abba bildades i Göteborg 1972.",
         "Musikalen 'Mamma Mia' bygger på Abbas låtar."
       ],
-      "tillhör_index": [
-        1,
-        3
-      ],
+      "tillhör_index": [1, 3],
       "förklaring": "Abba slog igenom när de vann ESC 1974 med 'Waterloo'. Gruppnamnet bildas av medlemmarnas förnamn (Agnetha, Björn, Benny, Anni-Frid), inte efternamnen. Musikalen 'Mamma Mia' (1999) bygger helt på Abbas låtar. Abba bildades i Stockholm (inte Göteborg)."
     },
     {
@@ -190,10 +177,7 @@
         "Huden är kroppens största organ.",
         "Blodet är blått inuti kroppen och blir rött när det träffar syre."
       ],
-      "tillhör_index": [
-        1,
-        2
-      ],
+      "tillhör_index": [1, 2],
       "förklaring": "En vuxen kropp har 206 ben och huden är vårt största organ. Blod är alltid rött (syre påverkar bara nyansen lite, det är aldrig blått i kroppen). Och vi använder i princip hela hjärnan – 10%-idén är en seglivad myt."
     },
     {
@@ -207,11 +191,7 @@
         "Georgien",
         "Ukraina"
       ],
-      "tillhör_index": [
-        1,
-        2,
-        3
-      ],
+      "tillhör_index": [1, 2, 3],
       "förklaring": "Estland, Georgien och Ukraina var tre av de 15 sovjetrepublikerna (med i Sovjetunionen 1922–1991). Polen var aldrig en del av Sovjetunionen (även om landet tillhörde det kommunistiska östblocket)."
     }
   ]

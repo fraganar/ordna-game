@@ -64,7 +64,7 @@ class GameController {
             }
             
             // Otherwise load from packs
-            const packToLoad = this.selectedPack || 'Grund';
+            const packToLoad = this.selectedPack || 'Frågepaket 1';
             console.log('Loading questions from pack:', packToLoad);
             
             // Filter questions by pack

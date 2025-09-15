@@ -1,0 +1,198 @@
+{
+  "name": "Frågepaket 4 - Kultur och samhälle",
+  "description": "Språk, krig, religion och kultur genom tiderna",
+  "questions": [
+    {
+      "typ": "ordna",
+      "svårighetsgrad": "medel",
+      "fråga": "Ordna dessa språk efter antal modersmålstalare (färst till flest).",
+      "alternativ": [
+        "Svenska",
+        "Japanska",
+        "Engelska",
+        "Mandarin"
+      ],
+      "rätt_ordning": [
+        "Svenska",
+        "Japanska",
+        "Engelska",
+        "Mandarin"
+      ],
+      "förklaring": "Svenska har omkring 10 miljoner modersmålstalare, japanska ca 125 miljoner, engelska runt 400 miljoner och mandarin-kinesiska nära 1 miljard – alltså flest talare."
+    },
+    {
+      "typ": "ordna",
+      "svårighetsgrad": "lätt",
+      "fråga": "Ordna dessa krig efter längd (kortast till längst).",
+      "alternativ": [
+        "Sexdagarskriget",
+        "Andra världskriget",
+        "Trettioåriga kriget",
+        "Hundraårskriget"
+      ],
+      "rätt_ordning": [
+        "Sexdagarskriget",
+        "Andra världskriget",
+        "Trettioåriga kriget",
+        "Hundraårskriget"
+      ],
+      "förklaring": "Sexdagarskriget 1967 varade bara några dagar. Andra världskriget 1939–45 varade ~6 år. Trettioåriga kriget 1618–48 varade ~30 år, och Hundraårskriget 1337–1453 pågick i över 100 år."
+    },
+    {
+      "typ": "ordna",
+      "svårighetsgrad": "lätt",
+      "fråga": "Ordna dessa filmhistoriska milstolpar i kronologisk ordning, från äldst till nyast.",
+      "alternativ": [
+        "Oscar-ceremonin hålls för första gången",
+        "Bröderna Lumière visar film offentligt",
+        "The Jazz Singer introducerar ljudfilm",
+        "Becky Sharp blir första Technicolor-filmen"
+      ],
+      "rätt_ordning": [
+        "Bröderna Lumière visar film offentligt",
+        "The Jazz Singer introducerar ljudfilm",
+        "Oscar-ceremonin hålls för första gången",
+        "Becky Sharp blir första Technicolor-filmen"
+      ],
+      "förklaring": "Bröderna Lumière visade film 28 december 1895, The Jazz Singer kom oktober 1927, Oscar-ceremonin hölls 16 maj 1929, Becky Sharp släpptes 1935."
+    },
+    {
+      "typ": "ordna",
+      "svårighetsgrad": "medel",
+      "fråga": "Ordna dessa filmstudios efter när de grundades, från äldst till nyast.",
+      "alternativ": [
+        "Warner Bros",
+        "Paramount Pictures",
+        "MGM",
+        "Disney"
+      ],
+      "rätt_ordning": [
+        "Paramount Pictures",
+        "Warner Bros",
+        "Disney",
+        "MGM"
+      ],
+      "förklaring": "Paramount Pictures grundades 8 maj 1912, Warner Bros 4 april 1923, Disney 1923 (samma år som Warner Bros), MGM 17 april 1924."
+    },
+    {
+      "typ": "ordna",
+      "svårighetsgrad": "svår",
+      "fråga": "Ordna dessa klassiska Hollywood-filmer efter releasedatum, från äldst till nyast.",
+      "alternativ": [
+        "Casablanca",
+        "Gone with the Wind",
+        "Citizen Kane",
+        "Singin' in the Rain"
+      ],
+      "rätt_ordning": [
+        "Gone with the Wind",
+        "Citizen Kane",
+        "Casablanca",
+        "Singin' in the Rain"
+      ],
+      "förklaring": "Gone with the Wind 1939, Citizen Kane 1941, Casablanca 1942, Singin' in the Rain 1952."
+    },
+    {
+      "typ": "ordna",
+      "svårighetsgrad": "lätt",
+      "fråga": "Ordna dessa städer efter geografisk latitud, från nordligast till sydligast.",
+      "alternativ": [
+        "Kairo",
+        "Stockholm",
+        "Kapstaden",
+        "London"
+      ],
+      "rätt_ordning": [
+        "Stockholm",
+        "London",
+        "Kairo",
+        "Kapstaden"
+      ],
+      "förklaring": "Stockholm ligger ca 59°N, London ca 51°N, Kairo ca 30°N, och Kapstaden ca 34°S (söder om ekvatorn)."
+    },
+    {
+      "typ": "hör_till",
+      "svårighetsgrad": "medel",
+      "fråga": "Vilka av dessa är klassiska dödssynder?",
+      "kategori": "Dödssynder",
+      "alternativ": [
+        "Högmod",
+        "Feghet",
+        "Girighet",
+        "Sorg"
+      ],
+      "tillhör_index": [0, 2],
+      "förklaring": "Girighet och högmod är två av de sju dödssynderna enligt traditionen. Feghet och sorg räknas inte som dödssynder."
+    },
+    {
+      "typ": "hör_till",
+      "svårighetsgrad": "medel",
+      "fråga": "Vilka av dessa länders flaggor innehåller färgen röd?",
+      "kategori": "Röd i flaggan",
+      "alternativ": [
+        "Somalia",
+        "Kanada",
+        "Japan",
+        "Sverige"
+      ],
+      "tillhör_index": [1, 2],
+      "förklaring": "Japans flagga har en röd sol och Kanadas flagga ett rött lönnlöv. Sveriges flagga är blå och gul, och Somalias flagga är blå med en vit stjärna – ingen av dem har rött."
+    },
+    {
+      "typ": "hör_till",
+      "svårighetsgrad": "lätt",
+      "fråga": "Vilka av dessa sporter är olympiska sommargrenar?",
+      "kategori": "Olympiska sporter",
+      "alternativ": [
+        "Tennis",
+        "Cricket",
+        "Schack",
+        "Basket"
+      ],
+      "tillhör_index": [0, 3],
+      "förklaring": "Basket och tennis är sporter som ingår i sommar-OS program. Cricket och schack är däremot inte olympiska sportgrenar."
+    },
+    {
+      "typ": "hör_till",
+      "svårighetsgrad": "medel",
+      "fråga": "Vilka av följande påståenden om första Oscar-ceremonin 1929 är sanna?",
+      "kategori": "Hör till: sanna påståenden om första Oscar-ceremonin",
+      "alternativ": [
+        "Ceremonin varade endast 15 minuter",
+        "Vinnarna fick sina priser direkt som en överraskning",
+        "Det kostade 50 dollar att delta",
+        "Walt Disney var värd för ceremonin"
+      ],
+      "tillhör_index": [0],
+      "förklaring": "Ceremonin varade bara 15 minuter. Vinnarna hade faktiskt meddelats 3 månader i förväg (inte överraskning), biljetterna kostade 5 dollar (inte 50), och Douglas Fairbanks var värd (inte Walt Disney som inte ens var känd då)."
+    },
+    {
+      "typ": "hör_till",
+      "svårighetsgrad": "svår",
+      "fråga": "Vilka av följande påståenden om Katharine Hepburn är sanna?",
+      "kategori": "Hör till: sanna påståenden om Katharine Hepburn",
+      "alternativ": [
+        "Hon vann 4 Oscar för bästa kvinnliga huvudroll",
+        "Hon hade 18 Oscar-nomineringar totalt",
+        "20 år gick mellan hennes första och sista Oscar-vinst",
+        "Hon är den enda som vunnit Oscar fyra gånger i samma kategori"
+      ],
+      "tillhör_index": [0, 3],
+      "förklaring": "Hepburn vann 4 Oscar för bästa kvinnliga huvudroll och är ensam om fyra vinster i samma kategori. Hon hade 12 nomineringar (inte 18), och 48 år gick mellan första och sista vinsten (inte 20 år)."
+    },
+    {
+      "typ": "hör_till",
+      "svårighetsgrad": "lätt",
+      "fråga": "Vilka av följande påståenden om klassiska Hollywood-ikoner är sanna?",
+      "kategori": "Hör till: sanna påståenden om Hollywood-ikoner",
+      "alternativ": [
+        "Charlie Chaplin dog vid 88 års ålder 1977",
+        "Marilyn Monroe dog vid 42 års ålder 1968",
+        "Chaplin regisserade sitt första långfilm 'City Lights' 1931",
+        "Monroe var gift med Charlie Chaplin Jr."
+      ],
+      "tillhör_index": [0],
+      "förklaring": "Charlie Chaplin dog vid 88 års ålder 1977. Monroe dog 1962 vid 36 (inte 42 år 1968), Chaplins första långfilm var 'The Kid' 1921 (inte 'City Lights'), och Monroe hade en kort romans med Chaplin Jr. men gifte sig aldrig med honom."
+    }
+  ]
+}

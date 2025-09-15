@@ -84,7 +84,7 @@ class GameData {
     // Load default questions - MOVED FROM game.js
     async loadDefaultQuestions() {
         try {
-            const response = await fetch(`${this.dataPath}questions-grund.json`);
+            const response = await fetch(`${this.dataPath}fragepaket-1.json`);
             const data = await response.json();
             
             let questions = Array.isArray(data) ? data : (data.questions || []);
@@ -92,7 +92,7 @@ class GameData {
             // Add pack identifiers
             questions = questions.map((q, index) => ({
                 ...q,
-                pack: data.packs ? data.packs[index] : "Grund"
+                pack: data.packs ? data.packs[index] : "Frågepaket 1"
             }));
             
             return questions;
@@ -105,11 +105,12 @@ class GameData {
     // Helper to get pack configuration
     getPackConfig(packName) {
         const packConfigs = [
-            { name: "Grund", file: "questions-grund.json" },
-            { name: "Boomer", file: "questions-boomer.json" },
-            { name: "Blandat 1", file: "questions-blandat1.json" },
-            { name: "Blandat med B", file: "questions-blandat-b.json" },
-            { name: "Ganska lätt", file: "questions-ganska-latt.json" }
+            { name: "Frågepaket 1", file: "fragepaket-1.json" },
+            { name: "Frågepaket 2", file: "fragepaket-2.json" },
+            { name: "Frågepaket 3", file: "fragepaket-3.json" },
+            { name: "Frågepaket 4", file: "fragepaket-4.json" },
+            { name: "Frågepaket 5", file: "fragepaket-5.json" },
+            { name: "Frågepaket 6", file: "fragepaket-6.json" }
         ];
         
         return packConfigs.find(p => p.name === packName);
@@ -123,12 +124,13 @@ class GameData {
         
         // Define available packs (same as getPackConfig)
         const packConfigs = [
-            { name: "Grund", displayName: "Grund (Grundläggande)" },
-            { name: "Boomer", displayName: "Boomer (Nostalgisk)" },
-            { name: "Blandat 1", displayName: "Blandat 1 (Varierat)" },
-            { name: "Blandat med B", displayName: "Blandat med B (Favorit)" },
-            { name: "Ganska lätt", displayName: "Ganska lätt (Enkel)" },
-            { name: "Alla", displayName: "Alla frågor (Standard)" }
+            { name: "Frågepaket 1", displayName: "Frågepaket 1" },
+            { name: "Frågepaket 2", displayName: "Frågepaket 2" },
+            { name: "Frågepaket 3", displayName: "Frågepaket 3" },
+            { name: "Frågepaket 4", displayName: "Frågepaket 4" },
+            { name: "Frågepaket 5", displayName: "Frågepaket 5" },
+            { name: "Frågepaket 6", displayName: "Frågepaket 6" },
+            { name: "Alla", displayName: "Alla frågor" }
         ];
         
         // Clear existing options
@@ -150,9 +152,9 @@ class GameData {
             }
         });
         
-        // Set default selection to "Blandat med B"
-        if (packSelect) packSelect.value = 'Blandat med B';
-        if (challengePackSelect) challengePackSelect.value = 'Blandat med B';
+        // Set default selection to "Frågepaket 1"
+        if (packSelect) packSelect.value = 'Frågepaket 1';
+        if (challengePackSelect) challengePackSelect.value = 'Frågepaket 1';
     }
     
     // Utility: Shuffle array

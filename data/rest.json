@@ -1,0 +1,186 @@
+{
+  "name": "Överblivna frågor",
+  "description": "Frågor som inte fick plats i något frågepaket",
+  "questions": [
+    {
+      "typ": "hör_till",
+      "svårighetsgrad": "svår",
+      "fråga": "Vilka av följande påståenden om viktiga uppfinningar är sanna?",
+      "kategori": "Hör till: sanna påståenden om viktiga uppfinningar",
+      "alternativ": [
+        "Alexander Fleming upptäckte penicillin genom en ren slump 1928",
+        "Wright-bröderna flög högre än 100 meter vid första flygningen",
+        "Första telefonsamtalet skedde 10 mars 1876",
+        "Edison testade över 6000 material innan han hittade rätt glödlampstråd"
+      ],
+      "tillhör_index": [0, 2, 3],
+      "förklaring": "Fleming upptäckte penicillin av misstag när han kom tillbaka från semester 3 september 1928. Wright-brödernas första flygning nådde bara 3 meter höjd och 36,5 meter längd. Bell genomförde första telefonsamtalet 10 mars 1876. Edison testade verkligen över 6000 olika material för glödlampstråden."
+    },
+    {
+      "typ": "hör_till",
+      "svårighetsgrad": "lätt",
+      "fråga": "Vilka av följande påståenden om kända uppfinnare är sanna?",
+      "kategori": "Hör till: sanna påståenden om kända uppfinnare",
+      "alternativ": [
+        "Thomas Edison registrerade cirka 1100 patent under sin karriär",
+        "Alexander Graham Bell grundade AT&T-bolaget",
+        "Nikola Tesla uppfann växelström och hade över 300 patent",
+        "Marie Curie var första person att vinna två Nobelpris"
+      ],
+      "tillhör_index": [0, 1],
+      "förklaring": "Edison hade cirka 1100 patent och Bell var medgrundare av AT&T. Tesla hade faktiskt cirka 300 patent men uppfann inte växelström (han utvecklade AC-systemet). Marie Curie var första kvinnan med två Nobelpris, men inte första personen (det var Linus Pauling)."
+    },
+    {
+      "typ": "hör_till",
+      "svårighetsgrad": "svår",
+      "fråga": "Vilka av följande påståenden om historiska genombrott är korrekta?",
+      "kategori": "Hör till: korrekta fakta om historiska genombrott",
+      "alternativ": [
+        "ARPANET-meddelandet 1969 blev bara 'LO' när systemet kraschade",
+        "Wilhelm Röntgen demonstrerade sin upptäckt med frus hand",
+        "Edward Jenner vaccinerade 8-åriga James Phipps 1796",
+        "Alexander Graham Bell sa 'Mary Had a Little Lamb' i telefonen"
+      ],
+      "tillhör_index": [0, 1, 2],
+      "förklaring": "ARPANET kraschade efter 'LO' (skulle varit 'LOGIN') 29 oktober 1969. Röntgen röntgade sin frus hand med vigselring som demonstration. Jenner vaccinerade James Phipps 14 maj 1796. Men Bells första telefonmeddelande var 'Mr. Watson—come here—I want to see you', inte Mary Had a Little Lamb."
+    },
+    {
+      "typ": "ordna",
+      "svårighetsgrad": "lätt",
+      "fråga": "Ordna dessa kändisskandaler efter när de inträffade, från tidigast till senast.",
+      "alternativ": [
+        "Will Smith-smällen på Oscarsgalan",
+        "Janet Jacksons 'garderobsfel' på Super Bowl",
+        "Kanye West avbryter Taylor Swift",
+        "Britney Spears rakar av sig håret"
+      ],
+      "rätt_ordning": [
+        "Janet Jacksons 'garderobsfel' på Super Bowl",
+        "Britney Spears rakar av sig håret",
+        "Kanye West avbryter Taylor Swift",
+        "Will Smith-smällen på Oscarsgalan"
+      ],
+      "förklaring": "Super Bowl (2004), Britney (2007), Kanye/Taylor (2009 VMAs), Will Smith (2022)"
+    },
+    {
+      "typ": "ordna",
+      "svårighetsgrad": "lätt",
+      "fråga": "Ordna dessa ikoniska filmrepliker efter hur många ord de innehåller, från färst till flest.",
+      "alternativ": [
+        "May the Force be with you",
+        "I'll be back",
+        "Rosebud",
+        "Here's looking at you, kid"
+      ],
+      "rätt_ordning": [
+        "Rosebud",
+        "I'll be back",
+        "Here's looking at you, kid",
+        "May the Force be with you"
+      ],
+      "förklaring": "Rosebud (1 ord), I'll be back (3 ord), Here's looking at you, kid (5 ord), May the Force be with you (6 ord)"
+    },
+    {
+      "typ": "ordna",
+      "svårighetsgrad": "medel",
+      "fråga": "Ordna dessa sociala medier-plattformar efter när de lanserades för allmänheten, från tidigast till senast.",
+      "alternativ": [
+        "Instagram",
+        "Facebook",
+        "TikTok",
+        "Twitter"
+      ],
+      "rätt_ordning": [
+        "Facebook",
+        "Twitter",
+        "Instagram",
+        "TikTok"
+      ],
+      "förklaring": "Facebook (2004), Twitter (2006), Instagram (2010), TikTok (2016 internationellt)"
+    },
+    {
+      "typ": "hör_till",
+      "svårighetsgrad": "lätt",
+      "fråga": "Vilka av följande har spelat James Bond på film?",
+      "kategori": "Hör till: James Bond-skådespelare",
+      "alternativ": [
+        "Pierce Brosnan",
+        "Hugh Grant",
+        "Daniel Craig",
+        "Colin Firth"
+      ],
+      "tillhör_index": [0, 2],
+      "förklaring": "Pierce Brosnan (1995-2002) och Daniel Craig (2006-2021) har spelat Bond. Hugh Grant och Colin Firth har aldrig spelat 007."
+    },
+    {
+      "typ": "hör_till",
+      "svårighetsgrad": "medel",
+      "fråga": "Vilka av följande är sanna påståenden om IKEA?",
+      "kategori": "Hör till: sanna påståenden om IKEA",
+      "alternativ": [
+        "Grundades i Älmhult",
+        "Första varuhuset öppnade i Stockholm",
+        "Produktnamnen är ofta svenska",
+        "Ägs fortfarande av familjen Kamprad"
+      ],
+      "tillhör_index": [0, 2],
+      "förklaring": "Sant: Grundades i Älmhult (1943), produkter har svenska namn. Falskt: Första varuhuset i Älmhult (inte Stockholm), ägs av stiftelser i Nederländerna."
+    },
+    {
+      "typ": "hör_till",
+      "svårighetsgrad": "svår",
+      "fråga": "Vilka av följande artister/band har INTE vunnit Melodifestivalen?",
+      "kategori": "Hör INTE till: Melodifestivalvinnare",
+      "alternativ": [
+        "Veronica Maggio",
+        "Carola",
+        "Kent",
+        "Måns Zelmerlöw"
+      ],
+      "tillhör_index": [0, 2],
+      "förklaring": "Veronica Maggio och Kent har aldrig vunnit. Carola vann 1983, 1991, 2006. Måns Zelmerlöw vann 2015."
+    },
+    {
+      "typ": "hör_till",
+      "svårighetsgrad": "lätt",
+      "fråga": "Vilka av följande fenomen blev virala memes på internet?",
+      "kategori": "Hör till: virala internetmemes",
+      "alternativ": [
+        "Harlem Shake",
+        "Macarena",
+        "Ice Bucket Challenge",
+        "Twist"
+      ],
+      "tillhör_index": [0, 2],
+      "förklaring": "Harlem Shake (2013) och Ice Bucket Challenge (2014) var internetfenomen. Macarena (1990-tal) och Twist (1960-tal) var dansflugor före interneteran."
+    },
+    {
+      "typ": "hör_till",
+      "svårighetsgrad": "medel",
+      "fråga": "Vilka av följande påståenden om det svenska språket är sanna?",
+      "kategori": "Hör till: sanna påståenden om svenska språket",
+      "alternativ": [
+        "Har tre extra bokstäver: å, ä, ö",
+        "Talas av cirka 10 miljoner människor",
+        "Har ingen böjning av adjektiv",
+        "Använder pitch accent"
+      ],
+      "tillhör_index": [0, 1, 3],
+      "förklaring": "Sant: Å, ä, ö finns i alfabetet, cirka 10 miljoner talare, använder tonaccent. Falskt: Adjektiv böjs (en stor bil, ett stort hus)."
+    },
+    {
+      "typ": "hör_till",
+      "svårighetsgrad": "medel",
+      "fråga": "Vilka av följande kändisar har varit tillsammans med en svensk?",
+      "kategori": "Hör till: haft svensk partner",
+      "alternativ": [
+        "Tiger Woods",
+        "Leonardo DiCaprio",
+        "Madonna",
+        "George Clooney"
+      ],
+      "tillhör_index": [0, 2],
+      "förklaring": "Tiger Woods var gift med Elin Nordegren, Madonna datade Jesus Luz (ej svensk) men var med Jean-Paul Gaultier. DiCaprio och Clooney har inte haft kända svenska partners."
+    }
+  ]
+}

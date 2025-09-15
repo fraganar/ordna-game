@@ -1,0 +1,198 @@
+{
+  "name": "Frågepaket 3 - Naturvetenskap och världen",
+  "description": "Planeter, städer, djur och naturvetenskapliga fakta",
+  "questions": [
+    {
+      "typ": "ordna",
+      "svårighetsgrad": "medel",
+      "fråga": "Ordna dessa städer efter befolkningsmängd (minst till flest invånare).",
+      "alternativ": [
+        "Sydney",
+        "London",
+        "Kairo",
+        "Tokyo"
+      ],
+      "rätt_ordning": [
+        "Sydney",
+        "London",
+        "Kairo",
+        "Tokyo"
+      ],
+      "förklaring": "Sydney har bara omkring 5 miljoner invånare, London runt 9 miljoner (14M med omnejd), Kairo cirka 20 miljoner, och Tokyo är störst med över 35 miljoner invånare."
+    },
+    {
+      "typ": "ordna",
+      "svårighetsgrad": "medel",
+      "fråga": "Ordna dessa berg efter höjd över havet (lägst till högst).",
+      "alternativ": [
+        "Mont Blanc",
+        "Kilimanjaro",
+        "K2",
+        "Mount Everest"
+      ],
+      "rätt_ordning": [
+        "Mont Blanc",
+        "Kilimanjaro",
+        "K2",
+        "Mount Everest"
+      ],
+      "förklaring": "Mont Blanc (4 810 m) är lägst, Kilimanjaro (5 895 m) högre, K2 (8 611 m) näst högst och Mount Everest (8 848 m) högst."
+    },
+    {
+      "typ": "ordna",
+      "svårighetsgrad": "svår",
+      "fråga": "Ordna dessa planeter efter yttemperatur (kallast till varmast).",
+      "alternativ": [
+        "Mars",
+        "Jorden",
+        "Merkurius",
+        "Venus"
+      ],
+      "rätt_ordning": [
+        "Mars",
+        "Jorden",
+        "Merkurius",
+        "Venus"
+      ],
+      "förklaring": "Mars är kallast med en medeltemperatur långt under 0°C. Jorden är varmare. Merkurius solsida är mycket het men Venus är ändå varmare – runt 460°C – vilket gör Venus till den varmaste av dessa."
+    },
+    {
+      "typ": "ordna",
+      "svårighetsgrad": "lätt",
+      "fråga": "Ordna dessa djur efter topphastighet (långsammast till snabbast).",
+      "alternativ": [
+        "Sengångare",
+        "Elefant",
+        "Struts",
+        "Gepard"
+      ],
+      "rätt_ordning": [
+        "Sengångare",
+        "Elefant",
+        "Struts",
+        "Gepard"
+      ],
+      "förklaring": "Sengångaren rör sig i princip långsammast (några meter per minut). En elefant kan springa ca 25–40 km/h. En struts kan nå ca 70 km/h, medan geparden är snabbast med över 100 km/h."
+    },
+    {
+      "typ": "ordna",
+      "svårighetsgrad": "medel",
+      "fråga": "Ordna dessa historiska personer efter födelseår (yngst till äldst).",
+      "alternativ": [
+        "Martin Luther King",
+        "Mahatma Gandhi",
+        "Jeanne d'Arc",
+        "Kleopatra"
+      ],
+      "rätt_ordning": [
+        "Martin Luther King",
+        "Mahatma Gandhi",
+        "Jeanne d'Arc",
+        "Kleopatra"
+      ],
+      "förklaring": "Martin Luther King (född 1929) är yngst, Mahatma Gandhi (1869) äldre, Jeanne d'Arc levde på 1400-talet och Kleopatra levde för över 2000 år sedan, vilket gör henne äldst i gruppen."
+    },
+    {
+      "typ": "ordna",
+      "svårighetsgrad": "lätt",
+      "fråga": "Ordna dessa städer efter avstånd från Stockholm (närmast till längst bort).",
+      "alternativ": [
+        "Oslo",
+        "Paris",
+        "New York",
+        "Tokyo"
+      ],
+      "rätt_ordning": [
+        "Oslo",
+        "Paris",
+        "New York",
+        "Tokyo"
+      ],
+      "förklaring": "Oslo ligger närmast Stockholm (ca 400 km därifrån). Paris är längre bort (~1500 km). New York är mycket längre bort (~6000 km) och Tokyo ligger allra längst från Stockholm (över 8000 km)."
+    },
+    {
+      "typ": "hör_till",
+      "svårighetsgrad": "svår",
+      "fråga": "Vilka av dessa element är ädelgaser?",
+      "kategori": "Ädelgaser",
+      "alternativ": [
+        "Neon",
+        "Väte",
+        "Kväve",
+        "Helium"
+      ],
+      "tillhör_index": [0, 3],
+      "förklaring": "Helium och neon tillhör ädelgaserna – de är stabila och reagerar ogärna. Väte och kväve är visserligen gaser men räknas inte som ädelgaser."
+    },
+    {
+      "typ": "hör_till",
+      "svårighetsgrad": "lätt",
+      "fråga": "Vilka av dessa figurer är grekiska gudar?",
+      "kategori": "Grekiska gudar",
+      "alternativ": [
+        "Hera",
+        "Mars",
+        "Odin",
+        "Zeus"
+      ],
+      "tillhör_index": [0, 3],
+      "förklaring": "Zeus och Hera är gudar i grekisk mythology. Odin hör till nordisk mythology och Mars är det romerska namnet på krigets gud (grekerna kallade honom Ares)."
+    },
+    {
+      "typ": "hör_till",
+      "svårighetsgrad": "lätt",
+      "fråga": "Vilka av dessa superhjältar hör till Marvel-universumet?",
+      "kategori": "Marvel",
+      "alternativ": [
+        "Hulken",
+        "Iron Man",
+        "Batman",
+        "Wonder Woman"
+      ],
+      "tillhör_index": [0, 1],
+      "förklaring": "Iron Man och Hulken är Marvel-karaktärer. Wonder Woman och Batman tillhör konkurrenten DC Comics, inte Marvel."
+    },
+    {
+      "typ": "hör_till",
+      "svårighetsgrad": "svår",
+      "fråga": "Vilka av dessa språk är officiella arbetsspråk i FN?",
+      "kategori": "FN-språk",
+      "alternativ": [
+        "Arabiska",
+        "Hindi",
+        "Ryska",
+        "Tyska"
+      ],
+      "tillhör_index": [0, 2],
+      "förklaring": "FN har sex officiella språk: arabiska, kinesiska, engelska, franska, ryska och spanska. Hindi och tyska är inte officiella FN-språk."
+    },
+    {
+      "typ": "hör_till",
+      "svårighetsgrad": "medel",
+      "fråga": "Vilka av dessa IT-företag grundades på 1970-talet?",
+      "kategori": "Grundade på 1970-talet",
+      "alternativ": [
+        "Apple",
+        "Google",
+        "Microsoft",
+        "Amazon"
+      ],
+      "tillhör_index": [0, 2],
+      "förklaring": "Apple (1976) och Microsoft (1975) grundades på 1970-talet. Google grundades 1998 och Amazon 1994, alltså senare."
+    },
+    {
+      "typ": "hör_till",
+      "svårighetsgrad": "svår",
+      "fråga": "Vilka av dessa internetfenomen blev populära under 2010-talet?",
+      "kategori": "2010-talets internetfenomen",
+      "alternativ": [
+        "Harlem Shake",
+        "Chocolate Rain",
+        "Ice Bucket Challenge",
+        "Rickrolling"
+      ],
+      "tillhör_index": [0, 2],
+      "förklaring": "Harlem Shake (2013) och Ice Bucket Challenge (2014) spreds viralt under 2010-talet. Rickrolling och \"Chocolate Rain\" är äldre nätfenomen från runt 2007–2008."
+    }
+  ]
+}
