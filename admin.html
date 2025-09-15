@@ -1,0 +1,337 @@
+<!DOCTYPE html>
+<html lang="sv">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Panel - Tres Mangos</title>
+    <link rel="stylesheet" href="css/styles.css">
+    <style>
+        .admin-container {
+            max-width: 1200px;
+            margin: 20px auto;
+            padding: 20px;
+        }
+
+        .admin-header {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 20px;
+            border-radius: 10px;
+            margin-bottom: 30px;
+        }
+
+        .admin-section {
+            background: white;
+            border-radius: 10px;
+            padding: 20px;
+            margin-bottom: 20px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+
+        .section-title {
+            font-size: 1.5rem;
+            font-weight: bold;
+            margin-bottom: 15px;
+            color: #333;
+            border-bottom: 2px solid #667eea;
+            padding-bottom: 10px;
+        }
+
+        .data-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 15px;
+        }
+
+        .data-table th,
+        .data-table td {
+            text-align: left;
+            padding: 12px;
+            border-bottom: 1px solid #e0e0e0;
+        }
+
+        .data-table th {
+            background-color: #f5f5f5;
+            font-weight: 600;
+            color: #555;
+        }
+
+        .data-table tr:hover {
+            background-color: #f9f9f9;
+        }
+
+        .data-value {
+            font-family: monospace;
+            font-size: 0.9rem;
+            max-width: 500px;
+            overflow-x: auto;
+            white-space: pre-wrap;
+            word-break: break-all;
+        }
+
+        .admin-actions {
+            display: flex;
+            gap: 10px;
+            margin-top: 20px;
+        }
+
+        .admin-btn {
+            padding: 10px 20px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-weight: 600;
+            transition: all 0.3s;
+        }
+
+        .btn-export {
+            background: #4CAF50;
+            color: white;
+        }
+
+        .btn-export:hover {
+            background: #45a049;
+        }
+
+        .btn-clear {
+            background: #f44336;
+            color: white;
+        }
+
+        .btn-clear:hover {
+            background: #da190b;
+        }
+
+        .btn-refresh {
+            background: #2196F3;
+            color: white;
+        }
+
+        .btn-refresh:hover {
+            background: #0b7dda;
+        }
+
+        .auth-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0, 0, 0, 0.8);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 10000;
+        }
+
+        .auth-modal {
+            background: white;
+            padding: 30px;
+            border-radius: 10px;
+            max-width: 400px;
+            width: 90%;
+        }
+
+        .auth-modal h2 {
+            margin-bottom: 20px;
+            color: #333;
+        }
+
+        .auth-modal input {
+            width: 100%;
+            padding: 10px;
+            margin-bottom: 15px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            font-size: 16px;
+        }
+
+        .auth-modal button {
+            width: 100%;
+            padding: 12px;
+            background: #667eea;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            font-size: 16px;
+            cursor: pointer;
+        }
+
+        .auth-modal button:hover {
+            background: #5a67d8;
+        }
+
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 15px;
+            margin: 20px 0;
+        }
+
+        .stat-card {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 20px;
+            border-radius: 8px;
+            text-align: center;
+        }
+
+        .stat-value {
+            font-size: 2rem;
+            font-weight: bold;
+        }
+
+        .stat-label {
+            font-size: 0.9rem;
+            opacity: 0.9;
+            margin-top: 5px;
+        }
+
+        .empty-state {
+            text-align: center;
+            padding: 40px;
+            color: #999;
+        }
+
+        .challenge-item {
+            background: #f9f9f9;
+            padding: 15px;
+            border-radius: 8px;
+            margin-bottom: 10px;
+        }
+
+        .challenge-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 10px;
+        }
+
+        .challenge-id {
+            font-family: monospace;
+            color: #666;
+            font-size: 0.9rem;
+        }
+
+        .challenge-status {
+            padding: 4px 12px;
+            border-radius: 20px;
+            font-size: 0.85rem;
+            font-weight: 600;
+        }
+
+        .status-pending {
+            background: #FFF3CD;
+            color: #856404;
+        }
+
+        .status-completed {
+            background: #D4EDDA;
+            color: #155724;
+        }
+
+        .challenge-details {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 10px;
+            font-size: 0.9rem;
+        }
+
+        .detail-item {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .detail-label {
+            color: #666;
+            font-size: 0.85rem;
+        }
+
+        .detail-value {
+            font-weight: 600;
+            color: #333;
+        }
+    </style>
+</head>
+<body>
+    <!-- Authentication Overlay -->
+    <div id="authOverlay" class="auth-overlay">
+        <div class="auth-modal">
+            <h2>Admin-inloggning</h2>
+            <input type="password" id="adminPassword" placeholder="Ange lösenord" autocomplete="off">
+            <button onclick="window.adminPanel.authenticate()">Logga in</button>
+            <div id="authError" style="color: red; margin-top: 10px; display: none;">Fel lösenord!</div>
+        </div>
+    </div>
+
+    <!-- Admin Content -->
+    <div id="adminContent" class="admin-container" style="display: none;">
+        <div class="admin-header">
+            <h1>Admin Panel - Tres Mangos</h1>
+            <p>Systemöversikt och datahantering</p>
+        </div>
+
+        <!-- Statistics Section -->
+        <div class="admin-section">
+            <h2 class="section-title">Statistik</h2>
+            <div id="statsGrid" class="stats-grid">
+                <!-- Stats will be populated by JavaScript -->
+            </div>
+        </div>
+
+        <!-- LocalStorage Section -->
+        <div class="admin-section">
+            <h2 class="section-title">LocalStorage Data</h2>
+            <div class="admin-actions">
+                <button class="admin-btn btn-refresh" onclick="window.adminPanel.refreshData()">
+                    Uppdatera
+                </button>
+                <button class="admin-btn btn-export" onclick="window.adminPanel.exportLocalStorage()">
+                    Exportera JSON
+                </button>
+                <button class="admin-btn btn-clear" onclick="window.adminPanel.clearLocalStorage()">
+                    Rensa localStorage
+                </button>
+            </div>
+            <div id="localStorageContent">
+                <table class="data-table">
+                    <thead>
+                        <tr>
+                            <th>Nyckel</th>
+                            <th>Värde</th>
+                            <th>Åtgärder</th>
+                        </tr>
+                    </thead>
+                    <tbody id="localStorageTable">
+                        <!-- Content will be populated by JavaScript -->
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <!-- Firebase Section -->
+        <div class="admin-section">
+            <h2 class="section-title">Firebase Challenges</h2>
+            <div class="admin-actions">
+                <button class="admin-btn btn-refresh" onclick="window.adminPanel.loadFirebaseData()">
+                    Ladda Firebase-data
+                </button>
+                <button class="admin-btn btn-export" onclick="window.adminPanel.exportFirebaseData()">
+                    Exportera Challenges
+                </button>
+            </div>
+            <div id="firebaseContent">
+                <!-- Content will be populated by JavaScript -->
+            </div>
+        </div>
+    </div>
+
+    <!-- Firebase Scripts -->
+    <script src="https://www.gstatic.com/firebasejs/9.0.0/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.0.0/firebase-firestore-compat.js"></script>
+
+    <!-- Admin Panel Script -->
+    <script src="js/firebase-config.js"></script>
+    <script src="js/adminPanel.js"></script>
+</body>
+</html>

@@ -193,11 +193,23 @@ class App {
         }
     }
     
-    // Check if URL contains a challenge
+    // Check if URL contains a challenge or admin request
     async checkForChallenge() {
+        // Check if admin page is requested
+        if (window.location.pathname === '/admin' || window.location.pathname === '/admin.html') {
+            // Already on admin page, don't redirect
+            return;
+        }
+
+        // Check if user navigated to /admin (and redirect if needed)
+        if (window.location.pathname.endsWith('/admin')) {
+            window.location.href = '/admin.html';
+            return;
+        }
+
         const urlParams = new URLSearchParams(window.location.search);
         const challengeParam = urlParams.get('challenge');
-        
+
         if (challengeParam && window.ChallengeSystem) {
             try {
                 
