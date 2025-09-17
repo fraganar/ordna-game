@@ -6,6 +6,7 @@ class PlayerManager {
         this.currentPlayerIndex = 0;
         this.questionStarterIndex = 0;
         this.currentPlayer = {
+            id: `player_${Date.now()}_current`,
             name: localStorage.getItem('playerName') || '',
             totalScore: 0
         };
@@ -19,6 +20,7 @@ class PlayerManager {
         
         for (let i = 0; i < playerCount; i++) {
             this.players.push({
+                id: `player_${Date.now()}_${i}`, // Add unique player ID
                 name: playerNames[i] || `Spelare ${i + 1}`,
                 score: 0,
                 roundPot: 0,

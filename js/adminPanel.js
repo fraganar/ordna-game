@@ -225,7 +225,7 @@ class AdminPanel {
             const challengeDiv = document.createElement('div');
             challengeDiv.className = 'challenge-item';
 
-            const status = challenge.opponentScore !== undefined ? 'completed' : 'pending';
+            const status = challenge.opponent?.totalScore !== undefined ? 'completed' : 'pending';
             const createdDate = challenge.createdAt?.toDate ?
                 new Date(challenge.createdAt.toDate()).toLocaleString('sv-SE') :
                 'Okänt datum';
@@ -240,19 +240,19 @@ class AdminPanel {
                 <div class="challenge-details">
                     <div class="detail-item">
                         <span class="detail-label">Utmanare</span>
-                        <span class="detail-value">${challenge.challengerName || 'Okänd'}</span>
+                        <span class="detail-value">${challenge.challenger?.name || 'Okänd'}</span>
                     </div>
                     <div class="detail-item">
                         <span class="detail-label">Utmanarens poäng</span>
-                        <span class="detail-value">${challenge.challengerScore || 0}</span>
+                        <span class="detail-value">${challenge.challenger?.totalScore || 0}</span>
                     </div>
                     <div class="detail-item">
                         <span class="detail-label">Motståndare</span>
-                        <span class="detail-value">${challenge.opponentName || 'Väntar...'}</span>
+                        <span class="detail-value">${challenge.opponent?.name || 'Väntar...'}</span>
                     </div>
                     <div class="detail-item">
                         <span class="detail-label">Motståndarens poäng</span>
-                        <span class="detail-value">${challenge.opponentScore !== undefined ? challenge.opponentScore : '-'}</span>
+                        <span class="detail-value">${challenge.opponent?.totalScore !== undefined ? challenge.opponent.totalScore : '-'}</span>
                     </div>
                     <div class="detail-item">
                         <span class="detail-label">Frågepaket</span>

@@ -10,6 +10,7 @@ class ChallengeSystem {
         this.pendingChallengeCreation = false;
         this.pollingInterval = null;
         this.challengePollingInterval = null;
+        this.isCreatingChallenge = false; // Prevent duplicate challenge creation
     }
     
     // Reset challenge state
@@ -20,6 +21,7 @@ class ChallengeSystem {
         this.challengeQuestions = [];
         this.challengeQuestionScores = [];
         this.pendingChallengeCreation = false;
+        this.isCreatingChallenge = false; // Reset flag
         this.stopPolling();
         this.stopChallengePolling();
         
@@ -31,15 +33,32 @@ class ChallengeSystem {
     
     // Save score for current question
     saveScore(score, questionIndex) {
-        if (!this.isChallengeMode) return;
-        
+        console.log('📊 saveScore called:', {
+            score,
+            questionIndex,
+            isChallengeMode: this.isChallengeMode,
+            arrayLengthBefore: this.challengeQuestionScores?.length,
+            arrayContentBefore: [...(this.challengeQuestionScores || [])]
+        });
+
+        if (!this.isChallengeMode) {
+            console.warn('⚠️ saveScore: Not in challenge mode, returning');
+            return;
+        }
+
         // Ensure array is large enough
         while (this.challengeQuestionScores.length <= questionIndex) {
             this.challengeQuestionScores.push(0);
         }
-        
+
         // Add to existing score for this question (for multi-point questions)
         this.challengeQuestionScores[questionIndex] += score;
+
+        console.log('📊 saveScore completed:', {
+            arrayLengthAfter: this.challengeQuestionScores.length,
+            arrayContentAfter: [...this.challengeQuestionScores],
+            scoreAtIndex: this.challengeQuestionScores[questionIndex]
+        });
     }
     
     // Show challenger hint
@@ -108,26 +127,54 @@ class ChallengeSystem {
     
     // Complete challenge (when game ends) - MOVED from game.js endGame()
     async completeChallenge() {
-        
+
         if (!window.ischallengeMode) {
             return; // Not in challenge mode at all
         }
-        
+
         // Handle CHALLENGER mode (creating new challenge)
         if (!window.challengeId) {
-        
+
+        // Prevent duplicate challenge creation
+        if (this.isCreatingChallenge) {
+            console.log('⚠️ Already creating challenge, preventing duplicate call');
+            return;
+        }
+        this.isCreatingChallenge = true;
+
+        // Debug: Log call stack to find duplicate calls
+        console.log('🔍 completeChallenge called from:');
+        console.trace();
+
         try {
             // Get final score from PlayerManager
             const finalPlayer = window.PlayerManager.getCurrentPlayer();
+
+            // Debug: Log PlayerManager state
+            console.log('🔍 PlayerManager state:', {
+                finalPlayer: finalPlayer,
+                playersArray: window.PlayerManager?.getPlayers(),
+                currentPlayerIndex: window.PlayerManager?.currentPlayerIndex,
+                hasPlayers: window.PlayerManager?.players?.length > 0
+            });
+
             const finalScore = finalPlayer ? finalPlayer.score : 0;
-            
-            // Create the challenge in Firebase with the results  
+
+            // Create the challenge in Firebase with the results
             const playerName = finalPlayer ? finalPlayer.name : 'Unknown';
             const playerId = finalPlayer ? finalPlayer.id : 'unknown_id';
-            
+
             // Use the actual question scores as they were earned (don't pad with zeros)
             const completeScores = [...window.challengeQuestionScores];
-            
+
+            // Debug logging to verify scores
+            console.log('🎯 Creating challenge with scores:', {
+                playerName,
+                finalScore,
+                completeScores,
+                totalFromQuestions: completeScores.reduce((a, b) => a + b, 0)
+            });
+
             const newChallengeId = await FirebaseAPI.createChallenge(
                 playerName,
                 playerId,
@@ -157,7 +204,10 @@ class ChallengeSystem {
             return newChallengeId;
         } catch (error) {
             console.error('🔥 CHALLENGER MODE ERROR:', error);
+            this.isCreatingChallenge = false; // Reset flag on error
             throw error;
+        } finally {
+            this.isCreatingChallenge = false; // Always reset flag
         }
         } else {
             // Handle OPPONENT mode (accepting existing challenge)
@@ -262,7 +312,7 @@ class ChallengeSystem {
         try {
             const challenge = await FirebaseAPI.getChallenge(challengeId);
             
-            if (challenge && challenge.status === 'complete') {
+            if (challenge && challenge.status === 'completed') {
                 // Stop polling
                 this.stopChallengePolling();
                 // Show result view
@@ -668,7 +718,7 @@ class ChallengeSystem {
     async checkChallengeCompletionStatus(challengeId) {
         try {
             const challenge = await FirebaseAPI.getChallenge(challengeId);
-            return challenge && challenge.status === 'complete';
+            return challenge && challenge.status === 'completed';
         } catch (error) {
             return false;
         }
@@ -831,6 +881,8 @@ class ChallengeSystem {
     // Create a new challenge - starts the game immediately (moved from game.js)
     async createChallenge() {
         const playerName = window.PlayerManager ? window.PlayerManager.getPlayerName() : null;
+        console.log('🎮 createChallenge starting with playerName:', playerName);
+
         if (!playerName) {
             console.error('Player not set up');
             return;
@@ -881,8 +933,17 @@ class ChallengeSystem {
             
             // Initialize PlayerManager directly with challenger's name instead of relying on DOM
             if (window.PlayerManager) {
+                console.log('🎮 Initializing PlayerManager for challenge with name:', playerName);
                 window.PlayerManager.initializePlayers(1, [playerName]);
-                
+
+                // Verify initialization
+                const verifyPlayer = window.PlayerManager.getCurrentPlayer();
+                console.log('🎮 PlayerManager after init:', {
+                    currentPlayer: verifyPlayer,
+                    playerName: verifyPlayer?.name,
+                    playerScore: verifyPlayer?.score
+                });
+
                 // Synka globala variabler för kompatibilitet med game.js
                 if (typeof window.players !== 'undefined') {
                     window.players = window.PlayerManager.getPlayers();

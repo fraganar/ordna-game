@@ -571,17 +571,42 @@ async function startChallengeGame() {
         
         // Set up game with the same questions
         challengeQuestions = challengeData.questions;
-        challengeQuestionScores = [];
-        
-        // Set challenge mode flags for acceptance
+
+        // IMPORTANT: Set challenge mode FIRST before array setup
         ischallengeMode = true;
         window.ischallengeMode = true;
-        
-        // Sync ChallengeSystem state for hints
+
+        // FIX: Setup arrays properly for opponent
         if (window.ChallengeSystem) {
+            // Set challenge mode BEFORE array operations
             window.ChallengeSystem.isChallengeMode = true;
             window.ChallengeSystem.challengeId = window.challengeId;
             window.ChallengeSystem.challengeData = challengeData;
+
+            // Check if array already exists and has data (shouldn't happen for opponent)
+            if (window.ChallengeSystem.challengeQuestionScores &&
+                window.ChallengeSystem.challengeQuestionScores.length > 0) {
+                console.warn('⚠️ ChallengeSystem already has scores, clearing them:',
+                    window.ChallengeSystem.challengeQuestionScores);
+                window.ChallengeSystem.challengeQuestionScores.length = 0;
+            } else if (!window.ChallengeSystem.challengeQuestionScores) {
+                // Create new array if doesn't exist
+                window.ChallengeSystem.challengeQuestionScores = [];
+            }
+
+            // Connect all references to the same array
+            challengeQuestionScores = window.ChallengeSystem.challengeQuestionScores;
+            window.challengeQuestionScores = window.ChallengeSystem.challengeQuestionScores;
+
+            console.log('🎮 Opponent challenge setup:', {
+                isChallengeMode: window.ChallengeSystem.isChallengeMode,
+                challengeId: window.challengeId,
+                arrayReference: window.ChallengeSystem.challengeQuestionScores === challengeQuestionScores,
+                initialArrayLength: challengeQuestionScores.length
+            });
+        } else {
+            challengeQuestionScores = [];
+            console.error('❌ ChallengeSystem not available for opponent!');
         }
         
         
@@ -767,14 +792,24 @@ async function endSinglePlayerGame() {
             
             const playerName = player?.name || currentPlayer?.name || 'Unknown';
             const playerScore = player?.score || 0;
-            
+
+            console.log('🏁 Opponent completing challenge:', {
+                playerName,
+                playerScore,
+                globalArray: challengeQuestionScores,
+                challengeSystemArray: window.ChallengeSystem?.challengeQuestionScores,
+                arraysMatch: challengeQuestionScores === window.ChallengeSystem?.challengeQuestionScores,
+                globalLength: challengeQuestionScores.length,
+                systemLength: window.ChallengeSystem?.challengeQuestionScores?.length
+            });
+
             await FirebaseAPI.completeChallenge(
                 window.challengeId,
                 playerName,
                 playerScore,
                 challengeQuestionScores
             );
-            
+
             // Save to localStorage
             const challengeInfo = {
                 id: window.challengeId,
@@ -785,6 +820,8 @@ async function endSinglePlayerGame() {
                 totalScore: playerScore,
                 questionScores: challengeQuestionScores
             };
+
+            console.log('💾 Saving to localStorage:', challengeInfo);
             localStorage.setItem(`challenge_${window.challengeId}`, JSON.stringify(challengeInfo));
             
             // Show result comparison view
