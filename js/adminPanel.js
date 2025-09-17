@@ -226,9 +226,39 @@ class AdminPanel {
             challengeDiv.className = 'challenge-item';
 
             const status = challenge.opponent?.totalScore !== undefined ? 'completed' : 'pending';
-            const createdDate = challenge.createdAt?.toDate ?
-                new Date(challenge.createdAt.toDate()).toLocaleString('sv-SE') :
-                'Okänt datum';
+            const isCompleted = status === 'completed';
+
+            // Format dates
+            const createdDate = challenge.created?.toDate ?
+                new Date(challenge.created.toDate()).toLocaleString('sv-SE') :
+                (challenge.created ? new Date(challenge.created).toLocaleString('sv-SE') : 'Okänt datum');
+
+            const expiresDate = challenge.expires?.toDate ?
+                new Date(challenge.expires.toDate()).toLocaleString('sv-SE') :
+                (challenge.expires ? new Date(challenge.expires).toLocaleString('sv-SE') : 'Okänt datum');
+
+            // Calculate winner if completed
+            let winnerText = '';
+            let scoreDiff = 0;
+            if (isCompleted && challenge.challenger && challenge.opponent) {
+                const challengerScore = challenge.challenger.totalScore || 0;
+                const opponentScore = challenge.opponent.totalScore || 0;
+                scoreDiff = Math.abs(challengerScore - opponentScore);
+
+                if (challengerScore > opponentScore) {
+                    winnerText = `🏆 ${challenge.challenger.name} vann med ${scoreDiff}p`;
+                } else if (opponentScore > challengerScore) {
+                    winnerText = `🏆 ${challenge.opponent.name} vann med ${scoreDiff}p`;
+                } else {
+                    winnerText = '🤝 Oavgjort';
+                }
+            }
+
+            // Format questionScores arrays
+            const formatScores = (scores) => {
+                if (!scores || scores.length === 0) return 'Inga poäng';
+                return scores.map((s, i) => `F${i+1}:${s}`).join(' ');
+            };
 
             challengeDiv.innerHTML = `
                 <div class="challenge-header">
@@ -237,6 +267,7 @@ class AdminPanel {
                         ${status === 'completed' ? 'Slutförd' : 'Väntar'}
                     </span>
                 </div>
+                ${winnerText ? `<div style="text-align: center; padding: 10px; background: #f0f9ff; border-radius: 5px; margin: 10px 0; font-weight: bold;">${winnerText}</div>` : ''}
                 <div class="challenge-details">
                     <div class="detail-item">
                         <span class="detail-label">Utmanare</span>
@@ -244,32 +275,60 @@ class AdminPanel {
                     </div>
                     <div class="detail-item">
                         <span class="detail-label">Utmanarens poäng</span>
-                        <span class="detail-value">${challenge.challenger?.totalScore || 0}</span>
+                        <span class="detail-value" style="font-weight: bold; color: ${isCompleted && challenge.challenger?.totalScore > challenge.opponent?.totalScore ? 'green' : 'inherit'};">
+                            ${challenge.challenger?.totalScore || 0}p
+                        </span>
                     </div>
+                    ${challenge.challenger?.questionScores ? `
+                    <div class="detail-item" style="grid-column: 1 / -1;">
+                        <span class="detail-label">Utmanarens poängfördelning</span>
+                        <span class="detail-value" style="font-family: monospace; font-size: 0.9rem;">
+                            ${formatScores(challenge.challenger.questionScores)}
+                        </span>
+                    </div>` : ''}
                     <div class="detail-item">
                         <span class="detail-label">Motståndare</span>
                         <span class="detail-value">${challenge.opponent?.name || 'Väntar...'}</span>
                     </div>
                     <div class="detail-item">
                         <span class="detail-label">Motståndarens poäng</span>
-                        <span class="detail-value">${challenge.opponent?.totalScore !== undefined ? challenge.opponent.totalScore : '-'}</span>
+                        <span class="detail-value" style="font-weight: bold; color: ${isCompleted && challenge.opponent?.totalScore > challenge.challenger?.totalScore ? 'green' : 'inherit'};">
+                            ${challenge.opponent?.totalScore !== undefined ? challenge.opponent.totalScore + 'p' : '-'}
+                        </span>
                     </div>
+                    ${challenge.opponent?.questionScores ? `
+                    <div class="detail-item" style="grid-column: 1 / -1;">
+                        <span class="detail-label">Motståndarens poängfördelning</span>
+                        <span class="detail-value" style="font-family: monospace; font-size: 0.9rem;">
+                            ${formatScores(challenge.opponent.questionScores)}
+                        </span>
+                    </div>` : ''}
                     <div class="detail-item">
                         <span class="detail-label">Frågepaket</span>
                         <span class="detail-value">${challenge.packName || 'Standard'}</span>
+                    </div>
+                    <div class="detail-item">
+                        <span class="detail-label">Status</span>
+                        <span class="detail-value">${challenge.status || 'pending'}</span>
                     </div>
                     <div class="detail-item">
                         <span class="detail-label">Skapad</span>
                         <span class="detail-value">${createdDate}</span>
                     </div>
                     <div class="detail-item">
+                        <span class="detail-label">Utgår</span>
+                        <span class="detail-value">${expiresDate}</span>
+                    </div>
+                    <div class="detail-item">
                         <span class="detail-label">Antal frågor</span>
                         <span class="detail-value">${challenge.questions ? challenge.questions.length : 0}</span>
                     </div>
-                    <div class="detail-item">
+                    <div class="detail-item" style="grid-column: 1 / -1;">
                         <span class="detail-label">Delningslänk</span>
                         <span class="detail-value" style="font-size: 0.8rem; word-break: break-all;">
-                            ${window.location.origin}/?challenge=${challenge.id}
+                            <a href="${window.location.origin}/?challenge=${challenge.id}" target="_blank">
+                                ${window.location.origin}/?challenge=${challenge.id}
+                            </a>
                         </span>
                     </div>
                 </div>

@@ -33,18 +33,7 @@ class ChallengeSystem {
     
     // Save score for current question
     saveScore(score, questionIndex) {
-        console.log('📊 saveScore called:', {
-            score,
-            questionIndex,
-            isChallengeMode: this.isChallengeMode,
-            arrayLengthBefore: this.challengeQuestionScores?.length,
-            arrayContentBefore: [...(this.challengeQuestionScores || [])]
-        });
-
-        if (!this.isChallengeMode) {
-            console.warn('⚠️ saveScore: Not in challenge mode, returning');
-            return;
-        }
+        if (!this.isChallengeMode) return;
 
         // Ensure array is large enough
         while (this.challengeQuestionScores.length <= questionIndex) {
@@ -53,12 +42,6 @@ class ChallengeSystem {
 
         // Add to existing score for this question (for multi-point questions)
         this.challengeQuestionScores[questionIndex] += score;
-
-        console.log('📊 saveScore completed:', {
-            arrayLengthAfter: this.challengeQuestionScores.length,
-            arrayContentAfter: [...this.challengeQuestionScores],
-            scoreAtIndex: this.challengeQuestionScores[questionIndex]
-        });
     }
     
     // Show challenger hint
