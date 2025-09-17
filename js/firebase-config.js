@@ -70,12 +70,12 @@ const FirebaseAPI = {
                 },
                 opponent: null
             };
-            
+
             // Add pack info if specified
             if (packName) {
                 challengeData.packName = packName;
             }
-            
+
             await db.collection('challenges').doc(challengeId).set(challengeData);
 
             console.log('Challenge created:', challengeId, packName ? `with pack: ${packName}` : 'with all questions');
@@ -121,7 +121,7 @@ const FirebaseAPI = {
 
         try {
             await db.collection('challenges').doc(challengeId).update({
-                status: 'complete',
+                status: 'completed',
                 opponent: {
                     name: playerName,
                     completedAt: new Date(),
@@ -167,7 +167,7 @@ const FirebaseAPI = {
         try {
             let query = db.collection('challenges')
                 .where('challenger.name', '==', playerName)
-                .where('status', '==', 'complete');
+                .where('status', '==', 'completed');
 
             if (lastCheckTime) {
                 query = query.where('opponent.completedAt', '>', lastCheckTime);
