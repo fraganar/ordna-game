@@ -212,6 +212,106 @@ class AdminPanel {
         }
     }
 
+    renderQuestions(challenge) {
+        if (!challenge.questions || challenge.questions.length === 0) {
+            return '<p style="color: #999;">Inga frågor att visa</p>';
+        }
+
+        const challengerScores = challenge.challenger?.questionScores || [];
+        const opponentScores = challenge.opponent?.questionScores || [];
+
+        let html = `
+            <table style="width: 100%; border-collapse: collapse; font-size: 0.9rem;">
+                <thead>
+                    <tr style="background: #f5f5f5;">
+                        <th style="padding: 8px; text-align: left; border: 1px solid #ddd;">#</th>
+                        <th style="padding: 8px; text-align: left; border: 1px solid #ddd;">Typ</th>
+                        <th style="padding: 8px; text-align: left; border: 1px solid #ddd;">Svårighet</th>
+                        <th style="padding: 8px; text-align: left; border: 1px solid #ddd;">Fråga</th>
+                        <th style="padding: 8px; text-align: center; border: 1px solid #ddd;">${challenge.challenger?.name || 'Challenger'}</th>
+                        <th style="padding: 8px; text-align: center; border: 1px solid #ddd;">${challenge.opponent?.name || 'Opponent'}</th>
+                    </tr>
+                </thead>
+                <tbody>
+        `;
+
+        challenge.questions.forEach((q, i) => {
+            const typeIcon = q.typ === 'ordna' ? '🔢' : '✅';
+            const difficultyColor = {
+                'lätt': '#4CAF50',
+                'medel': '#FF9800',
+                'svår': '#f44336'
+            }[q.svårighetsgrad] || '#999';
+
+            const challengerScore = challengerScores[i] || 0;
+            const opponentScore = opponentScores[i] || 0;
+
+            html += `
+                <tr>
+                    <td style="padding: 8px; border: 1px solid #ddd;">${i + 1}</td>
+                    <td style="padding: 8px; border: 1px solid #ddd; text-align: center;">${typeIcon}</td>
+                    <td style="padding: 8px; border: 1px solid #ddd;">
+                        <span style="color: ${difficultyColor}; font-weight: bold;">
+                            ${q.svårighetsgrad || 'okänd'}
+                        </span>
+                    </td>
+                    <td style="padding: 8px; border: 1px solid #ddd; max-width: 300px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;">
+                        ${q.fråga}
+                    </td>
+                    <td style="padding: 8px; border: 1px solid #ddd; text-align: center; font-weight: bold;
+                               background: ${challengerScore > 0 ? '#e8f5e9' : '#ffebee'};">
+                        ${challengerScore}p
+                    </td>
+                    <td style="padding: 8px; border: 1px solid #ddd; text-align: center; font-weight: bold;
+                               background: ${opponentScore > 0 ? '#e8f5e9' : '#ffebee'};">
+                        ${opponentScore !== undefined ? opponentScore + 'p' : '-'}
+                    </td>
+                </tr>
+            `;
+        });
+
+        html += '</tbody></table>';
+        return html;
+    }
+
+    toggleQuestions(challengeId) {
+        const questionsDiv = document.getElementById(`questions-${challengeId}`);
+        const toggleIcon = document.getElementById(`toggle-icon-${challengeId}`);
+
+        if (questionsDiv) {
+            if (questionsDiv.style.display === 'none') {
+                questionsDiv.style.display = 'block';
+                if (toggleIcon) toggleIcon.textContent = '▼';
+            } else {
+                questionsDiv.style.display = 'none';
+                if (toggleIcon) toggleIcon.textContent = '▶';
+            }
+        }
+    }
+
+    copyJSON(challengeId) {
+        const challengeElements = document.querySelectorAll('.challenge-item');
+        let challengeData = null;
+
+        challengeElements.forEach(elem => {
+            if (elem.innerHTML.includes(challengeId)) {
+                const dataStr = elem.dataset.challengeData;
+                if (dataStr) {
+                    challengeData = JSON.parse(dataStr);
+                }
+            }
+        });
+
+        if (challengeData) {
+            const jsonStr = JSON.stringify(challengeData, null, 2);
+            navigator.clipboard.writeText(jsonStr).then(() => {
+                alert('Challenge-data kopierad till urklipp!');
+            }).catch(err => {
+                alert('Kunde inte kopiera: ' + err);
+            });
+        }
+    }
+
     displayFirebaseData() {
         const container = document.getElementById('firebaseContent');
         container.innerHTML = '';
@@ -236,6 +336,34 @@ class AdminPanel {
             const expiresDate = challenge.expires?.toDate ?
                 new Date(challenge.expires.toDate()).toLocaleString('sv-SE') :
                 (challenge.expires ? new Date(challenge.expires).toLocaleString('sv-SE') : 'Okänt datum');
+
+            // Get completion dates
+            const challengerCompletedDate = challenge.challenger?.completedAt?.toDate ?
+                new Date(challenge.challenger.completedAt.toDate()).toLocaleString('sv-SE') :
+                (challenge.challenger?.completedAt ? new Date(challenge.challenger.completedAt).toLocaleString('sv-SE') : 'N/A');
+
+            const opponentCompletedDate = challenge.opponent?.completedAt?.toDate ?
+                new Date(challenge.opponent.completedAt.toDate()).toLocaleString('sv-SE') :
+                (challenge.opponent?.completedAt ? new Date(challenge.opponent.completedAt).toLocaleString('sv-SE') : 'N/A');
+
+            // Calculate time difference if both completed
+            let timeDiff = '';
+            if (challenge.challenger?.completedAt && challenge.opponent?.completedAt) {
+                const challengerTime = challenge.challenger.completedAt.toDate ?
+                    challenge.challenger.completedAt.toDate() : new Date(challenge.challenger.completedAt);
+                const opponentTime = challenge.opponent.completedAt.toDate ?
+                    challenge.opponent.completedAt.toDate() : new Date(challenge.opponent.completedAt);
+
+                const diffMs = Math.abs(opponentTime - challengerTime);
+                const diffHours = Math.floor(diffMs / (1000 * 60 * 60));
+                const diffMinutes = Math.floor((diffMs % (1000 * 60 * 60)) / (1000 * 60));
+
+                if (diffHours > 0) {
+                    timeDiff = `${diffHours}h ${diffMinutes}min mellan spelare`;
+                } else {
+                    timeDiff = `${diffMinutes}min mellan spelare`;
+                }
+            }
 
             // Calculate winner if completed
             let winnerText = '';
@@ -319,6 +447,21 @@ class AdminPanel {
                         <span class="detail-label">Utgår</span>
                         <span class="detail-value">${expiresDate}</span>
                     </div>
+                    ${challenge.challenger?.completedAt ? `
+                    <div class="detail-item">
+                        <span class="detail-label">Challenger spelade</span>
+                        <span class="detail-value" style="font-size: 0.85rem;">${challengerCompletedDate}</span>
+                    </div>` : ''}
+                    ${challenge.opponent?.completedAt ? `
+                    <div class="detail-item">
+                        <span class="detail-label">Opponent spelade</span>
+                        <span class="detail-value" style="font-size: 0.85rem;">${opponentCompletedDate}</span>
+                    </div>` : ''}
+                    ${timeDiff ? `
+                    <div class="detail-item" style="grid-column: 1 / -1;">
+                        <span class="detail-label">Tidsskillnad</span>
+                        <span class="detail-value" style="color: #666; font-style: italic;">${timeDiff}</span>
+                    </div>` : ''}
                     <div class="detail-item">
                         <span class="detail-label">Antal frågor</span>
                         <span class="detail-value">${challenge.questions ? challenge.questions.length : 0}</span>
@@ -332,7 +475,29 @@ class AdminPanel {
                         </span>
                     </div>
                 </div>
+
+                <!-- Expandable Questions Section -->
+                <div style="border-top: 1px solid #e0e0e0; margin-top: 15px; padding-top: 10px;">
+                    <button onclick="window.adminPanel.toggleQuestions('${challenge.id}')"
+                            style="background: #2196F3; color: white; border: none; padding: 8px 15px; border-radius: 5px; cursor: pointer; margin-bottom: 10px;">
+                        <span id="toggle-icon-${challenge.id}">▶</span> Visa frågor (${challenge.questions ? challenge.questions.length : 0})
+                    </button>
+                    <div id="questions-${challenge.id}" style="display: none; margin-top: 10px;">
+                        ${this.renderQuestions(challenge)}
+                    </div>
+                </div>
+
+                <!-- Action Buttons -->
+                <div style="border-top: 1px solid #e0e0e0; margin-top: 15px; padding-top: 10px; display: flex; gap: 10px;">
+                    <button onclick="window.adminPanel.copyJSON('${challenge.id}')"
+                            style="background: #4CAF50; color: white; border: none; padding: 8px 15px; border-radius: 5px; cursor: pointer;">
+                        📋 Kopiera JSON
+                    </button>
+                </div>
             `;
+
+            // Store challenge data for later use
+            challengeDiv.dataset.challengeData = JSON.stringify(challenge);
 
             container.appendChild(challengeDiv);
         });
