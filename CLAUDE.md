@@ -82,6 +82,17 @@ Vågar du chansa? Stanna eller fortsätt - valet är ditt! Ett fel och rundans p
 - **Views**: Waiting screen (with polling), Result comparison, "My Challenges" list
 - **Features**: WhatsApp sharing, 7-day expiration, duplicate play prevention
 
+## Admin Panel
+Admin-panelen (`admin.html` och `js/adminPanel.js`) är designad som en separat modul från huvudspelet.
+
+**Designval:**
+- Admin-sidan har sin egen arkitektur och behöver inte följa spelets patterns
+- Den laddas bara från `admin.html` och påverkar inte spelupplevelsen
+- Kan växa och utvecklas självständigt för debugging och dataanalys
+- Prioriterar funktionalitet och insyn över kodelegans
+
+Detta är ett medvetet val för att hålla admin-funktionalitet helt separerad från spelkoden.
+
 ## Important Notes
 - App requires HTTP server (not file://) for JSON loading
 - Questions are loaded asynchronously via fetch API
