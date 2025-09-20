@@ -1,0 +1,216 @@
+{
+  "name": "Frågepaket 2 - Historia och geografi",
+  "description": "Världshistoria, geografiska fakta och livets stadier",
+  "questions": [
+    {
+      "typ": "hör_till",
+      "svårighetsgrad": "medel",
+      "fråga": "Vilka av dessa romaner är skrivna av Jane Austen?",
+      "kategori": "Jane Austen",
+      "alternativ": [
+        "Svindlande höjder",
+        "Förnuft och känsla",
+        "Jane Eyre",
+        "Stolthet och fördom"
+      ],
+      "tillhör_index": [
+        1,
+        3
+      ],
+      "förklaring": "Jane Austen skrev klassiker som \"Stolthet och fördom\" (1813) och \"Förnuft och känsla\" (1811). \"Jane Eyre\" skrevs av Charlotte Brontë och \"Svindlande höjder\" av Emily Brontë."
+    },
+    {
+      "typ": "hör_till",
+      "svårighetsgrad": "lätt",
+      "fråga": "Vilka av dessa är filmgenrer?",
+      "kategori": "Filmgenre",
+      "alternativ": [
+        "Sonett",
+        "Symfoni",
+        "Action",
+        "Skräck"
+      ],
+      "tillhör_index": [
+        2,
+        3
+      ],
+      "förklaring": "Skräck och action är filmgenrer. Sonett är en diktform och symfoni är ett musikaliskt verk, inte filmgenrer."
+    },
+    {
+      "typ": "ordna",
+      "svårighetsgrad": "medel",
+      "fråga": "Ordna dessa planeter efter storlek (minst till störst diameter).",
+      "alternativ": [
+        "Merkurius",
+        "Mars",
+        "Venus",
+        "Jorden"
+      ],
+      "rätt_ordning": [
+        "Merkurius",
+        "Mars",
+        "Venus",
+        "Jorden"
+      ],
+      "förklaring": "Merkurius är minst av dessa, därefter Mars. Venus är något mindre än jorden, som är störst bland dessa fyra planeter."
+    },
+    {
+      "typ": "hör_till",
+      "svårighetsgrad": "medel",
+      "fråga": "Vilka av dessa spel släpptes under 1990-talet?",
+      "kategori": "1990-talet",
+      "alternativ": [
+        "The Sims",
+        "Pac-Man",
+        "Super Mario 64",
+        "The Legend of Zelda: Ocarina of Time"
+      ],
+      "tillhör_index": [
+        2,
+        3
+      ],
+      "förklaring": "\"Super Mario 64\" (1996) och \"The Legend of Zelda: Ocarina of Time\" (1998) kom under 90-talet. \"The Sims\" kom år 2000 och arkadklassikern \"Pac-Man\" redan 1980."
+    },
+    {
+      "typ": "hör_till",
+      "svårighetsgrad": "lätt",
+      "fråga": "Vilka av dessa länder ligger i Sydamerika?",
+      "kategori": "Sydamerika",
+      "alternativ": [
+        "Spanien",
+        "Mexiko",
+        "Brasilien",
+        "Argentina"
+      ],
+      "tillhör_index": [
+        2,
+        3
+      ],
+      "förklaring": "Brasilien och Argentina är sydamerikanska länder. Mexiko ligger i Nordamerika, och Spanien ligger i Europa."
+    },
+    {
+      "typ": "ordna",
+      "svårighetsgrad": "svår",
+      "fråga": "Ordna dessa metaller efter värde (billigast till dyrast).",
+      "alternativ": [
+        "Järn",
+        "Silver",
+        "Guld",
+        "Platina"
+      ],
+      "rätt_ordning": [
+        "Järn",
+        "Silver",
+        "Guld",
+        "Platina"
+      ],
+      "förklaring": "Järn är billigast, silver mer värt. Guld är dyrbarare än silver, och platina anses mest värdefull av dessa metaller."
+    },
+    {
+      "typ": "hör_till",
+      "svårighetsgrad": "lätt",
+      "fråga": "Vilka av dessa föremål är vanliga köksredskap?",
+      "kategori": "Köksredskap",
+      "alternativ": [
+        "Visp",
+        "Skruvmejsel",
+        "Hammare",
+        "Kavel"
+      ],
+      "tillhör_index": [
+        0,
+        3
+      ],
+      "förklaring": "En visp och en kavel hör hemma i köket. En hammare och en skruvmejsel är verktyg för snickeri, inte matlagning."
+    },
+    {
+      "typ": "ordna",
+      "svårighetsgrad": "svår",
+      "fråga": "Ordna dessa länder efter antal officiella språk (färst till flest).",
+      "alternativ": [
+        "Sydafrika",
+        "Schweiz",
+        "Japan",
+        "Kanada"
+      ],
+      "rätt_ordning": [
+        "Japan",
+        "Kanada",
+        "Schweiz",
+        "Sydafrika"
+      ],
+      "förklaring": "Japan har 1 officiellt språk, Kanada har 2 (engelska och franska), Schweiz har 4, och Sydafrika har hela 11 officiella språk."
+    },
+    {
+      "typ": "ordna",
+      "svårighetsgrad": "lätt",
+      "fråga": "Ordna dessa 1990-talsfilmer efter premiärdatum (tidigast till senast).",
+      "alternativ": [
+        "Ensam hemma",
+        "Jurassic Park",
+        "Titanic",
+        "The Matrix"
+      ],
+      "rätt_ordning": [
+        "Ensam hemma",
+        "Jurassic Park",
+        "Titanic",
+        "The Matrix"
+      ],
+      "förklaring": "Ensam hemma kom 1990, Jurassic Park 1993, Titanic 1997 och The Matrix 1999. Det gör att de i kronologisk ordning släpptes i just den ordningen från tidigast till senast."
+    },
+    {
+      "typ": "ordna",
+      "svårighetsgrad": "medel",
+      "fråga": "Ordna dessa revolutioner i kronologisk ordning (äldst först).",
+      "alternativ": [
+        "Ryska revolutionen",
+        "Amerikanska revolutionen",
+        "Kulturrevolutionen i Kina",
+        "Franska revolutionen"
+      ],
+      "rätt_ordning": [
+        "Amerikanska revolutionen",
+        "Franska revolutionen",
+        "Ryska revolutionen",
+        "Kulturrevolutionen i Kina"
+      ],
+      "förklaring": "Amerikanska revolutionen skedde 1775–1783, sedan kom franska revolutionen 1789. Ryska revolutionen inträffade 1917 och sist inträffade Kinas kulturrevolution 1966–1976."
+    },
+    {
+      "typ": "hör_till",
+      "svårighetsgrad": "medel",
+      "fråga": "Vilka av dessa djur är däggdjur?",
+      "kategori": "Däggdjur",
+      "alternativ": [
+        "Haj",
+        "Blåval",
+        "Pingvin",
+        "Fladdermus"
+      ],
+      "tillhör_index": [
+        1,
+        3
+      ],
+      "förklaring": "Blåvalen och fladdermusen är däggdjur (de diar sina ungar och andas luft). En pingvin är en fågel och en haj är en fisk – inga däggdjur."
+    },
+    {
+      "typ": "ordna",
+      "svårighetsgrad": "lätt",
+      "fråga": "Ordna dessa livsstadier från tidigast till senast i livet.",
+      "alternativ": [
+        "Tonår",
+        "Vuxenliv",
+        "Ålderdom",
+        "Barndom"
+      ],
+      "rätt_ordning": [
+        "Barndom",
+        "Tonår",
+        "Vuxenliv",
+        "Ålderdom"
+      ],
+      "förklaring": "Först kommer barndomen, sedan tonåren, därefter vuxenlivet och till sist ålderdomen. Så ser de typiska stadierna i en människas liv ut i kronologisk ordning."
+    }
+  ]
+}

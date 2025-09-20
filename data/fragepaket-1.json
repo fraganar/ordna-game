@@ -1,198 +1,216 @@
 {
-  "name": "Frågepaket 1 - Blandat med B",
-  "description": "Kuriosa, populärkultur och litteratur genom tiderna",
+  "name": "Frågepaket 1 - Blandat innehåll",
+  "description": "Teknik, historia, språk, musik, byggnader och samhälle",
   "questions": [
     {
       "typ": "hör_till",
       "svårighetsgrad": "medel",
-      "fråga": "Vilket av följande påståenden om filmregissören Alfred Hitchcock är sant?",
-      "kategori": "Hör till: sanna påståenden om Alfred Hitchcock",
+      "fråga": "Nittiotalet bjöd på många filmklassiker. Vilka två av dessa filmer vann Oscar för bästa film under 1990-talet?",
+      "kategori": "Hör till: filmer som vann Oscar för Bästa film på 1990-talet",
       "alternativ": [
-        "Han hade panisk skräck för ägg och undvek dem hela livet.",
-        "Han vägrade använda telefon och kommunicerade enbart via brev.",
-        "Han utförde personligen alla sina egna stunttrick i sina filmer.",
-        "Han var vegetarian och svimmade om han såg rått kött."
+        "The Shawshank Redemption",
+        "Titanic",
+        "Forrest Gump",
+        "Pulp Fiction"
       ],
-      "tillhör_index": [0],
-      "förklaring": "Hitchcock hade panisk skräck för ägg (ovofobi) och berättade själv att han aldrig smakat ett. Övriga påståenden är påhittade."
-    },
-    {
-      "typ": "hör_till",
-      "svårighetsgrad": "svår",
-      "fråga": "Vilket av följande påståenden om författaren Mary Shelley är sant?",
-      "kategori": "Hör till: sanna påståenden om Mary Shelley",
-      "alternativ": [
-        "Hon sparade sin döde makes hjärta i sitt skrivbord under flera år.",
-        "Hon skrev under pseudonym en aldrig utgiven uppföljare till 'Frankenstein'.",
-        "Hon var i hemlighet förlovad med poeten Lord Byron en tid.",
-        "Hon uppfann en tidig prototyp till kameran som hon beskrev i dagböcker."
+      "tillhör_index": [
+        1,
+        2
       ],
-      "tillhör_index": [0],
-      "förklaring": "Efter Percy Shelleys död bevarade Mary Shelley hans förhärdade hjärta inlindat i siden i sitt skrivbord. Övriga alternativ är falska."
-    },
-    {
-      "typ": "hör_till",
-      "svårighetsgrad": "medel",
-      "fråga": "Vilket av följande är sant om skådespelaren Sir Christopher Lee?",
-      "kategori": "Hör till: sanna påståenden om Sir Christopher Lee",
-      "alternativ": [
-        "Han släppte ett heavy metal-album vid 90 års ålder.",
-        "Han tackade nej till att bli adlad av drottningen.",
-        "Han vann en Oscar för bästa manliga huvudroll i början av 2000-talet.",
-        "Han pratade endast italienska i privatlivet, trots sin filmkarriär."
-      ],
-      "tillhör_index": [0],
-      "förklaring": "Lee gav ut metal-album, bland annat 'Charlemagne: The Omens of Death', runt sin 90-årsdag. Övriga påståenden är falska."
+      "förklaring": "Titanic vann Oscar för bästa film 1997 och Forrest Gump vann 1994. Pulp Fiction och The Shawshank Redemption anses vara 90-talsklassiker men ingen av dem fick Oscar för bästa film (de förlorade båda mot Forrest Gump vid galaåret 1995)."
     },
     {
       "typ": "hör_till",
       "svårighetsgrad": "lätt",
-      "fråga": "Vilket av följande påståenden om pyramider är sant?",
-      "kategori": "Hör till: sanna påståenden om pyramider",
+      "fråga": "ABBA är en av Sveriges mest kända popgrupper. Men vilka påståenden om ABBA är sanna?",
+      "kategori": "Hör till: sanna påståenden om ABBA",
       "alternativ": [
-        "Landet Sudan har fler pyramider än Egypten.",
-        "Inkaimperiets pyramider i Peru byggdes före pyramiderna i Egypten.",
-        "Det finns över 100 pyramider dolda under isen i Antarktis.",
-        "Det har inte hittats några pyramider alls i Kina."
+        "ABBA turnerade tillsammans ända in på 2000-talet.",
+        "ABBA slog igenom genom att vinna Eurovision Song Contest 1974.",
+        "Två av medlemmarna i ABBA är syskon.",
+        "Gruppnamnet ABBA kommer från medlemmarnas initialer."
       ],
-      "tillhör_index": [0],
-      "förklaring": "Sudan har cirka 250 kända pyramider, fler än Egypten som har omkring 118. Övriga påståenden är felaktiga."
-    },
-    {
-      "typ": "hör_till",
-      "svårighetsgrad": "lätt",
-      "fråga": "Vilka av följande påståenden om OS är sanna?",
-      "kategori": "Hör till: sanna påståenden om de Olympiska spelen",
-      "alternativ": [
-        "OS-ringen med blå färg representerar Europa.",
-        "Olympiska elden tänds i Grekland inför varje OS.",
-        "De första moderna olympiska spelen hölls 1896.",
-        "OS har alltid hållits vart fjärde år utan avbrott."
+      "tillhör_index": [
+        1,
+        3
       ],
-      "tillhör_index": [0, 1, 2],
-      "förklaring": "Blå ring = Europa, elden tänds i Olympia i Grekland, första moderna OS hölls 1896. OS har ställts in under världskrigen, så påstående 4 är falskt."
-    },
-    {
-      "typ": "hör_till",
-      "svårighetsgrad": "medel",
-      "fråga": "Vilka av följande påståenden om Shakespeare är sanna?",
-      "kategori": "Hör till: sanna påståenden om William Shakespeare",
-      "alternativ": [
-        "Han skrev 154 sonetter.",
-        "Hans pjäser översattes till svenska redan på 1600-talet.",
-        "Han gifte sig vid 18 års ålder.",
-        "Han var både skådespelare och pjäsförfattare."
-      ],
-      "tillhör_index": [0, 3],
-      "förklaring": "Shakespeare skrev 154 sonetter, och han var både skådespelare och dramatiker. Han gifte sig vid 18 år är fel (han var 18 när han blev fader, men 18-årsmyten bygger på missförstånd). Svenska översättningar kom först på 1700-talet."
+      "förklaring": "ABBA slog igenom när de vann Eurovision 1974 med \"Waterloo\" – sant. Namnet ABBA är mycket riktigt bildat av initialerna för Agnetha, Björn, Benny och Anni-Frid. Däremot är inga av medlemmarna släkt med varandra, och gruppen splittrades redan 1982 (de turnerade inte in på 2000-talet)."
     },
     {
       "typ": "ordna",
       "svårighetsgrad": "medel",
-      "fråga": "Ordna följande populärkulturella fenomen efter lanseringsår, från äldst till nyast.",
+      "fråga": "Ordna följande tekniska prylar efter lanseringsår (från tidigast till senast).",
       "alternativ": [
-        "Den första Star Wars-filmen",
-        "Barbiedockan",
-        "Den första iPhone-modellen",
-        "Den första James Bond-filmen"
+        "DVD-skivan",
+        "Sony Walkman",
+        "iPod",
+        "CD-skivan"
       ],
       "rätt_ordning": [
-        "Barbiedockan",
-        "Den första James Bond-filmen",
-        "Den första Star Wars-filmen",
-        "Den första iPhone-modellen"
+        "Sony Walkman",
+        "CD-skivan",
+        "DVD-skivan",
+        "iPod"
       ],
-      "förklaring": "Barbie lanserades 1959, första Bond-film (Dr. No) 1962, Star Wars 1977, iPhone 2007."
+      "förklaring": "Sony Walkman lanserades 1979 som en av de första bärbara kassettbandspelarna. CD-skivan introducerades 1982, och DVD-skivan kom 1996 som ersättare för VHS. Apple lanserade iPod år 2001. Alltså kommer Walkman först, sedan CD, därefter DVD och sist iPod."
+    },
+    {
+      "typ": "ordna",
+      "svårighetsgrad": "medel",
+      "fråga": "Ordna dessa historiska händelser i kronologisk ordning (äldst till nyast).",
+      "alternativ": [
+        "Berlinmurens fall",
+        "Första månlandningen",
+        "Watergate-skandalen",
+        "Woodstockfestivalen"
+      ],
+      "rätt_ordning": [
+        "Första månlandningen",
+        "Woodstockfestivalen",
+        "Watergate-skandalen",
+        "Berlinmurens fall"
+      ],
+      "förklaring": "Första månlandningen skedde i juli 1969, strax före Woodstockfestivalen i augusti 1969. Watergate-skandalen uppdagades 1972 (Nixon avgick 1974). Berlinmuren föll 1989. Därför är ordningen: månlandning, Woodstock, Watergate, Berlinmurens fall."
     },
     {
       "typ": "ordna",
       "svårighetsgrad": "lätt",
-      "fråga": "Ordna dessa fiktiva karaktärer efter året de först introducerades, från äldst till nyast.",
+      "fråga": "Ordna dessa musikartister efter tidpunkten för sitt genombrott (från tidigast till senast).",
       "alternativ": [
-        "Batman",
-        "Sherlock Holmes",
-        "Harry Potter",
-        "Musse Pigg"
+        "Spice Girls",
+        "The Beatles",
+        "ABBA",
+        "Michael Jackson"
       ],
       "rätt_ordning": [
-        "Sherlock Holmes",
-        "Musse Pigg",
-        "Batman",
-        "Harry Potter"
+        "The Beatles",
+        "ABBA",
+        "Michael Jackson",
+        "Spice Girls"
       ],
-      "förklaring": "Sherlock Holmes debuterade 1887, Musse Pigg 1928, Batman 1939, Harry Potter 1997."
+      "förklaring": "The Beatles slog igenom i början av 1960-talet (internationellt genombrott 1963–64). ABBA blev världsberömda efter Eurovision-segern 1974. Michael Jacksons stora genombrott som soloartist kom i början av 1980-talet (albumet \"Thriller\" 1982). Spice Girls slog igenom 1996 med \"Wannabe\". Alltså: Beatles, ABBA, Michael Jackson, Spice Girls."
     },
     {
       "typ": "ordna",
       "svårighetsgrad": "lätt",
-      "fråga": "Ordna dessa musikgenrer efter när de blev populära i större delen av världen, från tidigast till senast.",
+      "fråga": "Ordna följande berömda byggnadsverk efter sin höjd (högst till lägst).",
       "alternativ": [
-        "Hip-hop",
-        "Rock'n'roll",
-        "Disco",
-        "Grunge"
+        "Eiffeltornet",
+        "Burj Khalifa",
+        "Empire State Building",
+        "Turning Torso"
       ],
       "rätt_ordning": [
-        "Rock'n'roll",
-        "Disco",
-        "Hip-hop",
-        "Grunge"
+        "Burj Khalifa",
+        "Empire State Building",
+        "Eiffeltornet",
+        "Turning Torso"
       ],
-      "förklaring": "Rock'n'roll slog igenom på 1950-talet, disco på 1970-talet, hip-hop på 1980-talet, grunge på 1990-talet."
+      "förklaring": "Burj Khalifa i Dubai är världens högsta byggnad (828 m). Empire State Building i New York är ~381 m (443 m med antennen) och därmed högre än Eiffeltornet i Paris (324 m). Turning Torso i Malmö är 190 m och klart lägst av dessa. Ordningen blir alltså: Burj Khalifa, Empire State Building, Eiffeltornet, Turning Torso."
     },
     {
       "typ": "ordna",
       "svårighetsgrad": "svår",
-      "fråga": "Ordna dessa litterära verk efter publiceringsår, från tidigast till senast.",
+      "fråga": "Ordna dessa länder efter årtalet då kvinnor fick rösträtt där (från tidigast till senast).",
       "alternativ": [
-        "1984 (George Orwell)",
-        "Moby Dick (Herman Melville)",
-        "Sagan om Ringen (J.R.R. Tolkien)",
-        "Don Quijote (Miguel de Cervantes)"
+        "Finland",
+        "Saudiarabien",
+        "Nya Zeeland",
+        "Schweiz"
       ],
       "rätt_ordning": [
-        "Don Quijote (Miguel de Cervantes)",
-        "Moby Dick (Herman Melville)",
-        "1984 (George Orwell)",
-        "Sagan om Ringen (J.R.R. Tolkien)"
+        "Nya Zeeland",
+        "Finland",
+        "Schweiz",
+        "Saudiarabien"
       ],
-      "förklaring": "Don Quijote 1605, Moby Dick 1851, 1984 år 1949, Sagan om Ringen 1954–55."
+      "förklaring": "Nya Zeeland införde kvinnlig rösträtt först i världen år 1893. Finland följde 1906 (först i Europa). Schweiz gav kvinnor federell rösträtt så sent som 1971. Saudiarabien införde kvinnlig rösträtt år 2015. Därför är ordningen: Nya Zeeland, Finland, Schweiz, Saudiarabien."
     },
     {
-      "typ": "ordna",
-      "svårighetsgrad": "medel",
-      "fråga": "Ordna dessa städer efter hur många gånger de har arrangerat sommar-OS, från färst till flest.",
-      "alternativ": [
-        "London",
-        "Los Angeles",
-        "Paris",
-        "Aten"
-      ],
-      "rätt_ordning": [
-        "Aten",
-        "Paris",
-        "Los Angeles",
-        "London"
-      ],
-      "förklaring": "Aten (1 gång: 2004), Paris (2: 1900, 1924, snart 2024), Los Angeles (2: 1932, 1984, snart 2028), London (3: 1908, 1948, 2012)."
-    },
-    {
-      "typ": "ordna",
+      "typ": "hör_till",
       "svårighetsgrad": "lätt",
-      "fråga": "Ordna dessa TV-serier efter premiärår, från äldst till nyast.",
+      "fråga": "Superhjältar från olika serieförlag blandas här. Två av dessa är skapade av Marvel – vilka?",
+      "kategori": "Hör till: Marvelsuperhjältar",
       "alternativ": [
-        "Vänner",
-        "Game of Thrones",
-        "M*A*S*H",
-        "The Simpsons"
+        "Batman",
+        "Iron Man",
+        "Spider-Man",
+        "Superman"
+      ],
+      "tillhör_index": [
+        1,
+        2
+      ],
+      "förklaring": "Iron Man och Spider-Man kommer från Marvels serietidningsvärld. Batman och Superman är skapade av DC Comics, inte Marvel."
+    },
+    {
+      "typ": "ordna",
+      "svårighetsgrad": "svår",
+      "fråga": "Ordna följande språk efter antal modersmålstalare (flest först, minst sist).",
+      "alternativ": [
+        "Spanska",
+        "Kinesiska",
+        "Engelska",
+        "Hindi"
       ],
       "rätt_ordning": [
-        "M*A*S*H",
-        "The Simpsons",
-        "Vänner",
-        "Game of Thrones"
+        "Kinesiska",
+        "Spanska",
+        "Engelska",
+        "Hindi"
       ],
-      "förklaring": "M*A*S*H 1972, The Simpsons 1989, Vänner 1994, Game of Thrones 2011."
+      "förklaring": "Kinesiska (mandarin) har omkring 900 miljoner–1 miljard modersmålstalare, flest i världen. Därefter följer spanska med ca 470 miljoner, sedan engelska med runt 370 miljoner. Hindi har omkring 340 miljoner modersmålstalare. Alltså: kinesiska, spanska, engelska, hindi i storleksordning."
+    },
+    {
+      "typ": "hör_till",
+      "svårighetsgrad": "lätt",
+      "fråga": "Astrid Lindgren är älskad författare både i Sverige och världen. Vilka av följande påståenden om Astrid Lindgren är sanna?",
+      "kategori": "Hör till: sanna påståenden om Astrid Lindgren",
+      "alternativ": [
+        "Astrid Lindgren belönades med Nobelpriset i litteratur.",
+        "Astrid Lindgren skapade berättelsen om Pippi Långstrump.",
+        "Hennes böcker har översatts till över 100 språk.",
+        "Astrid Lindgren föddes i Stockholm."
+      ],
+      "tillhör_index": [
+        1,
+        2
+      ],
+      "förklaring": "Astrid Lindgren skrev mycket riktigt om Pippi Långstrump och många andra älskade figurer. Hennes böcker har översatts till över 100 olika språk, vilket visar hennes globala genomslag. Däremot fick hon aldrig Nobelpriset i litteratur, trots flera nomineringar. Hon föddes inte i Stockholm utan på en gård nära Vimmerby i Småland."
+    },
+    {
+      "typ": "hör_till",
+      "svårighetsgrad": "medel",
+      "fråga": "Fotbolls-VM (herr) har en lång och händelserik historia. Vilka av följande påståenden om VM är sanna?",
+      "kategori": "Hör till: sanna påståenden om fotbolls-VM",
+      "alternativ": [
+        "Brasilien har vunnit flest VM (fem gånger).",
+        "Italien har aldrig vunnit fotbolls-VM.",
+        "Ingen VM-turnering spelades 1942 eller 1946 på grund av andra världskriget.",
+        "Sverige har tagit guld i fotbolls-VM en gång."
+      ],
+      "tillhör_index": [
+        0,
+        2
+      ],
+      "förklaring": "Brasilien är det mest framgångsrika landslaget med fem VM-titlar (rekord). Under andra världskriget ställdes VM in både 1942 och 1946. Sverige har däremot aldrig vunnit herr-VM (bästa resultat är silver 1958), och Italien har faktiskt vunnit fyra gånger, så påståendet att Italien aldrig vunnit är fel."
+    },
+    {
+      "typ": "hör_till",
+      "svårighetsgrad": "medel",
+      "fråga": "Vikingatiden är omgärdad av många myter. Vilka två av följande påståenden om vikingar är faktiskt sanna?",
+      "kategori": "Hör till: sanna påståenden om vikingar",
+      "alternativ": [
+        "Vikingarna använde runor som skriftspråk.",
+        "Vikingarna reste aldrig utanför Norden.",
+        "Vikingar nådde Nordamerika omkring år 1000, långt före Columbus.",
+        "Vikingarna bar horn på sina hjälmar."
+      ],
+      "tillhör_index": [
+        0,
+        2
+      ],
+      "förklaring": "Vikingarna hade ett eget alfabet med runor. De var också skickliga sjöfarare och nådde bland annat Nordamerika runt år 1000 (Leif Eriksson), långt innan Columbus. De stannade alltså inte bara i Norden – tvärtom for de vida omkring. Och bilden av horn på vikingahjälmar är en seglivad myt; inga hornprydda hjälmar från vikingatiden har påträffats."
     }
   ]
 }

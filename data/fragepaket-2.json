@@ -1,198 +1,198 @@
 {
-  "name": "Frågepaket 2 - Historia och geografi",
-  "description": "Världshistoria, geografiska fakta och livets stadier",
+  "name": "Frågepaket 1 - Blandat med B",
+  "description": "Kuriosa, populärkultur och litteratur genom tiderna",
   "questions": [
     {
-      "typ": "ordna",
+      "typ": "hör_till",
       "svårighetsgrad": "medel",
-      "fråga": "Ordna dessa revolutioner i kronologisk ordning (äldst först).",
+      "fråga": "Vilket av följande påståenden om filmregissören Alfred Hitchcock är sant?",
+      "kategori": "Hör till: sanna påståenden om Alfred Hitchcock",
       "alternativ": [
-        "Ryska revolutionen",
-        "Amerikanska revolutionen",
-        "Kulturrevolutionen i Kina",
-        "Franska revolutionen"
+        "Han hade panisk skräck för ägg och undvek dem hela livet.",
+        "Han vägrade använda telefon och kommunicerade enbart via brev.",
+        "Han utförde personligen alla sina egna stunttrick i sina filmer.",
+        "Han var vegetarian och svimmade om han såg rått kött."
       ],
-      "rätt_ordning": [
-        "Amerikanska revolutionen",
-        "Franska revolutionen",
-        "Ryska revolutionen",
-        "Kulturrevolutionen i Kina"
-      ],
-      "förklaring": "Amerikanska revolutionen skedde 1775–1783, sedan kom franska revolutionen 1789. Ryska revolutionen inträffade 1917 och sist inträffade Kinas kulturrevolution 1966–1976."
+      "tillhör_index": [0],
+      "förklaring": "Hitchcock hade panisk skräck för ägg (ovofobi) och berättade själv att han aldrig smakat ett. Övriga påståenden är påhittade."
     },
     {
-      "typ": "ordna",
-      "svårighetsgrad": "lätt",
-      "fråga": "Ordna dessa livsstadier från tidigast till senast i livet.",
-      "alternativ": [
-        "Tonår",
-        "Vuxenliv",
-        "Ålderdom",
-        "Barndom"
-      ],
-      "rätt_ordning": [
-        "Barndom",
-        "Tonår",
-        "Vuxenliv",
-        "Ålderdom"
-      ],
-      "förklaring": "Först kommer barndomen, sedan tonåren, därefter vuxenlivet och till sist ålderdomen. Så ser de typiska stadierna i en människas liv ut i kronologisk ordning."
-    },
-    {
-      "typ": "ordna",
-      "svårighetsgrad": "lätt",
-      "fråga": "Ordna dessa 1990-talsfilmer efter premiärdatum (tidigast till senast).",
-      "alternativ": [
-        "Ensam hemma",
-        "Jurassic Park",
-        "Titanic",
-        "The Matrix"
-      ],
-      "rätt_ordning": [
-        "Ensam hemma",
-        "Jurassic Park",
-        "Titanic",
-        "The Matrix"
-      ],
-      "förklaring": "Ensam hemma kom 1990, Jurassic Park 1993, Titanic 1997 och The Matrix 1999. Det gör att de i kronologisk ordning släpptes i just den ordningen från tidigast till senast."
-    },
-    {
-      "typ": "ordna",
-      "svårighetsgrad": "medel",
-      "fråga": "Ordna dessa planeter efter storlek (minst till störst diameter).",
-      "alternativ": [
-        "Merkurius",
-        "Mars",
-        "Venus",
-        "Jorden"
-      ],
-      "rätt_ordning": [
-        "Merkurius",
-        "Mars",
-        "Venus",
-        "Jorden"
-      ],
-      "förklaring": "Merkurius är minst av dessa, därefter Mars. Venus är något mindre än jorden, som är störst bland dessa fyra planeter."
-    },
-    {
-      "typ": "ordna",
+      "typ": "hör_till",
       "svårighetsgrad": "svår",
-      "fråga": "Ordna dessa metaller efter värde (billigast till dyrast).",
+      "fråga": "Vilket av följande påståenden om författaren Mary Shelley är sant?",
+      "kategori": "Hör till: sanna påståenden om Mary Shelley",
       "alternativ": [
-        "Järn",
-        "Silver",
-        "Guld",
-        "Platina"
+        "Hon sparade sin döde makes hjärta i sitt skrivbord under flera år.",
+        "Hon skrev under pseudonym en aldrig utgiven uppföljare till 'Frankenstein'.",
+        "Hon var i hemlighet förlovad med poeten Lord Byron en tid.",
+        "Hon uppfann en tidig prototyp till kameran som hon beskrev i dagböcker."
       ],
-      "rätt_ordning": [
-        "Järn",
-        "Silver",
-        "Guld",
-        "Platina"
-      ],
-      "förklaring": "Järn är billigast, silver mer värt. Guld är dyrbarare än silver, och platina anses mest värdefull av dessa metaller."
-    },
-    {
-      "typ": "ordna",
-      "svårighetsgrad": "svår",
-      "fråga": "Ordna dessa länder efter antal officiella språk (färst till flest).",
-      "alternativ": [
-        "Sydafrika",
-        "Schweiz",
-        "Japan",
-        "Kanada"
-      ],
-      "rätt_ordning": [
-        "Japan",
-        "Kanada",
-        "Schweiz",
-        "Sydafrika"
-      ],
-      "förklaring": "Japan har 1 officiellt språk, Kanada har 2 (engelska och franska), Schweiz har 4, och Sydafrika har hela 11 officiella språk."
+      "tillhör_index": [0],
+      "förklaring": "Efter Percy Shelleys död bevarade Mary Shelley hans förhärdade hjärta inlindat i siden i sitt skrivbord. Övriga alternativ är falska."
     },
     {
       "typ": "hör_till",
       "svårighetsgrad": "medel",
-      "fråga": "Vilka av dessa romaner är skrivna av Jane Austen?",
-      "kategori": "Jane Austen",
+      "fråga": "Vilket av följande är sant om skådespelaren Sir Christopher Lee?",
+      "kategori": "Hör till: sanna påståenden om Sir Christopher Lee",
       "alternativ": [
-        "Svindlande höjder",
-        "Förnuft och känsla",
-        "Jane Eyre",
-        "Stolthet och fördom"
+        "Han släppte ett heavy metal-album vid 90 års ålder.",
+        "Han tackade nej till att bli adlad av drottningen.",
+        "Han vann en Oscar för bästa manliga huvudroll i början av 2000-talet.",
+        "Han pratade endast italienska i privatlivet, trots sin filmkarriär."
       ],
-      "tillhör_index": [1, 3],
-      "förklaring": "Jane Austen skrev klassiker som \"Stolthet och fördom\" (1813) och \"Förnuft och känsla\" (1811). \"Jane Eyre\" skrevs av Charlotte Brontë och \"Svindlande höjder\" av Emily Brontë."
+      "tillhör_index": [0],
+      "förklaring": "Lee gav ut metal-album, bland annat 'Charlemagne: The Omens of Death', runt sin 90-årsdag. Övriga påståenden är falska."
     },
     {
       "typ": "hör_till",
       "svårighetsgrad": "lätt",
-      "fråga": "Vilka av dessa länder ligger i Sydamerika?",
-      "kategori": "Sydamerika",
+      "fråga": "Vilket av följande påståenden om pyramider är sant?",
+      "kategori": "Hör till: sanna påståenden om pyramider",
       "alternativ": [
-        "Spanien",
-        "Mexiko",
-        "Brasilien",
-        "Argentina"
+        "Landet Sudan har fler pyramider än Egypten.",
+        "Inkaimperiets pyramider i Peru byggdes före pyramiderna i Egypten.",
+        "Det finns över 100 pyramider dolda under isen i Antarktis.",
+        "Det har inte hittats några pyramider alls i Kina."
       ],
-      "tillhör_index": [2, 3],
-      "förklaring": "Brasilien och Argentina är sydamerikanska länder. Mexiko ligger i Nordamerika, och Spanien ligger i Europa."
+      "tillhör_index": [0],
+      "förklaring": "Sudan har cirka 250 kända pyramider, fler än Egypten som har omkring 118. Övriga påståenden är felaktiga."
+    },
+    {
+      "typ": "hör_till",
+      "svårighetsgrad": "lätt",
+      "fråga": "Vilka av följande påståenden om OS är sanna?",
+      "kategori": "Hör till: sanna påståenden om de Olympiska spelen",
+      "alternativ": [
+        "OS-ringen med blå färg representerar Europa.",
+        "Olympiska elden tänds i Grekland inför varje OS.",
+        "De första moderna olympiska spelen hölls 1896.",
+        "OS har alltid hållits vart fjärde år utan avbrott."
+      ],
+      "tillhör_index": [0, 1, 2],
+      "förklaring": "Blå ring = Europa, elden tänds i Olympia i Grekland, första moderna OS hölls 1896. OS har ställts in under världskrigen, så påstående 4 är falskt."
     },
     {
       "typ": "hör_till",
       "svårighetsgrad": "medel",
-      "fråga": "Vilka av dessa spel släpptes under 1990-talet?",
-      "kategori": "1990-talet",
+      "fråga": "Vilka av följande påståenden om Shakespeare är sanna?",
+      "kategori": "Hör till: sanna påståenden om William Shakespeare",
       "alternativ": [
-        "The Sims",
-        "Pac-Man",
-        "Super Mario 64",
-        "The Legend of Zelda: Ocarina of Time"
-      ],
-      "tillhör_index": [2, 3],
-      "förklaring": "\"Super Mario 64\" (1996) och \"The Legend of Zelda: Ocarina of Time\" (1998) kom under 90-talet. \"The Sims\" kom år 2000 och arkadklassikern \"Pac-Man\" redan 1980."
-    },
-    {
-      "typ": "hör_till",
-      "svårighetsgrad": "lätt",
-      "fråga": "Vilka av dessa är filmgenrer?",
-      "kategori": "Filmgenre",
-      "alternativ": [
-        "Sonett",
-        "Symfoni",
-        "Action",
-        "Skräck"
-      ],
-      "tillhör_index": [2, 3],
-      "förklaring": "Skräck och action är filmgenrer. Sonett är en diktform och symfoni är ett musikaliskt verk, inte filmgenrer."
-    },
-    {
-      "typ": "hör_till",
-      "svårighetsgrad": "lätt",
-      "fråga": "Vilka av dessa föremål är vanliga köksredskap?",
-      "kategori": "Köksredskap",
-      "alternativ": [
-        "Visp",
-        "Skruvmejsel",
-        "Hammare",
-        "Kavel"
+        "Han skrev 154 sonetter.",
+        "Hans pjäser översattes till svenska redan på 1600-talet.",
+        "Han gifte sig vid 18 års ålder.",
+        "Han var både skådespelare och pjäsförfattare."
       ],
       "tillhör_index": [0, 3],
-      "förklaring": "En visp och en kavel hör hemma i köket. En hammare och en skruvmejsel är verktyg för snickeri, inte matlagning."
+      "förklaring": "Shakespeare skrev 154 sonetter, och han var både skådespelare och dramatiker. Han gifte sig vid 18 år är fel (han var 18 när han blev fader, men 18-årsmyten bygger på missförstånd). Svenska översättningar kom först på 1700-talet."
     },
     {
-      "typ": "hör_till",
+      "typ": "ordna",
       "svårighetsgrad": "medel",
-      "fråga": "Vilka av dessa djur är däggdjur?",
-      "kategori": "Däggdjur",
+      "fråga": "Ordna följande populärkulturella fenomen efter lanseringsår, från äldst till nyast.",
       "alternativ": [
-        "Haj",
-        "Blåval",
-        "Pingvin",
-        "Fladdermus"
+        "Den första Star Wars-filmen",
+        "Barbiedockan",
+        "Den första iPhone-modellen",
+        "Den första James Bond-filmen"
       ],
-      "tillhör_index": [1, 3],
-      "förklaring": "Blåvalen och fladdermusen är däggdjur (de diar sina ungar och andas luft). En pingvin är en fågel och en haj är en fisk – inga däggdjur."
+      "rätt_ordning": [
+        "Barbiedockan",
+        "Den första James Bond-filmen",
+        "Den första Star Wars-filmen",
+        "Den första iPhone-modellen"
+      ],
+      "förklaring": "Barbie lanserades 1959, första Bond-film (Dr. No) 1962, Star Wars 1977, iPhone 2007."
+    },
+    {
+      "typ": "ordna",
+      "svårighetsgrad": "lätt",
+      "fråga": "Ordna dessa fiktiva karaktärer efter året de först introducerades, från äldst till nyast.",
+      "alternativ": [
+        "Batman",
+        "Sherlock Holmes",
+        "Harry Potter",
+        "Musse Pigg"
+      ],
+      "rätt_ordning": [
+        "Sherlock Holmes",
+        "Musse Pigg",
+        "Batman",
+        "Harry Potter"
+      ],
+      "förklaring": "Sherlock Holmes debuterade 1887, Musse Pigg 1928, Batman 1939, Harry Potter 1997."
+    },
+    {
+      "typ": "ordna",
+      "svårighetsgrad": "lätt",
+      "fråga": "Ordna dessa musikgenrer efter när de blev populära i större delen av världen, från tidigast till senast.",
+      "alternativ": [
+        "Hip-hop",
+        "Rock'n'roll",
+        "Disco",
+        "Grunge"
+      ],
+      "rätt_ordning": [
+        "Rock'n'roll",
+        "Disco",
+        "Hip-hop",
+        "Grunge"
+      ],
+      "förklaring": "Rock'n'roll slog igenom på 1950-talet, disco på 1970-talet, hip-hop på 1980-talet, grunge på 1990-talet."
+    },
+    {
+      "typ": "ordna",
+      "svårighetsgrad": "svår",
+      "fråga": "Ordna dessa litterära verk efter publiceringsår, från tidigast till senast.",
+      "alternativ": [
+        "1984 (George Orwell)",
+        "Moby Dick (Herman Melville)",
+        "Sagan om Ringen (J.R.R. Tolkien)",
+        "Don Quijote (Miguel de Cervantes)"
+      ],
+      "rätt_ordning": [
+        "Don Quijote (Miguel de Cervantes)",
+        "Moby Dick (Herman Melville)",
+        "1984 (George Orwell)",
+        "Sagan om Ringen (J.R.R. Tolkien)"
+      ],
+      "förklaring": "Don Quijote 1605, Moby Dick 1851, 1984 år 1949, Sagan om Ringen 1954–55."
+    },
+    {
+      "typ": "ordna",
+      "svårighetsgrad": "medel",
+      "fråga": "Ordna dessa städer efter hur många gånger de har arrangerat sommar-OS, från färst till flest.",
+      "alternativ": [
+        "London",
+        "Los Angeles",
+        "Paris",
+        "Aten"
+      ],
+      "rätt_ordning": [
+        "Aten",
+        "Paris",
+        "Los Angeles",
+        "London"
+      ],
+      "förklaring": "Aten (1 gång: 2004), Paris (2: 1900, 1924, snart 2024), Los Angeles (2: 1932, 1984, snart 2028), London (3: 1908, 1948, 2012)."
+    },
+    {
+      "typ": "ordna",
+      "svårighetsgrad": "lätt",
+      "fråga": "Ordna dessa TV-serier efter premiärår, från äldst till nyast.",
+      "alternativ": [
+        "Vänner",
+        "Game of Thrones",
+        "M*A*S*H",
+        "The Simpsons"
+      ],
+      "rätt_ordning": [
+        "M*A*S*H",
+        "The Simpsons",
+        "Vänner",
+        "Game of Thrones"
+      ],
+      "förklaring": "M*A*S*H 1972, The Simpsons 1989, Vänner 1994, Game of Thrones 2011."
     }
   ]
 }

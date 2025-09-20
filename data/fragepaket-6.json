@@ -5,24 +5,6 @@
     {
       "typ": "ordna",
       "svårighetsgrad": "medel",
-      "fråga": "Ordna dessa medicinska upptäckter efter när de gjordes, från äldst till nyast.",
-      "alternativ": [
-        "Vaccination (Edward Jenner)",
-        "DNA:ts struktur",
-        "Penicillin (Alexander Fleming)",
-        "Röntgenstrålning"
-      ],
-      "rätt_ordning": [
-        "Vaccination (Edward Jenner)",
-        "Röntgenstrålning",
-        "Penicillin (Alexander Fleming)",
-        "DNA:ts struktur"
-      ],
-      "förklaring": "Edward Jenner utvecklade vaccination 1796, Wilhelm Röntgen upptäckte röntgenstrålning 1895, Alexander Fleming upptäckte penicillin 1928, Watson & Crick beskrev DNA:ts struktur 1953."
-    },
-    {
-      "typ": "ordna",
-      "svårighetsgrad": "medel",
       "fråga": "Ordna dessa transportrevolutioner efter när de först introducerades, från äldst till nyast.",
       "alternativ": [
         "Karl Benz första bil",
@@ -37,6 +19,42 @@
         "Wright-brödernas första flygplan"
       ],
       "förklaring": "Hjulet uppfanns av mesopotamierna omkring 3500 f.Kr., Thomas Savery utvecklade första praktiska ångmaskinen 1698, Karl Benz byggde sin första bil 1885, och Wright-bröderna genomförde första flygningen 1903."
+    },
+    {
+      "typ": "hör_till",
+      "svårighetsgrad": "lätt",
+      "fråga": "Astrid Lindgren skrev många älskade barnböcker. Vilka av dessa figurer är skapade av henne?",
+      "kategori": "Hör till: Astrid Lindgrens figurer",
+      "alternativ": [
+        "Karlsson på taket",
+        "Lilla My",
+        "Emil i Lönneberga",
+        "Pippi Långstrump"
+      ],
+      "tillhör_index": [
+        0,
+        2,
+        3
+      ],
+      "förklaring": "Karlsson på taket, Emil i Lönneberga och Pippi Långstrump är alla karaktärer i Astrid Lindgrens berättelser. Lilla My är en figur ur Mumintrollen av Tove Jansson, alltså inte skapad av Lindgren."
+    },
+    {
+      "typ": "ordna",
+      "svårighetsgrad": "medel",
+      "fråga": "Ordna dessa medicinska upptäckter efter när de gjordes, från äldst till nyast.",
+      "alternativ": [
+        "Vaccination (Edward Jenner)",
+        "DNA:ts struktur",
+        "Penicillin (Alexander Fleming)",
+        "Röntgenstrålning"
+      ],
+      "rätt_ordning": [
+        "Vaccination (Edward Jenner)",
+        "Röntgenstrålning",
+        "Penicillin (Alexander Fleming)",
+        "DNA:ts struktur"
+      ],
+      "förklaring": "Edward Jenner utvecklade vaccination 1796, Wilhelm Röntgen upptäckte röntgenstrålning 1895, Alexander Fleming upptäckte penicillin 1928, Watson & Crick beskrev DNA:ts struktur 1953."
     },
     {
       "typ": "ordna",
@@ -57,6 +75,23 @@
       "förklaring": "Belgien ~30 000 km²; Sverige ~450 000 km²; Australien ~7,7 miljoner km²; Kanada ~9,98 miljoner km²."
     },
     {
+      "typ": "hör_till",
+      "svårighetsgrad": "medel",
+      "fråga": "Människokroppen är fantastisk – men också föremål för myter. Vilka av följande påståenden om kroppen är sanna?",
+      "kategori": "Hör till: sanna påståenden om människokroppen",
+      "alternativ": [
+        "Människan använder bara 10% av sin hjärna.",
+        "En vuxen människa har 206 ben i kroppen.",
+        "Huden är kroppens största organ.",
+        "Blodet är blått inuti kroppen och blir rött när det träffar syre."
+      ],
+      "tillhör_index": [
+        1,
+        2
+      ],
+      "förklaring": "En vuxen kropp har 206 ben och huden är vårt största organ. Blod är alltid rött (syre påverkar bara nyansen lite, det är aldrig blått i kroppen). Och vi använder i princip hela hjärnan – 10%-idén är en seglivad myt."
+    },
+    {
       "typ": "ordna",
       "svårighetsgrad": "medel",
       "fråga": "Ordna dessa berg efter höjd över havet, från lägst till högst.",
@@ -73,6 +108,75 @@
         "Mount Everest"
       ],
       "förklaring": "Mont Blanc 4 808 m; Kilimanjaro 5 895 m; K2 8 611 m; Mount Everest 8 848 m över havet."
+    },
+    {
+      "typ": "hör_till",
+      "svårighetsgrad": "svår",
+      "fråga": "Sovjetunionen bestod av 15 republiker fram till 1991. Vilka av följande länder var en del av Sovjet?",
+      "kategori": "Hör till: före detta delrepubliker i Sovjetunionen",
+      "alternativ": [
+        "Polen",
+        "Estland",
+        "Georgien",
+        "Ukraina"
+      ],
+      "tillhör_index": [
+        1,
+        2,
+        3
+      ],
+      "förklaring": "Estland, Georgien och Ukraina var tre av de 15 sovjetrepublikerna (med i Sovjetunionen 1922–1991). Polen var aldrig en del av Sovjetunionen (även om landet tillhörde det kommunistiska östblocket)."
+    },
+    {
+      "typ": "hör_till",
+      "svårighetsgrad": "lätt",
+      "fråga": "Vilka av dessa räknas som planeter i vårt solsystem?",
+      "kategori": "Hör INTE till: solsystemets planeter",
+      "alternativ": [
+        "Mars",
+        "Pluto",
+        "Jupiter",
+        "Venus"
+      ],
+      "tillhör_index": [
+        1
+      ],
+      "förklaring": "Mars, Jupiter och Venus är alla bland de åtta planeterna i solsystemet. Pluto räknas sedan 2006 som en dvärgplanet och är inte längre en av de huvudsakliga planeterna."
+    },
+    {
+      "typ": "hör_till",
+      "svårighetsgrad": "medel",
+      "fråga": "Abba är kända världen över, men hur väl kan du deras historia? Vilka av följande påståenden om Abba är sanna?",
+      "kategori": "Hör till: sanna påståenden om Abba",
+      "alternativ": [
+        "Abba är en förkortning av medlemmarnas efternamn.",
+        "Abba vann Eurovision Song Contest 1974.",
+        "Abba bildades i Göteborg 1972.",
+        "Musikalen 'Mamma Mia' bygger på Abbas låtar."
+      ],
+      "tillhör_index": [
+        1,
+        3
+      ],
+      "förklaring": "Abba slog igenom när de vann ESC 1974 med 'Waterloo'. Gruppnamnet bildas av medlemmarnas förnamn (Agnetha, Björn, Benny, Anni-Frid), inte efternamnen. Musikalen 'Mamma Mia' (1999) bygger helt på Abbas låtar. Abba bildades i Stockholm (inte Göteborg)."
+    },
+    {
+      "typ": "hör_till",
+      "svårighetsgrad": "lätt",
+      "fråga": "Fotbolls-VM har genom historien endast vunnits av några få länder. Vilka av följande har tagit guld?",
+      "kategori": "Hör till: länder som har vunnit herrarnas fotbolls-VM",
+      "alternativ": [
+        "Brasilien",
+        "Nederländerna",
+        "Argentina",
+        "Tyskland"
+      ],
+      "tillhör_index": [
+        0,
+        2,
+        3
+      ],
+      "förklaring": "Brasilien (5 titlar), Tyskland (4) och Argentina (3) har vunnit VM-guld. Nederländerna har däremot aldrig vunnit (de har förlorat tre finaler)."
     },
     {
       "typ": "ordna",
@@ -109,90 +213,6 @@
         "Mandarin-kinesiska"
       ],
       "förklaring": "Svenska har ca 10 miljoner modersmålstalare; franska ~77 miljoner; arabiska ~300 miljoner; mandarin-kinesiska ~920 miljoner."
-    },
-    {
-      "typ": "hör_till",
-      "svårighetsgrad": "lätt",
-      "fråga": "Fotbolls-VM har genom historien endast vunnits av några få länder. Vilka av följande har tagit guld?",
-      "kategori": "Hör till: länder som har vunnit herrarnas fotbolls-VM",
-      "alternativ": [
-        "Brasilien",
-        "Nederländerna",
-        "Argentina",
-        "Tyskland"
-      ],
-      "tillhör_index": [0, 2, 3],
-      "förklaring": "Brasilien (5 titlar), Tyskland (4) och Argentina (3) har vunnit VM-guld. Nederländerna har däremot aldrig vunnit (de har förlorat tre finaler)."
-    },
-    {
-      "typ": "hör_till",
-      "svårighetsgrad": "lätt",
-      "fråga": "Astrid Lindgren skrev många älskade barnböcker. Vilka av dessa figurer är skapade av henne?",
-      "kategori": "Hör till: Astrid Lindgrens figurer",
-      "alternativ": [
-        "Karlsson på taket",
-        "Lilla My",
-        "Emil i Lönneberga",
-        "Pippi Långstrump"
-      ],
-      "tillhör_index": [0, 2, 3],
-      "förklaring": "Karlsson på taket, Emil i Lönneberga och Pippi Långstrump är alla karaktärer i Astrid Lindgrens berättelser. Lilla My är en figur ur Mumintrollen av Tove Jansson, alltså inte skapad av Lindgren."
-    },
-    {
-      "typ": "hör_till",
-      "svårighetsgrad": "lätt",
-      "fråga": "Vilka av dessa räknas som planeter i vårt solsystem?",
-      "kategori": "Hör INTE till: solsystemets planeter",
-      "alternativ": [
-        "Mars",
-        "Pluto",
-        "Jupiter",
-        "Venus"
-      ],
-      "tillhör_index": [1],
-      "förklaring": "Mars, Jupiter och Venus är alla bland de åtta planeterna i solsystemet. Pluto räknas sedan 2006 som en dvärgplanet och är inte längre en av de huvudsakliga planeterna."
-    },
-    {
-      "typ": "hör_till",
-      "svårighetsgrad": "medel",
-      "fråga": "Abba är kända världen över, men hur väl kan du deras historia? Vilka av följande påståenden om Abba är sanna?",
-      "kategori": "Hör till: sanna påståenden om Abba",
-      "alternativ": [
-        "Abba är en förkortning av medlemmarnas efternamn.",
-        "Abba vann Eurovision Song Contest 1974.",
-        "Abba bildades i Göteborg 1972.",
-        "Musikalen 'Mamma Mia' bygger på Abbas låtar."
-      ],
-      "tillhör_index": [1, 3],
-      "förklaring": "Abba slog igenom när de vann ESC 1974 med 'Waterloo'. Gruppnamnet bildas av medlemmarnas förnamn (Agnetha, Björn, Benny, Anni-Frid), inte efternamnen. Musikalen 'Mamma Mia' (1999) bygger helt på Abbas låtar. Abba bildades i Stockholm (inte Göteborg)."
-    },
-    {
-      "typ": "hör_till",
-      "svårighetsgrad": "medel",
-      "fråga": "Människokroppen är fantastisk – men också föremål för myter. Vilka av följande påståenden om kroppen är sanna?",
-      "kategori": "Hör till: sanna påståenden om människokroppen",
-      "alternativ": [
-        "Människan använder bara 10% av sin hjärna.",
-        "En vuxen människa har 206 ben i kroppen.",
-        "Huden är kroppens största organ.",
-        "Blodet är blått inuti kroppen och blir rött när det träffar syre."
-      ],
-      "tillhör_index": [1, 2],
-      "förklaring": "En vuxen kropp har 206 ben och huden är vårt största organ. Blod är alltid rött (syre påverkar bara nyansen lite, det är aldrig blått i kroppen). Och vi använder i princip hela hjärnan – 10%-idén är en seglivad myt."
-    },
-    {
-      "typ": "hör_till",
-      "svårighetsgrad": "svår",
-      "fråga": "Sovjetunionen bestod av 15 republiker fram till 1991. Vilka av följande länder var en del av Sovjet?",
-      "kategori": "Hör till: före detta delrepubliker i Sovjetunionen",
-      "alternativ": [
-        "Polen",
-        "Estland",
-        "Georgien",
-        "Ukraina"
-      ],
-      "tillhör_index": [1, 2, 3],
-      "förklaring": "Estland, Georgien och Ukraina var tre av de 15 sovjetrepublikerna (med i Sovjetunionen 1922–1991). Polen var aldrig en del av Sovjetunionen (även om landet tillhörde det kommunistiska östblocket)."
     }
   ]
 }
