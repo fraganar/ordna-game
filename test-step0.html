@@ -1,0 +1,218 @@
+<!DOCTYPE html>
+<html lang="sv">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Test Steg 0 - Firebase Player System</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 800px;
+            margin: 50px auto;
+            padding: 20px;
+            background: #f5f5f5;
+        }
+        .test-section {
+            background: white;
+            padding: 20px;
+            margin-bottom: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+        button {
+            background: #4CAF50;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            margin: 5px;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+        button:hover {
+            background: #45a049;
+        }
+        .danger {
+            background: #f44336;
+        }
+        .danger:hover {
+            background: #da190b;
+        }
+        .info {
+            background: #2196F3;
+        }
+        .info:hover {
+            background: #0b7dda;
+        }
+        pre {
+            background: #f0f0f0;
+            padding: 10px;
+            border-radius: 4px;
+            overflow-x: auto;
+        }
+        .result {
+            margin-top: 10px;
+            padding: 10px;
+            background: #e8f4f8;
+            border-left: 4px solid #2196F3;
+        }
+    </style>
+</head>
+<body>
+    <h1>Test Steg 0 - Firebase Player System</h1>
+
+    <div class="test-section">
+        <h2>1. Current State</h2>
+        <button onclick="showCurrentState()">Show localStorage & Player Info</button>
+        <div id="current-state"></div>
+    </div>
+
+    <div class="test-section">
+        <h2>2. Test New User</h2>
+        <button onclick="testNewUser()" class="danger">Clear localStorage & Reload</button>
+        <p><small>This will clear all localStorage and reload the page to test new user flow</small></p>
+    </div>
+
+    <div class="test-section">
+        <h2>3. Test Existing User (Backwards Compatibility)</h2>
+        <button onclick="testExistingUser()">Setup Old User & Reload</button>
+        <p><small>This will set up an old user with challenge data and reload</small></p>
+    </div>
+
+    <div class="test-section">
+        <h2>4. Test Firebase Sync</h2>
+        <button onclick="testFirebaseSync()" class="info">Check Firebase Player Data</button>
+        <div id="firebase-data"></div>
+    </div>
+
+    <div class="test-section">
+        <h2>5. Test Account Recovery</h2>
+        <input type="text" id="recovery-id" placeholder="Enter playerId to recover" style="padding: 8px; width: 300px;">
+        <button onclick="testAccountRecovery()">Recover Account</button>
+        <div id="recovery-result"></div>
+    </div>
+
+    <div class="test-section">
+        <h2>6. Manual Controls</h2>
+        <button onclick="localStorage.clear(); location.reload();" class="danger">Clear All & Reload</button>
+        <button onclick="location.reload();">Reload Page</button>
+        <button onclick="window.open('/', '_blank')">Open Game</button>
+    </div>
+
+    <script src="js/firebase-config.js"></script>
+    <script>
+        function showCurrentState() {
+            const state = {
+                localStorage: {},
+                playerInfo: {
+                    playerId: localStorage.getItem('playerId'),
+                    playerName: localStorage.getItem('playerName')
+                },
+                totalKeys: localStorage.length,
+                allKeys: []
+            };
+
+            for (let i = 0; i < localStorage.length; i++) {
+                const key = localStorage.key(i);
+                state.allKeys.push(key);
+                state.localStorage[key] = localStorage.getItem(key);
+            }
+
+            document.getElementById('current-state').innerHTML = `
+                <div class="result">
+                    <h4>Player Info:</h4>
+                    <pre>${JSON.stringify(state.playerInfo, null, 2)}</pre>
+                    <h4>All localStorage Keys (${state.totalKeys}):</h4>
+                    <pre>${JSON.stringify(state.allKeys, null, 2)}</pre>
+                    <h4>Full localStorage:</h4>
+                    <pre>${JSON.stringify(state.localStorage, null, 2)}</pre>
+                </div>
+            `;
+        }
+
+        function testNewUser() {
+            if (confirm('This will clear all localStorage. Continue?')) {
+                localStorage.clear();
+                location.reload();
+            }
+        }
+
+        function testExistingUser() {
+            localStorage.clear();
+            // Set up old user data
+            localStorage.setItem('playerId', 'player_old_' + Date.now());
+            localStorage.setItem('playerName', 'Test User Legacy');
+            localStorage.setItem('challenge_abc123', JSON.stringify({
+                id: 'abc123',
+                role: 'challenger',
+                totalScore: 45
+            }));
+            localStorage.setItem('myChallenges', JSON.stringify(['abc123']));
+            localStorage.setItem('expandedChallenges', JSON.stringify(['abc123']));
+
+            alert('Old user data set up. Page will reload now.');
+            location.reload();
+        }
+
+        async function testFirebaseSync() {
+            const playerId = localStorage.getItem('playerId');
+            if (!playerId) {
+                alert('No playerId found. Please run the game first.');
+                return;
+            }
+
+            try {
+                const playerData = await FirebaseAPI.getPlayer(playerId);
+                document.getElementById('firebase-data').innerHTML = `
+                    <div class="result">
+                        <h4>Firebase Player Data for ${playerId}:</h4>
+                        <pre>${JSON.stringify(playerData, null, 2)}</pre>
+                    </div>
+                `;
+            } catch (error) {
+                document.getElementById('firebase-data').innerHTML = `
+                    <div class="result" style="border-color: red;">
+                        <h4>Error fetching Firebase data:</h4>
+                        <pre>${error.message}</pre>
+                    </div>
+                `;
+            }
+        }
+
+        async function testAccountRecovery() {
+            const playerId = document.getElementById('recovery-id').value.trim();
+            if (!playerId) {
+                alert('Please enter a playerId');
+                return;
+            }
+
+            try {
+                const playerData = await FirebaseAPI.verifyPlayerId(playerId);
+                if (playerData) {
+                    if (confirm(`Found player: ${playerData.name}. Restore this account?`)) {
+                        localStorage.setItem('playerId', playerData.playerId);
+                        localStorage.setItem('playerName', playerData.name);
+                        location.reload();
+                    }
+                } else {
+                    document.getElementById('recovery-result').innerHTML = `
+                        <div class="result" style="border-color: orange;">
+                            Player ID not found in Firebase
+                        </div>
+                    `;
+                }
+            } catch (error) {
+                document.getElementById('recovery-result').innerHTML = `
+                    <div class="result" style="border-color: red;">
+                        Error: ${error.message}
+                    </div>
+                `;
+            }
+        }
+
+        // Auto-show current state on load
+        window.addEventListener('load', () => {
+            showCurrentState();
+        });
+    </script>
+</body>
+</html>

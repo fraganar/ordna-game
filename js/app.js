@@ -13,9 +13,9 @@ class App {
             // Wait for DOM to be ready
             await this.waitForDOM();
             
-            // Initialize player identity
-            this.initializePlayer();
-            
+            // Initialize player identity (now async for Firebase sync)
+            await this.initializePlayer();
+
             // Load game data
             await this.loadGameData();
             
@@ -66,22 +66,83 @@ class App {
         });
     }
     
-    // Initialize player identity
-    initializePlayer() {
+    // Initialize player identity with Firebase sync
+    async initializePlayer() {
         let playerId = localStorage.getItem('playerId');
         let playerName = localStorage.getItem('playerName');
-        
+
         if (!playerId) {
+            // New player - generate ID
             playerId = 'player_' + Date.now() + '_' + Math.random().toString(36).substr(2, 9);
             localStorage.setItem('playerId', playerId);
+            console.log('Generated new playerId:', playerId);
         }
-        
+
+        if (!playerName) {
+            playerName = 'Spelare';
+            localStorage.setItem('playerName', playerName);
+        }
+
         // Set player name in PlayerManager (check if function exists)
         if (playerName && window.PlayerManager && typeof PlayerManager.setPlayerName === 'function') {
             PlayerManager.setPlayerName(playerName);
         }
-        
+
+        // Sync with Firebase (background job - must not block)
+        this.syncPlayerToFirebase(playerId, playerName);
+
+        // Clean up old localStorage data (except playerId and playerName)
+        this.cleanupLocalStorage();
+
         console.log('Player initialized:', { playerId, playerName });
+    }
+
+    // Sync player data to Firebase
+    async syncPlayerToFirebase(playerId, playerName) {
+        try {
+            // Try to fetch from Firebase first
+            const firebasePlayer = await FirebaseAPI.getPlayer(playerId);
+
+            if (firebasePlayer) {
+                // Player exists in Firebase - update lastSeen
+                await FirebaseAPI.upsertPlayer(playerId, firebasePlayer.name || playerName);
+
+                // Update local name if it differs
+                if (firebasePlayer.name && firebasePlayer.name !== playerName) {
+                    localStorage.setItem('playerName', firebasePlayer.name);
+                    // Update PlayerManager if available
+                    if (window.PlayerManager && typeof PlayerManager.setPlayerName === 'function') {
+                        PlayerManager.setPlayerName(firebasePlayer.name);
+                    }
+                    console.log('Updated local name from Firebase:', firebasePlayer.name);
+                }
+            } else {
+                // New player or existing without Firebase data
+                await FirebaseAPI.upsertPlayer(playerId, playerName);
+                console.log('Created/migrated player in Firebase');
+            }
+        } catch (error) {
+            console.error('Failed to sync player to Firebase:', error);
+            // Not critical - game works even without Firebase sync
+        }
+    }
+
+    // Clean up old localStorage entries
+    cleanupLocalStorage() {
+        const keysToKeep = ['playerId', 'playerName', 'selectedPacks'];
+        const keysToRemove = [];
+
+        for (let i = 0; i < localStorage.length; i++) {
+            const key = localStorage.key(i);
+            if (key && !keysToKeep.includes(key)) {
+                keysToRemove.push(key);
+            }
+        }
+
+        if (keysToRemove.length > 0) {
+            console.log(`Cleaning up ${keysToRemove.length} old localStorage keys`);
+            keysToRemove.forEach(key => localStorage.removeItem(key));
+        }
     }
     
     // Load all game data

@@ -157,6 +157,78 @@ const FirebaseAPI = {
         }
     },
 
+    // Player management functions
+    async upsertPlayer(playerId, playerName) {
+        if (!firebaseInitialized) {
+            console.log('Demo mode: Would upsert player', playerId);
+            return;
+        }
+
+        try {
+            const playerRef = db.collection('players').doc(playerId);
+            const doc = await playerRef.get();
+
+            if (doc.exists) {
+                // Update existing player
+                await playerRef.update({
+                    name: playerName,
+                    lastSeen: new Date()
+                });
+                console.log('Player updated:', playerId);
+            } else {
+                // Create new player
+                await playerRef.set({
+                    playerId: playerId,
+                    name: playerName,
+                    created: new Date(),
+                    lastSeen: new Date(),
+                    stats: {
+                        challengesCreated: 0,
+                        challengesPlayed: 0,
+                        totalScore: 0
+                    }
+                });
+                console.log('Player created:', playerId);
+            }
+        } catch (error) {
+            console.error('Error upserting player:', error);
+            // Not critical - continue running even if this fails
+        }
+    },
+
+    // Get player data
+    async getPlayer(playerId) {
+        if (!firebaseInitialized) {
+            return null;
+        }
+
+        try {
+            const doc = await db.collection('players').doc(playerId).get();
+            return doc.exists ? doc.data() : null;
+        } catch (error) {
+            console.error('Error getting player:', error);
+            return null;
+        }
+    },
+
+    // Verify that playerId exists (for account recovery)
+    async verifyPlayerId(playerId) {
+        if (!firebaseInitialized) {
+            throw new Error('Firebase är inte tillgängligt');
+        }
+
+        try {
+            const doc = await db.collection('players').doc(playerId).get();
+            if (doc.exists) {
+                return doc.data();
+            }
+            return null;
+        } catch (error) {
+            console.error('Error verifying player:', error);
+            throw error;
+        }
+    },
+
     // Get new completed challenges (for notifications)
     async getNewCompletedChallenges(playerName, lastCheckTime) {
         if (!firebaseInitialized) {
