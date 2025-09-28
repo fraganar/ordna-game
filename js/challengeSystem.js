@@ -12,6 +12,11 @@ class ChallengeSystem {
         this.challengePollingInterval = null;
         this.isCreatingChallenge = false; // Prevent duplicate challenge creation
         this.isShowingWaitingView = false; // Flag to prevent showing old results when waiting
+
+        // Cache for Firebase challenges
+        this.challengeCache = null;
+        this.challengeCacheTime = null;
+        this.CACHE_TTL = 5 * 60 * 1000; // 5 minutes cache TTL
     }
     
     // Reset challenge state
@@ -26,8 +31,15 @@ class ChallengeSystem {
         this.isCreatingChallenge = false; // Reset flag
         this.stopPolling();
         this.stopChallengePolling();
-        
-        // BL-015 FIX: Call global challenge state reset
+
+        // Reset global challenge state variables
+        window.challengeId = null;
+        window.ischallengeMode = false;
+        window.isChallenger = false;
+        window.challengeQuestions = [];
+        window.challengeQuestionScores = [];
+
+        // BL-015 FIX: Call global challenge state reset if available
         if (typeof window.resetChallengeState === 'function') {
             window.resetChallengeState();
         }
@@ -92,17 +104,10 @@ class ChallengeSystem {
             });
             
             this.challengeId = challengeId;
-            
-            // Save to localStorage for tracking
-            const myChallenges = JSON.parse(localStorage.getItem('myChallenges') || '[]');
-            myChallenges.push({
-                challengeId: challengeId,
-                createdAt: new Date().toISOString(),
-                status: 'waiting',
-                opponentName: null
-            });
-            localStorage.setItem('myChallenges', JSON.stringify(myChallenges));
-            
+
+            // No longer saving to localStorage - Firebase is our single source of truth
+            // Challenge is already saved in Firebase via FirebaseAPI.createChallenge
+
             return challengeId;
         } catch (error) {
             console.error('Failed to create challenge:', error);
@@ -148,7 +153,12 @@ class ChallengeSystem {
             // Create the challenge in Firebase with the results
             const playerName = finalPlayer ? finalPlayer.name : 'Unknown';
             // Use the real playerId from localStorage, not the temporary one from the game
-            const playerId = localStorage.getItem('playerId') || `player_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`;
+            const playerId = localStorage.getItem('playerId');
+
+            if (!playerId) {
+                console.error('No playerId found - cannot create challenge');
+                throw new Error('Player ID krävs för att skapa utmaning. Ladda om sidan och försök igen.');
+            }
 
             // Use the actual question scores as they were earned (don't pad with zeros)
             const completeScores = [...window.challengeQuestionScores];
@@ -174,13 +184,16 @@ class ChallengeSystem {
             
             // No longer save to localStorage - Firebase is our source of truth
 
+            // Invalidate cache since we created a new challenge
+            this.invalidateCache();
+
             // Show waiting for opponent view
             this.isShowingWaitingView = true; // Set flag to prevent showing old results
             this.showWaitingForOpponentView(newChallengeId);
 
             // Skip loading challenges while showing waiting view to avoid conflicts
             // The challenges will be loaded when user returns to start screen
-            
+
             return newChallengeId;
         } catch (error) {
             console.error('🔥 CHALLENGER MODE ERROR:', error);
@@ -312,24 +325,47 @@ class ChallengeSystem {
         }
     }
     
-    // Get my challenges
-    getMyChallenges() {
-        return JSON.parse(localStorage.getItem('myChallenges') || '[]');
-    }
-    
-    // Update challenge status
-    updateChallengeStatus(challengeId, status, opponentName = null) {
-        const myChallenges = this.getMyChallenges();
-        const challenge = myChallenges.find(c => c.challengeId === challengeId);
-        
-        if (challenge) {
-            challenge.status = status;
-            if (opponentName) {
-                challenge.opponentName = opponentName;
+    // Get my challenges from Firebase with caching
+    async getMyChallenges() {
+        const playerId = localStorage.getItem('playerId');
+        if (!playerId) {
+            console.log('No playerId found - cannot get challenges');
+            return [];
+        }
+
+        try {
+            // Check if cache is still valid
+            if (this.challengeCache &&
+                this.challengeCacheTime &&
+                Date.now() - this.challengeCacheTime < this.CACHE_TTL) {
+                console.log('Using cached challenges');
+                return this.challengeCache;
             }
-            localStorage.setItem('myChallenges', JSON.stringify(myChallenges));
+
+            // Fetch from Firebase
+            console.log('Fetching challenges from Firebase...');
+            const challenges = await FirebaseAPI.getUserChallenges(playerId);
+
+            // Update cache
+            this.challengeCache = challenges;
+            this.challengeCacheTime = Date.now();
+
+            return challenges || [];
+        } catch (error) {
+            console.error('Failed to get challenges from Firebase:', error);
+            // Return cached data if available, otherwise empty array
+            return this.challengeCache || [];
         }
     }
+
+    // Invalidate cache when challenges change
+    invalidateCache() {
+        this.challengeCache = null;
+        this.challengeCacheTime = null;
+        console.log('Challenge cache invalidated');
+    }
+
+    // updateChallengeStatus removed - no longer needed with Firebase as single source
     
     // Check for new completed challenges
     async checkForNotifications(playerName) {
@@ -462,10 +498,45 @@ class ChallengeSystem {
                             </div>
                         `;
 
-                        // Click handler to show details - don't add if we're showing waiting view
+                        // Click handler for expanding details inline
                         if (!this.isShowingWaitingView) {
+                            item.style.cursor = 'pointer';
                             item.addEventListener('click', () => {
-                                this.showChallengeResultView(challenge.id);
+                                // Toggle expanded view inline instead of showing full result dialog
+                                const existingDetails = item.querySelector('.challenge-details');
+
+                                if (existingDetails) {
+                                    // Collapse if already expanded
+                                    existingDetails.remove();
+                                    item.style.maxHeight = '';
+                                } else {
+                                    // Expand to show details
+                                    const detailsDiv = document.createElement('div');
+                                    detailsDiv.className = 'challenge-details border-t border-slate-200 mt-3 pt-3';
+
+                                    // Create score breakdown
+                                    const myScores = myData.questionScores || [];
+                                    const oppScores = opponentData.questionScores || [];
+
+                                    let scoreDetails = '<div class="grid grid-cols-2 gap-4 text-sm">';
+                                    scoreDetails += '<div><strong>' + (isChallenger ? 'Du' : opponentData.name) + ':</strong></div>';
+                                    scoreDetails += '<div><strong>' + (isChallenger ? opponentData.name : 'Du') + ':</strong></div>';
+
+                                    for (let i = 0; i < Math.max(myScores.length, oppScores.length); i++) {
+                                        const myRoundScore = myScores[i] || 0;
+                                        const oppRoundScore = oppScores[i] || 0;
+                                        scoreDetails += `<div>Fråga ${i+1}: ${myRoundScore}p</div>`;
+                                        scoreDetails += `<div>Fråga ${i+1}: ${oppRoundScore}p</div>`;
+                                    }
+                                    scoreDetails += '</div>';
+
+                                    detailsDiv.innerHTML = scoreDetails;
+                                    item.querySelector('.p-3').appendChild(detailsDiv);
+
+                                    // Smooth expand animation
+                                    item.style.transition = 'max-height 0.3s ease';
+                                    item.style.maxHeight = item.scrollHeight + 'px';
+                                }
                             });
                         }
 
@@ -707,7 +778,11 @@ class ChallengeSystem {
         console.log('🎮 createChallenge starting with playerName:', playerName);
 
         // CRITICAL: Clear ALL previous challenge state completely
+        this.reset(); // Use the centralized reset to ensure everything is cleared
+
+        // Extra insurance - explicitly clear these critical values
         window.challengeId = null;  // This MUST be null for new challenges
+        window.isChallenger = false;  // Will be set to true later when game starts
         window.challengeQuestions = [];
         window.challengeQuestionScores = [];
         this.challengeData = null;

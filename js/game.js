@@ -1562,10 +1562,15 @@ function restartGame() {
     selectedPack = null;
     
     // Hide player status bar
-    playerStatusBar.classList.add('hidden');
+    const playerStatusBar = document.getElementById('player-status-bar');
+    if (playerStatusBar) {
+        playerStatusBar.classList.add('hidden');
+    }
     
     // Restore endScreen HTML
-    endScreen.innerHTML = `
+    const endScreen = document.getElementById('end-screen');
+    if (endScreen) {
+        endScreen.innerHTML = `
         <h2 class="text-3xl sm:text-4xl font-bold text-slate-900 mb-2">Spelet är slut!</h2>
         <p id="end-screen-subtitle" class="text-slate-600 mb-6 text-base sm:text-lg">Bra kämpat allihopa!</p>
         
@@ -1584,12 +1589,13 @@ function restartGame() {
             Spela igen
         </button>
     `;
-    
-    // Re-attach restart button listener
-    const restartBtn = document.getElementById('restart-btn');
-    if (restartBtn) {
-        restartBtn.addEventListener('click', restartGame);
-    }
+
+        // Re-attach restart button listener
+        const restartBtn = document.getElementById('restart-btn');
+        if (restartBtn) {
+            restartBtn.addEventListener('click', restartGame);
+        }
+    } // Close the if (endScreen) block
     
     // Update element references
     endScreenSubtitle = document.getElementById('end-screen-subtitle');

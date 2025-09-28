@@ -362,7 +362,7 @@ class App {
             console.log('DEBUG: Challenger name should be:', challenge.challenger?.name);
 
             // Show normal accept screen
-            const challengerDisplayName = UI?.get('challengerDisplayName');
+            const challengerDisplayName = document.getElementById('challenger-display-name');
             if (challengerDisplayName && challenge.challenger) {
                 challengerDisplayName.textContent = challenge.challenger.name || 'Okänd spelare';
             }
