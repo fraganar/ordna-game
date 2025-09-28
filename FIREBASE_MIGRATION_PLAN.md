@@ -1,20 +1,27 @@
 # Firebase Migration Plan - Challenge System
 
-## 📊 AKTUELL STATUS (2024-09-28)
+## 📊 AKTUELL STATUS (2024-12-28 - UPPDATERAD)
 
 ### ✅ Vad som är KLART:
 - **Steg 0:** Player-system i Firebase ✅
 - **Steg 1:** Firebase datastruktur uppdaterad ✅
 - **Steg 2:** Dubbelspelningsskydd implementerat ✅
 - **Steg 3 (Fas 1-3):** Firebase som enda sanningskälla, cache implementerad ✅
-- **Tester:** test-phase1-playerid.html och test-phase2-firebase.html - alla gröna ✅
+- **KRITISK BUGG FIXAD:** Fel challenger-namn i Firebase (rad 154 & 788) ✅
+- **Cache invalidering:** Implementerad i completeChallenge() ✅
+- **Debug logging:** Lagt till för att spåra hybrid-system problem ✅
+- **Tester:** test-step3-complete.html skapad för omfattande testning ✅
 
-### ⚠️ Aktuellt problem:
-- Fel challenger-namn sparas i Firebase (se "KRITISKT PROBLEM" nedan)
+### 🔧 Nyligen åtgärdat (2024-12-28):
+- **challengeSystem.js rad 154:** Ändrat från `finalPlayer.name` till `localStorage.getItem('playerName')`
+- **challengeSystem.js rad 788:** Samma fix i createChallenge()
+- **firebase-config.js:** Lagt till cache-invalidering efter challenge completion
+- **Debug logging:** Implementerat för att spåra namn-källor och identifiera hybrid-system buggar
 
 ### ⏳ Återstående:
 - Steg 3 Fas 4-5: UI state och error handling
 - Steg 4-6: Challenge-skapande, migration, felhantering
+- **VIKTIGT:** Slutföra migrering för att eliminera hybrid-system helt
 
 ---
 
@@ -965,37 +972,43 @@ const challenges = await this.firebaseCallWithRetry(
 
 ---
 
-## KRITISKT PROBLEM: Fel challenger-namn i Firebase
+## ✅ LÖST PROBLEM: Fel challenger-namn i Firebase (2024-12-28)
 
-### Problemet upptäckt 2024-09-28:
-När en utmaning skapas sparas fel namn som challenger i Firebase. Specifikt:
-- Spelare_54385 skapar utmaning
-- I Firebase sparas "Spelare_31312" som challenger (detta är mottagarens namn!)
-- När mottagaren öppnar länken ser de sitt eget namn som utmanare
+### Problemet som var:
+När en utmaning skapades sparades fel namn som challenger i Firebase:
+- Spelare_54385 skapade utmaning
+- I Firebase sparades "Spelare_31312" som challenger (mottagarens namn!)
+- När mottagaren öppnade länken såg de sitt eget namn som utmanare
 
-### Rotorsak:
+### Rotorsak identifierad:
 ```javascript
-// challengeSystem.js rad 154
+// BUGGY KOD (gammal rad 154):
 const playerName = finalPlayer ? finalPlayer.name : 'Unknown';
 ```
-Detta tar namnet från PlayerManager (game state) istället för localStorage.
+Detta tog namnet från PlayerManager (spelstatus) istället för localStorage (persistent identitet).
 
-### Mysteriet:
-**HUR kan mottagarens namn hamna i challenger-fältet?**
-- PlayerManager borde bara ha spelarens eget namn
-- Det finns ingen uppenbar kodväg där namn skulle kunna blandas ihop
-- Möjlig orsak: PlayerManager's state blir korrupt eller återanvänds mellan sessioner
+### Förklaring av buggen:
+- **PlayerManager** innehåller temporär spelstatus som kan ändras under spel
+- Efter en spelomgång kunde PlayerManager's state innehålla fel data
+- Detta är ett symptom på **hybrid-system problemet** där vi har två sanningskällor
 
-### Lösningsförslag:
-1. **Använd alltid localStorage för persistent identitet:**
+### Implementerad lösning:
 ```javascript
+// FIXAD KOD (ny rad 155 & 788):
 const playerName = localStorage.getItem('playerName') || 'Spelare';
-const playerId = localStorage.getItem('playerId');
 ```
 
-2. **Undersök varför PlayerManager har fel namn**
-- Lägg till debug-logging för att spåra när/hur namn sätts
-- Verifiera att PlayerManager rensas ordentligt mellan spel
+### Åtgärder som vidtagits:
+1. **challengeSystem.js rad 155:** Ändrat till att använda localStorage
+2. **challengeSystem.js rad 788:** Samma fix i createChallenge()
+3. **Debug logging:** Implementerat för att spåra namn-källor
+4. **Cache invalidering:** Lagt till i completeChallenge()
+5. **Test-fil:** Skapat test-step3-complete.html för verifiering
+
+### Lärdomar:
+- **Hybrid-system är farliga:** Två sanningskällor leder till synkroniseringsproblem
+- **Partiell migration fungerar inte:** Antingen migrera allt eller inget
+- **PlayerManager vs localStorage:** Måste vara tydliga med vad som är spelstatus vs persistent data
 
 ### Test för att reproducera:
 1. Skapa utmaning med Spelare A

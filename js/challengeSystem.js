@@ -151,9 +151,19 @@ class ChallengeSystem {
             const finalScore = finalPlayer ? finalPlayer.score : 0;
 
             // Create the challenge in Firebase with the results
-            const playerName = finalPlayer ? finalPlayer.name : 'Unknown';
+            // CRITICAL FIX: Use localStorage for player name, not PlayerManager (which can have wrong state)
+            const playerName = localStorage.getItem('playerName') || 'Spelare';
             // Use the real playerId from localStorage, not the temporary one from the game
             const playerId = localStorage.getItem('playerId');
+
+            // Debug logging to track name sources (helps identify hybrid-system bugs)
+            console.log('🔍 Challenge creation name sources:', {
+                playerNameFromLocalStorage: playerName,
+                playerNameFromPlayerManager: finalPlayer?.name,
+                playerId: playerId,
+                playerManagerState: window.PlayerManager?.getCurrentPlayer(),
+                critical: 'Using localStorage name to avoid wrong challenger bug'
+            });
 
             if (!playerId) {
                 console.error('No playerId found - cannot create challenge');
@@ -774,8 +784,16 @@ class ChallengeSystem {
     
     // Create a new challenge - starts the game immediately (moved from game.js)
     async createChallenge() {
-        const playerName = window.PlayerManager ? window.PlayerManager.getPlayerName() : null;
-        console.log('🎮 createChallenge starting with playerName:', playerName);
+        // CRITICAL FIX: Use localStorage for player name, not PlayerManager
+        const playerName = localStorage.getItem('playerName') || 'Spelare';
+
+        // Debug logging for hybrid-system analysis
+        console.log('🎮 createChallenge starting with name sources:', {
+            localStorageName: playerName,
+            playerManagerName: window.PlayerManager?.getPlayerName?.(),
+            playerId: localStorage.getItem('playerId'),
+            timestamp: new Date().toISOString()
+        });
 
         // CRITICAL: Clear ALL previous challenge state completely
         this.reset(); // Use the centralized reset to ensure everything is cleared

@@ -143,6 +143,13 @@ const FirebaseAPI = {
             });
 
             console.log('Challenge completed:', challengeId);
+
+            // CRITICAL: Invalidate cache after challenge completion
+            // This ensures "My Challenges" list updates immediately
+            if (window.ChallengeSystem && typeof window.ChallengeSystem.invalidateCache === 'function') {
+                window.ChallengeSystem.invalidateCache();
+                console.log('Cache invalidated after challenge completion');
+            }
         } catch (error) {
             console.error('Error completing challenge:', error);
             throw error;

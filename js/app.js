@@ -37,9 +37,8 @@ class App {
                 if (window.ChallengeSystem) {
                     await window.ChallengeSystem.loadMyChallenges();
                 }
-                // Set challenger name display
-                const challengerNameDisplay = UI?.get('challengerDisplayName');
-                if (challengerNameDisplay) challengerNameDisplay.textContent = playerName;
+                // REMOVED: Setting challenger name here was wrong - it overwrote the correct name from Firebase
+                // The challenger name is set correctly in showChallengeAcceptScreen() from Firebase data
             }
             
             // Load my challenges (but don't show notifications automatically)
