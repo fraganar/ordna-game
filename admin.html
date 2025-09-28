@@ -324,6 +324,25 @@
                 <!-- Content will be populated by JavaScript -->
             </div>
         </div>
+
+        <!-- Switch Player Section -->
+        <div class="admin-section">
+            <h2>Byt till annan spelare</h2>
+            <div style="display: flex; gap: 10px; align-items: center; margin-bottom: 15px;">
+                <input type="text"
+                       id="switchPlayerInput"
+                       placeholder="Ange Player ID (t.ex. player_1234567890_abc)"
+                       style="flex: 1; padding: 8px; border: 1px solid #ddd; border-radius: 4px; font-family: monospace;">
+                <button onclick="window.adminPanel.switchToPlayer()"
+                        class="admin-btn btn-primary">
+                    Byt spelare
+                </button>
+            </div>
+            <div id="switchPlayerResult" style="margin: 10px 0;"></div>
+            <div style="padding: 10px; background: #f0f0f0; border-radius: 4px;">
+                <small>💡 Tips: Använd "Använd"-knappen i spelartabellen ovan för att snabbt byta till en spelare</small>
+            </div>
+        </div>
     </div>
 
     <!-- Firebase Scripts -->

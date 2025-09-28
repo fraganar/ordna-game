@@ -1,0 +1,233 @@
+<!DOCTYPE html>
+<html lang="sv">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Test Steg 3 - Firebase loadMyChallenges</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 900px;
+            margin: 50px auto;
+            padding: 20px;
+        }
+        .test {
+            background: white;
+            padding: 20px;
+            margin: 20px 0;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+        button {
+            background: #2196F3;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            margin: 5px;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+        pre {
+            background: #f0f0f0;
+            padding: 10px;
+            border-radius: 4px;
+            overflow-x: auto;
+            font-size: 12px;
+        }
+        .error {
+            color: red;
+            background: #ffeaea;
+            padding: 10px;
+            border-radius: 4px;
+        }
+        .success {
+            color: green;
+            background: #e8f8e8;
+            padding: 10px;
+            border-radius: 4px;
+        }
+    </style>
+</head>
+<body>
+    <h1>Test Steg 3 - Firebase loadMyChallenges</h1>
+
+    <div class="test">
+        <h2>Setup</h2>
+        <div id="setup"></div>
+    </div>
+
+    <div class="test">
+        <h2>1. Test getUserChallenges directly</h2>
+        <button onclick="testGetUserChallenges()">Test getUserChallenges</button>
+        <div id="user-challenges"></div>
+    </div>
+
+    <div class="test">
+        <h2>2. Test loadMyChallenges function</h2>
+        <button onclick="testLoadMyChallenges()">Test loadMyChallenges</button>
+        <div id="load-result"></div>
+    </div>
+
+    <div class="test">
+        <h2>3. Check DOM elements</h2>
+        <button onclick="checkDOM()">Check DOM</button>
+        <div id="dom-result"></div>
+    </div>
+
+    <!-- Firebase CDN Scripts -->
+    <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore-compat.js"></script>
+    <script src="js/firebase-config.js"></script>
+    <script>
+        window.addEventListener('error', function(e) {
+            console.error('Script error:', e.message, 'at', e.filename, ':', e.lineno, ':', e.colno);
+            const setupDiv = document.getElementById('setup');
+            if (setupDiv) {
+                setupDiv.innerHTML += `
+                    <div class="error">Script error: ${e.message} at ${e.filename}:${e.lineno}:${e.colno}</div>
+                `;
+            }
+        });
+    </script>
+    <script src="js/challengeSystem.js"></script>
+    <script>
+        // Check if ChallengeSystem loaded
+        console.log('After loading challengeSystem.js:');
+        console.log('window.ChallengeSystem:', window.ChallengeSystem);
+        if (window.ChallengeSystem) {
+            console.log('ChallengeSystem methods:', Object.keys(window.ChallengeSystem));
+        }
+    </script>
+
+    <script>
+        // Show setup
+        function showSetup() {
+            const playerId = localStorage.getItem('playerId');
+            const playerName = localStorage.getItem('playerName');
+
+            document.getElementById('setup').innerHTML = `
+                <p><strong>PlayerId:</strong> ${playerId || 'Not set'}</p>
+                <p><strong>PlayerName:</strong> ${playerName || 'Not set'}</p>
+                <p><strong>Firebase:</strong> ${typeof FirebaseAPI !== 'undefined' ? '✅ Loaded' : '❌ Not loaded'}</p>
+                <p><strong>ChallengeSystem:</strong> ${typeof window.ChallengeSystem !== 'undefined' ? '✅ Loaded' : '❌ Not loaded'}</p>
+            `;
+        }
+
+        // Test getUserChallenges directly
+        async function testGetUserChallenges() {
+            const resultDiv = document.getElementById('user-challenges');
+            const playerId = localStorage.getItem('playerId');
+
+            if (!playerId) {
+                resultDiv.innerHTML = '<div class="error">No playerId in localStorage</div>';
+                return;
+            }
+
+            try {
+                console.log('Testing getUserChallenges with playerId:', playerId);
+                const challenges = await FirebaseAPI.getUserChallenges(playerId);
+
+                resultDiv.innerHTML = `
+                    <div class="success">
+                        <p>Found ${challenges.length} challenge(s)</p>
+                        <pre>${JSON.stringify(challenges.map(c => ({
+                            id: c.id,
+                            status: c.status,
+                            role: c.role,
+                            created: c.created?.toString()
+                        })), null, 2)}</pre>
+                    </div>
+                `;
+            } catch (error) {
+                resultDiv.innerHTML = `
+                    <div class="error">
+                        Error: ${error.message}
+                        <br>Check console for details
+                    </div>
+                `;
+                console.error('getUserChallenges error:', error);
+            }
+        }
+
+        // Test loadMyChallenges
+        async function testLoadMyChallenges() {
+            const resultDiv = document.getElementById('load-result');
+
+            // First check if ChallengeSystem is loaded
+            if (!window.ChallengeSystem) {
+                resultDiv.innerHTML = '<div class="error">ChallengeSystem not loaded! Check console for errors.</div>';
+                console.error('window.ChallengeSystem is undefined');
+                return;
+            }
+
+            // Create temporary DOM elements for testing
+            const testContainer = document.createElement('div');
+            testContainer.innerHTML = `
+                <div id="my-challenges-section" class="hidden">
+                    <h3>Mina utmaningar</h3>
+                    <div id="my-challenges-list"></div>
+                </div>
+            `;
+            document.body.appendChild(testContainer);
+
+            try {
+                console.log('Testing loadMyChallenges...');
+                console.log('ChallengeSystem:', window.ChallengeSystem);
+                console.log('loadMyChallenges method:', window.ChallengeSystem.loadMyChallenges);
+                await window.ChallengeSystem.loadMyChallenges();
+
+                const section = document.getElementById('my-challenges-section');
+                const list = document.getElementById('my-challenges-list');
+
+                const isHidden = section.classList.contains('hidden');
+                const listContent = list.innerHTML;
+
+                resultDiv.innerHTML = `
+                    <div class="${isHidden ? 'error' : 'success'}">
+                        <p>Section hidden: ${isHidden}</p>
+                        <p>List has content: ${listContent.length > 0}</p>
+                        <p>List HTML length: ${listContent.length} chars</p>
+                        <div style="max-height: 200px; overflow-y: auto;">
+                            <pre>${listContent ? listContent.substring(0, 500) + '...' : 'Empty'}</pre>
+                        </div>
+                    </div>
+                `;
+
+                // Clean up
+                document.body.removeChild(testContainer);
+
+            } catch (error) {
+                resultDiv.innerHTML = `
+                    <div class="error">
+                        Error: ${error.message}
+                        <br>Check console for details
+                    </div>
+                `;
+                console.error('loadMyChallenges error:', error);
+            }
+        }
+
+        // Check DOM elements
+        function checkDOM() {
+            const resultDiv = document.getElementById('dom-result');
+
+            const section = document.getElementById('my-challenges-section');
+            const list = document.getElementById('my-challenges-list');
+
+            resultDiv.innerHTML = `
+                <div class="${section && list ? 'success' : 'error'}">
+                    <p>my-challenges-section: ${section ? '✅ Found' : '❌ Not found'}</p>
+                    <p>my-challenges-list: ${list ? '✅ Found' : '❌ Not found'}</p>
+                    ${section ? `<p>Section classes: ${section.className}</p>` : ''}
+                    ${list ? `<p>List children: ${list.children.length}</p>` : ''}
+                </div>
+            `;
+        }
+
+        // Initialize
+        window.addEventListener('load', () => {
+            showSetup();
+        });
+    </script>
+</body>
+</html>

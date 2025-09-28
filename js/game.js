@@ -418,12 +418,13 @@ function checkForChallenge() {
 function resetChallengeState() {
     window.challengeId = null;
     window.ischallengeMode = false;
+    window.isChallenger = false;  // Clear challenger flag to prevent role contamination
     ischallengeMode = false;
     challengeQuestionScores = [];
-    
+
     // BL-015 FIX: Clear localStorage items that can cause challenge state to persist
     localStorage.removeItem('pendingChallenge');
-    
+
     // Stop any challenge polling if exists
     if (typeof stopChallengePolling === 'function') {
         stopChallengePolling();
@@ -555,26 +556,19 @@ async function startChallengeGame() {
             throw new Error('Challenge has expired');
         }
         
-        // Check if already completed by this player
-        const storedChallenge = localStorage.getItem(`challenge_${window.challengeId}`);
-        if (storedChallenge) {
-            const info = JSON.parse(storedChallenge);
-            if (info.role === 'opponent') {
-                UI?.showError('Du har redan spelat denna utmaning');
-                showChallengeResultView(window.challengeId);
-                return;
-            }
-        }
+        // Double-play protection is now handled in app.js showChallengeAcceptScreen()
+        // via Firebase playerId instead of localStorage
         
         // Set selected pack from challenge (for display purposes)
         selectedPack = challengeData.packName || null;
-        
+
         // Set up game with the same questions
         challengeQuestions = challengeData.questions;
 
         // IMPORTANT: Set challenge mode FIRST before array setup
         ischallengeMode = true;
         window.ischallengeMode = true;
+        window.isChallenger = false;  // Opponent is NOT the challenger
 
         // FIX: Setup arrays properly for opponent
         if (window.ChallengeSystem) {
@@ -770,8 +764,9 @@ async function endSinglePlayerGame() {
             }
         }
     }
-    // If this is accepting a challenge
-    else if (ischallengeMode && window.challengeId) {
+    // If this is accepting a challenge (opponent completing a challenge)
+    // Check that we're not the challenger creating a new one
+    else if (ischallengeMode && window.challengeId && !window.isChallenger) {
         try {
             // Säkerställ att globala variabler är synkade
             const player = window.PlayerManager?.getCurrentPlayer();
@@ -782,26 +777,17 @@ async function endSinglePlayerGame() {
             
             const playerName = player?.name || currentPlayer?.name || 'Unknown';
             const playerScore = player?.score || 0;
+            const playerId = localStorage.getItem('playerId') || 'unknown_player';
 
             await FirebaseAPI.completeChallenge(
                 window.challengeId,
+                playerId,
                 playerName,
                 playerScore,
                 challengeQuestionScores
             );
 
-            // Save to localStorage
-            const challengeInfo = {
-                id: window.challengeId,
-                role: 'opponent',
-                playerName: playerName,
-                completedAt: new Date().toISOString(),
-                hasSeenResult: true,
-                totalScore: playerScore,
-                questionScores: challengeQuestionScores
-            };
-
-            localStorage.setItem(`challenge_${window.challengeId}`, JSON.stringify(challengeInfo));
+            // No longer save to localStorage - Firebase is our source of truth
             
             // Show result comparison view
             await window.ChallengeSystem.showChallengeResultView(window.challengeId);
@@ -1556,7 +1542,11 @@ function endMultiplayerGame() {
 
 function restartGame() {
     // Stop any ongoing polling
-    stopChallengePolling();
+    if (window.ChallengeSystem && window.ChallengeSystem.stopPolling) {
+        window.ChallengeSystem.stopPolling();
+    } else if (typeof stopChallengePolling === 'function') {
+        stopChallengePolling();
+    }
     
     // Reset game state - PlayerManager handles player reset
     currentQuestionIndex = 0;
@@ -1564,8 +1554,8 @@ function restartGame() {
     currentPlayerIndex = 0;
     questionStarterIndex = 0;
     // Reset challenge and game state
-    if (window.ChallengeSystem) {
-        ChallengeSystem.reset();
+    if (window.ChallengeSystem && window.ChallengeSystem.reset) {
+        window.ChallengeSystem.reset();
     } else {
         resetChallengeState();
     }

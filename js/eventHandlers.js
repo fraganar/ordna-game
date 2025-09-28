@@ -132,7 +132,18 @@ function initializeAllEventListeners() {
     if (declineChallengeBtn) {
         declineChallengeBtn.addEventListener('click', handleDeclineChallenge);
     }
-    
+
+    // Challenge blocked dialog buttons
+    const backFromBlockedOwnBtn = document.getElementById('back-from-blocked-own-btn');
+    if (backFromBlockedOwnBtn) {
+        backFromBlockedOwnBtn.addEventListener('click', handleBackFromBlocked);
+    }
+
+    const backFromCompletedBtn = document.getElementById('back-from-completed-btn');
+    if (backFromCompletedBtn) {
+        backFromCompletedBtn.addEventListener('click', handleBackFromBlocked);
+    }
+
     console.log('Event listeners initialized');
 }
 
@@ -237,12 +248,27 @@ function handleBackToStart() {
     const startMain = UI.get('startMain');
     const challengeError = UI.get('challengeError');
     const challengeSuccess = UI.get('challengeSuccess');
-    
+
     if (challengeForm) challengeForm.classList.add('hidden');
     if (startMain) startMain.classList.remove('hidden');
     if (challengeError) challengeError.classList.add('hidden');
     if (challengeSuccess) challengeSuccess.classList.add('hidden');
 }
+
+function handleBackFromBlocked() {
+    const challengeBlocked = document.getElementById('challenge-blocked');
+    const startMain = document.getElementById('start-main');
+
+    if (challengeBlocked) challengeBlocked.classList.add('hidden');
+    if (startMain) startMain.classList.remove('hidden');
+
+    // Clear the challenge parameter from URL
+    const url = new URL(window.location);
+    url.searchParams.delete('challenge');
+    window.history.pushState({}, '', url);
+}
+
+// Removed handleShareOwnChallenge since we simplified the own challenge dialog
 
 async function handleCopyLink() {
     const challengeLink = UI.get('challengeLink');

@@ -301,23 +301,17 @@ Lägga till `playerId` i Firebase för att kunna koppla challenges till specifik
 ### Ändringar
 
 #### firebase-config.js - createChallenge()
-**Rad 48-86:** Lägg till `challengerId` i challenge-dokumentet
+**Rad 65-70:** Lägg till `playerId` i challenger-objektet (challengerId tas redan emot som parameter på rad 48)
 ```javascript
-const challengeData = {
-    id: challengeId,
-    created: created,
-    expires: expires,
-    status: 'pending',
-    questions: questions,
-    challenger: {
-        playerId: challengerId,  // NYTT FÄLT
-        name: challengerName,
-        completedAt: created,
-        totalScore: challengerScore,
-        questionScores: questionScores
-    },
-    opponent: null
-};
+// challengerId tas redan emot som parameter
+// Vi behöver bara lägga till det i challengeData:
+challenger: {
+    playerId: challengerId,  // NYTT FÄLT - lägg till detta
+    name: challengerName,
+    completedAt: created,
+    totalScore: challengerScore,
+    questionScores: questionScores
+}
 ```
 
 #### firebase-config.js - completeChallenge()
@@ -385,6 +379,11 @@ async getUserChallenges(playerId) {
 1. Skapa en ny utmaning och verifiera att `challenger.playerId` sparas i Firebase Console
 2. Acceptera en utmaning och verifiera att `opponent.playerId` sparas
 3. Testa getUserChallenges() med ett känt playerId
+
+### Bakåtkompatibilitet
+- Gamla challenges utan `playerId` fortsätter fungera (visas med namn)
+- De kommer inte upp i getUserChallenges() men det är acceptabelt
+- Nya challenges får alltid `playerId` och kan därför kopplas till rätt användare
 
 ---
 
@@ -473,7 +472,7 @@ async showChallengeAcceptScreen() {
 
 ---
 
-## Steg 3: Firebase-baserad loadMyChallenges()
+## Steg 3: Firebase-baserad loadMyChallenges() ✅
 
 ### Syfte
 Hämta användarens challenge-historik från Firebase istället för localStorage.
@@ -481,7 +480,7 @@ Hämta användarens challenge-historik från Firebase istället för localStorag
 ### Ändringar
 
 #### challengeSystem.js - loadMyChallenges()
-**Rad 391-698:** Ersätt hela funktionen
+**Rad 391-531:** Ersatt hela funktionen
 ```javascript
 async loadMyChallenges() {
     const myChallengesSection = document.getElementById('my-challenges-section');
@@ -600,10 +599,98 @@ async loadMyChallenges() {
 }
 ```
 
-### Test
-1. Radera localStorage helt och ladda om → ska inte visa några challenges
-2. Logga in med känt playerId → ska visa dina challenges från Firebase
-3. Testa utan internetanslutning → ska få felmeddelande, inte visa gammal data
+### Test ✅
+1. ✅ Test med Firebase data fungerar - visar utmaningar korrekt
+2. ✅ Hämtar både väntande och slutförda utmaningar
+3. ✅ Visar korrekt HTML med rätt formatering och tidsangivelser
+4. ✅ getTimeAgo() hanterar både Date-objekt och tidssträngar
+
+### Buggar som hittades och fixades i Step 3
+
+#### Bug 1: Challenge ger 0 poäng vid andra försöket ✅
+**Problem:** När man skapade en andra challenge utan att starta om webbläsaren fick man 0 poäng
+**Orsak:** `currentQuestionIndex` återställdes inte korrekt och `loadQuestion()` anropades direkt
+**Fix:**
+- Lagt till proper reset av `currentQuestionIndex = 0` i `challengeSystem.js` rad 801-804
+- Lagt till fördröjning (100ms) innan `loadQuestion()` anropas
+**Test:** Skapa flera challenges i rad utan att ladda om sidan
+
+#### Bug 2: Fel playerId sparades i Firebase ✅
+**Problem:** Nya challenges visades inte för skaparen i "Mina utmaningar"
+**Orsak:** Temporärt game-playerId (t.ex. `player_1759044786261_0`) användes istället för riktiga från localStorage
+**Fix:**
+- Ändrat rad 149 i `challengeSystem.js` till: `const playerId = localStorage.getItem('playerId')`
+**Test:** Skapa challenge och verifiera att den dyker upp direkt i "Mina utmaningar"
+
+#### Bug 3: stopChallengePolling undefined error ✅
+**Problem:** JavaScript-fel när man klickade "Ny omgång"
+**Fix:**
+- Lagt till kontroll i `game.js` rad 1542-1546
+- Använder `window.ChallengeSystem.stopPolling()` om tillgänglig
+**Test:** Klicka "Ny omgång" och verifiera att ingen error visas i konsolen
+
+#### Bug 4: Fel namn visas i accept-dialog ✅
+**Problem:** När mottagaren redan hade namn sparad visades fel namn/ID istället för utmanarens namn
+**Fix:**
+- Lagt till debug-logging i `app.js` rad 335-337
+- Visar nu `challenge.challenger.name` med fallback "Okänd spelare"
+**Test:** Acceptera challenge när du redan har namn satt
+
+#### Bug 5: URL-parameter tas inte bort ✅
+**Problem:** `?challenge=xxx` fanns kvar i URL efter spelat challenge
+**Fix:**
+- Lagt till `url.searchParams.delete('challenge')` i `challengeSystem.js` rad 665-668
+**Test:** Spela klart challenge och klicka "Tillbaka" - URL ska vara ren
+
+#### Bug 6: Challenge-resultat visas fel för samma namn ✅
+**Problem:** Om båda spelare hade samma namn kunde fel person identifieras som vinnare
+**Orsak:** Användes localStorage role som inte längre sparades efter Step 3
+**Fix:**
+- Ändrat från `challengeInfo?.role === 'challenger'` till `challenge.challenger?.playerId === myPlayerId`
+- Gäller både `showChallengeResultView()` rad 578-579 och `loadMyChallenges()` rad 436
+**Test:** Två spelare med samma namn - verifiera att rätt person vinner
+
+#### Bug 7: Gamla challenge-resultat visas när ny skapas ✅
+**Problem:** Resultat från förra utmaningen visades när man skapade ny
+**Orsak:** `window.challengeId` från tidigare utmaning var fortfarande satt
+**Fix:**
+- Rensar all challenge-state i `createChallenge()` rad 711-723 i challengeSystem.js
+- Sätter `window.isChallenger = true` för nya challenges (rad 763)
+- Lade till check `!window.isChallenger` i game.js rad 767 för att förhindra challenger från att trigga opponent-logik
+- Lade till `window.isChallenger = false` i `resetChallengeState()` rad 421 för att rensa flaggan ordentligt
+- Sätter explicit `window.isChallenger = false` för opponent i rad 571
+**Test:** Skapa flera challenges i rad och verifiera att delningsvyn (med länk) visas istället för resultatjämförelse
+
+#### Bug 8: Gamla utmaningsresultat visas under "Skapa utmaning"-knappen ✅
+**Problem:** När man skapar en andra utmaning visas gamla utmaningsresultat istället för väntevyn
+**Orsak:** `loadMyChallenges()` anropades direkt efter att utmaning skapats och byggde DOM-element för gamla utmaningar
+**Fix:**
+- Satt `this.isShowingWaitingView = true` när väntevyn visas (rad 178 i challengeSystem.js)
+- Skippar `loadMyChallenges()` helt när väntevyn visas (rad 181-182)
+- Kontrollerar flaggan innan klick-hanterare läggs till (rad 473-477)
+- Flaggan rensas i `reset()` funktionen (rad 23)
+**Test:** Skapa flera utmaningar i rad - ska endast visa väntevyn med delningslänk
+
+#### Bug 9: ChallengeSystem.reset is not a function ✅
+**Problem:** TypeError när man klickar "Ny omgång"
+**Orsak:** Anrop till `ChallengeSystem.reset()` utan att kontrollera om funktionen finns
+**Fix:**
+- Ändrat till `window.ChallengeSystem && window.ChallengeSystem.reset` i game.js rad 1558 och 1608
+**Test:** Klicka "Ny omgång" - ska inte ge JavaScript-fel
+
+#### Bug 10: Ingen länk visas vid andra utmaningen ❌
+**Problem:** När man skapar en andra utmaning visas bara "Utmaning skapad!" utan länk
+**Orsak:** Rad 878 i challengeSystem.js ändrade knappens ID från `restart-btn` till `back-to-start-created`, vilket gjorde att knappen inte hittades andra gången
+**Fix försök 1:** Tog bort rad 878 så knappen behåller sitt original-ID
+**Resultat:** Länken visas men introducerade Bug 4 igen (fel namn i accept-dialog)
+**Status:** Behöver ny lösning som inte bryter andra funktioner
+**Test:** Skapa två utmaningar i rad - båda ska visa länk
+
+#### Bug 11: Fel namn visas i accept-dialog (återkommande) ❌
+**Problem:** Efter fix för Bug 10 visas fel användarnamn när man accepterar utmaningen
+**Orsak:** Oklar - Bug 4 var tidigare fixad men återkom efter ändring för Bug 10
+**Status:** Behöver undersökas vidare
+**Test:** Acceptera utmaning - rätt challengers namn ska visas
 
 ---
 

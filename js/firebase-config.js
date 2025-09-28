@@ -52,10 +52,20 @@ const FirebaseAPI = {
         }
 
         try {
+            // Debug logging
+            console.log('createChallenge called with:', {
+                challengerName,
+                challengerId,
+                questions: questions?.length,
+                challengerScore,
+                questionScores,
+                packName
+            });
+
             const challengeId = 'challenge_' + Date.now() + '_' + Math.random().toString(36).substr(2, 9);
             const created = new Date();
             const expires = new Date(created.getTime() + 7 * 24 * 60 * 60 * 1000); // 7 days
-            
+
             const challengeData = {
                 id: challengeId,
                 created: created,
@@ -63,6 +73,7 @@ const FirebaseAPI = {
                 status: 'pending',
                 questions: questions,
                 challenger: {
+                    playerId: challengerId,  // Added for player tracking
                     name: challengerName,
                     completedAt: created,
                     totalScore: challengerScore,
@@ -113,7 +124,7 @@ const FirebaseAPI = {
     },
 
     // Complete a challenge as opponent
-    async completeChallenge(challengeId, playerName, playerScore, questionScores) {
+    async completeChallenge(challengeId, playerId, playerName, playerScore, questionScores) {
         if (!firebaseInitialized) {
             console.log('Demo mode: Challenge completed', {challengeId, playerName, playerScore});
             return;
@@ -123,6 +134,7 @@ const FirebaseAPI = {
             await db.collection('challenges').doc(challengeId).update({
                 status: 'completed',
                 opponent: {
+                    playerId: playerId,  // Added for player tracking
                     name: playerName,
                     completedAt: new Date(),
                     totalScore: playerScore,
@@ -253,7 +265,50 @@ const FirebaseAPI = {
         }
     },
 
-    // Get all challenges for a player (both as challenger and opponent)
+    // Get challenges by playerId (both as challenger and opponent)
+    async getUserChallenges(playerId) {
+        if (!firebaseInitialized) {
+            console.log('Demo mode: Would fetch challenges for player', playerId);
+            return [];
+        }
+
+        try {
+            // Get challenges where user is challenger (without orderBy to avoid index requirement)
+            const asChallenger = await db.collection('challenges')
+                .where('challenger.playerId', '==', playerId)
+                .limit(20)
+                .get();
+
+            // Get challenges where user is opponent (without orderBy to avoid index requirement)
+            const asOpponent = await db.collection('challenges')
+                .where('opponent.playerId', '==', playerId)
+                .limit(20)
+                .get();
+
+            const challenges = [
+                ...asChallenger.docs.map(doc => ({ ...doc.data(), role: 'challenger' })),
+                ...asOpponent.docs.map(doc => ({ ...doc.data(), role: 'opponent' }))
+            ];
+
+            // Sort by most recent activity (handle missing dates)
+            challenges.sort((a, b) => {
+                const aTime = a.role === 'challenger'
+                    ? (a.created?.toDate ? a.created.toDate() : new Date(a.created || 0))
+                    : (a.opponent?.completedAt?.toDate ? a.opponent.completedAt.toDate() : new Date(a.opponent?.completedAt || 0));
+                const bTime = b.role === 'challenger'
+                    ? (b.created?.toDate ? b.created.toDate() : new Date(b.created || 0))
+                    : (b.opponent?.completedAt?.toDate ? b.opponent.completedAt.toDate() : new Date(b.opponent?.completedAt || 0));
+                return bTime - aTime;
+            });
+
+            return challenges;
+        } catch (error) {
+            console.error('Error getting user challenges:', error);
+            return [];
+        }
+    },
+
+    // Get all challenges for a player (both as challenger and opponent) - LEGACY using name
     async getMyChallenges(playerName) {
         if (!firebaseInitialized) {
             console.log('Demo mode: Would fetch my challenges');
@@ -280,10 +335,14 @@ const FirebaseAPI = {
                 ...asOpponent.docs.map(doc => ({ ...doc.data(), role: 'opponent' }))
             ];
 
-            // Sort by most recent activity
+            // Sort by most recent activity (handle missing dates)
             challenges.sort((a, b) => {
-                const aTime = a.role === 'challenger' ? a.created : a.opponent.completedAt;
-                const bTime = b.role === 'challenger' ? b.created : b.opponent.completedAt;
+                const aTime = a.role === 'challenger'
+                    ? (a.created?.toDate ? a.created.toDate() : new Date(a.created || 0))
+                    : (a.opponent?.completedAt?.toDate ? a.opponent.completedAt.toDate() : new Date(a.opponent?.completedAt || 0));
+                const bTime = b.role === 'challenger'
+                    ? (b.created?.toDate ? b.created.toDate() : new Date(b.created || 0))
+                    : (b.opponent?.completedAt?.toDate ? b.opponent.completedAt.toDate() : new Date(b.opponent?.completedAt || 0));
                 return bTime - aTime;
             });
 

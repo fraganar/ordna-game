@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html lang="sv">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Test Challenge Fixes</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 800px;
+            margin: 50px auto;
+            padding: 20px;
+        }
+        .test {
+            background: white;
+            padding: 20px;
+            margin: 20px 0;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+        .success { color: green; }
+        .error { color: red; }
+        pre {
+            background: #f0f0f0;
+            padding: 10px;
+            border-radius: 4px;
+            overflow-x: auto;
+        }
+    </style>
+</head>
+<body>
+    <h1>Test Challenge Fixes</h1>
+
+    <div class="test">
+        <h2>Test 1: URL Parameter Clearing</h2>
+        <p>Current URL: <span id="current-url"></span></p>
+        <button onclick="testUrlParam()">Add challenge param</button>
+        <button onclick="clearUrlParam()">Clear challenge param</button>
+        <div id="url-result"></div>
+    </div>
+
+    <div class="test">
+        <h2>Test 2: localStorage Check</h2>
+        <button onclick="checkLocalStorage()">Check localStorage for challenges</button>
+        <div id="storage-result"></div>
+    </div>
+
+    <script>
+        // Show current URL
+        function updateUrl() {
+            document.getElementById('current-url').textContent = window.location.href;
+        }
+        updateUrl();
+
+        // Test URL parameter
+        function testUrlParam() {
+            const url = new URL(window.location);
+            url.searchParams.set('challenge', 'test123');
+            window.history.pushState({}, '', url);
+            updateUrl();
+            document.getElementById('url-result').innerHTML = '<p class="success">Added challenge parameter</p>';
+        }
+
+        // Clear URL parameter (same as fix)
+        function clearUrlParam() {
+            const url = new URL(window.location);
+            url.searchParams.delete('challenge');
+            window.history.pushState({}, '', url);
+            updateUrl();
+            document.getElementById('url-result').innerHTML = '<p class="success">Cleared challenge parameter</p>';
+        }
+
+        // Check localStorage
+        function checkLocalStorage() {
+            const resultDiv = document.getElementById('storage-result');
+            const challengeKeys = [];
+
+            for (let i = 0; i < localStorage.length; i++) {
+                const key = localStorage.key(i);
+                if (key.startsWith('challenge_')) {
+                    challengeKeys.push(key);
+                }
+            }
+
+            if (challengeKeys.length === 0) {
+                resultDiv.innerHTML = '<p class="success">✅ No challenge data in localStorage (good!)</p>';
+            } else {
+                resultDiv.innerHTML = `
+                    <p class="error">❌ Found ${challengeKeys.length} challenge entries in localStorage:</p>
+                    <pre>${challengeKeys.join('\n')}</pre>
+                    <p>These should not exist after the fix.</p>
+                `;
+            }
+        }
+    </script>
+</body>
+</html>

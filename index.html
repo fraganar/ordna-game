@@ -251,6 +251,38 @@
                     </button>
                 </div>
             </div>
+
+            <!-- Challenge Blocked Dialog (Hidden by default) -->
+            <div id="challenge-blocked" class="hidden">
+                <h2 class="text-2xl sm:text-3xl font-bold text-slate-900 mb-6 text-center">
+                    <span id="challenge-blocked-title">Utmaning blockerad</span>
+                </h2>
+                <div id="challenge-blocked-own" class="hidden">
+                    <div class="bg-yellow-50 border border-yellow-200 rounded-lg p-4 mb-6">
+                        <p class="text-lg text-center mb-2">🚫 Du kan inte spela din egen utmaning!</p>
+                        <p class="text-sm text-slate-600 text-center">Dela länken med en vän istället så de kan utmana dig.</p>
+                    </div>
+                    <div class="space-y-4">
+                        <button id="back-from-blocked-own-btn" class="w-full bg-slate-200 text-slate-800 font-bold py-3 sm:py-4 px-6 rounded-lg text-lg sm:text-xl hover:bg-slate-300 transition-colors">
+                            Tillbaka till start
+                        </button>
+                    </div>
+                </div>
+                <div id="challenge-blocked-completed" class="hidden">
+                    <div class="bg-blue-50 border border-blue-200 rounded-lg p-4 mb-6">
+                        <p class="text-lg text-center mb-2">✅ Denna utmaning är redan slutförd!</p>
+                        <p class="text-sm text-slate-600 text-center" id="challenge-completed-info">Resultatet har redan sparats.</p>
+                    </div>
+                    <div class="space-y-4">
+                        <button id="view-result-btn" class="hidden w-full bg-gradient-to-r from-info to-info-dark text-white font-bold py-3 sm:py-4 px-6 rounded-lg text-lg sm:text-xl hover:from-info-dark hover:to-info transition-colors">
+                            Se resultat
+                        </button>
+                        <button id="back-from-completed-btn" class="w-full bg-slate-200 text-slate-800 font-bold py-3 sm:py-4 px-6 rounded-lg text-lg sm:text-xl hover:bg-slate-300 transition-colors">
+                            Tillbaka till start
+                        </button>
+                    </div>
+                </div>
+            </div>
         </div>
 
         <!-- Game Screen (Hidden by default) -->
@@ -386,6 +418,13 @@
         </div>
     </div>
 
+    <!-- Player info footer for debugging -->
+    <div id="player-info-footer" class="fixed bottom-0 left-0 right-0 bg-slate-100 border-t border-slate-300 p-2 text-xs text-slate-600 hidden">
+        <div class="max-w-4xl mx-auto flex justify-between items-center">
+            <span>Namn: <strong id="footer-player-name">-</strong></span>
+            <span>Player ID: <code id="footer-player-id" class="bg-slate-200 px-1 rounded">-</code></span>
+        </div>
+    </div>
 
 </body>
 </html>

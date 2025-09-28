@@ -67,6 +67,22 @@ class App {
     }
     
     // Initialize player identity with Firebase sync
+    // Update footer display with player info
+    updateFooterDisplay() {
+        const playerId = localStorage.getItem('playerId');
+        const playerName = localStorage.getItem('playerName');
+
+        const footerElement = document.getElementById('player-info-footer');
+        const footerName = document.getElementById('footer-player-name');
+        const footerId = document.getElementById('footer-player-id');
+
+        if (footerElement && footerName && footerId) {
+            footerName.textContent = playerName || 'Inte satt';
+            footerId.textContent = playerId || 'Inget ID';
+            footerElement.classList.remove('hidden');
+        }
+    }
+
     async initializePlayer() {
         let playerId = localStorage.getItem('playerId');
         let playerName = localStorage.getItem('playerName');
@@ -78,10 +94,19 @@ class App {
             console.log('Generated new playerId:', playerId);
         }
 
+        // Update footer display
+        this.updateFooterDisplay();
+
         if (!playerName) {
-            playerName = 'Spelare';
+            // Create unique default name with timestamp
+            const timestamp = Date.now().toString().slice(-5); // Last 5 digits of timestamp
+            playerName = `Spelare_${timestamp}`;
             localStorage.setItem('playerName', playerName);
+            console.log('Generated unique default name:', playerName);
         }
+
+        // Update footer after setting name
+        this.updateFooterDisplay();
 
         // Set player name in PlayerManager (check if function exists)
         if (playerName && window.PlayerManager && typeof PlayerManager.setPlayerName === 'function') {
@@ -256,6 +281,7 @@ class App {
     
     // Check if URL contains a challenge or admin request
     async checkForChallenge() {
+
         // Check if admin page is requested
         if (window.location.pathname === '/admin' || window.location.pathname === '/admin.html') {
             // Already on admin page, don't redirect
@@ -279,9 +305,9 @@ class App {
                 
                 // Load challenge data
                 await window.ChallengeSystem.loadChallenge(challengeParam);
-                
-                // Show challenge accept screen
-                this.showChallengeAcceptScreen();
+
+                // Show challenge accept screen (await since it's async)
+                await this.showChallengeAcceptScreen();
                 
             } catch (error) {
                 console.error('Failed to load challenge:', error);
@@ -308,33 +334,57 @@ class App {
     }
     
     
-    // Show challenge accept screen
-    showChallengeAcceptScreen() {
-        const challengeData = window.ChallengeSystem?.challengeData;
-        
-        if (!challengeData) {
-            return;
-        }
-        
-        const challengerDisplayName = UI?.get('challengerDisplayName');
-        if (challengerDisplayName && challengeData.challenger) {
-            challengerDisplayName.textContent = challengeData.challenger.name;
-        }
-        
-        // Hide other screens and show challenge accept
-        const startMain = UI?.get('startMain');
-        const playerSetup = UI?.get('playerSetup');
-        const challengeForm = UI?.get('challengeForm');
-        const challengeAccept = UI?.get('challengeAccept');
-        
-        
-        if (startMain) startMain.classList.add('hidden');
-        if (playerSetup) playerSetup.classList.add('hidden');
-        if (challengeForm) challengeForm.classList.add('hidden');
-        if (challengeAccept) {
-            challengeAccept.classList.remove('hidden');
-        } else {
-            console.error('challengeAccept element not found - cannot show challenge accept screen');
+    // Show challenge accept screen with double-play protection
+    async showChallengeAcceptScreen() {
+        try {
+            const challenge = window.ChallengeSystem?.challengeData;
+
+            if (!challenge) {
+                return;
+            }
+
+            // Check if challenge is already completed
+            if (challenge.status === 'completed') {
+                this.showChallengeBlocked('completed', challenge);
+                return;
+            }
+
+            // Check if I am the challenger (can't play my own challenge)
+            const myPlayerId = localStorage.getItem('playerId');
+            if (challenge.challenger?.playerId === myPlayerId) {
+                this.showChallengeBlocked('own', challenge);
+                return;
+            }
+
+            // Debug för att identifiera problemet
+            console.log('DEBUG: Challenge data from Firebase:', challenge);
+            console.log('DEBUG: Challenger object:', challenge.challenger);
+            console.log('DEBUG: Challenger name should be:', challenge.challenger?.name);
+
+            // Show normal accept screen
+            const challengerDisplayName = UI?.get('challengerDisplayName');
+            if (challengerDisplayName && challenge.challenger) {
+                challengerDisplayName.textContent = challenge.challenger.name || 'Okänd spelare';
+            }
+
+            // Hide other screens and show challenge accept
+            const startMain = UI?.get('startMain');
+            const playerSetup = UI?.get('playerSetup');
+            const challengeForm = UI?.get('challengeForm');
+            const challengeAccept = UI?.get('challengeAccept');
+
+            if (startMain) startMain.classList.add('hidden');
+            if (playerSetup) playerSetup.classList.add('hidden');
+            if (challengeForm) challengeForm.classList.add('hidden');
+            if (challengeAccept) {
+                challengeAccept.classList.remove('hidden');
+            } else {
+                console.error('challengeAccept element not found - cannot show challenge accept screen');
+            }
+
+        } catch (error) {
+            console.error('Failed to show challenge accept screen:', error);
+            this.showError('Kunde inte ladda utmaning');
         }
     }
     
@@ -383,16 +433,73 @@ class App {
         console.log('Show challenge result:', challengeId);
     }
     
+    // Show challenge blocked dialog
+    showChallengeBlocked(type, challenge) {
+        // Hide all other screens
+        const screens = ['startMain', 'playerSetup', 'challengeForm', 'challengeAccept'];
+        screens.forEach(screen => {
+            const element = document.getElementById(screen) || document.getElementById(screen.replace(/([A-Z])/g, '-$1').toLowerCase());
+            if (element) element.classList.add('hidden');
+        });
+
+        // Show challenge blocked dialog
+        const blockedDialog = document.getElementById('challenge-blocked');
+        const blockedOwn = document.getElementById('challenge-blocked-own');
+        const blockedCompleted = document.getElementById('challenge-blocked-completed');
+
+        if (!blockedDialog) {
+            // Fallback to alert if dialog doesn't exist
+            if (type === 'own') {
+                alert('Du kan inte spela din egen utmaning! Dela länken med en vän istället.');
+            } else if (type === 'completed') {
+                alert('Denna utmaning är redan slutförd!');
+            }
+            return;
+        }
+
+        // Hide both sub-dialogs first
+        if (blockedOwn) blockedOwn.classList.add('hidden');
+        if (blockedCompleted) blockedCompleted.classList.add('hidden');
+
+        // Show the appropriate sub-dialog
+        if (type === 'own' && blockedOwn) {
+            blockedOwn.classList.remove('hidden');
+        } else if (type === 'completed' && blockedCompleted) {
+            blockedCompleted.classList.remove('hidden');
+
+            // Check if I was part of the challenge to show result button
+            const myPlayerId = localStorage.getItem('playerId');
+            const viewResultBtn = document.getElementById('view-result-btn');
+            if (viewResultBtn) {
+                if (challenge.challenger?.playerId === myPlayerId ||
+                    challenge.opponent?.playerId === myPlayerId) {
+                    viewResultBtn.classList.remove('hidden');
+                    viewResultBtn.onclick = () => {
+                        if (window.ChallengeSystem?.showChallengeResultView) {
+                            window.ChallengeSystem.showChallengeResultView(window.challengeId);
+                        }
+                    };
+                } else {
+                    viewResultBtn.classList.add('hidden');
+                }
+            }
+        }
+
+        // Show the main dialog
+        blockedDialog.classList.remove('hidden');
+    }
+
     // Show error message
     showError(message) {
-        const challengeError = UI?.get('challengeError');
-        if (challengeError) {
-            challengeError.textContent = message;
-            challengeError.classList.remove('hidden');
-            setTimeout(() => {
-                challengeError.classList.add('hidden');
-            }, 5000);
+        // Try to use the blocked dialog for errors
+        const blockedDialog = document.getElementById('challenge-blocked');
+        if (blockedDialog) {
+            // Could extend this to show generic errors in dialog
+            alert(message);
+        } else {
+            alert(message);
         }
+        console.log('Challenge protection message:', message);
     }
 }
 

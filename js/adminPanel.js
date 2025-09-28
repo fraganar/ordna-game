@@ -169,6 +169,91 @@ class AdminPanel {
         URL.revokeObjectURL(url);
     }
 
+    async loadPlayers() {
+        try {
+            const playersSnapshot = await firebase.firestore().collection('players').get();
+            const players = [];
+
+            playersSnapshot.forEach(doc => {
+                players.push({ id: doc.id, ...doc.data() });
+            });
+
+            // Sort by lastSeen (newest first)
+            players.sort((a, b) => {
+                const dateA = a.lastSeen?.toDate ? a.lastSeen.toDate() : new Date(0);
+                const dateB = b.lastSeen?.toDate ? b.lastSeen.toDate() : new Date(0);
+                return dateB - dateA;
+            });
+
+            this.displayPlayers(players);
+        } catch (error) {
+            console.error('Failed to load players:', error);
+        }
+    }
+
+    displayPlayers(players) {
+        let playersHtml = `
+            <h3>Spelare (${players.length})</h3>
+            <table class="data-table">
+                <thead>
+                    <tr>
+                        <th>Namn</th>
+                        <th>Player ID</th>
+                        <th>Skapad</th>
+                        <th>Senast sedd</th>
+                        <th>Utmaningar</th>
+                        <th>Åtgärd</th>
+                    </tr>
+                </thead>
+                <tbody>
+        `;
+
+        players.forEach(player => {
+            const created = player.created?.toDate ? player.created.toDate().toLocaleString('sv-SE') : '-';
+            const lastSeen = player.lastSeen?.toDate ? player.lastSeen.toDate().toLocaleString('sv-SE') : '-';
+            const stats = player.stats || {};
+            const playerId = player.playerId || player.id;
+
+            playersHtml += `
+                <tr>
+                    <td>${player.name || '-'}</td>
+                    <td class="monospace">${playerId}</td>
+                    <td>${created}</td>
+                    <td>${lastSeen}</td>
+                    <td>Skapade: ${stats.challengesCreated || 0}, Spelade: ${stats.challengesPlayed || 0}</td>
+                    <td>
+                        <button onclick="window.adminPanel.quickSwitchPlayer('${playerId}')"
+                                class="action-btn"
+                                style="padding: 2px 8px; font-size: 11px;">
+                            Använd
+                        </button>
+                    </td>
+                </tr>
+            `;
+        });
+
+        playersHtml += `
+                </tbody>
+            </table>
+        `;
+
+        // Add to existing container or create new one
+        const existingContainer = document.getElementById('playersContent');
+        if (existingContainer) {
+            existingContainer.innerHTML = playersHtml;
+        } else {
+            const container = document.createElement('div');
+            container.id = 'playersContent';
+            container.className = 'section';
+            container.innerHTML = playersHtml;
+
+            const firebaseSection = document.getElementById('firebaseContent');
+            if (firebaseSection) {
+                firebaseSection.parentNode.insertBefore(container, firebaseSection);
+            }
+        }
+    }
+
     async loadFirebaseData() {
         const container = document.getElementById('firebaseContent');
 
@@ -177,6 +262,9 @@ class AdminPanel {
             container.innerHTML = '<div class="empty-state">Firebase är inte konfigurerat eller initialiserat</div>';
             return;
         }
+
+        // Load both challenges and players
+        await this.loadPlayers();
 
         try {
             container.innerHTML = '<div class="empty-state">Laddar Firebase-data...</div>';
@@ -402,6 +490,18 @@ class AdminPanel {
                         <span class="detail-value">${challenge.challenger?.name || 'Okänd'}</span>
                     </div>
                     <div class="detail-item">
+                        <span class="detail-label">Utmanarens Player ID</span>
+                        <span class="detail-value" style="font-family: monospace; font-size: 0.85rem;">
+                            ${challenge.challenger?.playerId || 'Saknas (gammal challenge)'}
+                            ${challenge.challenger?.playerId ? `
+                                <button onclick="window.adminPanel.quickSwitchPlayer('${challenge.challenger.playerId}')"
+                                        style="margin-left: 10px; padding: 2px 6px; font-size: 10px; cursor: pointer;">
+                                    Använd
+                                </button>
+                            ` : ''}
+                        </span>
+                    </div>
+                    <div class="detail-item">
                         <span class="detail-label">Utmanarens poäng</span>
                         <span class="detail-value" style="font-weight: bold; color: ${isCompleted && challenge.challenger?.totalScore > challenge.opponent?.totalScore ? 'green' : 'inherit'};">
                             ${challenge.challenger?.totalScore || 0}p
@@ -417,6 +517,18 @@ class AdminPanel {
                     <div class="detail-item">
                         <span class="detail-label">Motståndare</span>
                         <span class="detail-value">${challenge.opponent?.name || 'Väntar...'}</span>
+                    </div>
+                    <div class="detail-item">
+                        <span class="detail-label">Motståndarens Player ID</span>
+                        <span class="detail-value" style="font-family: monospace; font-size: 0.85rem;">
+                            ${challenge.opponent?.playerId || (challenge.opponent ? 'Saknas (gammal challenge)' : 'Väntar...')}
+                            ${challenge.opponent?.playerId ? `
+                                <button onclick="window.adminPanel.quickSwitchPlayer('${challenge.opponent.playerId}')"
+                                        style="margin-left: 10px; padding: 2px 6px; font-size: 10px; cursor: pointer;">
+                                    Använd
+                                </button>
+                            ` : ''}
+                        </span>
                     </div>
                     <div class="detail-item">
                         <span class="detail-label">Motståndarens poäng</span>
@@ -565,6 +677,67 @@ class AdminPanel {
                 <div class="stat-label">Spelarnamn</div>
             </div>
         `;
+    }
+
+    // Switch to a different player
+    async switchToPlayer() {
+        const input = document.getElementById('switchPlayerInput');
+        const resultDiv = document.getElementById('switchPlayerResult');
+        const playerId = input.value.trim();
+
+        if (!playerId) {
+            resultDiv.innerHTML = '<div style="color: red;">⚠️ Ange ett Player ID</div>';
+            return;
+        }
+
+        if (!playerId.startsWith('player_')) {
+            resultDiv.innerHTML = '<div style="color: red;">⚠️ Ogiltigt format. Player ID ska börja med "player_"</div>';
+            return;
+        }
+
+        try {
+            resultDiv.innerHTML = '<div style="color: blue;">⏳ Verifierar Player ID...</div>';
+
+            // Check if FirebaseAPI is available
+            if (typeof FirebaseAPI === 'undefined' || !FirebaseAPI.verifyPlayerId) {
+                throw new Error('Firebase är inte tillgängligt');
+            }
+
+            const playerData = await FirebaseAPI.verifyPlayerId(playerId);
+
+            if (playerData) {
+                // Save to localStorage
+                localStorage.setItem('playerId', playerData.playerId || playerId);
+                localStorage.setItem('playerName', playerData.name || 'Okänd spelare');
+
+                resultDiv.innerHTML = `
+                    <div style="color: green;">
+                        ✅ Bytte till: <strong>${playerData.name}</strong>
+                        <br><small>(${playerData.playerId || playerId})</small>
+                        <br><br>Laddar om till huvudsidan...
+                    </div>
+                `;
+
+                // Redirect to main page after 1.5 seconds
+                setTimeout(() => {
+                    window.location.href = '/';
+                }, 1500);
+            } else {
+                resultDiv.innerHTML = '<div style="color: red;">❌ Player ID hittades inte i Firebase</div>';
+            }
+        } catch (error) {
+            console.error('Error switching player:', error);
+            resultDiv.innerHTML = `<div style="color: red;">❌ Fel: ${error.message}</div>`;
+        }
+    }
+
+    // Quick switch from players table
+    async quickSwitchPlayer(playerId) {
+        const input = document.getElementById('switchPlayerInput');
+        if (input) {
+            input.value = playerId;
+            await this.switchToPlayer();
+        }
     }
 }
 

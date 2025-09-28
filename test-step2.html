@@ -1,0 +1,276 @@
+<!DOCTYPE html>
+<html lang="sv">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Test Steg 2 - Double-Play Protection</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 800px;
+            margin: 50px auto;
+            padding: 20px;
+            background: #f5f5f5;
+        }
+        .test-section {
+            background: white;
+            padding: 20px;
+            margin-bottom: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+        button {
+            background: #4CAF50;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            margin: 5px;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+        button:hover {
+            background: #45a049;
+        }
+        .info {
+            background: #2196F3;
+        }
+        .info:hover {
+            background: #0b7dda;
+        }
+        .warning {
+            background: #ff9800;
+        }
+        .warning:hover {
+            background: #e68900;
+        }
+        pre {
+            background: #f0f0f0;
+            padding: 10px;
+            border-radius: 4px;
+            overflow-x: auto;
+        }
+        .result {
+            margin-top: 10px;
+            padding: 10px;
+            background: #e8f4f8;
+            border-left: 4px solid #2196F3;
+        }
+        .success {
+            background: #e8f8e8;
+            border-left: 4px solid #4CAF50;
+        }
+        .error {
+            background: #ffeaea;
+            border-left: 4px solid #f44336;
+        }
+    </style>
+</head>
+<body>
+    <h1>Test Steg 2 - Double-Play Protection</h1>
+
+    <div class="test-section" style="background: #f0f8ff;">
+        <h2>Current Setup</h2>
+        <div id="setup-status"></div>
+    </div>
+
+    <div class="test-section">
+        <h2>1. Test Own Challenge Protection</h2>
+        <p>Create a challenge and try to play it yourself</p>
+        <button onclick="testOwnChallenge()">Create & Try Own Challenge</button>
+        <div id="own-challenge-result"></div>
+    </div>
+
+    <div class="test-section">
+        <h2>2. Test Already Completed Protection</h2>
+        <p>Try to access an already completed challenge</p>
+        <input type="text" id="completed-id" placeholder="Enter completed challenge ID" style="padding: 8px; width: 300px;">
+        <button onclick="testCompletedChallenge()" class="info">Test Completed Challenge</button>
+        <div id="completed-result"></div>
+    </div>
+
+    <div class="test-section">
+        <h2>3. Test Valid Challenge Access</h2>
+        <p>Access a challenge from someone else (should work)</p>
+        <input type="text" id="valid-id" placeholder="Enter valid challenge ID" style="padding: 8px; width: 300px;">
+        <button onclick="testValidChallenge()" class="info">Test Valid Challenge</button>
+        <div id="valid-result"></div>
+    </div>
+
+    <div class="test-section">
+        <h2>4. Manual Test Links</h2>
+        <p>Use these to manually test double-play protection</p>
+        <div id="manual-links"></div>
+    </div>
+
+    <!-- Firebase CDN Scripts -->
+    <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore-compat.js"></script>
+    <script src="js/firebase-config.js"></script>
+
+    <script>
+        // Show current setup
+        function showSetup() {
+            const playerId = localStorage.getItem('playerId');
+            const playerName = localStorage.getItem('playerName');
+
+            document.getElementById('setup-status').innerHTML = `
+                <div class="result">
+                    <strong>Current Player:</strong><br>
+                    PlayerId: ${playerId || 'Not set'}<br>
+                    Name: ${playerName || 'Not set'}<br>
+                    Firebase: ${typeof FirebaseAPI !== 'undefined' ? '✅ Loaded' : '❌ Not loaded'}
+                </div>
+            `;
+        }
+
+        // Test 1: Try to play own challenge
+        async function testOwnChallenge() {
+            const resultDiv = document.getElementById('own-challenge-result');
+
+            try {
+                const playerId = localStorage.getItem('playerId');
+                const playerName = localStorage.getItem('playerName') || 'Test Player';
+
+                // Create a challenge
+                const testQuestions = [
+                    { question: 'Test Q1', type: 'order' }
+                ];
+
+                const challengeId = await FirebaseAPI.createChallenge(
+                    playerName,
+                    playerId,
+                    testQuestions,
+                    10,
+                    [10],
+                    'Test Pack'
+                );
+
+                resultDiv.innerHTML = `
+                    <div class="result success">
+                        <strong>✅ Challenge Created:</strong> ${challengeId}<br>
+                        <br>
+                        <strong>Now try to play it yourself:</strong><br>
+                        <a href="/?challenge=${challengeId}" target="_blank" class="info" style="color: white; padding: 10px; display: inline-block; margin-top: 10px; text-decoration: none; background: #2196F3; border-radius: 4px;">
+                            Open Challenge Link (should block you)
+                        </a><br>
+                        <br>
+                        <em>Expected result: "Du kan inte spela din egen utmaning!"</em>
+                    </div>
+                `;
+
+                // Add to manual links
+                updateManualLinks(challengeId, 'own');
+
+            } catch (error) {
+                resultDiv.innerHTML = `
+                    <div class="result error">
+                        <strong>❌ Error:</strong> ${error.message}
+                    </div>
+                `;
+            }
+        }
+
+        // Test 2: Try completed challenge
+        async function testCompletedChallenge() {
+            const challengeId = document.getElementById('completed-id').value.trim();
+            const resultDiv = document.getElementById('completed-result');
+
+            if (!challengeId) {
+                // Use the known completed challenge
+                document.getElementById('completed-id').value = 'challenge_1758983057766_yhie2igaj';
+                resultDiv.innerHTML = '<div class="result">Auto-filled with known completed challenge. Click button again.</div>';
+                return;
+            }
+
+            try {
+                const challenge = await FirebaseAPI.getChallenge(challengeId);
+
+                resultDiv.innerHTML = `
+                    <div class="result ${challenge.status === 'completed' ? 'success' : 'error'}">
+                        <strong>Challenge Status:</strong> ${challenge.status}<br>
+                        <strong>Challenger:</strong> ${challenge.challenger?.name} (${challenge.challenger?.playerId || 'no playerId'})<br>
+                        <strong>Opponent:</strong> ${challenge.opponent?.name || 'Not played'} (${challenge.opponent?.playerId || 'no playerId'})<br>
+                        <br>
+                        <a href="/?challenge=${challengeId}" target="_blank" class="warning" style="color: white; padding: 10px; display: inline-block; margin-top: 10px; text-decoration: none; background: #ff9800; border-radius: 4px;">
+                            Open Challenge Link (should say already completed)
+                        </a><br>
+                        <br>
+                        <em>Expected result: "Denna utmaning är redan slutförd!"</em>
+                    </div>
+                `;
+
+                updateManualLinks(challengeId, 'completed');
+
+            } catch (error) {
+                resultDiv.innerHTML = `
+                    <div class="result error">
+                        <strong>❌ Error:</strong> ${error.message}
+                    </div>
+                `;
+            }
+        }
+
+        // Test 3: Valid challenge
+        async function testValidChallenge() {
+            const challengeId = document.getElementById('valid-id').value.trim();
+            const resultDiv = document.getElementById('valid-result');
+
+            if (!challengeId) {
+                resultDiv.innerHTML = '<div class="result error">Please enter a challenge ID from someone else</div>';
+                return;
+            }
+
+            try {
+                const challenge = await FirebaseAPI.getChallenge(challengeId);
+                const myPlayerId = localStorage.getItem('playerId');
+
+                const isOwn = challenge.challenger?.playerId === myPlayerId;
+                const isCompleted = challenge.status === 'completed';
+
+                resultDiv.innerHTML = `
+                    <div class="result ${!isOwn && !isCompleted ? 'success' : 'error'}">
+                        <strong>Challenge Status:</strong> ${challenge.status}<br>
+                        <strong>Is my challenge:</strong> ${isOwn ? '❌ Yes' : '✅ No'}<br>
+                        <strong>Is completed:</strong> ${isCompleted ? '❌ Yes' : '✅ No'}<br>
+                        <br>
+                        ${!isOwn && !isCompleted ?
+                            `<a href="/?challenge=${challengeId}" target="_blank" class="info" style="color: white; padding: 10px; display: inline-block; margin-top: 10px; text-decoration: none; background: #4CAF50; border-radius: 4px;">
+                                ✅ Open Challenge (should work!)
+                            </a>` :
+                            `<span style="color: red;">This challenge is ${isOwn ? 'yours' : 'already completed'}</span>`
+                        }
+                    </div>
+                `;
+
+            } catch (error) {
+                resultDiv.innerHTML = `
+                    <div class="result error">
+                        <strong>❌ Error:</strong> ${error.message}
+                    </div>
+                `;
+            }
+        }
+
+        // Update manual test links
+        function updateManualLinks(challengeId, type) {
+            const linksDiv = document.getElementById('manual-links');
+            const existingContent = linksDiv.innerHTML || '';
+
+            const newLink = `
+                <div style="margin: 10px 0;">
+                    <strong>${type === 'own' ? 'Your challenge' : type === 'completed' ? 'Completed challenge' : 'Valid challenge'}:</strong><br>
+                    <code>${challengeId}</code><br>
+                    <a href="/?challenge=${challengeId}" target="_blank">Test Link</a>
+                </div>
+            `;
+
+            linksDiv.innerHTML = existingContent + newLink;
+        }
+
+        // Initialize on load
+        window.addEventListener('load', () => {
+            showSetup();
+        });
+    </script>
+</body>
+</html>
