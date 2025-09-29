@@ -20,13 +20,13 @@
 - **Migration:** Separat modul (js/migrations/challengeMigration_2024.js) som kan tas bort senare
 - **Debug logging:** Implementerat för att spåra namn-källor
 
-### 🎯 MIGRATION SLUTFÖRD:
-**Automatisk migration av gamla challenges:**
-- Användare med gamla challenges i localStorage får dem automatiskt migrerade till Firebase
-- playerId läggs till baserat på `role` (challenger/opponent) från localStorage
-- localStorage rensas efter lyckad migration
-- Körs endast EN GÅNG per användare (flagga: `migration_challenges_v1_completed`)
-- Kan enkelt tas bort efter några månader (separat modul)
+### ❌ MIGRATION BORTTAGEN (2024-12-28):
+**Automatisk migration av gamla challenges har tagits bort p.g.a. designbegränsning:**
+- **Problem:** localStorage är per-enhet, inte per-användare
+- **Konsekvens:** Varje enhet har sitt eget playerId, vilket gör cross-device migration omöjlig
+- **Beslut:** Migration-modulen togs bort eftersom den inte kunde lösa huvudproblemet
+- **Impact:** Minimal - få användare och historik börjar från Firebase-implementationen
+- **Framåt:** Alla nya challenges fungerar perfekt med Firebase-systemet
 
 ### ⏳ Valfria förbättringar (ej kritiska):
 - Fas 4: UI state management (ta bort `isShowingWaitingView` flaggan)
@@ -1208,43 +1208,6 @@ Om något går fel:
 **Total:** 10-15 timmar
 
 ---
-
-## 🗑️ Hur man tar bort migrations-modulen (efter Feb 2025)
-
-När alla aktiva användare har kört migrationen (uppskattningsvis efter 2-3 månader):
-
-### Steg 1: Ta bort migrations-filen
-```bash
-rm js/migrations/challengeMigration_2024.js
-```
-
-### Steg 2: Ta bort från index.html
-Ta bort dessa rader (cirka rad 71-72):
-```html
-<!-- TEMPORARY: Challenge migration (can be removed after Feb 2025) -->
-<script src="js/migrations/challengeMigration_2024.js"></script>
-```
-
-### Steg 3: Ta bort från app.js
-Ta bort dessa rader (cirka rad 19-29):
-```javascript
-// TEMPORARY MIGRATION (can be removed after all users migrated - est. Feb 2025)
-// Migrate old localStorage challenges to Firebase with playerId
-if (window.ChallengeMigration && await window.ChallengeMigration.shouldRunMigration()) {
-    try {
-        console.log('🔄 Running challenge migration...');
-        await window.ChallengeMigration.migrate();
-    } catch (error) {
-        console.error('Migration failed (non-critical):', error);
-        // Don't block startup if migration fails
-    }
-}
-```
-
-### Steg 4 (Valfritt): Ta bort updateChallenge om oanvänd
-Om `updateChallenge()` inte används för något annat, ta bort den från `firebase-config.js` (rad 159-173).
-
-### Totalt: 5 minuter arbete för att ta bort all migrations-kod
 
 ---
 
