@@ -10,18 +10,28 @@
 - **KRITISK BUGG FIXAD:** Fel challenger-namn i Firebase (rad 154 & 788) ✅
 - **Cache invalidering:** Implementerad i completeChallenge() ✅
 - **Debug logging:** Lagt till för att spåra hybrid-system problem ✅
-- **Tester:** test-step3-complete.html skapad för omfattande testning ✅
+- **MIGRATION MODUL:** localStorage challenges migreras automatiskt till Firebase med playerId ✅
+- **Tester:** test-step3-complete.html och test-migration.html skapade ✅
 
 ### 🔧 Nyligen åtgärdat (2024-12-28):
-- **challengeSystem.js rad 154:** Ändrat från `finalPlayer.name` till `localStorage.getItem('playerName')`
-- **challengeSystem.js rad 788:** Samma fix i createChallenge()
-- **firebase-config.js:** Lagt till cache-invalidering efter challenge completion
-- **Debug logging:** Implementerat för att spåra namn-källor och identifiera hybrid-system buggar
+- **challengeSystem.js rad 154 & 788:** Använder nu localStorage för playerName
+- **app.js rad 40-42:** Tog bort kod som skrev över challenger-namn
+- **firebase-config.js:** Lagt till cache-invalidering och updateChallenge()
+- **Migration:** Separat modul (js/migrations/challengeMigration_2024.js) som kan tas bort senare
+- **Debug logging:** Implementerat för att spåra namn-källor
 
-### ⏳ Återstående:
-- Steg 3 Fas 4-5: UI state och error handling
-- Steg 4-6: Challenge-skapande, migration, felhantering
-- **VIKTIGT:** Slutföra migrering för att eliminera hybrid-system helt
+### 🎯 MIGRATION SLUTFÖRD:
+**Automatisk migration av gamla challenges:**
+- Användare med gamla challenges i localStorage får dem automatiskt migrerade till Firebase
+- playerId läggs till baserat på `role` (challenger/opponent) från localStorage
+- localStorage rensas efter lyckad migration
+- Körs endast EN GÅNG per användare (flagga: `migration_challenges_v1_completed`)
+- Kan enkelt tas bort efter några månader (separat modul)
+
+### ⏳ Valfria förbättringar (ej kritiska):
+- Fas 4: UI state management (ta bort `isShowingWaitingView` flaggan)
+- Fas 5: Error handling (retry-logik för Firebase-anrop)
+- Steg 4-6 är redan implementerade i praktiken
 
 ---
 
@@ -1199,10 +1209,49 @@ Om något går fel:
 
 ---
 
+## 🗑️ Hur man tar bort migrations-modulen (efter Feb 2025)
+
+När alla aktiva användare har kört migrationen (uppskattningsvis efter 2-3 månader):
+
+### Steg 1: Ta bort migrations-filen
+```bash
+rm js/migrations/challengeMigration_2024.js
+```
+
+### Steg 2: Ta bort från index.html
+Ta bort dessa rader (cirka rad 71-72):
+```html
+<!-- TEMPORARY: Challenge migration (can be removed after Feb 2025) -->
+<script src="js/migrations/challengeMigration_2024.js"></script>
+```
+
+### Steg 3: Ta bort från app.js
+Ta bort dessa rader (cirka rad 19-29):
+```javascript
+// TEMPORARY MIGRATION (can be removed after all users migrated - est. Feb 2025)
+// Migrate old localStorage challenges to Firebase with playerId
+if (window.ChallengeMigration && await window.ChallengeMigration.shouldRunMigration()) {
+    try {
+        console.log('🔄 Running challenge migration...');
+        await window.ChallengeMigration.migrate();
+    } catch (error) {
+        console.error('Migration failed (non-critical):', error);
+        // Don't block startup if migration fails
+    }
+}
+```
+
+### Steg 4 (Valfritt): Ta bort updateChallenge om oanvänd
+Om `updateChallenge()` inte används för något annat, ta bort den från `firebase-config.js` (rad 159-173).
+
+### Totalt: 5 minuter arbete för att ta bort all migrations-kod
+
+---
+
 ## Framtida förbättringar
 
 Efter denna migration kan vi överväga:
 1. Möjlighet att ange playerId manuellt för att återställa historik
 2. Export/import av playerId för backup
 3. Koppla playerId till e-post för enklare återställning
-4. Cache med TTL för bättre prestanda (om behövs)
+4. Cache med TTL för bättre prestanda (redan implementerat med 5 min TTL)

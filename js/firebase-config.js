@@ -156,6 +156,22 @@ const FirebaseAPI = {
         }
     },
 
+    // Update an existing challenge (for migrations and corrections)
+    async updateChallenge(challengeId, updates) {
+        if (!firebaseInitialized) {
+            console.log('Demo mode: Would update challenge', challengeId, updates);
+            return;
+        }
+
+        try {
+            await db.collection('challenges').doc(challengeId).update(updates);
+            console.log('Challenge updated:', challengeId);
+        } catch (error) {
+            console.error('Error updating challenge:', error);
+            throw error;
+        }
+    },
+
     // Get challenges created by a player (for notifications)
     async getPlayerChallenges(playerId) {
         if (!firebaseInitialized) {

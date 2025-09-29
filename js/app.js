@@ -16,6 +16,18 @@ class App {
             // Initialize player identity (now async for Firebase sync)
             await this.initializePlayer();
 
+            // TEMPORARY MIGRATION (can be removed after all users migrated - est. Feb 2025)
+            // Migrate old localStorage challenges to Firebase with playerId
+            if (window.ChallengeMigration && await window.ChallengeMigration.shouldRunMigration()) {
+                try {
+                    console.log('🔄 Running challenge migration...');
+                    await window.ChallengeMigration.migrate();
+                } catch (error) {
+                    console.error('Migration failed (non-critical):', error);
+                    // Don't block startup if migration fails
+                }
+            }
+
             // Load game data
             await this.loadGameData();
             
