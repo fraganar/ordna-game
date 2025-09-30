@@ -50,6 +50,69 @@ Vågar du chansa? Stanna eller fortsätt - valet är ditt! Ett fel och rundans p
 - **Before committing**: Test both single and multiplayer modes thoroughly, including elimination scenarios
 - **Code review question**: Does this change fit the architecture or am I patching? Are animations coordinated with state changes?
 
+## Challenge System Architecture Principle
+**Viktig separation of concerns för att undvika hybrid-system buggar:**
+
+- **localStorage** = Persistent Identity
+  - `playerId`: Unik identifierare per enhet
+  - `playerName`: Användarens valda namn
+  - **Använd för**: Skapa challenges, identifiera spelare i Firebase
+
+- **PlayerManager** = Game State (temporary)
+  - Active player, turn order, round scores
+  - **Använd för**: Spellogik, turordning, rundpoäng
+  - **Använd INTE för**: Persistent data som sparas till Firebase
+
+- **Firebase** = Challenge Data (persistent)
+  - Questions, scores, status, player records
+  - **Använd för**: Dela challenges mellan enheter
+
+**Regel:** Använd ALDRIG PlayerManager för persistent data som player names i challenges. Hämta alltid identitet från localStorage när du skapar Firebase-records.
+
+**Varför?** PlayerManager innehåller temporär spelstatus som kan ändras under spel. Detta skapade buggar där fel spelarnamn sparades i challenges (se docs/archive/FIREBASE_MIGRATION_PLAN.md rad 997-1040).
+
+## Refactoring Guidelines
+
+**Innan refaktorering:**
+1. Dokumentera nuvarande state - vilka funktioner finns var
+2. Definiera målarkitektur - vad ska ägas av vad
+3. Skapa migreringsplan - steg-för-steg
+4. Skriv tester för kritiska flöden
+
+**Under refaktorering:**
+1. En förändring i taget - flytta/ersätt en funktion
+2. Testa efter varje steg
+3. Ta bort gamla funktioner efter nya bekräftats fungera
+4. Commit ofta med tydliga meddelanden
+
+**Efter refaktorering:**
+1. Validera alla användarflöden
+2. Uppdatera dokumentation
+3. Kör code review agent
+
+**Varning:** Dubbletter av funktioner (gamla + nya) skapar förvirring. Ersätt, integrera inte.
+
+## Firebase Challenge System - Teknisk Översikt
+
+**Implementation Status:** ✅ Komplett (Se docs/archive/FIREBASE_MIGRATION_PLAN.md för full historik)
+
+**Arkitektur:**
+- **players collection**: Spelaridentitet synkas från localStorage till Firebase
+- **challenges collection**: Challenge-data (questions, scores, status)
+- **Cache**: 5 min TTL i minnet för prestanda
+- **Error handling**: Minimal (user-friendly meddelanden på kritiska ställen)
+- **Demo mode**: Fungerar offline när Firebase ej tillgänglig
+
+**Kritiska buggar som lösts:**
+- Fel challenger-namn (hybrid-system problem) - rad 154 & 788 i challengeSystem.js
+- Cache uppdateras inte direkt - invalidering i completeChallenge()
+- localStorage/Firebase migration - borttagen pga per-device limitation
+
+**Design-beslut:**
+- localStorage = Persistent identity (playerId, playerName)
+- Firebase = Challenge data + player records
+- Ingen retry-logik (Firebase är extremt pålitlig)
+
 ## Local Development
 1. Start local server: `python3 -m http.server 8000`
 2. Open browser: `http://localhost:8000`
