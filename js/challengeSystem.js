@@ -207,6 +207,7 @@ class ChallengeSystem {
             return newChallengeId;
         } catch (error) {
             console.error('🔥 CHALLENGER MODE ERROR:', error);
+            window.UI?.showError('Kunde inte skapa utmaning. Kontrollera din internetanslutning.');
             this.isCreatingChallenge = false; // Reset flag on error
             throw error;
         } finally {
@@ -230,6 +231,7 @@ class ChallengeSystem {
             return true;
         } catch (error) {
             console.error('Failed to accept challenge:', error);
+            window.UI?.showError('Kunde inte acceptera utmaning. Kontrollera din internetanslutning.');
             throw error;
         }
     }
@@ -613,7 +615,7 @@ class ChallengeSystem {
             console.error('Failed to load challenges from Firebase:', error);
             // Hide section on error
             if (myChallengesSection) myChallengesSection.classList.add('hidden');
-            console.log('Kunde inte hämta utmaningar från servern');
+            window.UI?.showMessage('Kunde inte hämta utmaningar. Kontrollera din internetanslutning.');
         }
     }
     

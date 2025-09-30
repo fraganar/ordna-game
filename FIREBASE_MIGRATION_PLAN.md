@@ -30,8 +30,20 @@
 
 ### ⏳ Valfria förbättringar (ej kritiska):
 - Fas 4: UI state management (ta bort `isShowingWaitingView` flaggan)
-- Fas 5: Error handling (retry-logik för Firebase-anrop)
+- ~~Fas 5: Error handling (retry-logik för Firebase-anrop)~~ ✅ **KOMPLETT (minimal variant)**
 - Steg 4-6 är redan implementerade i praktiken
+
+### ✅ Error Handling - Implementerad (2024-12-28):
+**Beslut:** Minimal error handling istället för omfattande retry-logik
+- **Motivering:** Firebase är extremt pålitlig, retry-logik inte nödvändig
+- **Implementation:** User-friendly felmeddelanden på 3 kritiska ställen:
+  1. **acceptChallenge()** (rad 233): "Kunde inte acceptera utmaning. Kontrollera din internetanslutning."
+  2. **completeChallenge()** (rad 210): "Kunde inte skapa utmaning. Kontrollera din internetanslutning."
+  3. **loadMyChallenges()** (rad 618): "Kunde inte hämta utmaningar. Kontrollera din internetanslutning."
+- **Befintlig graceful degradation:**
+  - `upsertPlayer()` (firebase-config.js rad 230): "Not critical - continue running even if this fails"
+  - Demo mode fallbacks när Firebase ej initialiserad
+  - Cache används vid Firebase-fel där möjligt
 
 ---
 
@@ -1213,8 +1225,8 @@ Om något går fel:
 
 ## Framtida förbättringar
 
-Efter denna migration kan vi överväga:
-1. Möjlighet att ange playerId manuellt för att återställa historik
+### Övriga idéer:
+
 2. Export/import av playerId för backup
 3. Koppla playerId till e-post för enklare återställning
 4. Cache med TTL för bättre prestanda (redan implementerat med 5 min TTL)

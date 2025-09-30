@@ -9,12 +9,14 @@
 
 ### Kommande arbete (sorterat efter stackrank - högst första)
 
-1. **BL-007** (80) - Revanschknapp utmaning 
+1. **BL-007** (80) - Revanschknapp utmaning
 2. **BL-008** (70) - Visa poäng i utmaningsresultat
 3. **BL-009** (60) - Poänganimering före totalpoäng
 4. **BL-010** (50) - Utmana-knapp efter alla spellägen
-5. **BL-023** (35) - Säkra Firebase med autentisering
-6. **BL-018** (30) - Unificera slutskärmsfunktioner
+5. **BL-026** (45) - Admin-panel: Manuell playerId-redigering
+6. **BL-025** (40) - Account Recovery UI
+7. **BL-023** (35) - Säkra Firebase med autentisering
+8. **BL-018** (30) - Unificera slutskärmsfunktioner
 7. **BL-019** (25) - Duplicerad showChallengeAcceptScreen implementation
 8. **BL-020** (20) - Duplicerad difficulty badge implementation
 9. **BL-021** (15) - Komplettera CSS variables implementation
@@ -114,6 +116,29 @@
   - Skapa fallback-styles för äldre browsers
   - Testa i olika browsers och versioner
 - **Nytta:** Bättre browser-kompatibilitet, fungerar för fler användare
+
+### BL-026: Admin-panel - Manuell playerId-redigering för challenges
+- **Kategori:** FEATURE
+- **Stackrank:** 45
+- **Beskrivning:** Lägg till funktion i admin.html för att manuellt lägga till/ändra playerId för challenges
+- **Implementation:**
+  - Använd `FirebaseAPI.updateChallenge()` (finns redan i firebase-config.js!)
+  - UI för att söka challenge och uppdatera playerId-fält
+- **Användningsfall:** Återställa gamla challenges genom att manuellt sätta rätt playerId
+- **Benefit:** Löser migration-problemet för enskilda användare manuellt
+- **Tidsuppskattning:** 30-60 minuter
+
+### BL-025: Account Recovery UI - Återställ konto via playerId
+- **Kategori:** FEATURE
+- **Stackrank:** 40
+- **Beskrivning:** Lägg till funktion för att återställa konto på annan enhet via playerId
+- **Implementation:**
+  - Använd `FirebaseAPI.verifyPlayerId()` (finns redan i firebase-config.js rad 250-265)
+  - Flow: Prompt för playerId → Verifiera mot Firebase → Återställ localStorage → Reload
+  - Kan läggas i settings eller som dialog
+- **Användningsfall:** Användare byter enhet eller rensar localStorage och vill få tillbaka sitt konto och challenge-historik
+- **Benefit:** Löser cross-device-problemet som gjorde migration-modulen omöjlig
+- **Tidsuppskattning:** 1-2 timmar
 
 ### BL-024: Lägg till subtil färgad ram runt "Hör till"-knappar
 - **Kategori:** ENHANCEMENT
