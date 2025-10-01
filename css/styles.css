@@ -1,16 +1,15 @@
 :root {
-    /* New Playful Premium Color Palette */
-    --color-primary: #7C3AED;        /* Hero Purple */
-    --color-primary-dark: #6D28D9;   /* Hero Purple Dark */
-    /* Action colors removed - using mango colors instead */
+    /* Mango Sunshine Color Palette - Tropical Quiz Theme */
+    --color-primary: #FF9800;        /* Deep Mango Orange */
+    --color-primary-dark: #F57C00;   /* Rich Mango */
     --color-success: #14B8A6;        /* Success Teal */
     --color-success-dark: #0D9488;   /* Success Teal Dark */
     --color-danger: #F87171;         /* Danger Coral */
     --color-danger-dark: #EF4444;    /* Danger Coral Dark */
-    --color-magic: #EC4899;          /* Magic Pink */
-    --color-magic-dark: #DB2777;     /* Magic Pink Dark */
-    
-    /* Mango-inspired colors - Energy Orange palette */
+    --color-magic: #FFB74D;          /* Warm Mango */
+    --color-magic-dark: #FF9800;     /* Deep Mango */
+
+    /* Mango-inspired accent colors */
     --color-mango: #FB923C;          /* Energy Orange */
     --color-mango-light: #FFE0B2;    /* Light Mango */
     --color-mango-dark: #EA580C;     /* Energy Orange Dark */

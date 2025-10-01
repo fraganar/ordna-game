@@ -8,57 +8,55 @@ Detta dokument kartlägger all styling i Tres Mangos-spelet. Styling sätts på 
 
 ---
 
-## 🎨 Färgschema - "Playful Premium" Design (Uppdaterad 2025-08-27)
+## 🎨 Färgschema - "Mango Sunshine" Tropical Quiz Theme (Uppdaterad 2025-10-01)
 
-### NYA Primära färger (CSS Variables)
+### AKTUELLA Primära färger (CSS Variables)
 ```css
-/* Hero Colors - Huvudfärger */
---color-primary: #7C3AED;        /* Hero Purple */
---color-primary-dark: #6D28D9;   /* Hero Purple Dark */
---color-action: #FB923C;         /* Energy Orange */
---color-action-dark: #EA580C;    /* Energy Orange Dark */
+/* Mango Sunshine - Huvudfärger */
+--color-primary: #FF9800;        /* Deep Mango Orange */
+--color-primary-dark: #F57C00;   /* Rich Mango */
+--color-magic: #FFB74D;          /* Warm Mango */
+--color-magic-dark: #FF9800;     /* Deep Mango */
+
+/* Semantic colors */
 --color-success: #14B8A6;        /* Success Teal */
 --color-success-dark: #0D9488;   /* Success Teal Dark */
 --color-danger: #F87171;         /* Danger Coral */
 --color-danger-dark: #EF4444;    /* Danger Coral Dark */
---color-magic: #EC4899;          /* Magic Pink */
---color-magic-dark: #DB2777;     /* Magic Pink Dark */
+
+/* Mango-inspired accent colors */
+--color-mango: #FB923C;          /* Energy Orange */
+--color-mango-light: #FFE0B2;    /* Light Mango */
+--color-mango-dark: #EA580C;     /* Energy Orange Dark */
+--color-tropical-green: #66BB6A; /* Tropical Leaf Green */
 
 /* Bakgrunder & Neutrala */
 --color-deep-space: #0F172A;     /* Deep Space */
 --color-soft-cloud: #F8FAFC;     /* Soft Cloud */
 --color-pearl: #FFFFFF;          /* Pearl White */
-
-/* Mango-inspired colors */
---color-mango: #FFB74D;          /* Warm Mango Orange */
---color-mango-light: #FFE0B2;    /* Light Mango */
---color-mango-dark: #FF9800;     /* Deep Mango */
---color-tropical-green: #66BB6A; /* Tropical Leaf Green */
-
-/* Legacy colors (för backward compatibility) */
---color-legacy-blue: #3b82f6;    /* Gamla primärblå */
---color-legacy-green: #22c55e;   /* Gamla framgångsgröna */
---color-legacy-red: #ef4444;     /* Gamla felröda */
 ```
 
-### GAMLA färger (bevarade för referens)
+### GAMLA färger (tidigare versioner)
 ```css
-/* Tidigare färgschema - används inte längre aktivt */
-#3b82f6 - blue-500 (tidigare primary blue)
-#22c55e - green-500 (tidigare success color)
-#ef4444 - red-500 (tidigare error color)
-#dcfce7 - green-100 (tidigare correct answer bg)
-#fee2e2 - red-100 (tidigare incorrect bg)
+/* 2025-08-27: Purple theme (ersatt 2025-10-01) */
+#7C3AED - Hero Purple (tidigare primary)
+#EC4899 - Magic Pink (tidigare magic)
+
+/* 2025-08-05: Blue theme (ersatt 2025-08-27) */
+#3b82f6 - blue-500 (första primary)
+#22c55e - green-500 (första success)
 ```
 
-### Färganvändning per kontext (NYA DESIGNEN)
-- **Huvudfärg/Aktiv spelare**: Purple (--color-primary, --color-primary-dark)
-- **Action/Stanna-knapp**: Mango gradient (--color-mango, --color-mango-dark) 
-- **Rätt svar/Poäng**: Teal (--color-success, --color-success-dark)
+### Färganvändning per kontext (MANGO SUNSHINE)
+- **Huvudfärg/Primärknapp**: Deep Mango Orange (--color-primary: #FF9800)
+- **Gradients/Accenter**: Warm Mango (--color-magic: #FFB74D)
+- **Rätt svar/Poäng**: Tropical Teal (--color-success, --color-success-dark)
 - **Fel svar**: Coral (--color-danger, --color-danger-dark)
-- **Fortsätt/Nästa fråga**: Pink-Purple gradient (--color-magic + --color-primary)
+- **Fortsätt/Nästa fråga**: Mango gradient (--color-magic → --color-primary)
 - **Glassmorfism**: rgba(255, 255, 255, 0.9) med backdrop-filter: blur()
 - **Inaktiv/disabled**: Gråskala (behålls från tidigare)
+
+**Design-filosofi:** Varmt, tropiskt, energiskt - direkt koppling till "Tres Mangos" namnet och frukt-temat.
 
 ---
 
