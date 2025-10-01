@@ -124,15 +124,31 @@
                 </div>
 
                 <div class="space-y-4">
-                    <button id="show-player-setup-btn" class="w-full bg-gradient-to-r from-magic to-primary text-white font-bold py-3 sm:py-4 px-6 rounded-lg text-lg sm:text-xl hover:from-primary hover:to-magic-dark transition-all duration-300 shadow-lg hover:shadow-xl transform hover:-translate-y-1">
-                        Starta Spelet
+                    <!-- Primär action: Spela nu (challenge-flöde) -->
+                    <button id="play-now-btn" class="w-full bg-gradient-to-r from-magic to-primary text-white font-bold py-3 sm:py-4 px-6 rounded-lg text-lg sm:text-xl hover:from-primary hover:to-magic-dark transition-all duration-300 shadow-lg hover:shadow-xl transform hover:-translate-y-1">
+                        🥭 Spela nu
                     </button>
-                    <button id="show-challenge-form-btn" class="w-full bg-slate-500 text-white font-bold py-3 sm:py-4 px-6 rounded-lg text-lg sm:text-xl hover:bg-slate-600 transition-all duration-300 shadow-lg hover:shadow-xl transform hover:-translate-y-1">
-                        Utmana en vän!
+
+                    <!-- Toggle för fler spellägen -->
+                    <button id="toggle-more-modes" class="text-sm text-slate-500 hover:text-slate-700 hover:underline transition-colors mx-auto block">
+                        ⚡ Fler spellägen ↓
                     </button>
-                    <button id="open-pack-shop-btn" class="w-full bg-slate-400 text-white font-bold py-3 sm:py-4 px-6 rounded-lg text-lg sm:text-xl cursor-not-allowed opacity-75" disabled>
-                        Välj Frågepaket (Kommande)
-                    </button>
+
+                    <!-- Expanderbar sektion för multiplayer -->
+                    <div id="more-modes-section" class="hidden">
+                        <div class="bg-slate-50 border border-slate-200 rounded-lg p-4 animate-fadeIn">
+                            <h3 class="font-semibold text-slate-800 mb-2 flex items-center">
+                                <span class="text-2xl mr-2">👥</span>
+                                Lokal multiplayer
+                            </h3>
+                            <p class="text-sm text-slate-600 mb-3">
+                                Spela 2-4 samtidigt på storbildsskärm eller runt samma enhet.
+                            </p>
+                            <button id="start-local-multiplayer-btn" class="w-full bg-slate-600 text-white font-bold py-2 px-4 rounded-lg text-base hover:bg-slate-700 transition-colors">
+                                Starta multiplayer →
+                            </button>
+                        </div>
+                    </div>
                 </div>
 
                 <!-- My Challenges Section -->
@@ -159,12 +175,9 @@
                  <div class="mb-6">
                     <label for="player-count" class="block text-base sm:text-lg font-medium text-slate-700 mb-2">Hur många spelare?</label>
                     <select id="player-count" class="w-full p-3 border border-slate-300 rounded-lg text-base sm:text-lg">
-                        <option value="1">1 spelare (Ensamspel)</option>
                         <option value="2">2 spelare</option>
                         <option value="3">3 spelare</option>
                         <option value="4">4 spelare</option>
-                        <option value="5">5 spelare</option>
-                        <option value="6">6 spelare</option>
                     </select>
                  </div>
                  <div id="player-names-container" class="space-y-4 mb-8">

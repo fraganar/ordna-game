@@ -128,6 +128,11 @@ Frågor organiseras i tematiska paket som väljs före spelstart:
 #### Målsättning
 Samla så många poäng som möjligt över flera frågor genom att balansera risk mot belöning.
 
+**Efter Navigation Redesign (2025-10-01):**
+- Single player spelas nu genom "📱 Spela nu"-knappen (challenge-flöde)
+- Efter spelet kan spelaren **välja** att dela länk för att utmana någon
+- Delning är helt valfri - fungerar både som solo-spel och challenge-grund
+
 #### Poängsystem
 ```javascript
 // Aktuell fråga
@@ -163,10 +168,15 @@ totalScore = 0; // Ökas när spelaren "stannar" och säkrar sin pott
 - **Question Progress:** Progressbar som visar spelframsteg
 - **Feedback Area:** Visar rätt svar vid fel eller säkring
 
-### 2. Multiplayer Mode (2-6 spelare)
+### 2. Multiplayer Mode (2-4 spelare)
 
 #### Målsättning
 Ha högst total score när alla frågor är klara genom strategisk risktagning och turplanering.
+
+**Efter Navigation Redesign (2025-10-01):**
+- Lokal multiplayer är nu ett **sekundärt spelläge**
+- Nås via "⚡ Fler spellägen" → expanderbar sektion
+- Endast 2-4 spelare (5-6 spelare borttaget för praktiskt bruk)
 
 #### Poängsystem per spelare
 ```javascript
@@ -312,12 +322,40 @@ Viktigt: Auto-säkring gäller ALLA aktiva spelare samtidigt när villkoren uppn
 ### Huvudmeny & Navigation
 ```
 Huvudmeny
-├── Spela själv (1 spelare) → Single Player Game
-├── Spela med vänner (2-6) → Multiplayer Setup  
-├── Utmana någon → Challenge Creation
+├── 📱 Spela nu (Primärt) → Challenge-flöde (single med valfri delning)
+├── ⚡ Fler spellägen (Toggle) → Expanderbar sektion
+│   └── Lokal multiplayer (2-4) → Multiplayer Setup
 ├── Mina utmaningar → Challenge Management
-└── Välj frågepaket → Pack Selection
+└── Välj frågepaket → Pack Selection (INAKTIVERAD)
 ```
+
+**Navigation Redesign (2025-10-01):**
+- **Primär action:** "Spela nu" startar challenge-flöde direkt
+- **Sekundär option:** "Fler spellägen" döljer lokal multiplayer bakom toggle
+- **Single player:** Integrerat i challenge-flödet, delning är valfri efter spelet
+
+### Användarflöden (Efter Navigation Redesign)
+
+#### Flow 1: Solo-spel med Valfri Delning (Primärt)
+1. Klicka "📱 Spela nu"
+2. Spela 12 frågor (challenge-flöde)
+3. Se resultat
+4. **Valfritt:** Dela länk för att utmana någon
+
+#### Flow 2: Challenge-spel (Primärt)
+1. Klicka "📱 Spela nu"
+2. Spela 12 frågor
+3. Dela länk direkt efter
+4. Vänta på motståndare
+5. Se resultatjämförelse
+
+#### Flow 3: Lokal Multiplayer (Sekundärt)
+1. Klicka "⚡ Fler spellägen ↓"
+2. Expandera sektion
+3. Klicka "Starta multiplayer →"
+4. Välj 2-4 spelare
+5. Ange namn
+6. Spela tillsammans lokalt
 
 ### Game Flow States
 
@@ -795,6 +833,14 @@ Med rätt refaktorering och fortsatt utveckling kan detta bli ett riktigt starkt
 
 ## Versionshistorik
 
+**Version 1.2** - 2025-10-01
+- Uppdaterad efter navigation redesign (BL-027)
+- Challenge-flöde är nu primärt spelläge ("📱 Spela nu")
+- Lokal multiplayer flyttad till sekundär position (toggle)
+- Single player integrerat i challenge-flöde med valfri delning
+- Multiplayer nu 2-4 spelare (5-6 borttaget)
+- Tillagt användarflöden för nya navigationen
+
 **Version 1.1** - 2025-08-08
 - Uppdaterad efter omfattande refaktorering
 - Tillagt unified architecture-dokumentation
@@ -802,7 +848,7 @@ Med rätt refaktorering och fortsatt utveckling kan detta bli ett riktigt starkt
 - Dokumenterat nya helper-funktioner
 - Uppdaterat teknisk mognadsbedömning
 
-**Version 1.0** - 2025-08-05  
+**Version 1.0** - 2025-08-05
 - Initial komplett specifikation baserad på kodanalys
 
-**Status:** Aktuell specifikation som speglar refactoread implementation
+**Status:** Aktuell specifikation som speglar navigation redesign och refactored implementation
