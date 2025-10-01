@@ -30,11 +30,12 @@ Vågar du chansa? Stanna eller fortsätt - valet är ditt! Ett fel och rundans p
 ### Valmöjligheter i spelet
 
 **Från huvudmenyn kan användaren:**
-- **Spela själv** - Välj 1 spelare för att spela ensam och samla poäng (visas som "Totalpoäng: X")
-- **Spela med vänner** - Välj 2-6 spelare för att tävla mot varandra lokalt
-- **Utmana någon** - Skapa en utmaning och bjud in en vän via delbar länk (se Challenge System nedan för detaljer)
+- **🥭 Spela nu (Primärt)** - Spela 12 frågor i challenge-format. Efter spelet kan du välja att dela länken för att utmana någon, eller bara behålla dina poäng för dig själv
+- **⚡ Fler spellägen (Sekundärt)** - Lokal multiplayer för 2-4 spelare samtidigt på samma enhet (bra för storbildsskärm eller att spela tillsammans)
 - **Mina utmaningar** - Se dina aktiva utmaningar och vem som svarat
-- **Välj frågepaket** - Aktivera/avaktivera olika frågepaket för variation (INAKTIVERAD - funktion under utveckling)
+
+**Navigation Redesign (BL-027):**
+Challenge-flödet är nu det primära sättet att spela. Single-player och challenge har integrerats - du spelar alltid samma 12 frågor, men kan välja om du vill dela länken efteråt eller inte. Lokal multiplayer (2-4 spelare) är nu bakom en toggle för användare som vill spela tillsammans på samma enhet.
 
 ## Tech Stack
 - Frontend: Vanilla JavaScript (ES6+), HTML5, CSS3

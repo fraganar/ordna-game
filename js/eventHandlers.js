@@ -9,8 +9,38 @@ function initializeAllEventListeners() {
     }
     
     console.log('Initializing event listeners...');
-    
-    // Main navigation buttons
+
+    // Main navigation buttons - NEW navigation (BL-027)
+    const playNowBtn = UI.get('playNowBtn');
+    if (playNowBtn) {
+        playNowBtn.addEventListener('click', handleShowChallengeForm);
+    }
+
+    const toggleMoreModesBtn = UI.get('toggleMoreModesBtn');
+    const moreModesSection = UI.get('moreModesSection');
+    if (toggleMoreModesBtn && moreModesSection) {
+        toggleMoreModesBtn.addEventListener('click', () => {
+            const isHidden = moreModesSection.classList.contains('hidden');
+
+            // Handle animation: remove hidden, let animation play
+            if (isHidden) {
+                moreModesSection.classList.remove('hidden');
+                // Force reflow to trigger animation
+                void moreModesSection.offsetWidth;
+            } else {
+                moreModesSection.classList.add('hidden');
+            }
+
+            toggleMoreModesBtn.textContent = isHidden ? '⚡ Färre spellägen ↑' : '⚡ Fler spellägen ↓';
+        });
+    }
+
+    const startLocalMultiplayerBtn = UI.get('startLocalMultiplayerBtn');
+    if (startLocalMultiplayerBtn) {
+        startLocalMultiplayerBtn.addEventListener('click', showPlayerSetup);
+    }
+
+    // Legacy button (kept for backward compatibility)
     const showPlayerSetupBtn = UI.get('showPlayerSetupBtn');
     if (showPlayerSetupBtn) {
         showPlayerSetupBtn.addEventListener('click', showPlayerSetup);

@@ -10,6 +10,12 @@ class UIRenderer {
             playerCountSelect: document.getElementById('player-count'),
             playerNamesContainer: document.getElementById('player-names-container'),
             startGameBtn: document.getElementById('start-game-btn'),
+
+            // New navigation (BL-027)
+            playNowBtn: document.getElementById('play-now-btn'),
+            toggleMoreModesBtn: document.getElementById('toggle-more-modes'),
+            moreModesSection: document.getElementById('more-modes-section'),
+            startLocalMultiplayerBtn: document.getElementById('start-local-multiplayer-btn'),
             
             // Player name setup
             playerNameSetup: document.getElementById('player-name-setup'),
