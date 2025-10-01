@@ -311,12 +311,50 @@ Extensiv användning av linear gradients:
 
 ---
 
-## 🚀 Rekommendationer för Styling Update
+## 🚀 Styling Architecture & Best Practices
 
-1. **Centralisera färger**: Skapa CSS variables för färgschema
+### ✅ Implementerat (2025-10-01)
+
+1. **✅ Centraliserade färger**:
+   - CSS variables i `:root` är single source of truth
+   - Tailwind config läser från CSS variables med `var(--color-*)`
+   - Ingen duplicering av färgkoder mellan CSS och Tailwind
+   - Lätt att byta tema genom att bara uppdatera CSS variables
+
+### 🔄 Rekommendationer för Framtida Förbättringar
+
 2. **Konsolidera knappstilar**: Unified button component classes
 3. **Standardisera animationer**: Återanvändbara animation classes
 4. **Reducera gradient complexity**: Förenkla där möjligt
-5. **Öka Tailwind usage**: Minska custom CSS där Tailwind räcker
-6. **Dark mode prep**: Strukturera för framtida dark mode
-7. **Component isolation**: Separera komponent-specifik styling
+5. **Dark mode prep**: Strukturera för framtida dark mode
+6. **Component isolation**: Separera komponent-specifik styling
+
+### Färghantering - Single Source of Truth
+
+**Arkitektur:**
+```
+CSS (:root variables) → Tailwind config → HTML classes
+```
+
+**Exempel:**
+```css
+/* styles.css - DEFINIERA HÄR */
+:root {
+  --color-primary: #FF9800;
+}
+```
+
+```javascript
+// index.html - REFERERA HÄRIFRÅN
+tailwind.config = {
+  colors: {
+    'primary': 'var(--color-primary)'
+  }
+}
+```
+
+**Fördelar:**
+- ✅ En plats att ändra färger (CSS variables)
+- ✅ Automatisk synkning mellan CSS och Tailwind
+- ✅ Enklare att byta tema
+- ✅ Mindre risk för inkonsistens
