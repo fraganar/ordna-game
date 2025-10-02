@@ -1,14 +1,14 @@
 :root {
-    /* Alternative A: Softer Coral/Peach Palette */
-    --color-primary: #FF9E80;        /* Soft Coral/Peach */
-    --color-primary-dark: #FF7043;   /* Coral */
-    --color-primary-text: #E65100;   /* Extra Dark - for text contrast */
+    /* Mango Sunshine Color Palette - Tropical Quiz Theme */
+    --color-primary: #FF9800;        /* Deep Mango Orange */
+    --color-primary-dark: #F57C00;   /* Rich Mango */
+    --color-primary-text: #E65100;   /* Extra Dark Mango - for text contrast */
     --color-success: #14B8A6;        /* Success Teal */
     --color-success-dark: #0D9488;   /* Success Teal Dark */
     --color-danger: #F87171;         /* Danger Coral */
     --color-danger-dark: #EF4444;    /* Danger Coral Dark */
-    --color-magic: #FFCCBC;          /* Light Peach */
-    --color-magic-dark: #FF9E80;     /* Soft Coral */
+    --color-magic: #FFB74D;          /* Warm Mango */
+    --color-magic-dark: #FF9800;     /* Deep Mango */
 
     /* Mango-inspired accent colors */
     --color-mango: #FB923C;          /* Energy Orange */
@@ -839,17 +839,17 @@ body {
 }
 
 /* Mango title styling - simple diagonal gradient like the buttons */
-/* Alternative A: Softer coral/peach gradient for gentle warmth */
+/* Alternative G: Softened gradient for subtle mango identity */
 .mango-title {
     background: linear-gradient(135deg,
-        #FF9E80 0%,
-        #FFCCBC 50%,
-        #FF7043 100%
+        #FF9800 0%,
+        #FFB74D 50%,
+        #FF9800 100%
     );
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
     background-clip: text;
-    opacity: 0.9;
+    opacity: 0.85;
 }
 
 .mango-icon {
