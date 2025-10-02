@@ -7,6 +7,10 @@
     --color-success-dark: #0D9488;   /* Success Teal Dark */
     --color-danger: #F87171;         /* Danger Coral */
     --color-danger-dark: #EF4444;    /* Danger Coral Dark */
+    --color-info: #3B82F6;           /* Info Blue */
+    --color-info-dark: #2563EB;      /* Info Blue Dark */
+    --color-info-light: #DBEAFE;     /* Info Blue Light (50) */
+    --color-info-border: #BFDBFE;    /* Info Blue Border (200) */
     --color-magic: #FFB74D;          /* Warm Mango */
     --color-magic-dark: #FF9800;     /* Deep Mango */
 
