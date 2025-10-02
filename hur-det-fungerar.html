@@ -10,16 +10,16 @@
             theme: {
                 extend: {
                     colors: {
-                        'primary': '#7C3AED',
-                        'primary-dark': '#6D28D9',
-                        'action': '#FB923C',
-                        'action-dark': '#EA580C',
-                        'success': '#14B8A6',
-                        'success-dark': '#0D9488',
-                        'danger': '#F87171',
-                        'danger-dark': '#EF4444',
-                        'magic': '#EC4899',
-                        'magic-dark': '#DB2777'
+                        'primary': 'var(--color-primary)',
+                        'primary-dark': 'var(--color-primary-dark)',
+                        'action': 'var(--color-mango)',
+                        'action-dark': 'var(--color-mango-dark)',
+                        'success': 'var(--color-success)',
+                        'success-dark': 'var(--color-success-dark)',
+                        'danger': 'var(--color-danger)',
+                        'danger-dark': 'var(--color-danger-dark)',
+                        'magic': 'var(--color-magic)',
+                        'magic-dark': 'var(--color-magic-dark)'
                     }
                 }
             }
@@ -55,10 +55,10 @@
                         <span class="text-sm text-slate-600">Du ser två knappar:</span>
                         <div class="flex rounded-lg overflow-hidden bg-gray-100 inline-flex">
                             <button class="w-9 h-9 flex items-center justify-center bg-gray-50 border border-gray-300">
-                                <svg class="w-4 h-4" fill="none" stroke="#8E99A5" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7"></path></svg>
+                                <svg class="w-4 h-4 text-slate-500" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7"></path></svg>
                             </button>
                             <button class="w-9 h-9 flex items-center justify-center bg-gray-50 border border-gray-300 border-l-0">
-                                <svg class="w-4 h-4" fill="none" stroke="#8E99A5" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12"></path></svg>
+                                <svg class="w-4 h-4 text-slate-500" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12"></path></svg>
                             </button>
                         </div>
                         <span class="text-sm text-slate-600">(✓ = ja, ✗ = nej)</span>

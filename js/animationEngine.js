@@ -45,7 +45,7 @@ class AnimationEngine {
             top: ${sourceRect.top + sourceRect.height / 2}px;
             font-size: 24px;
             font-weight: bold;
-            color: #10b981;
+            color: var(--color-animation-success);
             z-index: 1000;
             pointer-events: none;
             transform: translate(-50%, -50%);
@@ -127,7 +127,7 @@ class AnimationEngine {
             top: ${sourceRect.top + sourceRect.height / 2}px;
             font-size: 24px;
             font-weight: bold;
-            color: #15803d;
+            color: var(--color-animation-success-dark);
             z-index: 1000;
             pointer-events: none;
             transform: translate(-50%, -50%);
@@ -282,7 +282,7 @@ class AnimationEngine {
                 position: fixed;
                 left: ${stopButton.getBoundingClientRect().left + stopButton.getBoundingClientRect().width / 2}px;
                 top: ${stopButton.getBoundingClientRect().top + stopButton.getBoundingClientRect().height / 2}px;
-                color: #ef4444;
+                color: var(--color-animation-danger);
                 font-size: 20px;
                 font-weight: bold;
                 z-index: 1000;

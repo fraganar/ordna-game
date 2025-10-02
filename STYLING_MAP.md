@@ -8,13 +8,14 @@ Detta dokument kartlägger all styling i Tres Mangos-spelet. Styling sätts på 
 
 ---
 
-## 🎨 Färgschema - "Mango Sunshine" Tropical Quiz Theme (Uppdaterad 2025-10-01)
+## 🎨 Färgschema - "Mango Sunshine" Tropical Quiz Theme (Uppdaterad 2025-10-02)
 
-### AKTUELLA Primära färger (CSS Variables)
+### AKTUELLA Primära färger (CSS Variables - Single Source of Truth)
 ```css
 /* Mango Sunshine - Huvudfärger */
 --color-primary: #FF9800;        /* Deep Mango Orange */
 --color-primary-dark: #F57C00;   /* Rich Mango */
+--color-primary-text: #E65100;   /* Extra Dark Mango - för text kontrast */
 --color-magic: #FFB74D;          /* Warm Mango */
 --color-magic-dark: #FF9800;     /* Deep Mango */
 
@@ -34,6 +35,35 @@ Detta dokument kartlägger all styling i Tres Mangos-spelet. Styling sätts på 
 --color-deep-space: #0F172A;     /* Deep Space */
 --color-soft-cloud: #F8FAFC;     /* Soft Cloud */
 --color-pearl: #FFFFFF;          /* Pearl White */
+
+/* Gray scale */
+--color-gray-100: #f3f4f6;
+--color-gray-200: #e5e7eb;
+--color-gray-300: #d1d5db;
+--color-gray-400: #9ca3af;
+--color-gray-500: #6b7280;
+
+/* Additional accents */
+--color-amber: #fcd34d;
+--color-sky: #7dd3fc;
+--color-slate: #f1f5f9;
+
+/* Animation colors (2025-10-02: Centraliserade från JS) */
+--color-animation-success: #10b981;      /* +1 points grön */
+--color-animation-success-dark: #15803d; /* Auto-save mörkare grön */
+--color-animation-danger: #ef4444;       /* -1 penalty röd */
+
+/* UI Neutrals (2025-10-02: Centraliserade från CSS/JS) */
+--color-icon-gray: #8E99A5;       /* Custom gray för ikoner */
+--color-disabled-bg: #f9fafb;     /* Disabled button bakgrund */
+
+/* Body gradient (2025-10-02: Centraliserade) */
+--color-body-gradient-start: #F8FAFC;  /* Soft Cloud */
+--color-body-gradient-end: #F0F4FF;    /* Light Lavender */
+
+/* PWA colors (referens - används i manifest.json och meta tags) */
+--color-theme: #F8FAFC;           /* Mobile browser chrome */
+--color-splash-bg: #FEF3C7;       /* PWA splash screen */
 ```
 
 ### GAMLA färger (tidigare versioner)
@@ -313,13 +343,38 @@ Extensiv användning av linear gradients:
 
 ## 🚀 Styling Architecture & Best Practices
 
-### ✅ Implementerat (2025-10-01)
+### ✅ Implementerat
 
-1. **✅ Centraliserade färger**:
-   - CSS variables i `:root` är single source of truth
-   - Tailwind config läser från CSS variables med `var(--color-*)`
-   - Ingen duplicering av färgkoder mellan CSS och Tailwind
-   - Lätt att byta tema genom att bara uppdatera CSS variables
+#### 1. Centraliserade färger (2025-10-01)
+- CSS variables i `:root` är single source of truth
+- Tailwind config läser från CSS variables med `var(--color-*)`
+- Ingen duplicering av färgkoder mellan CSS och Tailwind
+- Lätt att byta tema genom att bara uppdatera CSS variables
+
+#### 2. Komplett centralisering av ALLA färger (2025-10-02)
+**Problem som löstes:**
+- Hårdkodade hex-värden fanns i css/styles.css, js/animationEngine.js, och hur-det-fungerar.html
+- Gradient i `.mango-title` duplicerade värden från CSS variables
+- Animationer i JS hade hårdkodade färger (#10b981, #15803d, #ef4444)
+- hur-det-fungerar.html hade fel färgschema (lila istället för orange!)
+
+**Lösning:**
+- Nya CSS variables: `--color-animation-success`, `--color-animation-success-dark`, `--color-animation-danger`
+- Nya CSS variables: `--color-icon-gray`, `--color-disabled-bg`, `--color-body-gradient-start/end`
+- PWA färger dokumenterade i CSS för referens (måste vara hårdkodade i manifest.json)
+- Alla gradients använder nu `var(--color-primary)` och `var(--color-magic)`
+- js/animationEngine.js använder CSS variables via `var(--color-animation-*)`
+- hur-det-fungerar.html synkad med index.html (orange tema)
+
+**Filer som uppdaterades:**
+1. `css/styles.css` - Nya variables + ersatt alla hårdkodade värden
+2. `js/animationEngine.js` - Alla animationsfärger använder CSS variables
+3. `hur-det-fungerar.html` - Tailwind config synkad + SVG färger fixade
+
+**Undantag (måste vara hårdkodade):**
+- `manifest.json` - JSON stödjer inte CSS variables
+- `<meta name="theme-color">` - Kan inte använda CSS variables
+- Admin-filer (medvetet val, egen arkitektur)
 
 ### 🔄 Rekommendationer för Framtida Förbättringar
 

@@ -32,7 +32,24 @@
     --color-amber: #fcd34d;
     --color-sky: #7dd3fc;
     --color-slate: #f1f5f9;
-    
+
+    /* Animation colors */
+    --color-animation-success: #10b981;      /* +1 points green */
+    --color-animation-success-dark: #15803d; /* Auto-save darker green */
+    --color-animation-danger: #ef4444;       /* -1 penalty red */
+
+    /* UI Neutrals */
+    --color-icon-gray: #8E99A5;       /* Custom gray for icons */
+    --color-disabled-bg: #f9fafb;     /* Disabled button background */
+
+    /* Body gradient */
+    --color-body-gradient-start: #F8FAFC;  /* Soft Cloud */
+    --color-body-gradient-end: #F0F4FF;    /* Light Lavender */
+
+    /* PWA colors (documented for reference - used in manifest.json and meta tags) */
+    --color-theme: #F8FAFC;           /* Mobile browser chrome */
+    --color-splash-bg: #FEF3C7;       /* PWA splash screen */
+
     /* Legacy colors - removed as they are no longer used */
     /* --color-legacy-blue: #3b82f6; */
     /* --color-legacy-green: #22c55e; */
@@ -41,7 +58,7 @@
 
 body {
     font-family: 'Inter', sans-serif;
-    background: linear-gradient(135deg, #F8FAFC 0%, #F0F4FF 100%);
+    background: linear-gradient(135deg, var(--color-body-gradient-start) 0%, var(--color-body-gradient-end) 100%);
 }
 
 #game-container {
@@ -492,7 +509,7 @@ body {
 
 .decision-buttons button:disabled {
     cursor: not-allowed;
-    background-color: #f9fafb;
+    background-color: var(--color-disabled-bg);
 }
 
 #stop-btn:disabled {
@@ -505,8 +522,8 @@ body {
     width: 1.125rem; /* 18px */
     height: 1.125rem; /* 18px */
     stroke-width: 2.5;
-    color: #8E99A5; /* Custom gray */
-    stroke: #8E99A5; /* Custom gray */
+    color: var(--color-icon-gray);
+    stroke: var(--color-icon-gray);
     transition: color 0.2s, stroke 0.2s;
 }
 
@@ -842,9 +859,9 @@ body {
 /* Alternative G: Softened gradient for subtle mango identity */
 .mango-title {
     background: linear-gradient(135deg,
-        #FF9800 0%,
-        #FFB74D 50%,
-        #FF9800 100%
+        var(--color-primary) 0%,
+        var(--color-magic) 50%,
+        var(--color-primary) 100%
     );
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
