@@ -92,14 +92,14 @@
         <!-- Start Screen -->
         <div id="start-screen" class="p-6 sm:p-8 lg:p-12">
             <div id="start-main">
-                <h1 class="font-poppins text-[2.6rem] sm:text-5xl md:text-6xl lg:text-7xl font-bold text-primary mb-4 text-center mango-title">Tres Mangos<img src="images/mango.svg" alt="mango" class="mango-icon"></h1>
+                <h1 class="font-poppins text-[2.6rem] sm:text-5xl md:text-6xl lg:text-7xl font-bold text-slate-800 mb-4 text-center mango-title">Tres Mangos<img src="images/mango.svg" alt="mango" class="mango-icon"></h1>
                 <p class="text-slate-600 mb-6 sm:mb-8 text-base sm:text-lg text-center">Vågar du chansa? Samla poäng på varje rätt svar – men ett fel och rundan är över!</p>
 
                 <div class="bg-slate-100 text-left p-4 sm:p-6 rounded-lg mb-6 sm:mb-8 border border-slate-200">
                     <h2 class="font-bold text-lg text-slate-800 mb-4 text-center">Hur det fungerar</h2>
                     <ul class="space-y-3 text-slate-700 text-sm sm:text-base">
                         <li class="flex items-start">
-                            <svg class="w-5 h-5 sm:w-6 sm:h-6 mr-3 text-success flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+                            <svg class="w-5 h-5 sm:w-6 sm:h-6 mr-3 text-primary flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
                             <span><strong>Rätt svar = +1 poäng</strong> till din pott</span>
                         </li>
                         <li class="flex items-start">
@@ -111,13 +111,13 @@
                             <span><strong>Fel svar = Potten förloras!</strong> Men säkrade poäng är kvar</span>
                         </li>
                         <li class="flex items-start">
-                            <svg class="w-5 h-5 sm:w-6 sm:h-6 mr-3 text-success flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"></path></svg>
+                            <svg class="w-5 h-5 sm:w-6 sm:h-6 mr-3 text-primary flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"></path></svg>
                             <span><strong>Stanna eller chansa?</strong> Valet är ditt!</span>
                         </li>
                     </ul>
                     
                     <div class="mt-4 pt-4 border-t border-slate-300">
-                        <a href="hur-det-fungerar.html" class="text-success-dark hover:text-success underline text-base font-semibold">
+                        <a href="hur-det-fungerar.html" class="text-primary-dark hover:text-primary underline text-base font-semibold">
                             Läs mer om hur spelet fungerar →
                         </a>
                     </div>
@@ -125,7 +125,7 @@
 
                 <div class="space-y-4">
                     <!-- Primär action: Spela nu (challenge-flöde) -->
-                    <button id="play-now-btn" class="w-full bg-gradient-to-r from-success-dark to-success text-white font-bold py-3 sm:py-4 px-6 rounded-lg text-lg sm:text-xl hover:from-success hover:to-success-dark transition-all duration-300 shadow-lg hover:shadow-xl transform hover:-translate-y-1">
+                    <button id="play-now-btn" class="w-full bg-gradient-to-r from-primary-dark to-primary text-white font-bold py-3 sm:py-4 px-6 rounded-lg text-lg sm:text-xl hover:from-primary hover:to-primary-dark transition-all duration-300 shadow-lg hover:shadow-xl transform hover:-translate-y-1">
                         🥭 Spela nu
                     </button>
 
@@ -200,9 +200,9 @@
                         Fortsätt
                     </button>
                 </div>
-                <div class="mt-6 p-4 bg-teal-50 border border-teal-200 rounded-lg">
-                    <p class="text-sm text-success-dark">💡 <strong>Tips:</strong> Lägg till Tres Mangos på din hemskärm för bästa upplevelse!</p>
-                    <p class="text-xs text-success-dark mt-1">iPhone: Dela → Lägg till på hemskärm<br>Android: Meny → Lägg till på hemskärm</p>
+                <div class="mt-6 p-4 bg-amber-50 border border-primary rounded-lg">
+                    <p class="text-sm text-primary-dark">💡 <strong>Tips:</strong> Lägg till Tres Mangos på din hemskärm för bästa upplevelse!</p>
+                    <p class="text-xs text-primary-dark mt-1">iPhone: Dela → Lägg till på hemskärm<br>Android: Meny → Lägg till på hemskärm</p>
                 </div>
             </div>
 
@@ -230,10 +230,10 @@
                         Tillbaka
                     </button>
                 </div>
-                <div id="challenge-success" class="hidden mt-6 p-4 bg-teal-50 border border-teal-200 rounded-lg">
-                    <p class="text-success-dark font-semibold mb-2">✅ Utmaning skapad!</p>
-                    <p class="text-sm text-success mb-3">Dela denna länk med din vän:</p>
-                    <div class="bg-white border border-teal-300 rounded p-2 mb-3">
+                <div id="challenge-success" class="hidden mt-6 p-4 bg-amber-50 border border-primary rounded-lg">
+                    <p class="text-primary-dark font-semibold mb-2">✅ Utmaning skapad!</p>
+                    <p class="text-sm text-primary mb-3">Dela denna länk med din vän:</p>
+                    <div class="bg-white border border-primary rounded p-2 mb-3">
                         <input type="text" id="challenge-link" readonly class="w-full text-xs text-gray-600 bg-transparent border-none outline-none">
                     </div>
                     <div class="flex space-x-2">
@@ -309,7 +309,7 @@
                     <div id="question-counter" class="text-sm font-semibold text-slate-500">Fråga 1 / 30</div>
                     <div id="difficulty-badge"></div>
                 </div>
-                <div id="single-player-score" class="hidden text-sm font-semibold bg-teal-50 text-success-dark px-3 py-1 rounded-full">Totalpoäng: 0</div>
+                <div id="single-player-score" class="hidden text-sm font-semibold bg-amber-50 text-primary-dark px-3 py-1 rounded-full">Totalpoäng: 0</div>
             </div>
 
             <!-- Single Player Progress Bar -->
@@ -392,7 +392,7 @@
             <p id="end-screen-subtitle" class="text-slate-600 mb-6 text-base sm:text-lg">Bra kämpat allihopa!</p>
             
             <!-- Single Player Final Score -->
-            <div id="single-player-final" class="hidden bg-teal-50 text-success-dark rounded-lg p-6 mb-8">
+            <div id="single-player-final" class="hidden bg-amber-50 text-primary-dark rounded-lg p-6 mb-8">
                 <p class="text-xl">Din slutpoäng:</p>
                 <p id="single-final-score" class="text-6xl font-bold"></p>
             </div>
