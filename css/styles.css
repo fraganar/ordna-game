@@ -839,18 +839,18 @@ body {
 }
 
 /* Mango title styling - simple diagonal gradient like the buttons */
-/* Alternative B: Neutral heading instead of gradient
+/* Alternative G: Softened gradient for subtle mango identity */
 .mango-title {
     background: linear-gradient(135deg,
-        var(--color-primary) 0%,
-        var(--color-mango) 50%,
-        var(--color-primary-dark) 100%
+        #FF9800 0%,
+        #FFB74D 50%,
+        #FF9800 100%
     );
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
     background-clip: text;
+    opacity: 0.85;
 }
-*/
 
 .mango-icon {
     width: 0.7em;
