@@ -61,16 +61,16 @@
       "alternativ": [
         "Berlinmurens fall",
         "Första månlandningen",
-        "Watergate-skandalen",
-        "Woodstockfestivalen"
+        "Tjernobylolyckan",
+        "Sovjetunionens upplösning"
       ],
       "rätt_ordning": [
         "Första månlandningen",
-        "Woodstockfestivalen",
-        "Watergate-skandalen",
-        "Berlinmurens fall"
+        "Tjernobylolyckan",
+        "Berlinmurens fall",
+        "Sovjetunionens upplösning"
       ],
-      "förklaring": "Första månlandningen skedde i juli 1969, strax före Woodstockfestivalen i augusti 1969. Watergate-skandalen uppdagades 1972 (Nixon avgick 1974). Berlinmuren föll 1989. Därför är ordningen: månlandning, Woodstock, Watergate, Berlinmurens fall."
+      "förklaring": "Första månlandningen skedde i juli 1969. Tjernobylolyckan inträffade i april 1986. Berlinmuren föll i november 1989. Sovjetunionen upplöstes officiellt i december 1991. Alla dessa är omvälvande händelser som förändrade världen."
     },
     {
       "typ": "ordna",
@@ -92,8 +92,8 @@
     },
     {
       "typ": "ordna",
-      "svårighetsgrad": "lätt",
-      "fråga": "Ordna följande berömda byggnadsverk efter sin höjd (högst till lägst).",
+      "svårighetsgrad": "svår",
+      "fråga": "Ordna följande berömda byggnadsverk efter sin höjd (lägst till högst).",
       "alternativ": [
         "Eiffeltornet",
         "Burj Khalifa",
@@ -101,12 +101,12 @@
         "Turning Torso"
       ],
       "rätt_ordning": [
-        "Burj Khalifa",
-        "Empire State Building",
+        "Turning Torso",
         "Eiffeltornet",
-        "Turning Torso"
+        "Empire State Building",
+        "Burj Khalifa"
       ],
-      "förklaring": "Burj Khalifa i Dubai är världens högsta byggnad (828 m). Empire State Building i New York är ~381 m (443 m med antennen) och därmed högre än Eiffeltornet i Paris (324 m). Turning Torso i Malmö är 190 m och klart lägst av dessa. Ordningen blir alltså: Burj Khalifa, Empire State Building, Eiffeltornet, Turning Torso."
+      "förklaring": "Turning Torso i Malmö är 190 m och lägst av dessa. Eiffeltornet i Paris är 324 m. Empire State Building i New York är ~381 m (443 m med antennen). Burj Khalifa i Dubai är världens högsta byggnad med 828 m."
     },
     {
       "typ": "ordna",
@@ -115,20 +115,20 @@
       "alternativ": [
         "Finland",
         "Saudiarabien",
-        "Nya Zeeland",
+        "Frankrike",
         "Schweiz"
       ],
       "rätt_ordning": [
-        "Nya Zeeland",
         "Finland",
+        "Frankrike",
         "Schweiz",
         "Saudiarabien"
       ],
-      "förklaring": "Nya Zeeland införde kvinnlig rösträtt först i världen år 1893. Finland följde 1906 (först i Europa). Schweiz gav kvinnor federell rösträtt så sent som 1971. Saudiarabien införde kvinnlig rösträtt år 2015. Därför är ordningen: Nya Zeeland, Finland, Schweiz, Saudiarabien."
+      "förklaring": "Finland införde kvinnlig rösträtt 1906 (först i Europa). Frankrike gav kvinnor rösträtt överraskande sent, först 1944. Schweiz gav kvinnor federell rösträtt ännu senare, 1971. Saudiarabien införde kvinnlig rösträtt först år 2015. Detta visar hur olika länder utvecklats i olika takt."
     },
     {
       "typ": "hör_till",
-      "svårighetsgrad": "lätt",
+      "svårighetsgrad": "medel",
       "fråga": "Superhjältar från olika serieförlag blandas här. Två av dessa är skapade av Marvel – vilka?",
       "kategori": "Hör till: Marvelsuperhjältar",
       "alternativ": [
@@ -197,7 +197,7 @@
     },
     {
       "typ": "hör_till",
-      "svårighetsgrad": "medel",
+      "svårighetsgrad": "lätt",
       "fråga": "Vikingatiden är omgärdad av många myter. Vilka två av följande påståenden om vikingar är faktiskt sanna?",
       "kategori": "Hör till: sanna påståenden om vikingar",
       "alternativ": [

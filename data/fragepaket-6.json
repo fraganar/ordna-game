@@ -131,7 +131,7 @@
       "typ": "hör_till",
       "svårighetsgrad": "lätt",
       "fråga": "Vilka av dessa räknas som planeter i vårt solsystem?",
-      "kategori": "Hör INTE till: solsystemets planeter",
+      "kategori": "Hör till: solsystemets planeter",
       "alternativ": [
         "Mars",
         "Pluto",
@@ -139,7 +139,9 @@
         "Venus"
       ],
       "tillhör_index": [
-        1
+        0,
+        2,
+        3
       ],
       "förklaring": "Mars, Jupiter och Venus är alla bland de åtta planeterna i solsystemet. Pluto räknas sedan 2006 som en dvärgplanet och är inte längre en av de huvudsakliga planeterna."
     },

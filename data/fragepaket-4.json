@@ -40,7 +40,7 @@
     {
       "typ": "ordna",
       "svårighetsgrad": "medel",
-      "fråga": "Ordna dessa språk efter antal modersmålstalare (färst till flest).",
+      "fråga": "Ordna dessa språk efter antal modersmålstalare (färre till fler).",
       "alternativ": [
         "Svenska",
         "Japanska",
@@ -192,7 +192,7 @@
         "Disney",
         "MGM"
       ],
-      "förklaring": "Paramount Pictures grundades 8 maj 1912, Warner Bros 4 april 1923, Disney 1923 (samma år som Warner Bros), MGM 17 april 1924."
+      "förklaring": "Paramount Pictures grundades 8 maj 1912, Warner Bros 4 april 1923, Disney 16 oktober 1923, MGM 17 april 1924."
     },
     {
       "typ": "hör_till",

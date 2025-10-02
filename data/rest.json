@@ -25,7 +25,7 @@
         "Thomas Edison registrerade cirka 1100 patent under sin karriär",
         "Alexander Graham Bell grundade AT&T-bolaget",
         "Nikola Tesla uppfann växelström och hade över 300 patent",
-        "Marie Curie var första person att vinna två Nobelpris"
+        "Marie Curie var första kvinnan att vinna två Nobelpris"
       ],
       "tillhör_index": [0, 1],
       "förklaring": "Edison hade cirka 1100 patent och Bell var medgrundare av AT&T. Tesla hade faktiskt cirka 300 patent men uppfann inte växelström (han utvecklade AC-systemet). Marie Curie var första kvinnan med två Nobelpris, men inte första personen (det var Linus Pauling)."
@@ -65,7 +65,7 @@
     {
       "typ": "ordna",
       "svårighetsgrad": "lätt",
-      "fråga": "Ordna dessa ikoniska filmrepliker efter hur många ord de innehåller, från färst till flest.",
+      "fråga": "Ordna dessa ikoniska filmrepliker efter hur många ord de innehåller, från färre till fler.",
       "alternativ": [
         "May the Force be with you",
         "I'll be back",
@@ -180,7 +180,7 @@
         "George Clooney"
       ],
       "tillhör_index": [0, 2],
-      "förklaring": "Tiger Woods var gift med Elin Nordegren, Madonna datade Jesus Luz (ej svensk) men var med Jean-Paul Gaultier. DiCaprio och Clooney har inte haft kända svenska partners."
+      "förklaring": "Tiger Woods var gift med Elin Nordegren, Madonna var tillsammans med svenske Jesus Luz 2008-2010. DiCaprio och Clooney har inte haft kända svenska partners."
     }
   ]
 }
