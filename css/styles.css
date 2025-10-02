@@ -2,6 +2,7 @@
     /* Mango Sunshine Color Palette - Tropical Quiz Theme */
     --color-primary: #FF9800;        /* Deep Mango Orange */
     --color-primary-dark: #F57C00;   /* Rich Mango */
+    --color-primary-text: #E65100;   /* Extra Dark Mango - for text contrast */
     --color-success: #14B8A6;        /* Success Teal */
     --color-success-dark: #0D9488;   /* Success Teal Dark */
     --color-danger: #F87171;         /* Danger Coral */
