@@ -325,11 +325,27 @@ class PlayerManager {
     setPlayerName(name) {
         this.currentPlayer.name = name;
         localStorage.setItem('playerName', name);
+
+        // Sync to Firebase in background (non-blocking)
+        // Sync all names (including dummy) - dummy names can be updated later
+        const playerId = localStorage.getItem('playerId');
+        if (playerId && window.FirebaseAPI) {
+            FirebaseAPI.upsertPlayer(playerId, name).catch(err => {
+                console.error('Failed to sync name to Firebase:', err);
+            });
+        }
     }
     
     // Get saved player name
     getPlayerName() {
-        return this.currentPlayer.name;
+        const name = this.currentPlayer.name;
+        // Treat dummy names as "no real name set"
+        // Dummy names are OK internally, but we want to prompt user
+        // before using the name publicly (challenges, sharing, etc)
+        if (window.isDummyName && window.isDummyName(name)) {
+            return null;
+        }
+        return name;
     }
 }
 

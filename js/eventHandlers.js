@@ -120,7 +120,9 @@ function initializeAllEventListeners() {
     // Player name setup
     const savePlayerNameBtn = UI.get('savePlayerNameBtn');
     if (savePlayerNameBtn) {
-        savePlayerNameBtn.addEventListener('click', handleSavePlayerName);
+        savePlayerNameBtn.addEventListener('click', async () => {
+            await handleSavePlayerName();
+        });
     }
     
     // Challenge system
@@ -180,17 +182,59 @@ function initializeAllEventListeners() {
 // Handler functions that use UI.get() for DOM access
 async function handleSavePlayerName() {
     const playerNameInput = UI.get('playerNameInput');
+    console.log('🔵 handleSavePlayerName called - v2024-10-03-FIX');
+
     const playerNameSetup = UI.get('playerNameSetup');
     const challengeForm = UI.get('challengeForm');
     const challengerNameDisplay = UI.get('challengerNameDisplay');
     const startMain = UI.get('startMain');
-    
+
     const name = playerNameInput?.value.trim();
-    if (!name) return;
-    
-    if (window.PlayerManager) {
-        window.PlayerManager.setPlayerName(name);
+    console.log('📝 Name from input:', name);
+
+    if (!name) {
+        console.log('⚠️ No name provided, exiting');
+        return;
     }
+
+    if (window.PlayerManager) {
+        console.log('📝 Setting player name in PlayerManager:', name);
+        window.PlayerManager.setPlayerName(name);
+    } else {
+        console.warn('⚠️ PlayerManager not available');
+    }
+
+    // ✅ Sync to Firebase when name changes
+    // This ensures real names (not dummy names) are saved to Firebase
+    const playerId = localStorage.getItem('playerId');
+    console.log('🔍 Checking Firebase sync conditions:', {
+        playerId,
+        hasFirebaseAPI: !!window.FirebaseAPI,
+        FirebaseAPI: window.FirebaseAPI
+    });
+
+    if (playerId && window.FirebaseAPI) {
+        console.log('✅ Attempting Firebase sync...');
+        try {
+            await FirebaseAPI.upsertPlayer(playerId, name);
+            console.log('✅✅✅ SUCCESS: Real name updated in Firebase:', name);
+            console.log('   Player ID:', playerId);
+        } catch (error) {
+            console.error('❌❌❌ FAILED to update name in Firebase:', error);
+            console.error('   Player ID:', playerId);
+            console.error('   Name:', name);
+            console.error('   Error details:', error.message);
+            console.error('   Stack trace:', error.stack);
+            // Continue anyway - Firebase update is not critical for gameplay
+            // but log extensively for debugging
+        }
+    } else {
+        console.warn('❌ Firebase sync skipped because:', {
+            hasPlayerId: !!playerId,
+            hasFirebaseAPI: !!window.FirebaseAPI
+        });
+    }
+
     if (playerNameSetup) playerNameSetup.classList.add('hidden');
     
     // Check if user was trying to create a challenge

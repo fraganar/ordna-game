@@ -1,5 +1,16 @@
 // Main Application Entry Point - Initializes and coordinates all modules
 
+// Helper to detect dummy names (used as fallback, not real user names)
+function isDummyName(name) {
+    if (!name) return true;
+    // Match pattern: Spelare_[digits]
+    // Dummy names are OK internally, but should trigger name prompt before public use
+    return /^Spelare_\d+$/.test(name);
+}
+
+// Export globally
+window.isDummyName = isDummyName;
+
 class App {
     constructor() {
         this.initialized = false;
@@ -128,22 +139,42 @@ class App {
             const firebasePlayer = await FirebaseAPI.getPlayer(playerId);
 
             if (firebasePlayer) {
-                // Player exists in Firebase - update lastSeen
-                await FirebaseAPI.upsertPlayer(playerId, firebasePlayer.name || playerName);
+                // Player exists in Firebase
+                const firebaseName = firebasePlayer.name;
 
-                // Update local name if it differs
-                if (firebasePlayer.name && firebasePlayer.name !== playerName) {
-                    localStorage.setItem('playerName', firebasePlayer.name);
+                // ✅ Prefer real Firebase name over local dummy name
+                // If Firebase has a real name but localStorage has a dummy name,
+                // restore the real name locally (useful for device switching)
+                if (firebaseName && !isDummyName(firebaseName) && isDummyName(playerName)) {
+                    localStorage.setItem('playerName', firebaseName);
+                    if (window.PlayerManager && typeof PlayerManager.setPlayerName === 'function') {
+                        PlayerManager.setPlayerName(firebaseName);
+                    }
+                    console.log('✅ Restored real name from Firebase:', firebaseName);
+                    // Still update lastSeen but with Firebase name
+                    await FirebaseAPI.upsertPlayer(playerId, firebaseName);
+                    this.updateFooterDisplay();
+                    return;
+                }
+
+                // Update lastSeen (but don't overwrite real names with dummy names)
+                const nameToSync = isDummyName(playerName) && firebaseName ? firebaseName : playerName;
+                await FirebaseAPI.upsertPlayer(playerId, nameToSync);
+
+                // Update local name if it differs and Firebase has real name
+                if (firebaseName && firebaseName !== playerName && !isDummyName(firebaseName)) {
+                    localStorage.setItem('playerName', firebaseName);
                     // Update PlayerManager if available
                     if (window.PlayerManager && typeof PlayerManager.setPlayerName === 'function') {
-                        PlayerManager.setPlayerName(firebasePlayer.name);
+                        PlayerManager.setPlayerName(firebaseName);
                     }
-                    console.log('Updated local name from Firebase:', firebasePlayer.name);
+                    console.log('Updated local name from Firebase:', firebaseName);
                 }
             } else {
                 // New player or existing without Firebase data
+                // Create player with current name (even if dummy - can be updated later)
                 await FirebaseAPI.upsertPlayer(playerId, playerName);
-                console.log('Created/migrated player in Firebase');
+                console.log('Created player in Firebase:', playerName);
             }
         } catch (error) {
             console.error('Failed to sync player to Firebase:', error);

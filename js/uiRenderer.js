@@ -989,16 +989,8 @@ class UIRenderer {
         this.showStartScreen();
     }
 
-    handleSavePlayerName() {
-        const input = this.get('playerNameInput');
-        const name = input?.value?.trim();
-        
-        if (name && window.PlayerManager) {
-            window.PlayerManager.setPlayerName(name);
-        }
-        
-        this.showStartScreen();
-    }
+    // handleSavePlayerName removed - now handled by eventHandlers.js
+    // This avoids duplicate code and ensures Firebase sync happens correctly
 
     // Pack shop functions (moved from uiController.js)
     openPackShop() {
@@ -1041,9 +1033,7 @@ function handleDeclineChallenge() {
     if (window.UI) window.UI.handleDeclineChallenge();
 }
 
-function handleSavePlayerName() {
-    if (window.UI) window.UI.handleSavePlayerName();
-}
+// handleSavePlayerName removed - now handled by eventHandlers.js
 
 function openPackShop() {
     if (window.UI) window.UI.openPackShop();
