@@ -194,11 +194,8 @@ const FirebaseAPI = {
 
     // Player management functions
     async upsertPlayer(playerId, playerName) {
-        console.log('🔵 upsertPlayer called:', { playerId, playerName });
-
         if (!firebaseInitialized) {
-            console.warn('⚠️ Firebase NOT initialized - running in DEMO mode');
-            console.warn('   Player NOT saved to Firebase:', playerId, playerName);
+            console.log('Demo mode: Would upsert player', playerId);
             return;
         }
 
@@ -208,15 +205,12 @@ const FirebaseAPI = {
 
             if (doc.exists) {
                 // Update existing player
-                console.log('📝 Updating existing player in Firebase...');
                 await playerRef.update({
                     name: playerName,
                     lastSeen: new Date()
                 });
-                console.log('✅ Player updated in Firebase:', playerId, '→', playerName);
             } else {
                 // Create new player
-                console.log('📝 Creating new player in Firebase...');
                 await playerRef.set({
                     playerId: playerId,
                     name: playerName,
@@ -228,16 +222,10 @@ const FirebaseAPI = {
                         totalScore: 0
                     }
                 });
-                console.log('✅ Player created in Firebase:', playerId, '→', playerName);
             }
         } catch (error) {
-            console.error('❌ ERROR upserting player to Firebase:', error);
-            console.error('   Player ID:', playerId);
-            console.error('   Name:', playerName);
-            console.error('   Error message:', error.message);
-            console.error('   Error code:', error.code);
-            // Not critical - continue running even if this fails
-            throw error; // Re-throw so caller can catch and log
+            console.error('Error upserting player:', error);
+            throw error;
         }
     },
 
