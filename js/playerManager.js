@@ -321,22 +321,24 @@ class PlayerManager {
     }
     
     
-    // Save player name to localStorage
+    /**
+     * Save player name to localStorage
+     * @param {string} name - The player name to save
+     * @note Firebase sync is handled by handleSavePlayerName() in eventHandlers.js
+     */
     setPlayerName(name) {
         this.currentPlayer.name = name;
         localStorage.setItem('playerName', name);
-
-        // Sync to Firebase in background (non-blocking)
-        // Sync all names (including dummy) - dummy names can be updated later
-        const playerId = localStorage.getItem('playerId');
-        if (playerId && window.FirebaseAPI) {
-            FirebaseAPI.upsertPlayer(playerId, name).catch(err => {
-                console.error('Failed to sync name to Firebase:', err);
-            });
-        }
+        // Note: Firebase sync is handled by handleSavePlayerName() in eventHandlers.js
+        // This avoids double-writes and keeps sync logic in one place
     }
-    
-    // Get saved player name
+
+    /**
+     * Get saved player name
+     * @returns {string|null} - Player name, or null if dummy name (triggers prompt)
+     * @note Dummy names (Spelare_12345) are treated as "no real name set"
+     *       Use this for public features. For internal logic, use currentPlayer.name directly
+     */
     getPlayerName() {
         const name = this.currentPlayer.name;
         // Treat dummy names as "no real name set"

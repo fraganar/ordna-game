@@ -108,11 +108,39 @@ Challenge-flödet är nu det primära sättet att spela. Single-player och chall
 - Fel challenger-namn (hybrid-system problem) - rad 154 & 788 i challengeSystem.js
 - Cache uppdateras inte direkt - invalidering i completeChallenge()
 - localStorage/Firebase migration - borttagen pga per-device limitation
+- window.FirebaseAPI export saknades - gjorde att namn inte sparades (2025-01-12)
 
 **Design-beslut:**
 - localStorage = Persistent identity (playerId, playerName)
 - Firebase = Challenge data + player records
 - Ingen retry-logik (Firebase är extremt pålitlig)
+
+## Player Name Management
+
+**Design-princip:**
+- Dummy-namn genereras automatiskt vid första besök (`Spelare_12345`)
+- Dummy-namn är OK internt men triggar prompt vid publika funktioner (challenges)
+- Riktiga namn synkas omedelbart till Firebase när användaren anger dem
+- Firebase-restore prioriterar riktiga namn över dummy-namn (för device switching)
+
+**Implementation:**
+- `isDummyName(name)` - Helper för att detektera dummy-namn (app.js rad 3-7)
+- `window.FirebaseAPI` - Global export för Firebase-operationer (firebase-config.js rad 390)
+- `PlayerManager.getPlayerName()` - Returnerar null för dummy-namn → triggar prompt
+- `PlayerManager.setPlayerName(name)` - Synkar automatiskt till Firebase
+- `handleSavePlayerName()` - Explicit Firebase-sync när användare anger namn (eventHandlers.js)
+
+**Namn-flöde:**
+1. Ny användare → Dummy-namn skapas lokalt (`Spelare_xxxxx`)
+2. Användare klickar "Spela nu" → Prompt visas (getPlayerName() returnerar null)
+3. Användare anger "Anna" → Sparas till localStorage + Firebase
+4. Vid nästa besök → "Anna" laddas från Firebase om localStorage rensats
+
+**Viktigt:**
+- Dummy-namn sparas i både localStorage OCH Firebase (temporärt)
+- Firebase-namn uppdateras när användare anger riktigt namn
+- Internt kan kod använda `currentPlayer.name` direkt (alltid definierad)
+- Publikt använd `getPlayerName()` (returnerar null för dummy)
 
 ## Local Development
 1. Start local server: `python3 -m http.server 8000`

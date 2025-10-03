@@ -1,15 +1,5 @@
 // Main Application Entry Point - Initializes and coordinates all modules
-
-// Helper to detect dummy names (used as fallback, not real user names)
-function isDummyName(name) {
-    if (!name) return true;
-    // Match pattern: Spelare_[digits]
-    // Dummy names are OK internally, but should trigger name prompt before public use
-    return /^Spelare_\d+$/.test(name);
-}
-
-// Export globally
-window.isDummyName = isDummyName;
+// Note: isDummyName() is now in utils.js
 
 class App {
     constructor() {
