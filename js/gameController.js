@@ -23,8 +23,6 @@ class GameController {
     
     // Initialize game based on mode
     async initializeGame(playerCount, playerNames) {
-        console.log(`Starting game with ${playerCount} player(s)`);
-        
         // Initialize players through PlayerManager
         if (window.PlayerManager) {
             PlayerManager.initializePlayers(playerCount, playerNames);
@@ -59,14 +57,12 @@ class GameController {
             // If challenge mode, use challenge questions
             if (this.isChallengeMode && this.challengeQuestions.length > 0) {
                 this.questionsToPlay = [...this.challengeQuestions];
-                console.log('Using challenge questions:', this.questionsToPlay.length);
                 return;
             }
-            
+
             // Otherwise load from packs
             const packToLoad = this.selectedPack || 'Frågepaket 1';
-            console.log('Loading questions from pack:', packToLoad);
-            
+
             // Filter questions by pack
             if (this.allQuestions.length > 0) {
                 if (packToLoad === 'Alla') {
@@ -75,7 +71,6 @@ class GameController {
                     const filtered = this.allQuestions.filter(q => q.pack === packToLoad);
                     this.questionsToPlay = window.GameData.shuffleArray(filtered);
                 }
-                console.log(`Loaded ${this.questionsToPlay.length} questions from pack: ${packToLoad}`);
             }
         } catch (error) {
             console.error('Failed to load questions:', error);

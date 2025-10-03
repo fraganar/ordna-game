@@ -230,8 +230,6 @@ class UIRenderer {
     
     // Show correct answers for belongs questions
     showBelongsCorrectAnswers(question) {
-        console.log('DEBUG showBelongsCorrectAnswers called with question:', question?.fråga);
-        
         // Guard against multiple calls - check if already processed
         const grid = this.get('optionsGrid');
         if (!grid) {
@@ -359,11 +357,6 @@ class UIRenderer {
                 activePlayerDisplay.textContent = `${currentPlayer.name}s tur`;
                 activePlayerDisplay.classList.add('active-player-highlight');
             } else if (activePlayerDisplay) {
-                console.warn('updatePlayerDisplay: currentPlayer is undefined', {
-                    currentPlayerIndex,
-                    playersLength: players?.length,
-                    players
-                });
                 activePlayerDisplay.textContent = 'Spelares tur';
             }
             
@@ -429,12 +422,10 @@ class UIRenderer {
         const startMain = this.get('startMain');
         const playerSetup = this.get('playerSetup');
         const challengeForm = this.get('challengeForm');
-        
-        // 🚫 TEMPORARILY DISABLED: innerHTML reset destroys multiplayer structure  
+
+        // 🚫 TEMPORARILY DISABLED: innerHTML reset destroys multiplayer structure
         // This bandaid prevents contamination but doesn't fix root architectural problem
         if (false && endScreen) {
-            console.log('🚨 WARNING: showStartScreen() is RESETTING endScreen.innerHTML!');
-            console.trace('Call stack showing WHO called showStartScreen:');
             endScreen.innerHTML = `
         <h2 class="text-3xl sm:text-4xl font-bold text-slate-900 mb-2">Spelet är slut!</h2>
         <p id="end-screen-subtitle" class="text-slate-600 mb-6 text-base sm:text-lg">Bra kämpat allihopa!</p>
@@ -922,12 +913,10 @@ class UIRenderer {
         const endScreen = this.get('endScreen');
         const startMain = this.get('startMain');
         const playerSetup = this.get('playerSetup');
-        
-        // 🚫 TEMPORARILY DISABLED: innerHTML reset destroys multiplayer structure  
+
+        // 🚫 TEMPORARILY DISABLED: innerHTML reset destroys multiplayer structure
         // This bandaid prevents contamination but doesn't fix root architectural problem
         if (false && endScreen) {
-            console.log('🚨 WARNING: showStartScreen() is RESETTING endScreen.innerHTML!');
-            console.trace('Call stack showing WHO called showStartScreen:');
             endScreen.innerHTML = `
         <h2 class="text-3xl sm:text-4xl font-bold text-slate-900 mb-2">Spelet är slut!</h2>
         <p id="end-screen-subtitle" class="text-slate-600 mb-6 text-base sm:text-lg">Bra kämpat allihopa!</p>

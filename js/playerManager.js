@@ -28,8 +28,6 @@ class PlayerManager {
                 completionReason: null // 'stopped', 'wrong', 'finished'
             });
         }
-        
-        console.log('Initialized players:', this.players);
     }
     
     // Get current active player
@@ -113,11 +111,10 @@ class PlayerManager {
         
         
         currentPlayer.roundPot++;
-        
+
         // Save point for challenge mode (each correct answer = 1 point)
         if (window.ChallengeSystem && window.ischallengeMode) {
             window.ChallengeSystem.saveScore(1, actualQuestionIndex);
-            console.log(`Challenge: Saved 1 point for question ${actualQuestionIndex}`);
         }
         
         // Show animation
@@ -242,11 +239,9 @@ class PlayerManager {
         }
         
         const {player, points} = playersToSecure[index];
-        
+
         // Show animation for this player
         if (window.AnimationEngine) {
-            // Add visual indicator for which player is being secured (optional)
-            console.log(`Securing ${player.name}: ${points} points`);
             window.AnimationEngine.showSecureAnimation(points);
         }
         

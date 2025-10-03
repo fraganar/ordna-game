@@ -8,27 +8,25 @@ class App {
     
     // Initialize the application
     async initialize() {
-        console.log('Initializing Tres Mangos...');
-        
         try {
             // Wait for DOM to be ready
             await this.waitForDOM();
-            
+
             // Initialize player identity (now async for Firebase sync)
             await this.initializePlayer();
 
             // Load game data
             await this.loadGameData();
-            
+
             // Setup UI
             this.setupUI();
-            
+
             // Validate startup dependencies
             this.validateDependencies();
-            
+
             // Check for challenge in URL
             await this.checkForChallenge();
-            
+
             // MIGRATED from game.js initializeApp(): Check for notifications
             const playerName = window.PlayerManager ? window.PlayerManager.getPlayerName() : null;
             if (playerName) {
@@ -41,15 +39,14 @@ class App {
                 // REMOVED: Setting challenger name here was wrong - it overwrote the correct name from Firebase
                 // The challenger name is set correctly in showChallengeAcceptScreen() from Firebase data
             }
-            
+
             // Load my challenges (but don't show notifications automatically)
             if (window.ChallengeSystem) {
                 await window.ChallengeSystem.loadMyChallenges();
             }
-            
+
             this.initialized = true;
-            console.log('Tres Mangos initialized successfully!');
-            
+
         } catch (error) {
             console.error('Failed to initialize app:', error);
         }
@@ -91,7 +88,6 @@ class App {
             // New player - generate ID
             playerId = 'player_' + Date.now() + '_' + Math.random().toString(36).substr(2, 9);
             localStorage.setItem('playerId', playerId);
-            console.log('Generated new playerId:', playerId);
         }
 
         // Update footer display
@@ -102,7 +98,6 @@ class App {
             const timestamp = Date.now().toString().slice(-5); // Last 5 digits of timestamp
             playerName = `Spelare_${timestamp}`;
             localStorage.setItem('playerName', playerName);
-            console.log('Generated unique default name:', playerName);
         }
 
         // Update footer after setting name
@@ -118,8 +113,6 @@ class App {
 
         // Clean up old localStorage data (except playerId and playerName)
         this.cleanupLocalStorage();
-
-        console.log('Player initialized:', { playerId, playerName });
     }
 
     // Sync player data to Firebase
@@ -140,7 +133,6 @@ class App {
                     if (window.PlayerManager && typeof PlayerManager.setPlayerName === 'function') {
                         PlayerManager.setPlayerName(firebaseName);
                     }
-                    console.log('✅ Restored real name from Firebase:', firebaseName);
                     // Still update lastSeen but with Firebase name
                     await FirebaseAPI.upsertPlayer(playerId, firebaseName);
                     this.updateFooterDisplay();
@@ -158,13 +150,11 @@ class App {
                     if (window.PlayerManager && typeof PlayerManager.setPlayerName === 'function') {
                         PlayerManager.setPlayerName(firebaseName);
                     }
-                    console.log('Updated local name from Firebase:', firebaseName);
                 }
             } else {
                 // New player or existing without Firebase data
                 // Create player with current name (even if dummy - can be updated later)
                 await FirebaseAPI.upsertPlayer(playerId, playerName);
-                console.log('Created player in Firebase:', playerName);
             }
         } catch (error) {
             console.error('Failed to sync player to Firebase:', error);
@@ -185,7 +175,6 @@ class App {
         }
 
         if (keysToRemove.length > 0) {
-            console.log(`Cleaning up ${keysToRemove.length} old localStorage keys`);
             keysToRemove.forEach(key => localStorage.removeItem(key));
         }
     }
@@ -193,11 +182,9 @@ class App {
     // Load all game data
     async loadGameData() {
         // Game data loading (without UI population which happens later)
-        console.log('Loading game data...');
-        
+
         // MIGRATED from game.js initializeApp(): Populate pack shop
         if (typeof window.populatePackShop === 'function') {
-            console.log('Calling populatePackShop...');
             window.populatePackShop();
         } else {
             console.warn('populatePackShop function not found');
@@ -210,20 +197,12 @@ class App {
         if (window.AnimationEngine && typeof AnimationEngine.resetDecisionButtons === 'function') {
             AnimationEngine.resetDecisionButtons();
         }
-        
+
         // MIGRATED from loadGameData(): Populate pack selectors (now that UI is ready)
-        console.log('Debug GameData:', {
-            'window.GameData exists': !!window.GameData,
-            'GameData.populatePackSelectors type': typeof (window.GameData && window.GameData.populatePackSelectors),
-            'GameData keys': window.GameData ? Object.getOwnPropertyNames(window.GameData) : 'no GameData'
-        });
-        
         if (window.GameData && typeof window.GameData.populatePackSelectors === 'function') {
-            console.log('Using GameData.populatePackSelectors...');
             window.GameData.populatePackSelectors();
         } else {
             // Fallback to old method if GameData not available
-            console.log('Fallback: Using window.populatePackSelect...');
             if (typeof window.populatePackSelect === 'function') {
                 window.populatePackSelect();
             }
@@ -252,12 +231,10 @@ class App {
     
     // Validate that all required global dependencies are available
     validateDependencies() {
-        console.log('Validating startup dependencies...');
-        
         const requiredFunctions = [
             // Functions required by eventHandlers.js
             'playerStops',
-            'showPlayerSetup', 
+            'showPlayerSetup',
             'createPlayerInputs',
             'initializeGame',
             'restartGame',
@@ -271,29 +248,25 @@ class App {
             // Functions required by playerManager.js
             'updateGameControls'  // KRITISK för BL-002: UI-tillståndshantering vid spelarbyte
         ];
-        
+
         const missingFunctions = [];
-        
+
         for (const funcName of requiredFunctions) {
             if (typeof window[funcName] !== 'function') {
                 missingFunctions.push(funcName);
             }
         }
-        
+
         if (missingFunctions.length > 0) {
             console.error('🚨 CRITICAL: Missing required global functions:', missingFunctions);
             console.error('This can cause runtime errors when event handlers are triggered.');
             console.error('Check that these functions are properly exposed in game.js');
-        } else {
-            console.log('✅ All required global functions are available');
         }
-        
+
         // Log available modules for debugging
         const modules = ['PlayerManager', 'GameData', 'GameController', 'UI', 'AnimationEngine', 'ChallengeSystem'];
-        const availableModules = modules.filter(mod => window[mod]);
         const missingModules = modules.filter(mod => !window[mod]);
-        
-        console.log('Available modules:', availableModules);
+
         if (missingModules.length > 0) {
             console.warn('Missing modules:', missingModules);
         }
@@ -376,11 +349,6 @@ class App {
                 return;
             }
 
-            // Debug för att identifiera problemet
-            console.log('DEBUG: Challenge data from Firebase:', challenge);
-            console.log('DEBUG: Challenger object:', challenge.challenger);
-            console.log('DEBUG: Challenger name should be:', challenge.challenger?.name);
-
             // Show normal accept screen
             const challengerDisplayName = document.getElementById('challenger-display-name');
             if (challengerDisplayName && challenge.challenger) {
@@ -450,7 +418,6 @@ class App {
     async showChallengeResult(challengeId) {
         // This would show the challenge result screen
         // Implementation depends on how you want to display results
-        console.log('Show challenge result:', challengeId);
     }
     
     // Show challenge blocked dialog
@@ -519,7 +486,6 @@ class App {
         } else {
             alert(message);
         }
-        console.log('Challenge protection message:', message);
     }
 }
 

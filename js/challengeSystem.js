@@ -127,27 +127,13 @@ class ChallengeSystem {
 
         // Prevent duplicate challenge creation
         if (this.isCreatingChallenge) {
-            console.log('⚠️ Already creating challenge, preventing duplicate call');
             return;
         }
         this.isCreatingChallenge = true;
 
-        // Debug: Log call stack to find duplicate calls
-        console.log('🔍 completeChallenge called from:');
-        console.trace();
-
         try {
             // Get final score from PlayerManager
             const finalPlayer = window.PlayerManager.getCurrentPlayer();
-
-            // Debug: Log PlayerManager state
-            console.log('🔍 PlayerManager state:', {
-                finalPlayer: finalPlayer,
-                playersArray: window.PlayerManager?.getPlayers(),
-                currentPlayerIndex: window.PlayerManager?.currentPlayerIndex,
-                hasPlayers: window.PlayerManager?.players?.length > 0
-            });
-
             const finalScore = finalPlayer ? finalPlayer.score : 0;
 
             // Create the challenge in Firebase with the results
@@ -156,15 +142,6 @@ class ChallengeSystem {
             // Use the real playerId from localStorage, not the temporary one from the game
             const playerId = localStorage.getItem('playerId');
 
-            // Debug logging to track name sources (helps identify hybrid-system bugs)
-            console.log('🔍 Challenge creation name sources:', {
-                playerNameFromLocalStorage: playerName,
-                playerNameFromPlayerManager: finalPlayer?.name,
-                playerId: playerId,
-                playerManagerState: window.PlayerManager?.getCurrentPlayer(),
-                critical: 'Using localStorage name to avoid wrong challenger bug'
-            });
-
             if (!playerId) {
                 console.error('No playerId found - cannot create challenge');
                 throw new Error('Player ID krävs för att skapa utmaning. Ladda om sidan och försök igen.');
@@ -172,14 +149,6 @@ class ChallengeSystem {
 
             // Use the actual question scores as they were earned (don't pad with zeros)
             const completeScores = [...window.challengeQuestionScores];
-
-            // Debug logging to verify scores
-            console.log('🎯 Creating challenge with scores:', {
-                playerName,
-                finalScore,
-                completeScores,
-                totalFromQuestions: completeScores.reduce((a, b) => a + b, 0)
-            });
 
             const newChallengeId = await FirebaseAPI.createChallenge(
                 playerName,
@@ -341,7 +310,6 @@ class ChallengeSystem {
     async getMyChallenges() {
         const playerId = localStorage.getItem('playerId');
         if (!playerId) {
-            console.log('No playerId found - cannot get challenges');
             return [];
         }
 
@@ -350,12 +318,10 @@ class ChallengeSystem {
             if (this.challengeCache &&
                 this.challengeCacheTime &&
                 Date.now() - this.challengeCacheTime < this.CACHE_TTL) {
-                console.log('Using cached challenges');
                 return this.challengeCache;
             }
 
             // Fetch from Firebase
-            console.log('Fetching challenges from Firebase...');
             const challenges = await FirebaseAPI.getUserChallenges(playerId);
 
             // Update cache
@@ -374,7 +340,6 @@ class ChallengeSystem {
     invalidateCache() {
         this.challengeCache = null;
         this.challengeCacheTime = null;
-        console.log('Challenge cache invalidated');
     }
 
     // updateChallengeStatus removed - no longer needed with Firebase as single source
@@ -422,7 +387,6 @@ class ChallengeSystem {
                 });
                 return true;
             } catch (err) {
-                console.log('User cancelled share or error:', err);
                 return false;
             }
         } else {
@@ -440,8 +404,6 @@ class ChallengeSystem {
         // Get playerId from localStorage
         const myPlayerId = localStorage.getItem('playerId');
 
-        console.log('DEBUG: loadMyChallenges called with playerId:', myPlayerId);
-
         if (!myPlayerId) {
             // No playerId = no challenges to show
             if (myChallengesSection) myChallengesSection.classList.add('hidden');
@@ -450,13 +412,9 @@ class ChallengeSystem {
 
         try {
             // Fetch challenges from Firebase
-            console.log('DEBUG: Fetching challenges from Firebase for playerId:', myPlayerId);
             const allChallenges = await FirebaseAPI.getUserChallenges(myPlayerId);
-            console.log('DEBUG: Received challenges from Firebase:', allChallenges.length, 'challenges');
-            console.log('DEBUG: Challenge details:', allChallenges);
 
             if (allChallenges.length === 0) {
-                console.log('DEBUG: No challenges found, hiding section');
                 if (myChallengesSection) myChallengesSection.classList.add('hidden');
                 return;
             }
@@ -600,7 +558,7 @@ class ChallengeSystem {
                                             shareBtn.textContent = 'Dela';
                                         }, 2000);
                                     } catch (err) {
-                                        console.log('Could not copy:', err);
+                                        // Silent fail
                                     }
                                 }
                             });
@@ -660,19 +618,8 @@ class ChallengeSystem {
             const myPlayerId = localStorage.getItem('playerId');
             const isChallenger = challenge.challenger?.playerId === myPlayerId;
 
-            console.log('DEBUG: Using playerId-based identification');
-            console.log('DEBUG: myPlayerId:', myPlayerId);
-            console.log('DEBUG: challenger.playerId:', challenge.challenger?.playerId);
-            console.log('DEBUG: opponent.playerId:', challenge.opponent?.playerId);
-            console.log('DEBUG: isChallenger:', isChallenger);
-            console.log('DEBUG: challenger.name:', challenge.challenger?.name);
-            console.log('DEBUG: opponent.name:', challenge.opponent?.name);
-            
             const myData = isChallenger ? challenge.challenger : challenge.opponent;
             const opponentData = isChallenger ? challenge.opponent : challenge.challenger;
-            
-            console.log('DEBUG: showChallengeResultView - myData:', myData);
-            console.log('DEBUG: showChallengeResultView - opponentData:', opponentData);
             
             // Create result view HTML
             const resultHTML = `
@@ -866,16 +813,7 @@ class ChallengeSystem {
             
             // Initialize PlayerManager directly with challenger's name instead of relying on DOM
             if (window.PlayerManager) {
-                console.log('🎮 Initializing PlayerManager for challenge with name:', playerName);
                 window.PlayerManager.initializePlayers(1, [playerName]);
-
-                // Verify initialization
-                const verifyPlayer = window.PlayerManager.getCurrentPlayer();
-                console.log('🎮 PlayerManager after init:', {
-                    currentPlayer: verifyPlayer,
-                    playerName: verifyPlayer?.name,
-                    playerScore: verifyPlayer?.score
-                });
 
                 // Synka globala variabler för kompatibilitet med game.js
                 if (typeof window.players !== 'undefined') {
@@ -910,7 +848,6 @@ class ChallengeSystem {
 
             // Start the game after a brief delay to ensure everything is initialized
             setTimeout(() => {
-                console.log('Starting challenge game with question index:', window.currentQuestionIndex);
                 if (typeof window.loadQuestion === 'function') {
                     window.loadQuestion();
                 }
@@ -926,18 +863,15 @@ class ChallengeSystem {
 
     // Show waiting for opponent view (moved from uiController.js)
     showWaitingForOpponentView(challengeId) {
-        console.log('🔍 showWaitingForOpponentView called with challengeId:', challengeId);
-        console.log('🔍 window.challengeId is:', window.challengeId);
         const challengeUrl = window.location.origin + window.location.pathname +
             '?challenge=' + challengeId;
-        console.log('🔍 Generated challengeUrl:', challengeUrl);
-        
+
         // Get player score - use PlayerManager if available
-        const playerScore = window.PlayerManager ? 
+        const playerScore = window.PlayerManager ?
             window.PlayerManager.getPlayers()[0]?.score : 0;
-        const playerName = window.PlayerManager ? 
+        const playerName = window.PlayerManager ?
             window.PlayerManager.getPlayerName() : 'Spelare';
-        
+
         // ✅ PROPER FIX: Use standard endScreen structure, just modify content
         UI?.showEndScreen();
 
@@ -946,7 +880,6 @@ class ChallengeSystem {
             // Clear any existing share container first
             const existingShare = endScreen.querySelector('.mb-6');
             if (existingShare) {
-                console.log('🔍 Removing old share container');
                 existingShare.remove();
             }
             // Use standard endScreen but adapt title and show single-player result
@@ -1046,7 +979,7 @@ class ChallengeSystem {
                                 shareBtn.textContent = 'Dela';
                             }, 2000);
                         } catch (copyErr) {
-                            console.log('Could not share or copy:', copyErr);
+                            // Silent fail
                         }
                     }
                 } else {
@@ -1058,7 +991,7 @@ class ChallengeSystem {
                             shareBtn.textContent = 'Dela';
                         }, 2000);
                     } catch (err) {
-                        console.log('Could not copy to clipboard:', err);
+                        // Silent fail
                     }
                 }
             });

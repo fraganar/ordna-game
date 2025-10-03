@@ -3,12 +3,9 @@
 function initializeAllEventListeners() {
     // Wait for UI to be ready
     if (!window.UI) {
-        console.log('Waiting for UI to be ready...');
         setTimeout(initializeAllEventListeners, 100);
         return;
     }
-    
-    console.log('Initializing event listeners...');
 
     // Main navigation buttons - NEW navigation (BL-027)
     const playNowBtn = UI.get('playNowBtn');
@@ -175,8 +172,6 @@ function initializeAllEventListeners() {
     if (backFromCompletedBtn) {
         backFromCompletedBtn.addEventListener('click', handleBackFromBlocked);
     }
-
-    console.log('Event listeners initialized');
 }
 
 // Handler functions that use UI.get() for DOM access
@@ -352,7 +347,7 @@ async function handleShare() {
                 text: `${shareText} ${challengeUrl}`
             });
         } catch (err) {
-            console.log('User cancelled share or error:', err);
+            // Silent fail
         }
     } else {
         // Fallback to WhatsApp sharing

@@ -25,28 +25,21 @@ class GameData {
     
     // Load questions for game - MOVED FROM game.js (this is the working implementation)
     async loadQuestionsForGame(selectedPack) {
-        console.log('GameData loadQuestionsForGame: selectedPack:', selectedPack);
-        
         if (selectedPack && selectedPack !== 'Alla') {
-            // Load specific pack  
-            console.log('GameData: Loading pack questions for:', selectedPack);
+            // Load specific pack
             const packQuestions = await this.loadPackQuestions(selectedPack);
-            console.log('GameData: packQuestions length:', packQuestions?.length);
             if (packQuestions.length > 0) {
                 // Update global variables for compatibility
                 window.allQuestions = packQuestions;
-                console.log('GameData: Set allQuestions to packQuestions, length:', packQuestions.length);
                 return packQuestions;
             }
             // Fallback if pack loading fails
             console.warn(`GameData: Failed to load pack "${selectedPack}", falling back to default questions`);
         }
-        
+
         // Load default questions or 'Alla'
-        console.log('GameData: Loading all questions');
         const allQuestions = await this.loadDefaultQuestions();
         window.allQuestions = allQuestions;
-        console.log('GameData: Set allQuestions to default, length:', allQuestions?.length);
         return allQuestions;
     }
     
