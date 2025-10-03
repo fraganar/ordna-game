@@ -291,6 +291,16 @@ function handleBackToStart() {
     if (startMain) startMain.classList.remove('hidden');
     if (challengeError) challengeError.classList.add('hidden');
     if (challengeSuccess) challengeSuccess.classList.add('hidden');
+
+    // Invalidate cache to ensure fresh data when showing "Mina utmaningar"
+    if (window.ChallengeSystem && typeof window.ChallengeSystem.invalidateCache === 'function') {
+        window.ChallengeSystem.invalidateCache();
+    }
+
+    // Reload challenges to show updated list
+    if (window.ChallengeSystem && typeof window.ChallengeSystem.loadMyChallenges === 'function') {
+        window.ChallengeSystem.loadMyChallenges();
+    }
 }
 
 function handleBackFromBlocked() {
@@ -304,6 +314,16 @@ function handleBackFromBlocked() {
     const url = new URL(window.location);
     url.searchParams.delete('challenge');
     window.history.pushState({}, '', url);
+
+    // Invalidate cache to ensure fresh data when showing "Mina utmaningar"
+    if (window.ChallengeSystem && typeof window.ChallengeSystem.invalidateCache === 'function') {
+        window.ChallengeSystem.invalidateCache();
+    }
+
+    // Reload challenges to show updated list
+    if (window.ChallengeSystem && typeof window.ChallengeSystem.loadMyChallenges === 'function') {
+        window.ChallengeSystem.loadMyChallenges();
+    }
 }
 
 // Removed handleShareOwnChallenge since we simplified the own challenge dialog
