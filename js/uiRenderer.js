@@ -761,7 +761,7 @@ class UIRenderer {
         const createChallengeBtn = this.get('createChallengeBtn');
         if (createChallengeBtn) {
             createChallengeBtn.disabled = false;
-            createChallengeBtn.textContent = 'Skapa utmaning';
+            createChallengeBtn.textContent = 'Börja spela →';
         }
     }
 

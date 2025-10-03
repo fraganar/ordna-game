@@ -956,16 +956,16 @@ class ChallengeSystem {
             const finalScore = endScreen.querySelector('#single-final-score');
             const finalScoreboard = endScreen.querySelector('#final-scoreboard');
             
-            if (title) title.textContent = 'Utmaning skapad!';
-            if (subtitle) subtitle.textContent = 'Din utmaning är redo att delas!';
-            
+            if (title) title.textContent = 'Bra kämpat!';
+            if (subtitle) subtitle.textContent = '';
+
             // Show single player result instead of multiplayer scoreboard
             if (singlePlayerFinal && finalScore) {
                 singlePlayerFinal.classList.remove('hidden');
                 finalScore.textContent = playerScore;
             }
             if (finalScoreboard) finalScoreboard.classList.add('hidden');
-            
+
             // Add challenge-specific sharing buttons after standard restart button
             const restartBtn = endScreen.querySelector('#restart-btn');
             if (restartBtn) {
@@ -975,9 +975,12 @@ class ChallengeSystem {
                 const shareContainer = document.createElement('div');
                 shareContainer.className = 'mb-6';
                 shareContainer.innerHTML = `
-                    <p class="text-sm text-slate-600 mb-3">Dela denna länk med din vän:</p>
+                    <div class="border-t border-slate-200 pt-6 mb-4">
+                        <h3 class="text-xl font-bold text-slate-800 mb-2">🏆 Utmana någon!</h3>
+                        <p class="text-slate-600 mb-3">Vågar någon slå ditt resultat? Dela länken:</p>
+                    </div>
                     <div class="bg-white border border-slate-300 rounded p-2 mb-3">
-                        <input type="text" id="challenge-link-created" value="${challengeUrl}" readonly 
+                        <input type="text" id="challenge-link-created" value="${challengeUrl}" readonly
                                class="w-full text-xs text-gray-600 bg-transparent border-none outline-none">
                     </div>
                     <div class="flex space-x-2 mb-4">
@@ -985,7 +988,7 @@ class ChallengeSystem {
                         <button id="share-created" class="flex-1 bg-slate-600 text-white py-2 px-3 rounded text-sm hover:bg-slate-700">Dela</button>
                     </div>
                 `;
-                
+
                 restartBtn.parentNode?.insertBefore(shareContainer, restartBtn);
             }
         }

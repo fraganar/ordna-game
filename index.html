@@ -212,10 +212,12 @@
 
             <!-- Challenge a Friend Form (Hidden by default) -->
             <div id="challenge-form" class="hidden">
-                <h2 class="text-2xl sm:text-3xl font-bold text-slate-900 mb-6 text-center">Utmana en vän</h2>
+                <h2 class="text-2xl sm:text-3xl font-bold text-slate-900 mb-6 text-center">Spela 12 frågor</h2>
                 <div class="bg-slate-50 border border-slate-200 rounded-lg p-4 mb-6">
-                    <p class="text-sm text-slate-600 mb-2">Ditt namn: <strong id="challenger-name-display">Ej angivet</strong></p>
-                    <p class="text-xs text-slate-500">Din vän kommer få en länk att klicka på</p>
+                    <p class="text-sm text-slate-600 mb-3">Spelare: <strong id="challenger-name-display">Ej angivet</strong></p>
+                    <div class="bg-info-light border-l-4 border-info p-3 rounded">
+                        <p class="text-base sm:text-lg text-slate-700"><strong>🏆 Efter spelet kan du dela länken för att utmana någon!</strong></p>
+                    </div>
                 </div>
                 
                 <!-- Pack Selection for Challenge -->
@@ -228,7 +230,7 @@
                 
                 <div class="space-y-4">
                     <button id="create-challenge-btn" class="w-full bg-gradient-to-r from-magic to-primary text-white font-bold py-3 sm:py-4 px-6 rounded-lg text-lg sm:text-xl hover:from-primary hover:to-magic-dark transition-colors">
-                        Skapa utmaning
+                        Börja spela →
                     </button>
                     <button id="back-to-start-btn" class="w-full bg-slate-200 text-slate-800 font-bold py-3 sm:py-4 px-6 rounded-lg text-lg sm:text-xl hover:bg-slate-300 transition-colors">
                         Tillbaka
