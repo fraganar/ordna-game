@@ -1611,13 +1611,14 @@ function restartGame() {
     
     // Reset game state
     if (window.ChallengeSystem) {
-        ChallengeSystem.reset();
+        window.ChallengeSystem.reset();
     } else {
         resetChallengeState();
     }
-    
-    // Reload my challenges
+
+    // Invalidate cache and reload challenges
     if (window.ChallengeSystem) {
+        window.ChallengeSystem.invalidateCache();
         window.ChallengeSystem.loadMyChallenges();
     }
 }
