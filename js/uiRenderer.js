@@ -6,7 +6,6 @@ class UIRenderer {
             startScreen: document.getElementById('start-screen'),
             startMain: document.getElementById('start-main'),
             playerSetup: document.getElementById('player-setup'),
-            showPlayerSetupBtn: document.getElementById('show-player-setup-btn'),
             playerCountSelect: document.getElementById('player-count'),
             playerNamesContainer: document.getElementById('player-names-container'),
             startGameBtn: document.getElementById('start-game-btn'),
@@ -16,15 +15,14 @@ class UIRenderer {
             toggleMoreModesBtn: document.getElementById('toggle-more-modes'),
             moreModesSection: document.getElementById('more-modes-section'),
             startLocalMultiplayerBtn: document.getElementById('start-local-multiplayer-btn'),
-            
+
             // Player name setup
             playerNameSetup: document.getElementById('player-name-setup'),
             playerNameInput: document.getElementById('player-name-input'),
             savePlayerNameBtn: document.getElementById('save-player-name-btn'),
-            
+
             // Challenge form elements
             challengeForm: document.getElementById('challenge-form'),
-            showChallengeFormBtn: document.getElementById('show-challenge-form-btn'),
             challengerNameDisplay: document.getElementById('challenger-name-display'),
             createChallengeBtn: document.getElementById('create-challenge-btn'),
             backToStartBtn: document.getElementById('back-to-start-btn'),
@@ -33,16 +31,16 @@ class UIRenderer {
             challengeLink: document.getElementById('challenge-link'),
             copyLinkBtn: document.getElementById('copy-link-btn'),
             shareBtn: document.getElementById('share-btn'),
-            
+
             // Challenge accept elements
             challengeAccept: document.getElementById('challenge-accept'),
             challengerDisplayName: document.getElementById('challenger-display-name'),
             acceptChallengeBtn: document.getElementById('accept-challenge-btn'),
             declineChallengeBtn: document.getElementById('decline-challenge-btn'),
-            
+
             // Notifications
             notificationsArea: document.getElementById('notifications-area'),
-            
+
             // Game screen elements
             gameScreen: document.getElementById('game-screen'),
             endScreen: document.getElementById('end-screen'),
@@ -58,30 +56,27 @@ class UIRenderer {
             stopBtn: document.getElementById('stop-btn'),
             nextQuestionBtn: document.getElementById('next-question-btn'),
             finalScoreboard: document.getElementById('final-scoreboard'),
-            
+
             // Decision button elements
             decisionButton: document.getElementById('decision-button'),
             stopSide: document.getElementById('stop-side'),
             nextSide: document.getElementById('next-side'),
             largeNextQuestionBtn: document.getElementById('large-next-question-btn'),
-            
+
             // Pack shop elements
             packShopModal: document.getElementById('pack-shop-modal'),
-            openPackShopBtn: document.getElementById('open-pack-shop-btn'),
             closePackShopBtn: document.getElementById('close-pack-shop-btn'),
             confirmPacksBtn: document.getElementById('confirm-packs-btn'),
             packGrid: document.getElementById('pack-grid'),
-            
+
             // Single player elements
             singlePlayerScore: document.getElementById('single-player-score'),
             singlePlayerProgress: document.getElementById('single-player-progress'),
             progressBar: document.getElementById('progress-bar'),
-            singlePlayerStars: document.getElementById('single-player-stars'), // Legacy - may not exist
-            currentScoreContainer: document.getElementById('current-score-container'), // Legacy - may not exist
             singlePlayerFinal: document.getElementById('single-player-final'),
             singleFinalScore: document.getElementById('single-final-score'),
             endScreenSubtitle: document.getElementById('end-screen-subtitle'),
-            
+
             // Multiplayer elements
             playerStatusBar: document.getElementById('player-status-bar'),
             activePlayerDisplay: document.getElementById('active-player-display'),

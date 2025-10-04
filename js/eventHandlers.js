@@ -36,12 +36,6 @@ function initializeAllEventListeners() {
     if (startLocalMultiplayerBtn) {
         startLocalMultiplayerBtn.addEventListener('click', showPlayerSetup);
     }
-
-    // Legacy button (kept for backward compatibility)
-    const showPlayerSetupBtn = UI.get('showPlayerSetupBtn');
-    if (showPlayerSetupBtn) {
-        showPlayerSetupBtn.addEventListener('click', showPlayerSetup);
-    }
     
     // Player setup
     const playerCountSelect = UI.get('playerCountSelect');
@@ -97,13 +91,8 @@ function initializeAllEventListeners() {
             loadQuestion();
         });
     }
-    
+
     // Pack shop
-    const openPackShopBtn = UI.get('openPackShopBtn');
-    if (openPackShopBtn) {
-        openPackShopBtn.addEventListener('click', openPackShop);
-    }
-    
     const closePackShopBtn = UI.get('closePackShopBtn');
     if (closePackShopBtn) {
         closePackShopBtn.addEventListener('click', closePackShop);
@@ -121,13 +110,8 @@ function initializeAllEventListeners() {
             await handleSavePlayerName();
         });
     }
-    
+
     // Challenge system
-    const showChallengeFormBtn = UI.get('showChallengeFormBtn');
-    if (showChallengeFormBtn) {
-        showChallengeFormBtn.addEventListener('click', handleShowChallengeForm);
-    }
-    
     const createChallengeBtn = UI.get('createChallengeBtn');
     if (createChallengeBtn) {
         createChallengeBtn.addEventListener('click', () => {
