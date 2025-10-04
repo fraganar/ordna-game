@@ -480,7 +480,7 @@ class ChallengeSystem {
                                             ${resultIcon} ${resultText}
                                         </div>
                                         <p class="text-sm text-slate-600">
-                                            ${myScore}-${oppScore} poäng ${isChallenger ? 'mot' : 'från'} ${opponentData.name}
+                                            ${myScore}-${oppScore} poäng mot ${opponentData.name}
                                         </p>
                                         <p class="text-xs text-slate-500 mt-1">${this.getTimeAgo(createdDate)}</p>
                                     </div>
