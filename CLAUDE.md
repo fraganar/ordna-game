@@ -93,6 +93,23 @@ Challenge-flödet är nu det primära sättet att spela. Single-player och chall
 
 **Varning:** Dubbletter av funktioner (gamla + nya) skapar förvirring. Ersätt, integrera inte.
 
+## Error Handling Philosophy
+
+**Princip: Fail fast, no silent fallbacks**
+
+Fallbacks döljer problem och leder till svårhittade buggar. Istället:
+- **Visa tydliga felmeddelanden** när något går fel
+- **Logga fel i konsolen** för debugging
+- **Låt användaren veta** vad som hänt och vad de kan göra
+
+**Exempel:**
+- ❌ Dåligt: Firebase nere → Använd hårdkodad fallback-lista → Användaren ser inte problemet
+- ✅ Bra: Firebase nere → Visa "Kunde inte ladda frågepaket, försök igen senare"
+
+**Undantag där fallback är OK:**
+- Demo-läge när Firebase inte är konfigurerat alls (utvecklingsmiljö)
+- Temporär cache medan ny data laddas (men visa laddningsindikator)
+
 ## Firebase Challenge System - Teknisk Översikt
 
 **Implementation Status:** ✅ Komplett (Se docs/archive/FIREBASE_MIGRATION_PLAN.md för full historik)
