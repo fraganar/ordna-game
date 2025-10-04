@@ -444,29 +444,56 @@ class ChallengeSystem {
 
                         const myScore = myData.totalScore;
                         const oppScore = opponentData.totalScore;
-                        const resultEmoji = myScore > oppScore ? '🏆' : myScore < oppScore ? '' : '🤝';
+
+                        // Determine result
+                        const iWon = myScore > oppScore;
+                        const isDraw = myScore === oppScore;
+                        const iLost = myScore < oppScore;
+
+                        // Result styling and text
+                        let resultText, resultIcon, bgColor, borderColor;
+                        if (iWon) {
+                            resultText = 'Du vann!';
+                            resultIcon = '🏆';
+                            bgColor = 'bg-green-50';
+                            borderColor = 'border-green-200';
+                        } else if (isDraw) {
+                            resultText = 'Oavgjort!';
+                            resultIcon = '🤝';
+                            bgColor = 'bg-blue-50';
+                            borderColor = 'border-blue-200';
+                        } else {
+                            resultText = `${opponentData.name} vann`;
+                            resultIcon = '😔';
+                            bgColor = 'bg-slate-50';
+                            borderColor = 'border-slate-200';
+                        }
 
                         // Get creation date
                         const createdDate = challenge.created?.toDate ? challenge.created.toDate() : challenge.created;
 
                         item.innerHTML = `
-                            <div class="p-3 cursor-pointer" data-challenge-id="${challenge.id}">
+                            <div class="p-3 cursor-pointer ${bgColor}" data-challenge-id="${challenge.id}">
                                 <div class="flex justify-between items-start">
                                     <div class="flex-1">
-                                        <p class="font-semibold text-slate-800">
-                                            ${isChallenger ? 'Utmanade' : 'Utmanad av'} ${opponentData.name}
-                                        </p>
-                                        <p class="text-sm text-slate-600 font-medium mt-1">
-                                            Du: ${myScore}p vs ${opponentData.name}: ${oppScore}p ${resultEmoji}
+                                        <div class="text-base font-bold mb-1">
+                                            ${resultIcon} ${resultText}
+                                        </div>
+                                        <p class="text-sm text-slate-600">
+                                            ${myScore}-${oppScore} poäng ${isChallenger ? 'mot' : 'från'} ${opponentData.name}
                                         </p>
                                         <p class="text-xs text-slate-500 mt-1">${this.getTimeAgo(createdDate)}</p>
                                     </div>
-                                    <div class="flex items-center gap-2">
+                                    <div class="flex flex-col items-end gap-1">
                                         <span class="bg-teal-100 text-teal-800 text-xs font-semibold px-2 py-1 rounded">Klar</span>
+                                        <span class="text-xs text-blue-600">↓ Visa detaljer</span>
                                     </div>
                                 </div>
                             </div>
                         `;
+
+                        // Update item border color
+                        item.className = `challenge-list-item ${bgColor} border ${borderColor} rounded-lg overflow-hidden transition-all duration-300`;
 
                         // Click handler for expanding details inline
                         if (!this.isShowingWaitingView) {
@@ -480,25 +507,51 @@ class ChallengeSystem {
                                     existingDetails.remove();
                                     item.style.maxHeight = '';
                                 } else {
-                                    // Expand to show details
+                                    // Expand to show compact details
                                     const detailsDiv = document.createElement('div');
                                     detailsDiv.className = 'challenge-details border-t border-slate-200 mt-3 pt-3';
 
-                                    // Create score breakdown
+                                    // Create compact score visualization
                                     const myScores = myData.questionScores || [];
                                     const oppScores = opponentData.questionScores || [];
 
-                                    let scoreDetails = '<div class="grid grid-cols-2 gap-4 text-sm">';
-                                    scoreDetails += '<div><strong>' + (isChallenger ? 'Du' : opponentData.name) + ':</strong></div>';
-                                    scoreDetails += '<div><strong>' + (isChallenger ? opponentData.name : 'Du') + ':</strong></div>';
+                                    // Build compact horizontal visualization
+                                    let scoreDetails = '<div class="text-xs mb-2 font-semibold text-slate-700">Poäng per fråga:</div>';
+                                    scoreDetails += '<div class="grid grid-cols-12 gap-1 mb-2">';
 
                                     for (let i = 0; i < Math.max(myScores.length, oppScores.length); i++) {
                                         const myRoundScore = myScores[i] || 0;
                                         const oppRoundScore = oppScores[i] || 0;
-                                        scoreDetails += `<div>Fråga ${i+1}: ${myRoundScore}p</div>`;
-                                        scoreDetails += `<div>Fråga ${i+1}: ${oppRoundScore}p</div>`;
+
+                                        // Color code: green if I won, red if I lost, gray if tied
+                                        let cellColor = 'bg-slate-100';
+                                        if (myRoundScore > oppRoundScore) {
+                                            cellColor = 'bg-green-200';
+                                        } else if (myRoundScore < oppRoundScore) {
+                                            cellColor = 'bg-red-200';
+                                        }
+
+                                        scoreDetails += `
+                                            <div class="${cellColor} rounded p-1 text-center text-xs" title="Fråga ${i+1}: Du ${myRoundScore}p vs ${opponentData.name} ${oppRoundScore}p">
+                                                <div class="font-bold text-slate-800">${myRoundScore}</div>
+                                                <div class="text-slate-600">${oppRoundScore}</div>
+                                            </div>
+                                        `;
                                     }
                                     scoreDetails += '</div>';
+
+                                    // Add summary stats
+                                    const myBestScore = Math.max(...myScores);
+                                    const oppBestScore = Math.max(...oppScores);
+                                    const myBestQuestions = myScores.map((s, i) => s === myBestScore ? i+1 : null).filter(x => x !== null);
+                                    const oppBestQuestions = oppScores.map((s, i) => s === oppBestScore ? i+1 : null).filter(x => x !== null);
+
+                                    scoreDetails += `
+                                        <div class="text-xs text-slate-600 mt-2 space-y-1">
+                                            <div>Din bästa: Fråga ${myBestQuestions.join(', ')} (${myBestScore}p)</div>
+                                            <div>${opponentData.name}s bästa: Fråga ${oppBestQuestions.join(', ')} (${oppBestScore}p)</div>
+                                        </div>
+                                    `;
 
                                     detailsDiv.innerHTML = scoreDetails;
                                     item.querySelector('.p-3').appendChild(detailsDiv);
