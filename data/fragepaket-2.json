@@ -1,5 +1,5 @@
 {
-  "name": "Frågepaket 1 - Blandat med B",
+  "name": "Frågepaket 2",
   "description": "Kuriosa, populärkultur och litteratur genom tiderna",
   "questions": [
     {
@@ -13,7 +13,9 @@
         "Han utförde personligen alla sina egna stunttrick i sina filmer.",
         "Han var vegetarian och svimmade om han såg rått kött."
       ],
-      "tillhör_index": [0],
+      "tillhör_index": [
+        0
+      ],
       "förklaring": "Hitchcock hade panisk skräck för ägg (ovofobi) och berättade själv att han aldrig smakat ett. Övriga påståenden är påhittade."
     },
     {
@@ -27,7 +29,9 @@
         "Hon var i hemlighet förlovad med poeten Lord Byron en tid.",
         "Hon uppfann en tidig prototyp till kameran som hon beskrev i dagböcker."
       ],
-      "tillhör_index": [0],
+      "tillhör_index": [
+        0
+      ],
       "förklaring": "Efter Percy Shelleys död bevarade Mary Shelley hans förhärdade hjärta inlindat i siden i sitt skrivbord. Övriga alternativ är falska."
     },
     {
@@ -41,7 +45,9 @@
         "Han vann en Oscar för bästa manliga huvudroll i början av 2000-talet.",
         "Han pratade endast italienska i privatlivet, trots sin filmkarriär."
       ],
-      "tillhör_index": [0],
+      "tillhör_index": [
+        0
+      ],
       "förklaring": "Lee gav ut metal-album, bland annat 'Charlemagne: The Omens of Death', runt sin 90-årsdag. Övriga påståenden är falska."
     },
     {
@@ -55,7 +61,9 @@
         "Det finns över 100 pyramider dolda under isen i Antarktis.",
         "Det har inte hittats några pyramider alls i Kina."
       ],
-      "tillhör_index": [0],
+      "tillhör_index": [
+        0
+      ],
       "förklaring": "Sudan har cirka 250 kända pyramider, fler än Egypten som har omkring 118. Övriga påståenden är felaktiga."
     },
     {
@@ -69,7 +77,11 @@
         "De första moderna olympiska spelen hölls 1896.",
         "OS har alltid hållits vart fjärde år utan avbrott."
       ],
-      "tillhör_index": [0, 1, 2],
+      "tillhör_index": [
+        0,
+        1,
+        2
+      ],
       "förklaring": "Blå ring = Europa, elden tänds i Olympia i Grekland, första moderna OS hölls 1896. OS har ställts in under världskrigen, så påstående 4 är falskt."
     },
     {
@@ -83,7 +95,10 @@
         "Han gifte sig vid 18 års ålder.",
         "Han var både skådespelare och pjäsförfattare."
       ],
-      "tillhör_index": [0, 3],
+      "tillhör_index": [
+        0,
+        3
+      ],
       "förklaring": "Shakespeare skrev 154 sonetter, och han var både skådespelare och dramatiker. Han gifte sig vid 18 år är fel (han var 18 när han blev fader, men 18-årsmyten bygger på missförstånd). Svenska översättningar kom först på 1700-talet."
     },
     {

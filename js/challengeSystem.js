@@ -810,16 +810,26 @@ class ChallengeSystem {
             const challengePackSelect = window.UI?.get('challengePackSelect');
             const selectedPack = challengePackSelect?.value || null;
             window.selectedPack = selectedPack; // Also set global for compatibility
-            
+
             // Load questions using GameData (working implementation moved there)
             if (window.GameData && window.GameData.loadQuestionsForGame) {
-                await window.GameData.loadQuestionsForGame(selectedPack);
+                try {
+                    await window.GameData.loadQuestionsForGame(selectedPack);
+                } catch (loadError) {
+                    // Show user-friendly error message
+                    alert(`❌ Kunde inte ladda frågepaket\n\n${loadError.message}\n\nVänligen välj ett annat frågepaket.`);
+                    console.error('Failed to load question pack:', loadError);
+                    return; // Stop challenge creation
+                }
             } else {
                 console.error('GameData.loadQuestionsForGame not available');
+                alert('❌ Systemfel: GameData är inte tillgängligt. Ladda om sidan.');
+                return;
             }
-            
+
             if (!window.allQuestions || window.allQuestions.length === 0) {
-                throw new Error('No questions available for selected pack');
+                alert('❌ Inga frågor kunde laddas. Vänligen välj ett annat frågepaket.');
+                return;
             }
             
             // Select 12 random questions from loaded pack

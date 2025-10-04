@@ -1,212 +1,216 @@
-[
-  {
-    "typ": "hör_till",
-    "svårighetsgrad": "medel",
-    "fråga": "Vilka två påståenden om ABBA är sanna?",
-    "kategori": "Hör till: sanna påståenden om ABBA",
-    "alternativ": [
-      "Namnet ABBA är bildat av medlemmarnas initialer.",
-      "Gruppen bildades på 1960-talet.",
-      "ABBA vann Eurovision Song Contest 1974.",
-      "Två av medlemmarna i ABBA är syskon."
-    ],
-    "tillhör_index": [
-      0,
-      2
-    ],
-    "förklaring": "Namnet ABBA består av första bokstaven i medlemmarnas förnamn (Agnetha, Björn, Benny, Anni-Frid). Gruppen slog igenom på 1970-talet (de vann Eurovision 1974), alltså inte på 60-talet. Inga av medlemmarna är dessutom syskon – de var två gifta par."
-  },
-  {
-    "typ": "ordna",
-    "svårighetsgrad": "medel",
-    "fråga": "Ordna byggnadsverken efter när de uppfördes (äldst först).",
-    "alternativ": [
-      "Eiffeltornet (Paris)",
-      "Keopspyramiden i Giza",
-      "Notre-Dame i Paris",
-      "Colosseum i Rom"
-    ],
-    "rätt_ordning": [
-      "Keopspyramiden i Giza",
-      "Colosseum i Rom",
-      "Notre-Dame i Paris",
-      "Eiffeltornet (Paris)"
-    ],
-    "förklaring": "Keopspyramiden uppfördes omkring 2500 f.Kr., Colosseum invigdes ca 80 e.Kr., Notre-Dame stod klar 1345, och Eiffeltornet invigdes 1889. Därför är ordningen från äldst till yngst."
-  },
-  {
-    "typ": "hör_till",
-    "svårighetsgrad": "lätt",
-    "fråga": "Vilka två påståenden om Pippi Långstrump är sanna?",
-    "kategori": "Hör till: sanna påståenden om Pippi Långstrump",
-    "alternativ": [
-      "Hon har en lillebror som heter Emil.",
-      "Pippi är stark nog att lyfta en häst.",
-      "Pippi går snällt i skolan varje dag.",
-      "Hennes bästa vänner heter Tommy och Annika."
-    ],
-    "tillhör_index": [
-      1,
-      3
-    ],
-    "förklaring": "Pippi Långstrump är superstark – hon kan lyfta sin häst Lilla Gubben. Hennes bästa vänner är grannbarnen Tommy och Annika. Hon bor utan syskon (Emil hör till en annan saga) och går inte i skolan som vanliga barn."
-  },
-  {
-    "typ": "ordna",
-    "svårighetsgrad": "svår",
-    "fråga": "Ordna konstepokerna i kronologisk ordning (äldst först).",
-    "alternativ": [
-      "Modernismen",
-      "Renässansen",
-      "Romantiken",
-      "Barocken"
-    ],
-    "rätt_ordning": [
-      "Renässansen",
-      "Barocken",
-      "Romantiken",
-      "Modernismen"
-    ],
-    "förklaring": "Renässansen dominerade under 1400–1500-talet, Barocken under 1600-talet, Romantiken under 1800-talet och Modernismen vid 1900-talets början. Således är den kronologiska ordningen som ovan."
-  },
-  {
-    "typ": "hör_till",
-    "svårighetsgrad": "lätt",
-    "fråga": "Vilka två av dessa sporter är med i vinter-OS?",
-    "kategori": "Hör till: sporter i vinter-OS",
-    "alternativ": [
-      "Brottning",
-      "Curling",
-      "Skateboard",
-      "Skidskytte"
-    ],
-    "tillhör_index": [
-      1,
-      3
-    ],
-    "förklaring": "Curling och skidskytte är båda med i vinter-OS, medan brottning är en sommarolympisk sport och skateboard debuterade som sommarsport år 2020."
-  },
-  {
-    "typ": "ordna",
-    "svårighetsgrad": "medel",
-    "fråga": "Ordna händelserna i tidsordning (äldst först).",
-    "alternativ": [
-      "Franska revolutionen",
-      "Romarrikets fall",
-      "Första världskrigets utbrott",
-      "Kolumbus resa till Amerika"
-    ],
-    "rätt_ordning": [
-      "Romarrikets fall",
-      "Kolumbus resa till Amerika",
-      "Franska revolutionen",
-      "Första världskrigets utbrott"
-    ],
-    "förklaring": "Romarrikets fall skedde år 476 e.Kr., Kolumbus nådde Amerika 1492, Franska revolutionen startade 1789 och första världskriget bröt ut 1914. Alltså är det den kronologiska ordningen."
-  },
-  {
-    "typ": "hör_till",
-    "svårighetsgrad": "svår",
-    "fråga": "Vilka två påståenden om Leonardo da Vinci är sanna?",
-    "kategori": "Hör till: sanna påståenden om Leonardo da Vinci",
-    "alternativ": [
-      "Leonardo skulpterade den berömda statyn "David".",
-      "Leonardo målade porträttet "Mona Lisa".",
-      "Leonardo målade taket i Sixtinska kapellet.",
-      "Han skrev ofta sina anteckningar spegelvänt."
-    ],
-    "tillhör_index": [
-      1,
-      3
-    ],
-    "förklaring": "Leonardo da Vinci målade Mona Lisa, och han var känd för att ibland skriva sina anteckningar spegelvänt. Däremot skapade han varken statyn David eller Sixtinska kapellets takmålningar – de verken gjordes av Michelangelo."
-  },
-  {
-    "typ": "ordna",
-    "svårighetsgrad": "lätt",
-    "fråga": "Ordna uppfinningarna efter när de uppfanns (äldst först).",
-    "alternativ": [
-      "Internet",
-      "Telefonen",
-      "Flygplanet",
-      "Glödlampan"
-    ],
-    "rätt_ordning": [
-      "Telefonen",
-      "Glödlampan",
-      "Flygplanet",
-      "Internet"
-    ],
-    "förklaring": "Telefonen uppfanns 1876, glödlampan 1879, flygplanet flög första gången 1903, och internet kom långt senare under 1900-talets andra hälft. Därför är ordningen äldst till yngst."
-  },
-  {
-    "typ": "hör_till",
-    "svårighetsgrad": "medel",
-    "fråga": "Vilka två påståenden om regalskeppet Vasa är sanna?",
-    "kategori": "Hör till: sanna påståenden om regalskeppet Vasa",
-    "alternativ": [
-      "Hundratals personer omkom när Vasa sjönk.",
-      "Vasa sjönk under sin första seglats 1628.",
-      "Efter bärgningen rustades Vasa upp för nya strider.",
-      "Vraket bärgades år 1961."
-    ],
-    "tillhör_index": [
-      1,
-      3
-    ],
-    "förklaring": "Regalskeppet Vasa kantrade och sjönk på sin jungfruresa år 1628. Omkring 30 personer omkom (inte hundratals). Vraket bärgades 1961 och finns nu på museum; naturligtvis kom skeppet aldrig till användning i strid efter bärgningen."
-  },
-  {
-    "typ": "ordna",
-    "svårighetsgrad": "lätt",
-    "fråga": "Ordna musiklegenderna efter när de slog igenom (tidigast först).",
-    "alternativ": [
-      "ABBA",
-      "Elvis Presley",
-      "Madonna",
-      "The Beatles"
-    ],
-    "rätt_ordning": [
-      "Elvis Presley",
-      "The Beatles",
-      "ABBA",
-      "Madonna"
-    ],
-    "förklaring": "Elvis Presley slog igenom på 1950-talet, The Beatles på 1960-talet, ABBA på 1970-talet och Madonna på 1980-talet. Därför är ordningen i tidsföljd som ovan."
-  },
-  {
-    "typ": "hör_till",
-    "svårighetsgrad": "lätt",
-    "fråga": "Vilka två av följande är inte svenska traditioner?",
-    "kategori": "Hör INTE till: svenska traditioner",
-    "alternativ": [
-      "Midsommar",
-      "Oktoberfest",
-      "Luciafirandet",
-      "Thanksgiving"
-    ],
-    "tillhör_index": [
-      1,
-      3
-    ],
-    "förklaring": "Midsommar och Lucia är svenska traditioner, medan Oktoberfest (Tyskland) och Thanksgiving (USA) inte hör till svenska högtider."
-  },
-  {
-    "typ": "ordna",
-    "svårighetsgrad": "medel",
-    "fråga": "Ordna musikformaten efter när de introducerades (äldst först).",
-    "alternativ": [
-      "CD-skivan",
-      "Vinylskivan",
-      "MP3-formatet",
-      "Kassettbandet"
-    ],
-    "rätt_ordning": [
-      "Vinylskivan",
-      "Kassettbandet",
-      "CD-skivan",
-      "MP3-formatet"
-    ],
-    "förklaring": "Vinylskivan började användas under första halvan av 1900-talet, kassettbandet kom på 1960-talet, CD-skivan lanserades 1982 och MP3-formatet slog igenom på 1990-talet. Därför är ordningen från äldst till nyast."
-  }
-]
+{
+  "name": "Frågepaket 8",
+  "description": "Historia, arkitektur, konst, sport, kultur, musik och uppfinningar",
+  "questions": [
+    {
+      "typ": "hör_till",
+      "svårighetsgrad": "medel",
+      "fråga": "Vilka påståenden om ABBA är sanna?",
+      "kategori": "Hör till: sanna påståenden om ABBA",
+      "alternativ": [
+        "Namnet ABBA är bildat av medlemmarnas initialer.",
+        "Gruppen bildades på 1960-talet.",
+        "ABBA vann Eurovision Song Contest 1974.",
+        "Två av medlemmarna i ABBA är syskon."
+      ],
+      "tillhör_index": [
+        0,
+        2
+      ],
+      "förklaring": "Namnet ABBA består av första bokstaven i medlemmarnas förnamn (Agnetha, Björn, Benny, Anni-Frid). Gruppen slog igenom på 1970-talet (de vann Eurovision 1974), alltså inte på 60-talet. Inga av medlemmarna är dessutom syskon – de var två gifta par."
+    },
+    {
+      "typ": "ordna",
+      "svårighetsgrad": "medel",
+      "fråga": "Ordna byggnadsverken efter när de uppfördes (äldst först).",
+      "alternativ": [
+        "Eiffeltornet (Paris)",
+        "Keopspyramiden i Giza",
+        "Notre-Dame i Paris",
+        "Colosseum i Rom"
+      ],
+      "rätt_ordning": [
+        "Keopspyramiden i Giza",
+        "Colosseum i Rom",
+        "Notre-Dame i Paris",
+        "Eiffeltornet (Paris)"
+      ],
+      "förklaring": "Keopspyramiden uppfördes omkring 2500 f.Kr., Colosseum invigdes ca 80 e.Kr., Notre-Dame stod klar 1345, och Eiffeltornet invigdes 1889. Därför är ordningen från äldst till yngst."
+    },
+    {
+      "typ": "hör_till",
+      "svårighetsgrad": "lätt",
+      "fråga": "Vilka påståenden om Pippi Långstrump är sanna?",
+      "kategori": "Hör till: sanna påståenden om Pippi Långstrump",
+      "alternativ": [
+        "Hon har en lillebror som heter Emil.",
+        "Pippi är stark nog att lyfta en häst.",
+        "Pippi går snällt i skolan varje dag.",
+        "Hennes bästa vänner heter Tommy och Annika."
+      ],
+      "tillhör_index": [
+        1,
+        3
+      ],
+      "förklaring": "Pippi Långstrump är superstark – hon kan lyfta sin häst Lilla Gubben. Hennes bästa vänner är grannbarnen Tommy och Annika. Hon bor utan syskon (Emil hör till en annan saga) och går inte i skolan som vanliga barn."
+    },
+    {
+      "typ": "ordna",
+      "svårighetsgrad": "svår",
+      "fråga": "Ordna konstepokerna i kronologisk ordning (äldst först).",
+      "alternativ": [
+        "Modernismen",
+        "Renässansen",
+        "Romantiken",
+        "Barocken"
+      ],
+      "rätt_ordning": [
+        "Renässansen",
+        "Barocken",
+        "Romantiken",
+        "Modernismen"
+      ],
+      "förklaring": "Renässansen dominerade under 1400–1500-talet, Barocken under 1600-talet, Romantiken under 1800-talet och Modernismen vid 1900-talets början. Således är den kronologiska ordningen som ovan."
+    },
+    {
+      "typ": "hör_till",
+      "svårighetsgrad": "lätt",
+      "fråga": "Vilka av dessa sporter är med i vinter-OS?",
+      "kategori": "Hör till: sporter i vinter-OS",
+      "alternativ": [
+        "Brottning",
+        "Curling",
+        "Skateboard",
+        "Skidskytte"
+      ],
+      "tillhör_index": [
+        1,
+        3
+      ],
+      "förklaring": "Curling och skidskytte är båda med i vinter-OS, medan brottning är en sommarolympisk sport och skateboard debuterade som sommarsport år 2020."
+    },
+    {
+      "typ": "ordna",
+      "svårighetsgrad": "medel",
+      "fråga": "Ordna händelserna i tidsordning (äldst först).",
+      "alternativ": [
+        "Franska revolutionen",
+        "Romarrikets fall",
+        "Första världskrigets utbrott",
+        "Kolumbus resa till Amerika"
+      ],
+      "rätt_ordning": [
+        "Romarrikets fall",
+        "Kolumbus resa till Amerika",
+        "Franska revolutionen",
+        "Första världskrigets utbrott"
+      ],
+      "förklaring": "Romarrikets fall skedde år 476 e.Kr., Kolumbus nådde Amerika 1492, Franska revolutionen startade 1789 och första världskriget bröt ut 1914. Alltså är det den kronologiska ordningen."
+    },
+    {
+      "typ": "hör_till",
+      "svårighetsgrad": "svår",
+      "fråga": "Vilka påståenden om Leonardo da Vinci är sanna?",
+      "kategori": "Hör till: sanna påståenden om Leonardo da Vinci",
+      "alternativ": [
+        "Leonardo skulpterade den berömda statyn \"David\".",
+        "Leonardo målade porträttet \"Mona Lisa\".",
+        "Leonardo målade taket i Sixtinska kapellet.",
+        "Han skrev ofta sina anteckningar spegelvänt."
+      ],
+      "tillhör_index": [
+        1,
+        3
+      ],
+      "förklaring": "Leonardo da Vinci målade Mona Lisa, och han var känd för att ibland skriva sina anteckningar spegelvänt. Däremot skapade han varken statyn David eller Sixtinska kapellets takmålningar – de verken gjordes av Michelangelo."
+    },
+    {
+      "typ": "ordna",
+      "svårighetsgrad": "lätt",
+      "fråga": "Ordna uppfinningarna efter när de uppfanns (äldst först).",
+      "alternativ": [
+        "Internet",
+        "Telefonen",
+        "Flygplanet",
+        "Glödlampan"
+      ],
+      "rätt_ordning": [
+        "Telefonen",
+        "Glödlampan",
+        "Flygplanet",
+        "Internet"
+      ],
+      "förklaring": "Telefonen uppfanns 1876, glödlampan 1879, flygplanet flög första gången 1903, och internet kom långt senare under 1900-talets andra hälft. Därför är ordningen äldst till yngst."
+    },
+    {
+      "typ": "hör_till",
+      "svårighetsgrad": "medel",
+      "fråga": "Vilka påståenden om regalskeppet Vasa är sanna?",
+      "kategori": "Hör till: sanna påståenden om regalskeppet Vasa",
+      "alternativ": [
+        "Hundratals personer omkom när Vasa sjönk.",
+        "Vasa sjönk under sin första seglats 1628.",
+        "Efter bärgningen rustades Vasa upp för nya strider.",
+        "Vraket bärgades år 1961."
+      ],
+      "tillhör_index": [
+        1,
+        3
+      ],
+      "förklaring": "Regalskeppet Vasa kantrade och sjönk på sin jungfruresa år 1628. Omkring 30 personer omkom (inte hundratals). Vraket bärgades 1961 och finns nu på museum; naturligtvis kom skeppet aldrig till användning i strid efter bärgningen."
+    },
+    {
+      "typ": "ordna",
+      "svårighetsgrad": "lätt",
+      "fråga": "Ordna musiklegenderna efter när de slog igenom (tidigast först).",
+      "alternativ": [
+        "ABBA",
+        "Elvis Presley",
+        "Madonna",
+        "The Beatles"
+      ],
+      "rätt_ordning": [
+        "Elvis Presley",
+        "The Beatles",
+        "ABBA",
+        "Madonna"
+      ],
+      "förklaring": "Elvis Presley slog igenom på 1950-talet, The Beatles på 1960-talet, ABBA på 1970-talet och Madonna på 1980-talet. Därför är ordningen i tidsföljd som ovan."
+    },
+    {
+      "typ": "hör_till",
+      "svårighetsgrad": "lätt",
+      "fråga": "Vilka av följande är inte svenska traditioner?",
+      "kategori": "Hör INTE till: svenska traditioner",
+      "alternativ": [
+        "Midsommar",
+        "Oktoberfest",
+        "Luciafirandet",
+        "Thanksgiving"
+      ],
+      "tillhör_index": [
+        1,
+        3
+      ],
+      "förklaring": "Midsommar och Lucia är svenska traditioner, medan Oktoberfest (Tyskland) och Thanksgiving (USA) inte hör till svenska högtider."
+    },
+    {
+      "typ": "ordna",
+      "svårighetsgrad": "medel",
+      "fråga": "Ordna musikformaten efter när de introducerades (äldst först).",
+      "alternativ": [
+        "CD-skivan",
+        "Vinylskivan",
+        "MP3-formatet",
+        "Kassettbandet"
+      ],
+      "rätt_ordning": [
+        "Vinylskivan",
+        "Kassettbandet",
+        "CD-skivan",
+        "MP3-formatet"
+      ],
+      "förklaring": "Vinylskivan började användas under första halvan av 1900-talet, kassettbandet kom på 1960-talet, CD-skivan lanserades 1982 och MP3-formatet slog igenom på 1990-talet. Därför är ordningen från äldst till nyast."
+    }
+  ]
+}

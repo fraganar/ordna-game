@@ -1,11 +1,11 @@
 {
-  "name": "Frågepaket 1 - Blandat innehåll",
+  "name": "Frågepaket 1",
   "description": "Teknik, historia, språk, musik, byggnader och samhälle",
   "questions": [
     {
       "typ": "hör_till",
       "svårighetsgrad": "medel",
-      "fråga": "Nittiotalet bjöd på många filmklassiker. Vilka två av dessa filmer vann Oscar för bästa film under 1990-talet?",
+      "fråga": "Nittiotalet bjöd på många filmklassiker. Vilka av dessa filmer vann Oscar för bästa film under 1990-talet?",
       "kategori": "Hör till: filmer som vann Oscar för Bästa film på 1990-talet",
       "alternativ": [
         "The Shawshank Redemption",
@@ -129,7 +129,7 @@
     {
       "typ": "hör_till",
       "svårighetsgrad": "medel",
-      "fråga": "Superhjältar från olika serieförlag blandas här. Två av dessa är skapade av Marvel – vilka?",
+      "fråga": "Superhjältar från olika serieförlag blandas här. Vilka av dessa är skapade av Marvel?",
       "kategori": "Hör till: Marvelsuperhjältar",
       "alternativ": [
         "Batman",
@@ -198,7 +198,7 @@
     {
       "typ": "hör_till",
       "svårighetsgrad": "lätt",
-      "fråga": "Vikingatiden är omgärdad av många myter. Vilka två av följande påståenden om vikingar är faktiskt sanna?",
+      "fråga": "Vikingatiden är omgärdad av många myter. Vilka av följande påståenden om vikingar är faktiskt sanna?",
       "kategori": "Hör till: sanna påståenden om vikingar",
       "alternativ": [
         "Vikingarna använde runor som skriftspråk.",

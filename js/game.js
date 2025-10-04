@@ -871,13 +871,20 @@ async function initializeGame() {
     // Set selected pack from dropdown
     const packSelect = UI?.get('packSelect');
     selectedPack = packSelect?.value || null;
-    
+
     // Load questions using GameData (working implementation moved there)
-    allQuestions = await window.GameData.loadQuestionsForGame(selectedPack);
-    
+    try {
+        allQuestions = await window.GameData.loadQuestionsForGame(selectedPack);
+    } catch (loadError) {
+        // Show user-friendly error message
+        alert(`❌ Kunde inte ladda frågepaket\n\n${loadError.message}\n\nVänligen välj ett annat frågepaket och försök igen.`);
+        console.error('Failed to load question pack:', loadError);
+        return;
+    }
+
     if (allQuestions.length === 0) {
         console.error("No questions loaded! allQuestions.length:", allQuestions.length);
-        alert("Kunde inte ladda frågor. Kontrollera att frågefiler finns.");
+        alert("❌ Inga frågor kunde laddas. Vänligen välj ett annat frågepaket.");
         return;
     }
     

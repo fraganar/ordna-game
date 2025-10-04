@@ -5,6 +5,7 @@ class GameData {
         this.allQuestions = [];
         this.packMetadata = {};
         this.availablePacks = [];
+        this.cachedPacks = null; // Cache for packs.json
         this.dataPath = '/data/';
     }
     
@@ -23,54 +24,61 @@ class GameData {
         return shuffled.slice(0, count);
     }
     
-    // Load questions for game - MOVED FROM game.js (this is the working implementation)
+    // Load questions for game - throws error instead of silent fallback
     async loadQuestionsForGame(selectedPack) {
-        if (selectedPack && selectedPack !== 'Alla') {
-            // Load specific pack
+        if (selectedPack) {
+            // Load specific pack - will throw error if it fails
             const packQuestions = await this.loadPackQuestions(selectedPack);
-            if (packQuestions.length > 0) {
-                // Update global variables for compatibility
-                window.allQuestions = packQuestions;
-                return packQuestions;
-            }
-            // Fallback if pack loading fails
-            console.warn(`GameData: Failed to load pack "${selectedPack}", falling back to default questions`);
+            // Update global variables for compatibility
+            window.allQuestions = packQuestions;
+            return packQuestions;
         }
 
-        // Load default questions or 'Alla'
+        // Load default questions (only if no pack selected)
         const allQuestions = await this.loadDefaultQuestions();
         window.allQuestions = allQuestions;
         return allQuestions;
     }
     
-    // Load questions from a specific pack - MOVED FROM game.js
+    // Load questions from a specific pack - throws detailed errors instead of returning empty array
     async loadPackQuestions(packName) {
-        const pack = this.getPackConfig(packName);
-        
-        if (!pack || !pack.file) {
-            console.warn(`GameData: Pack "${packName}" not available or has no file`);
-            return [];
+        const pack = await this.getPackConfig(packName);
+
+        if (!pack) {
+            throw new Error(`Frågepaket "${packName}" hittades inte i listan. Kontakta admin.`);
         }
-        
+
         try {
-            const response = await fetch(`${this.dataPath}${pack.file}`);
+            // Use pack.id as the filename (already includes .json)
+            const response = await fetch(`${this.dataPath}${pack.id}`);
             if (!response.ok) {
-                throw new Error(`HTTP ${response.status}`);
+                if (response.status === 404) {
+                    throw new Error(`Filen för "${packName}" hittades inte (${pack.id}). Kontakta admin.`);
+                }
+                throw new Error(`Kunde inte ladda "${packName}" (HTTP ${response.status})`);
             }
-            
+
             const data = await response.json();
             let questions = Array.isArray(data) ? data : (data.questions || []);
-            
+
+            if (!questions || questions.length === 0) {
+                throw new Error(`"${packName}" innehåller inga frågor.`);
+            }
+
             // Add pack identifier to each question
             questions = questions.map(q => ({
                 ...q,
-                pack: data.name || packName
+                pack: pack.name || packName
             }));
-            
+
             return questions;
         } catch (error) {
-            console.error(`GameData: Failed to load pack "${packName}":`, error);
-            return [];
+            // If it's a SyntaxError (JSON parsing failed), provide helpful message
+            if (error instanceof SyntaxError) {
+                throw new Error(`"${packName}" har ett formatfel i JSON-filen. Kontakta admin.\n\nTeknisk info: ${error.message}`);
+            }
+            // Re-throw our custom errors or network errors
+            throw error;
         }
     }
     
@@ -95,59 +103,89 @@ class GameData {
         }
     }
     
-    // Helper to get pack configuration
-    getPackConfig(packName) {
-        const packConfigs = [
-            { name: "Frågepaket 1", file: "fragepaket-1.json" },
-            { name: "Frågepaket 2", file: "fragepaket-2.json" },
-            { name: "Frågepaket 3", file: "fragepaket-3.json" },
-            { name: "Frågepaket 4", file: "fragepaket-4.json" },
-            { name: "Frågepaket 5", file: "fragepaket-5.json" },
-            { name: "Frågepaket 6", file: "fragepaket-6.json" }
-        ];
-        
-        return packConfigs.find(p => p.name === packName);
+    // Load available packs from packs.json
+    async loadAvailablePacks() {
+        if (this.cachedPacks) {
+            return this.cachedPacks;
+        }
+
+        try {
+            const response = await fetch(`${this.dataPath}packs.json`);
+            if (!response.ok) {
+                throw new Error(`HTTP ${response.status}`);
+            }
+
+            const packs = await response.json();
+            this.cachedPacks = packs;
+            return packs;
+        } catch (error) {
+            console.error('GameData: Failed to load packs.json:', error);
+            throw new Error('Kunde inte ladda frågepaket. Kontrollera att /data/packs.json finns.');
+        }
+    }
+
+    // Helper to get pack configuration by name
+    async getPackConfig(packName) {
+        const packs = await this.loadAvailablePacks();
+        return packs.find(p => p.name === packName);
     }
     
-    // Populate pack selector dropdowns - simplified for on-demand loading
-    populatePackSelectors() {
+    // Populate pack selector dropdowns - loads from packs.json
+    async populatePackSelectors() {
         // Use direct DOM access since UI might not be ready yet
         const packSelect = document.getElementById('pack-select');
         const challengePackSelect = document.getElementById('challenge-pack-select');
-        
-        // Define available packs (same as getPackConfig)
-        const packConfigs = [
-            { name: "Frågepaket 1", displayName: "Frågepaket 1" },
-            { name: "Frågepaket 2", displayName: "Frågepaket 2" },
-            { name: "Frågepaket 3", displayName: "Frågepaket 3" },
-            { name: "Frågepaket 4", displayName: "Frågepaket 4" },
-            { name: "Frågepaket 5", displayName: "Frågepaket 5" },
-            { name: "Frågepaket 6", displayName: "Frågepaket 6" },
-            { name: "Alla", displayName: "Alla frågor" }
-        ];
-        
-        // Clear existing options
-        if (packSelect) packSelect.innerHTML = '';
-        if (challengePackSelect) challengePackSelect.innerHTML = '';
-        
-        // Add packs to selectors
-        packConfigs.forEach(pack => {
-            const option = document.createElement('option');
-            option.value = pack.name;
-            option.textContent = pack.displayName;
-            
-            // Add to both selectors
+
+        try {
+            // Load packs from packs.json
+            const packs = await this.loadAvailablePacks();
+
+            // Clear existing options
+            if (packSelect) packSelect.innerHTML = '';
+            if (challengePackSelect) challengePackSelect.innerHTML = '';
+
+            // Add packs to selectors
+            packs.forEach(pack => {
+                const option = document.createElement('option');
+                option.value = pack.name;
+                option.textContent = pack.name;
+
+                // Add to both selectors
+                if (packSelect) {
+                    packSelect.appendChild(option.cloneNode(true));
+                }
+                if (challengePackSelect) {
+                    challengePackSelect.appendChild(option.cloneNode(true));
+                }
+            });
+
+            // Set default selection to first pack
+            if (packSelect && packs.length > 0) {
+                packSelect.value = packs[0].name;
+            }
+            if (challengePackSelect && packs.length > 0) {
+                challengePackSelect.value = packs[0].name;
+            }
+
+        } catch (error) {
+            console.error('GameData: Kunde inte populera paketväljare:', error);
+
+            // Show error in dropdowns
+            const errorOption = document.createElement('option');
+            errorOption.value = '';
+            errorOption.textContent = '❌ Kunde inte ladda frågepaket';
+            errorOption.disabled = true;
+            errorOption.selected = true;
+
             if (packSelect) {
-                packSelect.appendChild(option.cloneNode(true));
+                packSelect.innerHTML = '';
+                packSelect.appendChild(errorOption.cloneNode(true));
             }
             if (challengePackSelect) {
-                challengePackSelect.appendChild(option.cloneNode(true));
+                challengePackSelect.innerHTML = '';
+                challengePackSelect.appendChild(errorOption.cloneNode(true));
             }
-        });
-        
-        // Set default selection to "Frågepaket 1"
-        if (packSelect) packSelect.value = 'Frågepaket 1';
-        if (challengePackSelect) challengePackSelect.value = 'Frågepaket 1';
+        }
     }
     
     // Utility: Shuffle array
