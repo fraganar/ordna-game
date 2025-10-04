@@ -1540,14 +1540,14 @@ function endMultiplayerGame() {
     }
 }
 
-function restartGame() {
+async function restartGame() {
     // Stop any ongoing polling
     if (window.ChallengeSystem && window.ChallengeSystem.stopPolling) {
         window.ChallengeSystem.stopPolling();
     } else if (typeof stopChallengePolling === 'function') {
         stopChallengePolling();
     }
-    
+
     // Reset game state - PlayerManager handles player reset
     currentQuestionIndex = 0;
     window.currentQuestionIndex = 0; // Sync global variable
@@ -1560,31 +1560,31 @@ function restartGame() {
         resetChallengeState();
     }
     selectedPack = null;
-    
+
     // Hide player status bar
     const playerStatusBar = document.getElementById('player-status-bar');
     if (playerStatusBar) {
         playerStatusBar.classList.add('hidden');
     }
-    
+
     // Restore endScreen HTML
     const endScreen = document.getElementById('end-screen');
     if (endScreen) {
         endScreen.innerHTML = `
         <h2 class="text-3xl sm:text-4xl font-bold text-slate-900 mb-2">Spelet är slut!</h2>
         <p id="end-screen-subtitle" class="text-slate-600 mb-6 text-base sm:text-lg">Bra kämpat allihopa!</p>
-        
+
         <!-- Single Player Final Score -->
         <div id="single-player-final" class="hidden bg-purple-100 text-purple-800 rounded-lg p-6 mb-8">
             <p class="text-xl">Din slutpoäng:</p>
             <p id="single-final-score" class="text-6xl font-bold"></p>
         </div>
-        
+
         <!-- Multiplayer Final Scoreboard -->
         <div id="final-scoreboard" class="space-y-3 sm:space-y-4 mb-8">
             <!-- Final player scores will be listed here -->
         </div>
-        
+
         <button id="restart-btn" class="w-full bg-gradient-to-r from-magic to-primary text-white font-bold py-3 px-6 rounded-lg text-lg sm:text-xl hover:from-primary hover:to-magic-dark transition-colors shadow-md">
             Spela igen
         </button>
@@ -1596,19 +1596,19 @@ function restartGame() {
             restartBtn.addEventListener('click', restartGame);
         }
     } // Close the if (endScreen) block
-    
+
     // Update element references
     endScreenSubtitle = document.getElementById('end-screen-subtitle');
     singlePlayerFinal = document.getElementById('single-player-final');
     singleFinalScore = document.getElementById('single-final-score');
     finalScoreboard = document.getElementById('final-scoreboard');
-    
+
     UI?.showStartScreen();
-    
+
     // Reset single player display
     singlePlayerFinal.classList.add('hidden');
     finalScoreboard.classList.remove('hidden');
-    
+
     // Reset game state
     if (window.ChallengeSystem) {
         window.ChallengeSystem.reset();
@@ -1619,7 +1619,7 @@ function restartGame() {
     // Invalidate cache and reload challenges
     if (window.ChallengeSystem) {
         window.ChallengeSystem.invalidateCache();
-        window.ChallengeSystem.loadMyChallenges();
+        await window.ChallengeSystem.loadMyChallenges();
     }
 }
 
