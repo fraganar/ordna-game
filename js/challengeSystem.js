@@ -755,6 +755,7 @@ class ChallengeSystem {
                     const gameScreen = window.UI?.get('gameScreen');
                     const playerSetup = window.UI?.get('playerSetup');
                     const challengeForm = window.UI?.get('challengeForm');
+                    const challengeAccept = window.UI?.get('challengeAccept');
                     const startScreen = window.UI?.get('startScreen');
                     const startMain = window.UI?.get('startMain');
 
@@ -762,6 +763,7 @@ class ChallengeSystem {
                     if (endScreen) endScreen.classList.add('hidden');
                     if (playerSetup) playerSetup.classList.add('hidden');
                     if (challengeForm) challengeForm.classList.add('hidden');
+                    if (challengeAccept) challengeAccept.classList.add('hidden');
 
                     // Show start screen
                     if (startScreen) startScreen.classList.remove('hidden');
