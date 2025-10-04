@@ -9,93 +9,24 @@
 
 ### Kommande arbete (sorterat efter stackrank - högst första)
 
-1. **BL-027** (100) - Omdesigna huvudnavigering - Challenge som primärt spelläge
-2. **BL-007** (80) - Revanschknapp utmaning
-3. **BL-008** (70) - Visa poäng i utmaningsresultat
-4. **BL-028** (65) - Komprimera poängvisning i "Mina utmaningar"
-5. **BL-009** (60) - Poänganimering före totalpoäng
-6. **BL-010** (50) - Utmana-knapp efter alla spellägen
-7. **BL-026** (45) - Admin-panel: Manuell playerId-redigering
-8. **BL-025** (40) - Account Recovery UI
-9. **BL-023** (35) - Säkra Firebase med autentisering
-10. **BL-018** (30) - Unificera slutskärmsfunktioner
-11. **BL-019** (25) - Duplicerad showChallengeAcceptScreen implementation
-12. **BL-020** (20) - Duplicerad difficulty badge implementation
-13. **BL-022** (12) - Lägg till browser fallbacks för moderna CSS-effekter
-14. **BL-024** (10) - Redesigna "Hör till"-knappar enligt ny mockup
+1. **BL-009** (60) - Poänganimering före totalpoäng
+2. **BL-026** (45) - Admin-panel: Manuell playerId-redigering
+3. **BL-025** (40) - Account Recovery UI
+4. **BL-023** (35) - Säkra Firebase med autentisering
+5. **BL-018** (30) - Unificera slutskärmsfunktioner
+6. **BL-019** (25) - Duplicerad showChallengeAcceptScreen implementation
+7. **BL-020** (20) - Duplicerad difficulty badge implementation
+8. **BL-022** (12) - Lägg till browser fallbacks för moderna CSS-effekter
+9. **BL-024** (10) - Redesigna "Hör till"-knappar enligt ny mockup
 
 ---
 
 ## 📝 Backlog Items
 
-### BL-027: Omdesigna huvudnavigering - Challenge som primärt spelläge
-- **Kategori:** FEATURE (Navigation Redesign)
-- **Stackrank:** 100
-- **Beskrivning:** Gör challenge-flödet till det primära sättet att spela
-- **Nuvarande problem:**
-  - "Starta Spelet" är primärknappen men ger en upplevelse utan delningsaspekt
-  - "Utmana en vän" är sekundär men är egentligen det roligaste spelläget
-  - Otydlig navigation - två sätt att spela som känns separata
-- **Föreslagna ändringar:**
-  1. **Ta bort "Starta Spelet"-knappen** från huvudmenyn
-  2. **"Utmana en vän" blir det vanliga spelflödet:**
-     - Spela själv först (12 frågor)
-     - Efter spelet: Dela länk för att utmana någon
-     - Detta blir det primära sättet att spela (både solo och vs)
-  3. **Multiplayer-läget (2-6 spelare samtidigt):**
-     - Behåll funktionalitet men gör det sekundärt/gömt
-     - **Utvärdera:** Är detta spelläge verkligen kul? Används det?
-     - **Alternativ:** Kan tas bort helt om det inte tillför värde
-     - **Fråga:** Vad är use-casen? När spelar folk 2-6 samtidigt på samma enhet?
-- **Fördelar:**
-  - Enklare navigation - en tydlig primär väg in i spelet
-  - Challenge-systemet (det roligaste) blir standard
-  - Solo-spelare får ändå spela och kan välja att dela efteråt
-  - Multiplayer-läget kan utvärderas separat
-- **Implementation:**
-  - UI: Redesigna startskärm med challenge som huvudknapp
-  - Navigation: Dölj eller ta bort multiplayer-alternativet
-  - UX: Tydlig flow: Spela → Dela → Vänta på motståndare → Se resultat
-- **Öppna frågor:**
-  - Ska multiplayer-läget (2-6 samtidigt) behållas eller tas bort?
-  - Om det behålls, var ska ingången finnas? (Meny? Footer? Settings?)
-  - Vad händer med singelspel utan challenge? Tas det helt bort?
-- **Diskussion:**
-  - Challenge-flödet är mer socialt och engagerande
-  - Ger replayability (folk vill slå sina vänner)
-  - Solo-spel utan delning känns mindre motiverande
-  - Multiplayer samma-enhet känns niche (behövs det?)
-
-### BL-007: Revanschknapp utmaning
-- **Kategori:** BUG  
-- **Stackrank:** 80
-- **Beskrivning:** Revanschknappen fungerar inte för utmaning
-
-### BL-008: Visa poäng i utmaningsresultat
-- **Kategori:** FEATURE
-- **Stackrank:** 70
-- **Beskrivning:** Man ser inte poängen för den som tog emot utmaningen i visning av resultat
-- **Fråga:** Ska poäng för varje fråga visas? Tillför det något?
-
-### BL-028: Komprimera poängvisning i "Mina utmaningar"
-- **Kategori:** ENHANCEMENT
-- **Stackrank:** 65
-- **Beskrivning:** När man expanderar en challenge i "Mina utmaningar" tar poängvisningen för mycket höjd
-- **Problem:**
-  - Alla 12 frågornas poäng visas i 2-kolumns grid (rad 533-543 i challengeSystem.js)
-  - Tar upp enormt mycket vertikal höjd
-  - Går inte att se alla poäng utan scrollning
-- **Önskat:** Mer kompakt visning som får plats på skärmen
-
 ### BL-009: Poänganimering före totalpoäng
 - **Kategori:** BUG
 - **Stackrank:** 60
 - **Beskrivning:** Totalpoäng ökar före animationen landar i multi och kanske i singel också
-
-### BL-010: Utmana-knapp efter alla spellägen
-- **Kategori:** FEATURE
-- **Stackrank:** 50
-- **Beskrivning:** Utmana borde man alltid få välja i slutet på alla spel, singelspel och kanske multispel också
 
 ### BL-018: Unificera slutskärmsfunktioner
 - **Kategori:** REFACTOR
@@ -255,6 +186,11 @@ Se LOG.md för detaljer om slutförda items:
 - BL-016: UI Cleanup mellan spellägen ✅
 - BL-017: Challenge State Persistence Bug ✅
 - BL-021: Komplettera CSS variables implementation ✅
+- BL-028: Komprimera poängvisning i "Mina utmaningar" ✅
+- BL-010: Utmana-knapp efter alla spellägen ✅
+- BL-008: Visa poäng i utmaningsresultat ✅
+- BL-027: Omdesigna huvudnavigering - Challenge som primärt spelläge ✅
+- BL-007: Revanschknapp utmaning ✅
 
 ## ❌ Kasserade Items (endast rubriker)
 

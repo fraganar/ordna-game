@@ -704,12 +704,8 @@ class ChallengeSystem {
                             '<p class="text-xl font-bold text-blue-600">Oavgjort!</p>'
                         }
                     </div>
-                    
-                    <button id="new-challenge-btn" class="w-full bg-blue-600 text-white font-bold py-3 px-6 rounded-lg text-lg hover:bg-blue-700 transition-colors mb-3">
-                        Revansch!
-                    </button>
-                    
-                    <button id="back-to-start-result" class="w-full bg-slate-200 text-slate-800 font-bold py-3 px-6 rounded-lg text-lg hover:bg-slate-300 transition-colors">
+
+                    <button id="back-to-start-result" class="w-full bg-blue-600 text-white font-bold py-3 px-6 rounded-lg text-lg hover:bg-blue-700 transition-colors">
                         Tillbaka till start
                     </button>
                 </div>
@@ -725,22 +721,9 @@ class ChallengeSystem {
             
             // No longer using localStorage for challenge state
             
-            // Add event listeners
-            const newChallengeBtn = document.getElementById('new-challenge-btn');
+            // Add event listener
             const backToStartBtn = document.getElementById('back-to-start-result');
-            
-            if (newChallengeBtn) {
-                newChallengeBtn.addEventListener('click', () => {
-                    if (typeof window.restartGame === 'function') {
-                        window.restartGame();
-                    }
-                    const showChallengeFormBtn = window.UI?.get('showChallengeFormBtn');
-                    if (showChallengeFormBtn) {
-                        showChallengeFormBtn.click();
-                    }
-                });
-            }
-            
+
             if (backToStartBtn) {
                 backToStartBtn.addEventListener('click', () => {
                     // Go directly to start screen without showing end screen
