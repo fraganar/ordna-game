@@ -1116,8 +1116,8 @@ function loadQuestion() {
     updateGameControls();
 
     const question = questions[currentQuestionIndex];
-    
-    UI.updateQuestionCounter(currentQuestionIndex + 1, questions.length);
+
+    // updateQuestionCounter removed - progress bar shows this info
     UI.updateDifficultyBadge(question.svårighetsgrad);
     UI.setQuestionText(question.fråga);
     

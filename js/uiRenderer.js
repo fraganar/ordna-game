@@ -47,7 +47,7 @@ class UIRenderer {
             restartBtn: document.getElementById('restart-btn'),
             packSelect: document.getElementById('pack-select'),
             challengePackSelect: document.getElementById('challenge-pack-select'),
-            questionCounter: document.getElementById('question-counter'),
+            // questionCounter: removed - progress bar shows this info
             scoreboard: document.getElementById('scoreboard'),
             difficultyBadge: document.getElementById('difficulty-badge'),
             questionText: document.getElementById('question-text'),
@@ -147,12 +147,7 @@ class UIRenderer {
     }
 
     // Common UI update methods that were scattered in game.js
-    updateQuestionCounter(current, total) {
-        const counter = this.get('questionCounter');
-        if (counter) {
-            counter.textContent = `Fråga ${current} av ${total}`;
-        }
-    }
+    // updateQuestionCounter removed - progress bar shows this info instead
 
     updateDifficultyBadge(difficulty) {
         const badge = this.get('difficultyBadge');
@@ -340,7 +335,8 @@ class UIRenderer {
                 // Update the score content for single player
                 const player = players[0];
                 if (player) {
-                    singlePlayerScore.textContent = `Totalpoäng: ${player.score}`;
+                    const scoreValue = document.getElementById('score-value');
+                    if (scoreValue) scoreValue.textContent = player.score;
                 }
             }
             if (scoreboard) scoreboard.classList.add('hidden');
@@ -600,9 +596,9 @@ class UIRenderer {
 
     // Single player UI - MOVED from game.js (ID:7)
     updateSinglePlayerScore(score) {
-        const singlePlayerScore = this.get('singlePlayerScore');
-        if (singlePlayerScore) {
-            singlePlayerScore.textContent = `Totalpoäng: ${score}`;
+        const scoreValue = document.getElementById('score-value');
+        if (scoreValue) {
+            scoreValue.textContent = score;
         }
     }
 
