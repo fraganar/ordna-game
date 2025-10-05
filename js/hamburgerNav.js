@@ -10,9 +10,13 @@ class HamburgerNav {
         this.closeMenuBtn = document.getElementById('close-menu-btn');
         this.menuHomeBtn = document.getElementById('menu-home-btn');
         this.menuChangeNameBtn = document.getElementById('menu-change-name-btn');
+        this.menuHelpBtn = document.getElementById('menu-help-btn');
         this.confirmDialog = document.getElementById('confirm-dialog');
         this.confirmYesBtn = document.getElementById('confirm-yes-btn');
         this.confirmCancelBtn = document.getElementById('confirm-cancel-btn');
+        this.helpModal = document.getElementById('help-modal');
+        this.closeHelpBtn = document.getElementById('close-help-btn');
+        this.closeHelpBottomBtn = document.getElementById('close-help-bottom-btn');
 
         this.isMenuOpen = false;
         this.isGameActive = false;
@@ -37,15 +41,27 @@ class HamburgerNav {
         // Menu actions
         this.menuHomeBtn.addEventListener('click', () => this.handleBackToStart());
         this.menuChangeNameBtn.addEventListener('click', () => this.handleChangeName());
+        this.menuHelpBtn.addEventListener('click', () => this.openHelpModal());
 
         // Confirmation dialog
         this.confirmYesBtn.addEventListener('click', () => this.confirmBackToStart());
         this.confirmCancelBtn.addEventListener('click', () => this.closeConfirmDialog());
 
-        // ESC key to close menu
+        // Help modal
+        this.closeHelpBtn.addEventListener('click', () => this.closeHelpModal());
+        this.closeHelpBottomBtn.addEventListener('click', () => this.closeHelpModal());
+        this.helpModal.addEventListener('click', (e) => {
+            if (e.target === this.helpModal) {
+                this.closeHelpModal();
+            }
+        });
+
+        // ESC key to close menu/dialogs
         document.addEventListener('keydown', (e) => {
             if (e.key === 'Escape') {
-                if (this.confirmDialog.classList.contains('hidden') === false) {
+                if (this.helpModal.classList.contains('hidden') === false) {
+                    this.closeHelpModal();
+                } else if (this.confirmDialog.classList.contains('hidden') === false) {
                     this.closeConfirmDialog();
                 } else if (this.isMenuOpen) {
                     this.closeMenu();
@@ -58,6 +74,20 @@ class HamburgerNav {
         this.menuOverlay.classList.remove('hidden');
         this.isMenuOpen = true;
         document.body.style.overflow = 'hidden'; // Prevent scrolling when menu is open
+
+        // Update player info when menu opens
+        this.updatePlayerInfo();
+    }
+
+    updatePlayerInfo() {
+        const playerId = localStorage.getItem('playerId');
+        const playerName = localStorage.getItem('playerName');
+
+        const menuName = document.getElementById('menu-player-name');
+        const menuId = document.getElementById('menu-player-id');
+
+        if (menuName) menuName.textContent = playerName || 'Inte satt';
+        if (menuId) menuId.textContent = playerId || 'Inget ID';
     }
 
     closeMenu() {
@@ -147,6 +177,19 @@ class HamburgerNav {
             // Focus input
             playerNameInput.focus();
         }, 350);
+    }
+
+    openHelpModal() {
+        this.closeMenu();
+        setTimeout(() => {
+            this.helpModal.classList.remove('hidden');
+            document.body.style.overflow = 'hidden';
+        }, 350);
+    }
+
+    closeHelpModal() {
+        this.helpModal.classList.add('hidden');
+        document.body.style.overflow = '';
     }
 
     // Public method to update game state from outside

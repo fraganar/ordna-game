@@ -873,6 +873,15 @@ body {
     opacity: 0.85;
 }
 
+/* Hamburger button gradient - same soft mango gradient as title */
+.hamburger-gradient {
+    background: linear-gradient(135deg,
+        var(--color-primary) 0%,
+        var(--color-magic) 50%,
+        var(--color-primary) 100%
+    );
+}
+
 .mango-icon {
     width: 0.7em;
     height: 0.7em;
@@ -913,6 +922,30 @@ body::before {
 
 .animate-fadeIn {
     animation: fadeIn 0.3s ease-out forwards;
+}
+
+/* Help Modal Scrollbar */
+#help-modal .overflow-y-auto {
+    scrollbar-width: thin;
+    scrollbar-color: #cbd5e1 #f1f5f9;
+}
+
+#help-modal .overflow-y-auto::-webkit-scrollbar {
+    width: 8px;
+}
+
+#help-modal .overflow-y-auto::-webkit-scrollbar-track {
+    background: #f1f5f9;
+    border-radius: 4px;
+}
+
+#help-modal .overflow-y-auto::-webkit-scrollbar-thumb {
+    background: #cbd5e1;
+    border-radius: 4px;
+}
+
+#help-modal .overflow-y-auto::-webkit-scrollbar-thumb:hover {
+    background: #94a3b8;
 }
 
 /* Hamburger Menu Styles */

@@ -39,7 +39,7 @@ class GameController {
         // Show game screen
         if (window.UI) {
             UI.showScreen('gameScreen');
-            UI.updateQuestionCounter(1, this.questionsToPlay.length);
+            // updateQuestionCounter removed - progress bar shows this info
         }
         
         // Update display
@@ -104,7 +104,7 @@ class GameController {
         
         // Update UI
         if (window.UI) {
-            UI.updateQuestionCounter(this.currentQuestionIndex + 1, this.questionsToPlay.length);
+            // updateQuestionCounter removed - progress bar shows this info
             UI.updateDifficultyBadge(question.svårighetsgrad);
             UI.setQuestionText(question.fråga);
             

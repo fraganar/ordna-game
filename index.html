@@ -99,7 +99,7 @@
 <body class="bg-slate-100 text-slate-800 flex items-center justify-center min-h-screen p-2 sm:p-4">
 
     <!-- Hamburger Menu Button (Fixed position, always visible) -->
-    <button id="hamburger-btn" class="fixed top-4 right-4 z-50 bg-gradient-to-br from-magic to-primary text-white p-3 rounded-xl shadow-lg hover:shadow-xl transition-all duration-300 hover:scale-105">
+    <button id="hamburger-btn" class="fixed top-4 right-4 z-50 hamburger-gradient text-white p-3 rounded-xl shadow-lg hover:shadow-xl transition-all duration-300 hover:scale-105">
         <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M4 6h16M4 12h16M4 18h16"></path>
         </svg>
@@ -144,19 +144,17 @@
                     </svg>
                 </button>
 
-                <a href="hur-det-fungerar.html" class="block w-full bg-white hover:bg-slate-50 text-slate-800 font-semibold py-4 px-6 rounded-xl border-2 border-slate-200 hover:border-primary transition-all duration-300">
-                    <span class="flex items-center justify-between group">
-                        <span class="flex items-center">
-                            <svg class="w-6 h-6 mr-3 text-primary" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8.228 9c.549-1.165 2.03-2 3.772-2 2.21 0 4 1.343 4 3 0 1.4-1.278 2.575-3.006 2.907-.542.104-.994.54-.994 1.093m0 3h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
-                            </svg>
-                            Hur det fungerar
-                        </span>
-                        <svg class="w-5 h-5 text-slate-400 group-hover:text-primary transition-colors" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path>
+                <button id="menu-help-btn" class="w-full bg-white hover:bg-slate-50 text-slate-800 font-semibold py-4 px-6 rounded-xl border-2 border-slate-200 hover:border-primary transition-all duration-300 flex items-center justify-between group">
+                    <span class="flex items-center">
+                        <svg class="w-6 h-6 mr-3 text-primary" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8.228 9c.549-1.165 2.03-2 3.772-2 2.21 0 4 1.343 4 3 0 1.4-1.278 2.575-3.006 2.907-.542.104-.994.54-.994 1.093m0 3h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
                         </svg>
+                        Hur det fungerar
                     </span>
-                </a>
+                    <svg class="w-5 h-5 text-slate-400 group-hover:text-primary transition-colors" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path>
+                    </svg>
+                </button>
 
                 <!-- Future features (disabled/greyed out) -->
                 <div class="pt-4 border-t border-slate-200">
@@ -170,6 +168,20 @@
                         </span>
                     </button>
                 </div>
+
+                <!-- Player info -->
+                <div class="pt-4 mt-4 border-t border-slate-200">
+                    <div class="bg-slate-100 rounded-lg p-3 text-xs text-slate-600">
+                        <div class="flex justify-between items-center mb-1">
+                            <span class="text-slate-500">Namn:</span>
+                            <strong id="menu-player-name" class="text-slate-800">-</strong>
+                        </div>
+                        <div class="flex justify-between items-center">
+                            <span class="text-slate-500">Player ID:</span>
+                            <code id="menu-player-id" class="bg-slate-200 px-2 py-0.5 rounded text-slate-700">-</code>
+                        </div>
+                    </div>
+                </div>
             </div>
         </div>
     </div>
@@ -180,11 +192,92 @@
             <h3 class="text-xl font-bold text-slate-800 mb-3">Avbryta spelet?</h3>
             <p class="text-slate-600 mb-6">Dina poäng för denna runda går förlorade om du går tillbaka nu.</p>
             <div class="flex space-x-3">
+                <button id="confirm-yes-btn" class="flex-1 bg-slate-200 text-slate-800 font-semibold py-3 px-4 rounded-lg hover:bg-slate-300 transition-colors">
+                    Ja, avbryt
+                </button>
                 <button id="confirm-cancel-btn" class="flex-1 bg-slate-200 text-slate-800 font-semibold py-3 px-4 rounded-lg hover:bg-slate-300 transition-colors">
                     Fortsätt spela
                 </button>
-                <button id="confirm-yes-btn" class="flex-1 bg-gradient-to-r from-danger to-danger-dark text-white font-semibold py-3 px-4 rounded-lg hover:from-danger-dark hover:to-danger transition-colors">
-                    Ja, avbryt
+            </div>
+        </div>
+    </div>
+
+    <!-- Help Modal -->
+    <div id="help-modal" class="hidden fixed inset-0 bg-black bg-opacity-50 z-50 flex items-center justify-center p-4">
+        <div class="bg-white rounded-2xl shadow-2xl max-w-2xl w-full max-h-[90vh] overflow-y-auto p-6 sm:p-8 animate-fadeIn">
+            <!-- Close button -->
+            <button id="close-help-btn" class="float-right text-slate-400 hover:text-slate-600 transition-colors mb-2">
+                <svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
+                </svg>
+            </button>
+
+            <h2 class="font-poppins text-3xl font-bold text-primary mb-6 clear-both">Hur Tres Mangos fungerar</h2>
+
+            <div class="mb-8">
+                <h3 class="text-xl font-bold text-slate-800 mb-3">Frågetyper</h3>
+                <div class="space-y-4">
+                    <div class="bg-purple-50 border border-purple-200 rounded-lg p-4">
+                        <h4 class="font-semibold text-primary-dark mb-2">Ordna-frågor</h4>
+                        <p class="text-sm text-slate-700 mb-2">Klicka på alternativen i rätt ordning (t.ex. minst till störst, äldst till nyast).</p>
+                        <p class="text-xs text-slate-600"><strong>Obs:</strong> Du måste klicka i rätt ordning - ett fel och du är ute!</p>
+                    </div>
+
+                    <div class="bg-purple-50 border border-purple-200 rounded-lg p-4">
+                        <h4 class="font-semibold text-purple-800 mb-2">Hör till-frågor</h4>
+                        <p class="text-sm text-slate-700 mb-2">Bedöm om varje alternativ hör till kategorin eller inte.</p>
+
+                        <div class="flex items-center gap-2 mt-3 mb-3">
+                            <span class="text-sm text-slate-600">Du ser två knappar:</span>
+                            <div class="flex rounded-lg overflow-hidden bg-gray-100 inline-flex">
+                                <button class="w-9 h-9 flex items-center justify-center bg-gray-50 border border-gray-300">
+                                    <svg class="w-4 h-4 text-slate-500" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7"></path></svg>
+                                </button>
+                                <button class="w-9 h-9 flex items-center justify-center bg-gray-50 border border-gray-300 border-l-0">
+                                    <svg class="w-4 h-4 text-slate-500" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12"></path></svg>
+                                </button>
+                            </div>
+                            <span class="text-sm text-slate-600">(✓ = ja, ✗ = nej)</span>
+                        </div>
+
+                        <p class="text-xs text-slate-600"><strong>Frihet:</strong> Du väljer själv i vilken ordning du svarar på alternativen!</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="mb-8">
+                <h3 class="text-xl font-bold text-slate-800 mb-3">Spela ensam eller utmana någon</h3>
+                <div class="space-y-2 text-sm text-slate-700">
+                    <p>Varje rätt svar ger +1 poäng till din pott</p>
+                    <p>Du ser din pott växa på <span class="bg-amber-100 px-2 py-1 rounded font-medium">Stanna +Xp</span> knappen</p>
+                    <p>Klicka "Stanna" när som helst för att säkra poängen permanent</p>
+                    <p>Ett fel svar = potten töms! (men säkrade poäng behålls)</p>
+                    <p>När alla alternativ är besvarade säkras potten automatiskt</p>
+                </div>
+
+                <div class="mt-4 p-4 bg-slate-50 rounded-lg border border-slate-200">
+                    <p class="text-sm text-slate-600"><strong>Utmaningar:</strong> Du spelar 12 frågor och din vän får samma frågor. Högst totalpoäng vinner!</p>
+                </div>
+            </div>
+
+            <div class="mb-6">
+                <h3 class="text-xl font-bold text-slate-800 mb-3">Spela flera (2-6 spelare)</h3>
+                <div class="space-y-2 text-sm text-slate-700">
+                    <p>Spelarna turas om - aktiv spelare har blå ram</p>
+                    <p>Varje spelare bygger sin egen pott under rundan</p>
+                    <p>"Stanna" = säkra din pott och kliv av rundan</p>
+                    <p>Fel svar = förlora potten och kliv av rundan</p>
+                    <p>När alla är klara: de som fortfarande är kvar får sin pott automatiskt!</p>
+                </div>
+
+                <div class="mt-4 p-4 bg-amber-50 rounded-lg border border-amber-200">
+                    <p class="text-sm text-amber-800"><strong>Smart taktik:</strong> Ibland lönar det sig att vara försiktig och säkra poäng tidigt. Ibland är det värt att vänta ut de andra!</p>
+                </div>
+            </div>
+
+            <div class="text-center">
+                <button id="close-help-bottom-btn" class="bg-gradient-to-r from-magic to-primary text-white font-bold py-3 px-6 rounded-lg hover:from-primary hover:to-magic-dark transition-colors">
+                    Stäng
                 </button>
             </div>
         </div>
@@ -409,12 +502,14 @@
             <div id="notifications-area" class="hidden mb-4"></div>
             
             <!-- Header -->
-            <div class="flex justify-between items-center mb-2">
-                <div class="flex items-center space-x-3">
-                    <div id="question-counter" class="text-sm font-semibold text-slate-500">Fråga 1 / 30</div>
-                    <div id="difficulty-badge"></div>
+            <div class="flex items-center justify-between mb-2">
+                <div id="difficulty-badge"></div>
+                <div id="single-player-score" class="hidden text-sm font-semibold text-slate-700 px-3 py-1 border border-slate-300 rounded-full absolute left-1/2 transform -translate-x-1/2">
+                    <span class="hidden sm:inline">Totalpoäng: </span>
+                    <span class="sm:hidden">Poäng: </span>
+                    <span id="score-value">0</span>
                 </div>
-                <div id="single-player-score" class="hidden text-sm font-semibold text-slate-700 px-3 py-1 border border-slate-300 rounded-full">Totalpoäng: 0</div>
+                <div></div>
             </div>
 
             <!-- Single Player Progress Bar -->
@@ -533,14 +628,6 @@
                     Bekräfta val & Stäng
                 </button>
             </div>
-        </div>
-    </div>
-
-    <!-- Player info footer for debugging -->
-    <div id="player-info-footer" class="fixed bottom-0 left-0 right-0 bg-slate-100 border-t border-slate-300 p-2 text-xs text-slate-600 hidden">
-        <div class="max-w-4xl mx-auto flex justify-between items-center">
-            <span>Namn: <strong id="footer-player-name">-</strong></span>
-            <span>Player ID: <code id="footer-player-id" class="bg-slate-200 px-1 rounded">-</code></span>
         </div>
     </div>
 

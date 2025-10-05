@@ -64,19 +64,17 @@ class App {
     }
     
     // Initialize player identity with Firebase sync
-    // Update footer display with player info
-    updateFooterDisplay() {
+    // Update menu display with player info
+    updateMenuPlayerInfo() {
         const playerId = localStorage.getItem('playerId');
         const playerName = localStorage.getItem('playerName');
 
-        const footerElement = document.getElementById('player-info-footer');
-        const footerName = document.getElementById('footer-player-name');
-        const footerId = document.getElementById('footer-player-id');
+        const menuName = document.getElementById('menu-player-name');
+        const menuId = document.getElementById('menu-player-id');
 
-        if (footerElement && footerName && footerId) {
-            footerName.textContent = playerName || 'Inte satt';
-            footerId.textContent = playerId || 'Inget ID';
-            footerElement.classList.remove('hidden');
+        if (menuName && menuId) {
+            menuName.textContent = playerName || 'Inte satt';
+            menuId.textContent = playerId || 'Inget ID';
         }
     }
 
@@ -90,8 +88,8 @@ class App {
             localStorage.setItem('playerId', playerId);
         }
 
-        // Update footer display
-        this.updateFooterDisplay();
+        // Update menu player info
+        this.updateMenuPlayerInfo();
 
         if (!playerName) {
             // Create unique default name with timestamp
@@ -100,8 +98,8 @@ class App {
             localStorage.setItem('playerName', playerName);
         }
 
-        // Update footer after setting name
-        this.updateFooterDisplay();
+        // Update menu player info after setting name
+        this.updateMenuPlayerInfo();
 
         // Set player name in PlayerManager (check if function exists)
         if (playerName && window.PlayerManager && typeof PlayerManager.setPlayerName === 'function') {
