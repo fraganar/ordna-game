@@ -22,6 +22,11 @@ class HamburgerNav {
         this.saveChangeNameBtn = document.getElementById('save-change-name-btn');
         this.cancelChangeNameBtn = document.getElementById('cancel-change-name-btn');
         this.closeChangeNameBtn = document.getElementById('close-change-name-btn');
+        this.packsModal = document.getElementById('packs-modal');
+        this.packsBtn = document.getElementById('menu-packs-btn');
+        this.closePacksBtn = document.getElementById('close-packs-btn');
+        this.closePacksBottomBtn = document.getElementById('close-packs-bottom-btn');
+        this.packsList = document.getElementById('packs-list');
 
         this.isMenuOpen = false;
         this.isGameActive = false;
@@ -49,6 +54,7 @@ class HamburgerNav {
         this.menuHomeBtn.addEventListener('click', () => this.handleBackToStart());
         this.menuChangeNameBtn.addEventListener('click', () => this.handleChangeName());
         this.menuHelpBtn.addEventListener('click', () => this.openHelpModal());
+        this.packsBtn.addEventListener('click', () => this.openPacksModal());
 
         // Confirmation dialog
         this.confirmYesBtn.addEventListener('click', () => this.confirmBackToStart());
@@ -79,10 +85,21 @@ class HamburgerNav {
             }
         });
 
+        // Packs modal
+        this.closePacksBtn.addEventListener('click', () => this.closePacksModal());
+        this.closePacksBottomBtn.addEventListener('click', () => this.closePacksModal());
+        this.packsModal.addEventListener('click', (e) => {
+            if (e.target === this.packsModal) {
+                this.closePacksModal();
+            }
+        });
+
         // ESC key to close menu/dialogs
         document.addEventListener('keydown', (e) => {
             if (e.key === 'Escape') {
-                if (this.changeNameModal.classList.contains('hidden') === false) {
+                if (this.packsModal.classList.contains('hidden') === false) {
+                    this.closePacksModal();
+                } else if (this.changeNameModal.classList.contains('hidden') === false) {
                     this.closeChangeNameModal();
                 } else if (this.helpModal.classList.contains('hidden') === false) {
                     this.closeHelpModal();
@@ -311,6 +328,89 @@ class HamburgerNav {
     closeHelpModal() {
         this.helpModal.classList.add('hidden');
         this.closeModal('help');
+    }
+
+    // Open packs modal
+    async openPacksModal() {
+        this.closeMenu();
+
+        setTimeout(async () => {
+            try {
+                // Load all packs from packs.json
+                const allPacks = await window.GameData.loadAvailablePacks();
+
+                // Load played packs from Firebase
+                const playerId = localStorage.getItem('playerId');
+                const playedPacks = await window.FirebaseAPI.getPlayedPacks(playerId);
+
+                // Render list
+                this.renderPacksList(allPacks, playedPacks);
+
+                // Open modal with stack management
+                this.packsModal.classList.remove('hidden');
+                this.openModal('packs');
+            } catch (error) {
+                console.error('Failed to load packs:', error);
+                // Show error in modal (fail fast - no silent fallback)
+                this.packsList.innerHTML = `
+                    <div class="text-center text-red-600 py-8">
+                        <p class="font-semibold mb-2">Kunde inte ladda frågepaket</p>
+                        <p class="text-sm">Försök igen senare eller kontrollera din internetanslutning.</p>
+                    </div>
+                `;
+                this.packsModal.classList.remove('hidden');
+                this.openModal('packs');
+            }
+        }, 350);
+    }
+
+    // Render packs list
+    renderPacksList(allPacks, playedPacks) {
+        this.packsList.innerHTML = '';
+
+        allPacks.forEach(pack => {
+            const isPlayed = playedPacks[pack.id];
+            const packItem = document.createElement('div');
+            packItem.className = 'bg-slate-50 border border-slate-200 rounded-lg p-4 hover:border-primary/30 transition-colors';
+
+            packItem.innerHTML = `
+                <div class="flex items-start">
+                    <div class="mr-3 mt-1">
+                        ${isPlayed ?
+                            '<svg class="w-6 h-6 text-success" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg>' :
+                            '<svg class="w-6 h-6 text-slate-300" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 6h12M6 12h12M6 18h12"></path></svg>'
+                        }
+                    </div>
+                    <div class="flex-1">
+                        <h3 class="font-semibold text-slate-800 ${!isPlayed ? 'text-slate-400' : ''}">${pack.name}</h3>
+                        <p class="text-sm text-slate-600 ${!isPlayed ? 'text-slate-400' : ''}">${pack.description}</p>
+                        ${isPlayed ? `
+                            <div class="mt-2 text-xs text-slate-500">
+                                <p>Spelat ${playedPacks[pack.id].timesPlayed} gång(er)</p>
+                                <p>Bästa poäng: ${playedPacks[pack.id].bestScore}</p>
+                                <p>Senast: ${this.formatDate(playedPacks[pack.id].playedAt)}</p>
+                            </div>
+                        ` : `
+                            <p class="mt-2 text-xs text-slate-400 italic">Inte spelad ännu</p>
+                        `}
+                    </div>
+                </div>
+            `;
+
+            this.packsList.appendChild(packItem);
+        });
+    }
+
+    // Format date helper (handles both Firebase Timestamp and Date)
+    formatDate(timestamp) {
+        const dateObj = timestamp?.toDate ? timestamp.toDate() : timestamp;
+        return new Date(dateObj).toLocaleDateString('sv-SE');
+    }
+
+    // Close packs modal
+    closePacksModal() {
+        this.packsModal.classList.add('hidden');
+        this.closeModal('packs');
     }
 
     // Public method to update game state from outside

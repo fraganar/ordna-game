@@ -948,6 +948,30 @@ body::before {
     background: #94a3b8;
 }
 
+/* Packs Modal Scrollbar (reuse help modal styles) */
+#packs-modal .overflow-y-auto {
+    scrollbar-width: thin;
+    scrollbar-color: #cbd5e1 #f1f5f9;
+}
+
+#packs-modal .overflow-y-auto::-webkit-scrollbar {
+    width: 8px;
+}
+
+#packs-modal .overflow-y-auto::-webkit-scrollbar-track {
+    background: #f1f5f9;
+    border-radius: 4px;
+}
+
+#packs-modal .overflow-y-auto::-webkit-scrollbar-thumb {
+    background: #cbd5e1;
+    border-radius: 4px;
+}
+
+#packs-modal .overflow-y-auto::-webkit-scrollbar-thumb:hover {
+    background: #94a3b8;
+}
+
 /* Hamburger Menu Styles */
 #hamburger-btn {
     backdrop-filter: blur(10px);
