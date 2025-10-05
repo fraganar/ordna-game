@@ -62,76 +62,98 @@ Spelare ska kunna se vilka frågepaket de har spelat. Detta visas via hamburgerm
 
 ## Firebase Datamodell
 
-### players/{playerId}
+### Subcollection Structure
+```
+players/{playerId}/playedPacks/{packId}
+```
+
+**Exempel:**
 ```javascript
+// players/abc123/playedPacks/fragepaket-1.json
 {
-  playerId: "abc123",
-  playedPacks: {
-    "fragepaket-1.json": {
-      playedAt: Timestamp,       // Senaste gången
-      timesPlayed: 3,             // Antal gånger totalt
-      bestScore: 12               // Högsta poäng
-    },
-    "fragepaket-2.json": {
-      playedAt: Timestamp,
-      timesPlayed: 1,
-      bestScore: 8
-    }
-  }
+  playedAt: Timestamp,       // Senaste gången (Firebase Timestamp object)
+  timesPlayed: 3,             // Antal gånger totalt
+  bestScore: 12               // Högsta poäng någonsin
+}
+
+// players/abc123/playedPacks/fragepaket-2.json
+{
+  playedAt: Timestamp,
+  timesPlayed: 1,
+  bestScore: 8
 }
 ```
 
 **Notera:**
-- Inget `name` field längre - bara `playerId`
-- `playedPacks` är en map (lätt att uppdatera)
-- Varje packId (t.ex. "fragepaket-1.json") har egen sub-object
+- Använder **subcollection** (inte map) för skalbarhet
+- packId är dokumentnamnet (t.ex. "fragepaket-1.json")
+- playedAt är Firebase Timestamp (konverteras med `.toDate()` vid rendering)
 
 ## Implementation
 
 ### 1. Firebase API (firebase-config.js)
 
-**Ny funktion:**
+**Nya funktioner i FirebaseAPI object:**
 ```javascript
 async updatePlayedPack(playerId, packId, score) {
-    if (!firebaseInitialized) return;
-
-    const playerRef = db.collection('players').doc(playerId);
-    const packRef = playerRef.collection('playedPacks').doc(packId);
-
-    const doc = await packRef.get();
-
-    if (doc.exists) {
-        // Update existing
-        const data = doc.data();
-        await packRef.update({
-            playedAt: new Date(),
-            timesPlayed: data.timesPlayed + 1,
-            bestScore: Math.max(data.bestScore, score)
-        });
-    } else {
-        // Create new
-        await packRef.set({
-            playedAt: new Date(),
-            timesPlayed: 1,
-            bestScore: score
-        });
+    if (!firebaseInitialized) {
+        console.log('Demo mode: Would track played pack', packId);
+        return;
     }
-}
+
+    try {
+        const playerRef = db.collection('players').doc(playerId);
+        const packRef = playerRef.collection('playedPacks').doc(packId);
+
+        const doc = await packRef.get();
+
+        if (doc.exists) {
+            // Update existing
+            const data = doc.data();
+            await packRef.update({
+                playedAt: new Date(),
+                timesPlayed: data.timesPlayed + 1,
+                bestScore: Math.max(data.bestScore, score)
+            });
+        } else {
+            // Create new
+            await packRef.set({
+                playedAt: new Date(),
+                timesPlayed: 1,
+                bestScore: score
+            });
+        }
+
+        console.log('Tracked played pack:', packId, 'Score:', score);
+    } catch (error) {
+        console.error('Error updating played pack:', error);
+        throw error; // Let caller handle error
+    }
+},
 
 async getPlayedPacks(playerId) {
-    if (!firebaseInitialized) return {};
+    if (!firebaseInitialized) {
+        console.log('Demo mode: Would fetch played packs');
+        return {};
+    }
 
-    const snapshot = await db.collection('players')
-        .doc(playerId)
-        .collection('playedPacks')
-        .get();
+    try {
+        const snapshot = await db.collection('players')
+            .doc(playerId)
+            .collection('playedPacks')
+            .get();
 
-    const playedPacks = {};
-    snapshot.forEach(doc => {
-        playedPacks[doc.id] = doc.data();
-    });
+        const playedPacks = {};
+        snapshot.forEach(doc => {
+            playedPacks[doc.id] = doc.data();
+        });
 
-    return playedPacks;
+        console.log('Loaded played packs:', Object.keys(playedPacks).length, 'packs');
+        return playedPacks;
+    } catch (error) {
+        console.error('Error getting played packs:', error);
+        throw error; // Let caller handle error
+    }
 }
 ```
 
@@ -139,16 +161,23 @@ async getPlayedPacks(playerId) {
 
 **I gameController.js (single-player/local multiplayer):**
 ```javascript
-async endGame() {
+async endSinglePlayerGame() {
     // ... existing code ...
 
-    // Track played pack
+    // Track played pack (only if specific pack was selected)
     const playerId = localStorage.getItem('playerId');
-    const packId = this.selectedPack; // t.ex. "fragepaket-1.json"
+    const packId = this.selectedPack; // t.ex. "fragepaket-1.json" eller null
     const finalScore = PlayerManager.getCurrentPlayer().score;
 
     if (playerId && packId && window.FirebaseAPI) {
-        await FirebaseAPI.updatePlayedPack(playerId, packId, finalScore);
+        try {
+            await FirebaseAPI.updatePlayedPack(playerId, packId, finalScore);
+        } catch (error) {
+            console.error('Failed to track played pack:', error);
+            // Non-blocking error - game continues normally
+        }
+    } else if (!packId) {
+        console.log('Blandat läge - trackar inte played pack');
     }
 }
 ```
@@ -160,14 +189,74 @@ async completeChallenge() {
 
     // Track played pack
     const playerId = localStorage.getItem('playerId');
-    const packId = challengeData.packId; // Hämta från challenge
+    const packId = challengeData.packId; // Must be present in challenge data
     const finalScore = PlayerManager.getCurrentPlayer().score;
 
-    if (playerId && packId && window.FirebaseAPI) {
-        await FirebaseAPI.updatePlayedPack(playerId, packId, finalScore);
+    if (!packId) {
+        console.error('Challenge missing packId - cannot track played pack');
+        // This should never happen if challenges are created correctly
+        return;
+    }
+
+    if (playerId && window.FirebaseAPI) {
+        try {
+            await FirebaseAPI.updatePlayedPack(playerId, packId, finalScore);
+        } catch (error) {
+            console.error('Failed to track played pack:', error);
+            // Non-blocking error - game continues normally
+        }
     }
 }
 ```
+
+**VIKTIGT:** Challenges måste nu inkludera `packId` när de skapas. Se sektion nedan.
+
+### 2b. Lägg till packId i Challenge Creation
+
+**Problem:** Challenges sparar idag bara `packName` (fritext), men vi behöver `packId` för tracking.
+
+**Lösning:** Uppdatera `createChallenge()` i firebase-config.js:
+
+```javascript
+async createChallenge(challengerName, challengerId, questions, challengerScore, questionScores, packName = null, packId = null) {
+    // ... existing code ...
+
+    const challengeData = {
+        id: challengeId,
+        created: created,
+        expires: expires,
+        status: 'pending',
+        questions: questions,
+        challenger: { /* ... */ },
+        opponent: null
+    };
+
+    // Add pack info if specified
+    if (packName) {
+        challengeData.packName = packName;  // Keep for display
+    }
+    if (packId) {
+        challengeData.packId = packId;      // NEW: For tracking
+    }
+
+    await db.collection('challenges').doc(challengeId).set(challengeData);
+}
+```
+
+**Uppdatera anrop i challengeSystem.js:**
+```javascript
+const challengeId = await FirebaseAPI.createChallenge(
+    challengerName,
+    challengerId,
+    questions,
+    totalScore,
+    questionScores,
+    selectedPackName,  // Existing
+    this.selectedPack  // NEW: packId (t.ex. "fragepaket-1.json")
+);
+```
+
+**Viktigt:** Utan packId kommer tracking att failas med error i konsolen (fail fast-principen).
 
 ### 3. UI - Hamburgermenyn (index.html)
 
@@ -230,25 +319,38 @@ this.closePacksBtn.addEventListener('click', () => this.closePacksModal());
 this.closePacksBottomBtn.addEventListener('click', () => this.closePacksModal());
 ```
 
-**Ny metod:**
+**Nya metoder:**
 ```javascript
 async openPacksModal() {
     this.closeMenu();
 
     setTimeout(async () => {
-        // Load all packs from packs.json
-        const allPacks = await window.GameData.loadAvailablePacks();
+        try {
+            // Load all packs from packs.json
+            const allPacks = await window.GameData.loadAvailablePacks();
 
-        // Load played packs from Firebase
-        const playerId = localStorage.getItem('playerId');
-        const playedPacks = await window.FirebaseAPI.getPlayedPacks(playerId);
+            // Load played packs from Firebase
+            const playerId = localStorage.getItem('playerId');
+            const playedPacks = await window.FirebaseAPI.getPlayedPacks(playerId);
 
-        // Render list
-        this.renderPacksList(allPacks, playedPacks);
+            // Render list
+            this.renderPacksList(allPacks, playedPacks);
 
-        // Open modal
-        this.packsModal.classList.remove('hidden');
-        document.body.style.overflow = 'hidden';
+            // Open modal with stack management
+            this.packsModal.classList.remove('hidden');
+            this.openModal('packs');  // Use existing modal stack system
+        } catch (error) {
+            console.error('Failed to load packs:', error);
+            // Show error in modal (fail fast - no silent fallback)
+            this.packsList.innerHTML = `
+                <div class="text-center text-red-600 py-8">
+                    <p class="font-semibold mb-2">Kunde inte ladda frågepaket</p>
+                    <p class="text-sm">Försök igen senare eller kontrollera din internetanslutning.</p>
+                </div>
+            `;
+            this.packsModal.classList.remove('hidden');
+            this.openModal('packs');
+        }
     }, 350);
 }
 
@@ -275,7 +377,7 @@ renderPacksList(allPacks, playedPacks) {
                         <div class="mt-2 text-xs text-slate-500">
                             <p>Spelat ${playedPacks[pack.id].timesPlayed} gång(er)</p>
                             <p>Bästa poäng: ${playedPacks[pack.id].bestScore}</p>
-                            <p>Senast: ${new Date(playedPacks[pack.id].playedAt.toDate()).toLocaleDateString('sv-SE')}</p>
+                            <p>Senast: ${this.formatDate(playedPacks[pack.id].playedAt)}</p>
                         </div>
                     ` : `
                         <p class="mt-2 text-xs text-slate-400 italic">Inte spelad ännu</p>
@@ -288,10 +390,26 @@ renderPacksList(allPacks, playedPacks) {
     });
 }
 
+formatDate(timestamp) {
+    // Handle both Firebase Timestamp and JavaScript Date objects
+    const dateObj = timestamp?.toDate ? timestamp.toDate() : timestamp;
+    return new Date(dateObj).toLocaleDateString('sv-SE');
+}
+
 closePacksModal() {
     this.packsModal.classList.add('hidden');
-    document.body.style.overflow = '';
+    this.closeModal('packs');  // Use existing modal stack system
 }
+```
+
+**ESC key support:** Lägg till i `setupEventListeners()`:
+```javascript
+// ESC closes packs modal
+document.addEventListener('keydown', (e) => {
+    if (e.key === 'Escape' && !this.packsModal.classList.contains('hidden')) {
+        this.closePacksModal();
+    }
+});
 ```
 
 ### 5. Styling (styles.css)
@@ -375,27 +493,29 @@ async resetPlayedPacks(playerId) {
 6. ✅ Testa alla modalens stäng-alternativ (X, Stäng, ESC, click outside)
 
 ### Edge cases
-- ⚠️ Firebase offline → Visa cached data eller felmeddelande
-- ⚠️ Inget paket valt (blandat) → Tracka inte (eller tracka som "Blandat")
-- ⚠️ Challenge-mode → Säkerställ att packId finns i challenge-data
+- ⚠️ Firebase offline → Visa felmeddelande i modal (no silent fallback)
+- ⚠️ Inget paket valt (blandat) → Tracka inte, logga meddelande
+- ⚠️ Challenge-mode utan packId → Error i konsolen (fail fast)
 
 ## Filer som ändras
 
-1. `js/firebase-config.js` - updatePlayedPack(), getPlayedPacks()
-2. `js/hamburgerNav.js` - openPacksModal(), renderPacksList(), closePacksModal()
-3. `js/gameController.js` - Tracking vid spelslut (single-player)
-4. `js/challengeSystem.js` - Tracking vid challenge-slut
-5. `index.html` - Meny-knapp + packs-modal
-6. `css/styles.css` - Modal scrollbar styling
-7. `docs/PLAYED_PACKS_FEATURE.md` - Denna fil (dokumentation)
+1. `js/firebase-config.js` - updatePlayedPack(), getPlayedPacks(), createChallenge() (add packId param)
+2. `js/hamburgerNav.js` - openPacksModal(), renderPacksList(), formatDate(), closePacksModal(), ESC key
+3. `js/gameController.js` - Tracking vid spelslut (endSinglePlayerGame)
+4. `js/challengeSystem.js` - Tracking vid challenge-slut + pass packId to createChallenge()
+5. `index.html` - Meny-knapp + packs-modal HTML
+6. `css/styles.css` - Modal scrollbar styling (reuse help modal styles)
+7. `docs/PLAYED_PACKS_FEATURE.md` - Denna fil (uppdaterad plan)
 
 ## Milestones
 
-- [ ] Milestone 1: Firebase API (updatePlayedPack, getPlayedPacks)
-- [ ] Milestone 2: Tracking vid spelslut (gameController + challengeSystem)
-- [ ] Milestone 3: UI (hamburgermenyn knapp + modal)
-- [ ] Milestone 4: Logik (ladda & rendera paketlista)
-- [ ] Milestone 5: Styling & polish
-- [ ] Milestone 6: Testing & bugfixing
-- [ ] Milestone 7: Deploy to staging for mobile testing
-- [ ] Milestone 8: Merge to main (production)
+- [ ] Milestone 1: Firebase API (updatePlayedPack, getPlayedPacks) + add packId to createChallenge()
+- [ ] Milestone 2: Update challenge creation flow to include packId
+- [ ] Milestone 3: Add tracking at game end (gameController.endSinglePlayerGame)
+- [ ] Milestone 4: Add tracking at challenge end (challengeSystem.completeChallenge)
+- [ ] Milestone 5: Create UI (hamburger button + packs modal HTML)
+- [ ] Milestone 6: Implement modal logic (hamburgerNav.js methods)
+- [ ] Milestone 7: Add styling (CSS scrollbar for modal)
+- [ ] Milestone 8: Testing (all manual tests + edge cases)
+- [ ] Milestone 9: Deploy to staging for mobile testing
+- [ ] Milestone 10: Merge to main (production)
