@@ -17,6 +17,11 @@ class HamburgerNav {
         this.helpModal = document.getElementById('help-modal');
         this.closeHelpBtn = document.getElementById('close-help-btn');
         this.closeHelpBottomBtn = document.getElementById('close-help-bottom-btn');
+        this.changeNameModal = document.getElementById('change-name-modal');
+        this.changeNameInput = document.getElementById('change-name-input');
+        this.saveChangeNameBtn = document.getElementById('save-change-name-btn');
+        this.cancelChangeNameBtn = document.getElementById('cancel-change-name-btn');
+        this.closeChangeNameBtn = document.getElementById('close-change-name-btn');
 
         this.isMenuOpen = false;
         this.isGameActive = false;
@@ -56,10 +61,28 @@ class HamburgerNav {
             }
         });
 
+        // Change name modal
+        this.saveChangeNameBtn.addEventListener('click', () => this.saveNewName());
+        this.cancelChangeNameBtn.addEventListener('click', () => this.closeChangeNameModal());
+        this.closeChangeNameBtn.addEventListener('click', () => this.closeChangeNameModal());
+        this.changeNameModal.addEventListener('click', (e) => {
+            if (e.target === this.changeNameModal) {
+                this.closeChangeNameModal();
+            }
+        });
+        // Enter key to save
+        this.changeNameInput.addEventListener('keypress', (e) => {
+            if (e.key === 'Enter') {
+                this.saveNewName();
+            }
+        });
+
         // ESC key to close menu/dialogs
         document.addEventListener('keydown', (e) => {
             if (e.key === 'Escape') {
-                if (this.helpModal.classList.contains('hidden') === false) {
+                if (this.changeNameModal.classList.contains('hidden') === false) {
+                    this.closeChangeNameModal();
+                } else if (this.helpModal.classList.contains('hidden') === false) {
                     this.closeHelpModal();
                 } else if (this.confirmDialog.classList.contains('hidden') === false) {
                     this.closeConfirmDialog();
@@ -155,28 +178,61 @@ class HamburgerNav {
     handleChangeName() {
         this.closeMenu();
 
-        // Show player name setup dialog
         setTimeout(() => {
-            const playerNameSetup = document.getElementById('player-name-setup');
-            const playerNameInput = document.getElementById('player-name-input');
-
-            // Hide all screens
-            document.getElementById('start-screen').classList.add('hidden');
-            document.getElementById('game-screen').classList.add('hidden');
-            document.getElementById('end-screen').classList.add('hidden');
-
-            // Show name change dialog
-            playerNameSetup.classList.remove('hidden');
-
             // Pre-fill current name
-            const currentName = window.PlayerManager ? window.PlayerManager.getPlayerName() : '';
-            if (currentName && currentName !== 'Ej angivet') {
-                playerNameInput.value = currentName;
+            const currentName = localStorage.getItem('playerName') || '';
+            if (currentName) {
+                this.changeNameInput.value = currentName;
             }
 
-            // Focus input
-            playerNameInput.focus();
+            // Open modal
+            this.changeNameModal.classList.remove('hidden');
+            document.body.style.overflow = 'hidden';
+
+            // Focus input and select text
+            this.changeNameInput.focus();
+            this.changeNameInput.select();
         }, 350);
+    }
+
+    async saveNewName() {
+        const newName = this.changeNameInput.value.trim();
+
+        if (!newName) {
+            // Empty name - just close modal
+            this.closeChangeNameModal();
+            return;
+        }
+
+        // Save to localStorage
+        localStorage.setItem('playerName', newName);
+
+        // Update PlayerManager
+        if (window.PlayerManager) {
+            window.PlayerManager.setPlayerName(newName);
+        }
+
+        // Sync to Firebase
+        const playerId = localStorage.getItem('playerId');
+        if (playerId && window.FirebaseAPI) {
+            try {
+                await FirebaseAPI.upsertPlayer(playerId, newName);
+            } catch (error) {
+                console.error('Failed to update name in Firebase:', error);
+            }
+        }
+
+        // Update player info display in menu
+        this.updatePlayerInfo();
+
+        // Close modal - user returns to exactly where they were!
+        this.closeChangeNameModal();
+    }
+
+    closeChangeNameModal() {
+        this.changeNameModal.classList.add('hidden');
+        document.body.style.overflow = '';
+        this.changeNameInput.value = '';
     }
 
     openHelpModal() {
