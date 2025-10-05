@@ -30,8 +30,8 @@ class HamburgerNav {
     }
 
     init() {
-        // Open menu
-        this.hamburgerBtn.addEventListener('click', () => this.openMenu());
+        // Toggle menu (open/close)
+        this.hamburgerBtn.addEventListener('click', () => this.toggleMenu());
 
         // Close menu
         this.closeMenuBtn.addEventListener('click', () => this.closeMenu());
@@ -91,6 +91,14 @@ class HamburgerNav {
                 }
             }
         });
+    }
+
+    toggleMenu() {
+        if (this.isMenuOpen) {
+            this.closeMenu();
+        } else {
+            this.openMenu();
+        }
     }
 
     openMenu() {
