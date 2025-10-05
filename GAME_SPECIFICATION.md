@@ -161,10 +161,15 @@ totalScore = 0; // Ökas när spelaren "stannar" och säkrar sin pott
 - **Progress Bar:** Visuell indikation av hur långt spelaren kommit
 
 #### UI-komponenter
+- **Hamburger Menu:** Global navigation (övre högra hörnet)
+  - Tillbaka till start (med bekräftelse vid aktivt spel)
+  - Byt namn (modal dialog)
+  - Hur det fungerar (modal med spelregler)
+  - Spelarinformation (namn + ID)
 - **Decision Button:** Tvådelad knapp som kombinerar Stanna/Fortsätt funktionalitet
   - **Vänster sida (Stanna):** Visar `+Xp`, blir aktiv vid poäng > 0, "vaknar" med glow-effekt
   - **Höger sida (Fortsätt):** Alltid klickbar för att gå vidare till nästa del av frågan
-- **Total Score:** Visas som `Totalpoäng: X` i header (inte stjärnor längre)
+- **Total Score:** Visas som `Totalpoäng: X` (desktop) / `Poäng: X` (mobil) i header, centrerad
 - **Question Progress:** Progressbar som visar spelframsteg
 - **Feedback Area:** Visar rätt svar vid fel eller säkring
 
@@ -224,6 +229,7 @@ questionStarterIndex = 0;      // Vem som börjar nästa fråga (roterar)
 - **Completion Feedback:** Tydlig indikation när spelaren är klar med rundan
 
 #### UI-komponenter
+- **Hamburger Menu:** Samma globala navigation som single player
 - **Scoreboard:** Visar alla spelare, deras poäng och status
 - **Turn Indicator:** Blå ram runt aktiv spelare
 - **Decision Button:** Visar "Spelarnamn +Xp" på stanna-sidan
@@ -795,7 +801,7 @@ function concludeQuestionRound() {
 ### Tekniska Förbättringar
 - **Legacy Code Cleanup:** Eliminera kvarvarande globala variabler från pre-refactoring
 - **TypeScript Migration:** Bätter type safety och dokumentation
-- **Component Architecture:** Modularisera UI-komponenter  
+- **Component Architecture:** Modularisera UI-komponenter (Hamburger navigation är första steget)
 - **State Management:** Redux eller liknande för komplex state
 - **Testing Framework:** Automated testing av spellogik
 - **Performance Optimization:** Lazy loading, caching, etc.
@@ -832,6 +838,13 @@ Med rätt refaktorering och fortsatt utveckling kan detta bli ett riktigt starkt
 ---
 
 ## Versionshistorik
+
+**Version 1.3** - 2025-10-05
+- Dokumenterat hamburger-meny implementation
+- Global navigation tillgänglig från alla skärmar
+- Player info flyttad från footer till hamburger-meny
+- Responsiv poäng-display (Totalpoäng/Poäng)
+- Modal-baserade dialogs för name change och help
 
 **Version 1.2** - 2025-10-01
 - Uppdaterad efter navigation redesign (BL-027)
