@@ -166,14 +166,28 @@ Fallbacks döljer problem och leder till svårhittade buggar. Istället:
 4. Check browser console for any errors
 
 ## Deployment Workflow
+
+**Branch Strategy:**
+- `main`: Production branch → Deployed to main URL (luminous-griffin-0807ba.netlify.app)
+- `staging`: Test environment → Deployed to staging URL (staging--luminous-griffin-0807ba.netlify.app)
+- `feature/*`: Development branches → Merge to staging first for testing
+
+**Testing Process:**
+1. Develop in feature branch (e.g. `feature/hamburger-menu`)
+2. Merge to `staging` and push → Test on staging URL (mobile testing!)
+3. When confirmed working → Merge to `main` and push
+4. In Netlify: Click "Publish" on the main deploy to update production
+
+**Deploy Steps:**
 1. Make changes locally
 2. Test with local server (http://localhost:8000)
-3. Run `./deploy.sh` or manually:
+3. Commit and push to staging:
    - `git add .`
    - `git commit -m "descriptive message"`
    - `git push`
-4. Netlify automatically builds and deploys (1-2 minutes)
-5. Check live site at your Netlify URL
+4. Test on staging URL (especially mobile!)
+5. When ready: Merge to main and push
+6. Netlify auto-deploys both branches (1-2 minutes)
 
 ## Project Structure
 - `index.html`: Main entry point
