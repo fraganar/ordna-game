@@ -133,7 +133,7 @@ class App {
                     }
                     // Still update lastSeen but with Firebase name
                     await FirebaseAPI.upsertPlayer(playerId, firebaseName);
-                    this.updateFooterDisplay();
+                    this.updateMenuPlayerInfo();
                     return;
                 }
 

@@ -25,6 +25,8 @@ class HamburgerNav {
 
         this.isMenuOpen = false;
         this.isGameActive = false;
+        this.isSaving = false; // Prevent spam-clicking save button
+        this.modalStack = []; // Track open modals for proper scroll restoration
 
         this.init();
     }
@@ -104,10 +106,30 @@ class HamburgerNav {
     openMenu() {
         this.menuOverlay.classList.remove('hidden');
         this.isMenuOpen = true;
-        document.body.style.overflow = 'hidden'; // Prevent scrolling when menu is open
+        this.openModal('menu');
 
         // Update player info when menu opens
         this.updatePlayerInfo();
+    }
+
+    // Modal stack management for proper scroll restoration
+    openModal(modalName) {
+        if (!this.modalStack.includes(modalName)) {
+            this.modalStack.push(modalName);
+        }
+        document.body.style.overflow = 'hidden';
+    }
+
+    closeModal(modalName) {
+        const index = this.modalStack.indexOf(modalName);
+        if (index > -1) {
+            this.modalStack.splice(index, 1);
+        }
+
+        // Only restore scroll if no modals are open
+        if (this.modalStack.length === 0) {
+            document.body.style.overflow = '';
+        }
     }
 
     updatePlayerInfo() {
@@ -127,7 +149,7 @@ class HamburgerNav {
             this.menuOverlay.classList.add('hidden');
             this.menuOverlay.classList.remove('closing');
             this.isMenuOpen = false;
-            document.body.style.overflow = ''; // Restore scrolling
+            this.closeModal('menu'); // Use modal stack for scroll restoration
         }, 300); // Match animation duration
     }
 
@@ -141,7 +163,7 @@ class HamburgerNav {
             this.closeMenu();
             setTimeout(() => {
                 this.confirmDialog.classList.remove('hidden');
-                document.body.style.overflow = 'hidden';
+                this.openModal('confirm');
             }, 350);
         } else {
             // Just go back to start
@@ -157,7 +179,7 @@ class HamburgerNav {
 
     closeConfirmDialog() {
         this.confirmDialog.classList.add('hidden');
-        document.body.style.overflow = '';
+        this.closeModal('confirm');
     }
 
     goToStart() {
@@ -193,9 +215,13 @@ class HamburgerNav {
                 this.changeNameInput.value = currentName;
             }
 
+            // Clear any previous error messages
+            const existingError = this.changeNameModal.querySelector('.error-message');
+            if (existingError) existingError.remove();
+
             // Open modal
             this.changeNameModal.classList.remove('hidden');
-            document.body.style.overflow = 'hidden';
+            this.openModal('change-name');
 
             // Focus input and select text
             this.changeNameInput.focus();
@@ -204,6 +230,9 @@ class HamburgerNav {
     }
 
     async saveNewName() {
+        // Prevent spam-clicking
+        if (this.isSaving) return;
+
         const newName = this.changeNameInput.value.trim();
 
         if (!newName) {
@@ -212,34 +241,62 @@ class HamburgerNav {
             return;
         }
 
-        // Save to localStorage
-        localStorage.setItem('playerName', newName);
+        // Set saving state
+        this.isSaving = true;
+        const saveBtn = this.saveChangeNameBtn;
+        const originalText = saveBtn.textContent;
+        saveBtn.textContent = 'Sparar...';
+        saveBtn.disabled = true;
 
-        // Update PlayerManager
-        if (window.PlayerManager) {
-            window.PlayerManager.setPlayerName(newName);
-        }
+        // Clear any previous error messages
+        const existingError = this.changeNameModal.querySelector('.error-message');
+        if (existingError) existingError.remove();
 
-        // Sync to Firebase
-        const playerId = localStorage.getItem('playerId');
-        if (playerId && window.FirebaseAPI) {
-            try {
-                await FirebaseAPI.upsertPlayer(playerId, newName);
-            } catch (error) {
-                console.error('Failed to update name in Firebase:', error);
+        try {
+            // Save to localStorage
+            localStorage.setItem('playerName', newName);
+
+            // Update PlayerManager
+            if (window.PlayerManager) {
+                window.PlayerManager.setPlayerName(newName);
             }
+
+            // Sync to Firebase
+            const playerId = localStorage.getItem('playerId');
+            if (playerId && window.FirebaseAPI) {
+                await FirebaseAPI.upsertPlayer(playerId, newName);
+            }
+
+            // Update player info display in menu
+            this.updatePlayerInfo();
+
+            // Close modal - user returns to exactly where they were!
+            this.closeChangeNameModal();
+
+        } catch (error) {
+            console.error('Failed to update name in Firebase:', error);
+
+            // Show error message in modal (aligned with "Fail fast" philosophy)
+            const errorDiv = document.createElement('div');
+            errorDiv.className = 'error-message text-red-600 text-sm mt-2';
+            errorDiv.textContent = 'Kunde inte synka namn till servern. Försök igen.';
+
+            const inputContainer = this.changeNameModal.querySelector('.mb-6');
+            if (inputContainer) {
+                inputContainer.appendChild(errorDiv);
+            }
+
+        } finally {
+            // Restore button state
+            this.isSaving = false;
+            saveBtn.textContent = originalText;
+            saveBtn.disabled = false;
         }
-
-        // Update player info display in menu
-        this.updatePlayerInfo();
-
-        // Close modal - user returns to exactly where they were!
-        this.closeChangeNameModal();
     }
 
     closeChangeNameModal() {
         this.changeNameModal.classList.add('hidden');
-        document.body.style.overflow = '';
+        this.closeModal('change-name');
         this.changeNameInput.value = '';
     }
 
@@ -247,13 +304,13 @@ class HamburgerNav {
         this.closeMenu();
         setTimeout(() => {
             this.helpModal.classList.remove('hidden');
-            document.body.style.overflow = 'hidden';
+            this.openModal('help');
         }, 350);
     }
 
     closeHelpModal() {
         this.helpModal.classList.add('hidden');
-        document.body.style.overflow = '';
+        this.closeModal('help');
     }
 
     // Public method to update game state from outside
