@@ -35,6 +35,35 @@
             color: #333;
             border-bottom: 2px solid #667eea;
             padding-bottom: 10px;
+            cursor: pointer;
+            user-select: none;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .section-title:hover {
+            color: #667eea;
+        }
+
+        .section-title .toggle-icon {
+            transition: transform 0.3s;
+        }
+
+        .section-title.collapsed .toggle-icon {
+            transform: rotate(-90deg);
+        }
+
+        .section-content {
+            max-height: 2000px;
+            overflow: hidden;
+            transition: max-height 0.3s ease-out, opacity 0.3s;
+            opacity: 1;
+        }
+
+        .section-content.collapsed {
+            max-height: 0;
+            opacity: 0;
         }
 
         .data-table {
@@ -273,15 +302,24 @@
 
         <!-- Statistics Section -->
         <div class="admin-section">
-            <h2 class="section-title">Statistik</h2>
-            <div id="statsGrid" class="stats-grid">
-                <!-- Stats will be populated by JavaScript -->
+            <h2 class="section-title" onclick="window.adminPanel.toggleSection(this)">
+                <span>Statistik</span>
+                <span class="toggle-icon">▼</span>
+            </h2>
+            <div class="section-content">
+                <div id="statsGrid" class="stats-grid">
+                    <!-- Stats will be populated by JavaScript -->
+                </div>
             </div>
         </div>
 
         <!-- LocalStorage Section -->
         <div class="admin-section">
-            <h2 class="section-title">LocalStorage Data</h2>
+            <h2 class="section-title" onclick="window.adminPanel.toggleSection(this)">
+                <span>LocalStorage Data</span>
+                <span class="toggle-icon">▼</span>
+            </h2>
+            <div class="section-content">
             <div class="admin-actions">
                 <button class="admin-btn btn-refresh" onclick="window.adminPanel.refreshData()">
                     Uppdatera
@@ -307,11 +345,16 @@
                     </tbody>
                 </table>
             </div>
+            </div>
         </div>
 
-        <!-- Firebase Section -->
+        <!-- Firebase Challenges Section -->
         <div class="admin-section">
-            <h2 class="section-title">Firebase Challenges</h2>
+            <h2 class="section-title" onclick="window.adminPanel.toggleSection(this)">
+                <span>Firebase Challenges</span>
+                <span class="toggle-icon">▼</span>
+            </h2>
+            <div class="section-content">
             <div class="admin-actions">
                 <button class="admin-btn btn-refresh" onclick="window.adminPanel.loadFirebaseData()">
                     Ladda Firebase-data
@@ -323,11 +366,34 @@
             <div id="firebaseContent">
                 <!-- Content will be populated by JavaScript -->
             </div>
+            </div>
+        </div>
+
+        <!-- Played Packs Section -->
+        <div class="admin-section">
+            <h2 class="section-title" onclick="window.adminPanel.toggleSection(this)">
+                <span>Mina Frågepaket (Played Packs)</span>
+                <span class="toggle-icon">▼</span>
+            </h2>
+            <div class="section-content">
+                <div class="admin-actions">
+                    <button class="admin-btn btn-refresh" onclick="window.adminPanel.loadPlayedPacks()">
+                        Ladda spelade paket
+                    </button>
+                </div>
+                <div id="playedPacksContent">
+                    <!-- Content will be populated by JavaScript -->
+                </div>
+            </div>
         </div>
 
         <!-- Switch Player Section -->
         <div class="admin-section">
-            <h2>Byt till annan spelare</h2>
+            <h2 class="section-title" onclick="window.adminPanel.toggleSection(this)">
+                <span>Byt till annan spelare</span>
+                <span class="toggle-icon">▼</span>
+            </h2>
+            <div class="section-content">
             <div style="display: flex; gap: 10px; align-items: center; margin-bottom: 15px;">
                 <input type="text"
                        id="switchPlayerInput"
@@ -341,6 +407,7 @@
             <div id="switchPlayerResult" style="margin: 10px 0;"></div>
             <div style="padding: 10px; background: #f0f0f0; border-radius: 4px;">
                 <small>💡 Tips: Använd "Använd"-knappen i spelartabellen ovan för att snabbt byta till en spelare</small>
+            </div>
             </div>
         </div>
     </div>

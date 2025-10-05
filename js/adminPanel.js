@@ -739,6 +739,82 @@ class AdminPanel {
             await this.switchToPlayer();
         }
     }
+
+    // Toggle section collapse/expand
+    toggleSection(titleElement) {
+        const content = titleElement.nextElementSibling;
+        const icon = titleElement.querySelector('.toggle-icon');
+
+        if (content.classList.contains('collapsed')) {
+            content.classList.remove('collapsed');
+            titleElement.classList.remove('collapsed');
+        } else {
+            content.classList.add('collapsed');
+            titleElement.classList.add('collapsed');
+        }
+    }
+
+    // Load played packs from Firebase
+    async loadPlayedPacks() {
+        const content = document.getElementById('playedPacksContent');
+        content.innerHTML = '<p>Laddar...</p>';
+
+        try {
+            const playerId = localStorage.getItem('playerId');
+            if (!playerId) {
+                content.innerHTML = '<p style="color: orange;">⚠️ Ingen playerId hittades i localStorage</p>';
+                return;
+            }
+
+            const playedPacks = await window.FirebaseAPI.getPlayedPacks(playerId);
+
+            if (Object.keys(playedPacks).length === 0) {
+                content.innerHTML = '<p style="color: #666;">Inga spelade paket hittades för denna spelare.</p>';
+                return;
+            }
+
+            let html = `
+                <p style="margin-bottom: 15px;"><strong>Player ID:</strong> ${playerId}</p>
+                <table class="data-table">
+                    <thead>
+                        <tr>
+                            <th>Pack ID</th>
+                            <th>Gånger spelad</th>
+                            <th>Bästa poäng</th>
+                            <th>Senast spelad</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+            `;
+
+            for (const [packId, data] of Object.entries(playedPacks)) {
+                const playedDate = data.playedAt?.toDate ? data.playedAt.toDate() : new Date(data.playedAt);
+                const formattedDate = playedDate.toLocaleString('sv-SE');
+
+                html += `
+                    <tr>
+                        <td><code>${packId}</code></td>
+                        <td>${data.timesPlayed}</td>
+                        <td><strong>${data.bestScore}</strong></td>
+                        <td>${formattedDate}</td>
+                    </tr>
+                `;
+            }
+
+            html += `
+                    </tbody>
+                </table>
+                <p style="margin-top: 15px; color: #666;">
+                    <strong>Totalt antal paket:</strong> ${Object.keys(playedPacks).length}
+                </p>
+            `;
+
+            content.innerHTML = html;
+        } catch (error) {
+            console.error('Failed to load played packs:', error);
+            content.innerHTML = `<p style="color: red;">❌ Fel vid laddning: ${error.message}</p>`;
+        }
+    }
 }
 
 // Initialize admin panel when DOM is ready
