@@ -403,18 +403,34 @@ class GameController {
     }
     
     // End single player game
-    endSinglePlayerGame() {
-        
+    async endSinglePlayerGame() {
+
         const player = window.PlayerManager?.getPlayers()[0];
         if (!player) return;
-        
+
+        // Track played pack (only if specific pack was selected)
+        const playerId = localStorage.getItem('playerId');
+        const packId = this.selectedPack; // e.g. "fragepaket-1.json" or null
+        const finalScore = player.score;
+
+        if (playerId && packId && window.FirebaseAPI) {
+            try {
+                await window.FirebaseAPI.updatePlayedPack(playerId, packId, finalScore);
+            } catch (error) {
+                console.error('Failed to track played pack:', error);
+                // Non-blocking error - game continues normally
+            }
+        } else if (!packId) {
+            console.log('Blandat läge - trackar inte played pack');
+        }
+
         // Normal single player end screen - challenges handled by game.js
         if (window.UI) {
             UI.showScreen('endScreen');
             const singlePlayerFinal = UI.get('singlePlayerFinal');
             const singleFinalScore = UI.get('singleFinalScore');
             const finalScoreboard = UI.get('finalScoreboard');
-            
+
             if (singlePlayerFinal) singlePlayerFinal.classList.remove('hidden');
             if (singleFinalScore) singleFinalScore.textContent = player.score;
             if (finalScoreboard) finalScoreboard.classList.add('hidden');

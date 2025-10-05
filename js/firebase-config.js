@@ -45,7 +45,7 @@ function initializeFirebase() {
 // Firebase helper functions
 const FirebaseAPI = {
     // Create a new challenge with questions
-    async createChallenge(challengerName, challengerId, questions, challengerScore, questionScores, packName = null) {
+    async createChallenge(challengerName, challengerId, questions, challengerScore, questionScores, packName = null, packId = null) {
         if (!firebaseInitialized) {
             console.log('Demo mode: Challenge would be created in Firebase');
             return 'demo_challenge_' + Date.now();
@@ -59,7 +59,8 @@ const FirebaseAPI = {
                 questions: questions?.length,
                 challengerScore,
                 questionScores,
-                packName
+                packName,
+                packId
             });
 
             const challengeId = 'challenge_' + Date.now() + '_' + Math.random().toString(36).substr(2, 9);
@@ -84,7 +85,10 @@ const FirebaseAPI = {
 
             // Add pack info if specified
             if (packName) {
-                challengeData.packName = packName;
+                challengeData.packName = packName;  // Keep for display
+            }
+            if (packId) {
+                challengeData.packId = packId;      // For tracking played packs
             }
 
             await db.collection('challenges').doc(challengeId).set(challengeData);
@@ -371,6 +375,69 @@ const FirebaseAPI = {
         } catch (error) {
             console.error('Error getting my challenges:', error);
             return [];
+        }
+    },
+
+    // Track played pack for a player
+    async updatePlayedPack(playerId, packId, score) {
+        if (!firebaseInitialized) {
+            console.log('Demo mode: Would track played pack', packId);
+            return;
+        }
+
+        try {
+            const playerRef = db.collection('players').doc(playerId);
+            const packRef = playerRef.collection('playedPacks').doc(packId);
+
+            const doc = await packRef.get();
+
+            if (doc.exists) {
+                // Update existing
+                const data = doc.data();
+                await packRef.update({
+                    playedAt: new Date(),
+                    timesPlayed: data.timesPlayed + 1,
+                    bestScore: Math.max(data.bestScore, score)
+                });
+            } else {
+                // Create new
+                await packRef.set({
+                    playedAt: new Date(),
+                    timesPlayed: 1,
+                    bestScore: score
+                });
+            }
+
+            console.log('Tracked played pack:', packId, 'Score:', score);
+        } catch (error) {
+            console.error('Error updating played pack:', error);
+            throw error; // Let caller handle error
+        }
+    },
+
+    // Get all played packs for a player
+    async getPlayedPacks(playerId) {
+        if (!firebaseInitialized) {
+            console.log('Demo mode: Would fetch played packs');
+            return {};
+        }
+
+        try {
+            const snapshot = await db.collection('players')
+                .doc(playerId)
+                .collection('playedPacks')
+                .get();
+
+            const playedPacks = {};
+            snapshot.forEach(doc => {
+                playedPacks[doc.id] = doc.data();
+            });
+
+            console.log('Loaded played packs:', Object.keys(playedPacks).length, 'packs');
+            return playedPacks;
+        } catch (error) {
+            console.error('Error getting played packs:', error);
+            throw error; // Let caller handle error
         }
     }
 };

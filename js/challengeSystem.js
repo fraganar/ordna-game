@@ -44,7 +44,21 @@ class ChallengeSystem {
             window.resetChallengeState();
         }
     }
-    
+
+    // Helper: Get pack display name from pack ID
+    async getPackName(packId) {
+        if (!packId || !window.GameData) return null;
+
+        try {
+            const packs = await window.GameData.loadAvailablePacks();
+            const pack = packs.find(p => p.id === packId);
+            return pack ? pack.name : null;
+        } catch (error) {
+            console.error('Failed to get pack name:', error);
+            return null;
+        }
+    }
+
     // Save score for current question
     saveScore(score, questionIndex) {
         if (!this.isChallengeMode) return;
@@ -150,16 +164,33 @@ class ChallengeSystem {
             // Use the actual question scores as they were earned (don't pad with zeros)
             const completeScores = [...window.challengeQuestionScores];
 
+            // Get pack name for display (if specific pack selected)
+            const packName = window.selectedPack ? await this.getPackName(window.selectedPack) : null;
+
             const newChallengeId = await FirebaseAPI.createChallenge(
                 playerName,
                 playerId,
                 window.challengeQuestions,
                 finalScore,
                 completeScores,
-                window.selectedPack
+                packName,               // Display name (e.g. "Frågepaket 1")
+                window.selectedPack     // Pack ID (e.g. "fragepaket-1.json")
             );
-            
+
             window.challengeId = newChallengeId;
+
+            // Track played pack for challenger
+            const packId = window.selectedPack;
+            if (playerId && packId && window.FirebaseAPI) {
+                try {
+                    await window.FirebaseAPI.updatePlayedPack(playerId, packId, finalScore);
+                } catch (error) {
+                    console.error('Failed to track played pack:', error);
+                    // Non-blocking error - game continues normally
+                }
+            } else if (!packId) {
+                console.log('Blandat läge - trackar inte played pack');
+            }
             
             // No longer save to localStorage - Firebase is our source of truth
 
@@ -196,7 +227,24 @@ class ChallengeSystem {
                 scores: scores,
                 totalScore: totalScore
             });
-            
+
+            // Track played pack for opponent
+            const playerId = localStorage.getItem('playerId');
+            const challengeData = await FirebaseAPI.getChallenge(challengeId);
+            const packId = challengeData.packId; // Must be present in challenge data
+
+            if (!packId) {
+                console.error('Challenge missing packId - cannot track played pack');
+                // This should never happen if challenges are created correctly
+            } else if (playerId && window.FirebaseAPI) {
+                try {
+                    await window.FirebaseAPI.updatePlayedPack(playerId, packId, totalScore);
+                } catch (error) {
+                    console.error('Failed to track played pack:', error);
+                    // Non-blocking error - game continues normally
+                }
+            }
+
             return true;
         } catch (error) {
             console.error('Failed to accept challenge:', error);
