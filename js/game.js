@@ -872,6 +872,11 @@ async function initializeGame() {
     const packSelect = UI?.get('packSelect');
     selectedPack = packSelect?.value || null;
 
+    // Also sync to GameController for tracking
+    if (window.GameController) {
+        window.GameController.selectedPack = selectedPack;
+    }
+
     // Load questions using GameData (working implementation moved there)
     try {
         allQuestions = await window.GameData.loadQuestionsForGame(selectedPack);
