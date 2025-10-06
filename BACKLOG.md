@@ -29,26 +29,28 @@
 ### BL-031: Konsolidera navigation till start screen
 - **Kategori:** REFACTOR
 - **Stackrank:** 75
-- **Beskrivning:** 3 olika implementationer av "tillbaka till start" skapar duplicerad kod och buggar
-- **Problem:**
-  - Challenge result "Tillbaka"-knapp: 35 rader kod
-  - Hamburger "Tillbaka till start": 42 rader kod
-  - restartGame(): 82 rader kod
-  - Total duplicering: ~159 rader
-  - Inkonsekvent beteende ledde till buggar (challenge accept-dialog visades felaktigt)
-  - Svårt att underhålla - måste ändra på 3 ställen
-- **Lösning:**
+- **Beskrivning:** 2 kvarvarande implementationer av "tillbaka till start" skapar duplicerad kod
+- **Status:** ✅ DELVIS LÖST - Hamburger-menyn konsoliderad (commit a1b62ed)
+- **Kvarvarande problem:**
+  - Challenge result "Tillbaka"-knapp: ~35 rader duplicerad kod
+  - restartGame(): ~90 rader (nu inkl. URL-rensning)
+  - Båda gör samma sak men på olika ställen
+- **Vad som fixats:**
+  - ✅ Hamburger "Tillbaka till start" använder nu restartGame() (~47 rader borttagna)
+  - ✅ restartGame() rensar nu URL och window.challengeId
+  - ✅ Challenge accept-buggen fixad genom konsolidering
+- **Kvarvarande lösning:**
   - Skapa NavigationManager.resetToStartScreen() - EN central implementation
-  - Ersätt alla 3 implementationer med anrop till central funktion
-  - Reducerar kod från ~159 rader till ~37 rader (56% mindre)
+  - Uppdatera challenge result-knappen att använda NavigationManager
+  - Uppdatera restartGame() att använda NavigationManager + game-specifik logik
+  - Reducerar ytterligare ~125 rader duplicerad kod
 - **Fördelar:**
-  - Garanterat konsekvent beteende
+  - Garanterat konsekvent beteende överallt
   - Lättare att underhålla (ändringar på ETT ställe)
-  - Färre buggar
-  - Tydligare kodstruktur
+  - Tydligare ansvarsfördelning
 - **Plan:** Se docs/CONSOLIDATE_NAVIGATION.md för detaljerad plan
 - **Risknivå:** Medium (påverkar kritiska navigationsflöden men baserat på fungerande kod)
-- **Tidsuppskattning:** ~55 minuter (kod + testning)
+- **Tidsuppskattning:** ~30 minuter (minskad pga delvis löst)
 
 ### BL-030: Refaktorera opponent completion till challengeSystem
 - **Kategori:** REFACTOR
