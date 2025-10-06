@@ -9,21 +9,46 @@
 
 ### Kommande arbete (sorterat efter stackrank - högst första)
 
-1. **BL-030** (70) - Refaktorera opponent completion till challengeSystem
-2. **BL-009** (60) - Poänganimering före totalpoäng
-3. **BL-026** (45) - Admin-panel: Manuell playerId-redigering
-4. **BL-025** (40) - Account Recovery UI
-5. **BL-023** (35) - Säkra Firebase med autentisering
-6. **BL-018** (30) - Unificera slutskärmsfunktioner
-7. **BL-019** (25) - Duplicerad showChallengeAcceptScreen implementation
-8. **BL-020** (20) - Duplicerad difficulty badge implementation
-9. **BL-022** (12) - Lägg till browser fallbacks för moderna CSS-effekter
-10. **BL-024** (10) - Redesigna "Hör till"-knappar enligt ny mockup
-11. **BL-029** (5) - Konsolidera selectedPack till en källa
+1. **BL-031** (75) - Konsolidera navigation till start screen
+2. **BL-030** (70) - Refaktorera opponent completion till challengeSystem
+3. **BL-009** (60) - Poänganimering före totalpoäng
+4. **BL-026** (45) - Admin-panel: Manuell playerId-redigering
+5. **BL-025** (40) - Account Recovery UI
+6. **BL-023** (35) - Säkra Firebase med autentisering
+7. **BL-018** (30) - Unificera slutskärmsfunktioner
+8. **BL-019** (25) - Duplicerad showChallengeAcceptScreen implementation
+9. **BL-020** (20) - Duplicerad difficulty badge implementation
+10. **BL-022** (12) - Lägg till browser fallbacks för moderna CSS-effekter
+11. **BL-024** (10) - Redesigna "Hör till"-knappar enligt ny mockup
+12. **BL-029** (5) - Konsolidera selectedPack till en källa
 
 ---
 
 ## 📝 Backlog Items
+
+### BL-031: Konsolidera navigation till start screen
+- **Kategori:** REFACTOR
+- **Stackrank:** 75
+- **Beskrivning:** 3 olika implementationer av "tillbaka till start" skapar duplicerad kod och buggar
+- **Problem:**
+  - Challenge result "Tillbaka"-knapp: 35 rader kod
+  - Hamburger "Tillbaka till start": 42 rader kod
+  - restartGame(): 82 rader kod
+  - Total duplicering: ~159 rader
+  - Inkonsekvent beteende ledde till buggar (challenge accept-dialog visades felaktigt)
+  - Svårt att underhålla - måste ändra på 3 ställen
+- **Lösning:**
+  - Skapa NavigationManager.resetToStartScreen() - EN central implementation
+  - Ersätt alla 3 implementationer med anrop till central funktion
+  - Reducerar kod från ~159 rader till ~37 rader (56% mindre)
+- **Fördelar:**
+  - Garanterat konsekvent beteende
+  - Lättare att underhålla (ändringar på ETT ställe)
+  - Färre buggar
+  - Tydligare kodstruktur
+- **Plan:** Se docs/CONSOLIDATE_NAVIGATION.md för detaljerad plan
+- **Risknivå:** Medium (påverkar kritiska navigationsflöden men baserat på fungerande kod)
+- **Tidsuppskattning:** ~55 minuter (kod + testning)
 
 ### BL-030: Refaktorera opponent completion till challengeSystem
 - **Kategori:** REFACTOR
