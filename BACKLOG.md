@@ -9,20 +9,42 @@
 
 ### Kommande arbete (sorterat efter stackrank - högst första)
 
-1. **BL-009** (60) - Poänganimering före totalpoäng
-2. **BL-026** (45) - Admin-panel: Manuell playerId-redigering
-3. **BL-025** (40) - Account Recovery UI
-4. **BL-023** (35) - Säkra Firebase med autentisering
-5. **BL-018** (30) - Unificera slutskärmsfunktioner
-6. **BL-019** (25) - Duplicerad showChallengeAcceptScreen implementation
-7. **BL-020** (20) - Duplicerad difficulty badge implementation
-8. **BL-022** (12) - Lägg till browser fallbacks för moderna CSS-effekter
-9. **BL-024** (10) - Redesigna "Hör till"-knappar enligt ny mockup
-10. **BL-029** (5) - Konsolidera selectedPack till en källa
+1. **BL-030** (70) - Refaktorera opponent completion till challengeSystem
+2. **BL-009** (60) - Poänganimering före totalpoäng
+3. **BL-026** (45) - Admin-panel: Manuell playerId-redigering
+4. **BL-025** (40) - Account Recovery UI
+5. **BL-023** (35) - Säkra Firebase med autentisering
+6. **BL-018** (30) - Unificera slutskärmsfunktioner
+7. **BL-019** (25) - Duplicerad showChallengeAcceptScreen implementation
+8. **BL-020** (20) - Duplicerad difficulty badge implementation
+9. **BL-022** (12) - Lägg till browser fallbacks för moderna CSS-effekter
+10. **BL-024** (10) - Redesigna "Hör till"-knappar enligt ny mockup
+11. **BL-029** (5) - Konsolidera selectedPack till en källa
 
 ---
 
 ## 📝 Backlog Items
+
+### BL-030: Refaktorera opponent completion till challengeSystem
+- **Kategori:** REFACTOR
+- **Stackrank:** 70
+- **Beskrivning:** Flytta opponent completion-logik från game.js till challengeSystem.js
+- **Problem:**
+  - game.js hanterar opponent completion direkt (40+ rader kod)
+  - challengeSystem.js:acceptChallenge() finns men anropas aldrig (död kod)
+  - Duplicerad tracking-logik på två ställen
+- **Lösning:**
+  - Uppdatera challengeSystem.acceptChallenge() med full opponent flow
+  - Delegera från game.js till ChallengeSystem.acceptChallenge()
+  - Ta bort duplicerad tracking-kod i game.js
+- **Fördelar:**
+  - Bättre separation of concerns - all challenge-logik i challengeSystem.js
+  - Mindre duplicerad kod - tracking finns bara på ett ställe
+  - Enklare att underhålla - en funktion istället för två
+  - game.js 40+ rader → 5 rader
+- **Plan:** Se docs/REFACTOR_OPPONENT_COMPLETION.md för detaljerad plan
+- **Risknivå:** Low-medium (påverkar kritiskt challenge-flöde men flyttar bara befintlig kod)
+- **Tidsuppskattning:** 20-25 minuter (kod + testning)
 
 ### BL-009: Poänganimering före totalpoäng
 - **Kategori:** BUG
