@@ -200,6 +200,11 @@ class HamburgerNav {
     }
 
     goToStart() {
+        // Clear challenge parameter from URL (important!)
+        const url = new URL(window.location);
+        url.searchParams.delete('challenge');
+        window.history.pushState({}, '', url);
+
         // Use the existing restartGame() function which handles everything correctly:
         // - Stops polling
         // - Resets game state
