@@ -9,69 +9,20 @@
 
 ### Kommande arbete (sorterat efter stackrank - högst första)
 
-1. **BL-031** (75) - Konsolidera navigation till start screen
-2. **BL-030** (70) - Refaktorera opponent completion till challengeSystem
-3. **BL-009** (60) - Poänganimering före totalpoäng
-4. **BL-026** (45) - Admin-panel: Manuell playerId-redigering
-5. **BL-025** (40) - Account Recovery UI
-6. **BL-023** (35) - Säkra Firebase med autentisering
-7. **BL-018** (30) - Unificera slutskärmsfunktioner
-8. **BL-019** (25) - Duplicerad showChallengeAcceptScreen implementation
-9. **BL-020** (20) - Duplicerad difficulty badge implementation
-10. **BL-022** (12) - Lägg till browser fallbacks för moderna CSS-effekter
-11. **BL-024** (10) - Redesigna "Hör till"-knappar enligt ny mockup
-12. **BL-029** (5) - Konsolidera selectedPack till en källa
+1. **BL-009** (60) - Poänganimering före totalpoäng
+2. **BL-026** (45) - Admin-panel: Manuell playerId-redigering
+3. **BL-025** (40) - Account Recovery UI
+4. **BL-023** (35) - Säkra Firebase med autentisering
+5. **BL-018** (30) - Unificera slutskärmsfunktioner
+6. **BL-019** (25) - Duplicerad showChallengeAcceptScreen implementation
+7. **BL-020** (20) - Duplicerad difficulty badge implementation
+8. **BL-022** (12) - Lägg till browser fallbacks för moderna CSS-effekter
+9. **BL-024** (10) - Redesigna "Hör till"-knappar enligt ny mockup
+10. **BL-029** (5) - Konsolidera selectedPack till en källa
 
 ---
 
 ## 📝 Backlog Items
-
-### BL-031: Konsolidera navigation till start screen
-- **Kategori:** REFACTOR
-- **Stackrank:** 75
-- **Beskrivning:** 2 kvarvarande implementationer av "tillbaka till start" skapar duplicerad kod
-- **Status:** ✅ DELVIS LÖST - Hamburger-menyn konsoliderad (commit a1b62ed)
-- **Kvarvarande problem:**
-  - Challenge result "Tillbaka"-knapp: ~35 rader duplicerad kod
-  - restartGame(): ~90 rader (nu inkl. URL-rensning)
-  - Båda gör samma sak men på olika ställen
-- **Vad som fixats:**
-  - ✅ Hamburger "Tillbaka till start" använder nu restartGame() (~47 rader borttagna)
-  - ✅ restartGame() rensar nu URL och window.challengeId
-  - ✅ Challenge accept-buggen fixad genom konsolidering
-- **Kvarvarande lösning:**
-  - Skapa NavigationManager.resetToStartScreen() - EN central implementation
-  - Uppdatera challenge result-knappen att använda NavigationManager
-  - Uppdatera restartGame() att använda NavigationManager + game-specifik logik
-  - Reducerar ytterligare ~125 rader duplicerad kod
-- **Fördelar:**
-  - Garanterat konsekvent beteende överallt
-  - Lättare att underhålla (ändringar på ETT ställe)
-  - Tydligare ansvarsfördelning
-- **Plan:** Se docs/CONSOLIDATE_NAVIGATION.md för detaljerad plan
-- **Risknivå:** Medium (påverkar kritiska navigationsflöden men baserat på fungerande kod)
-- **Tidsuppskattning:** ~30 minuter (minskad pga delvis löst)
-
-### BL-030: Refaktorera opponent completion till challengeSystem
-- **Kategori:** REFACTOR
-- **Stackrank:** 70
-- **Beskrivning:** Flytta opponent completion-logik från game.js till challengeSystem.js
-- **Problem:**
-  - game.js hanterar opponent completion direkt (40+ rader kod)
-  - challengeSystem.js:acceptChallenge() finns men anropas aldrig (död kod)
-  - Duplicerad tracking-logik på två ställen
-- **Lösning:**
-  - Uppdatera challengeSystem.acceptChallenge() med full opponent flow
-  - Delegera från game.js till ChallengeSystem.acceptChallenge()
-  - Ta bort duplicerad tracking-kod i game.js
-- **Fördelar:**
-  - Bättre separation of concerns - all challenge-logik i challengeSystem.js
-  - Mindre duplicerad kod - tracking finns bara på ett ställe
-  - Enklare att underhålla - en funktion istället för två
-  - game.js 40+ rader → 5 rader
-- **Plan:** Se docs/REFACTOR_OPPONENT_COMPLETION.md för detaljerad plan
-- **Risknivå:** Low-medium (påverkar kritiskt challenge-flöde men flyttar bara befintlig kod)
-- **Tidsuppskattning:** 20-25 minuter (kod + testning)
 
 ### BL-009: Poänganimering före totalpoäng
 - **Kategori:** BUG
@@ -241,6 +192,8 @@
 ## ✅ Slutförda Items (endast rubriker)
 
 Se LOG.md för detaljer om slutförda items:
+- BL-031: Konsolidera navigation till start screen ✅
+- BL-030: Refaktorera opponent completion till challengeSystem ✅
 - BL-002: Multiplayer Hör-till Bugg ✅
 - BL-003: Slutför uiController Refaktorering ✅
 - BL-004: Create DEPENDENCIES.md ✅
