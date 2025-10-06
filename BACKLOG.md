@@ -18,6 +18,7 @@
 7. **BL-020** (20) - Duplicerad difficulty badge implementation
 8. **BL-022** (12) - Lägg till browser fallbacks för moderna CSS-effekter
 9. **BL-024** (10) - Redesigna "Hör till"-knappar enligt ny mockup
+10. **BL-029** (5) - Konsolidera selectedPack till en källa
 
 ---
 
@@ -122,6 +123,23 @@
 - **Nytta:** Subtilt förbättrad tydlighet för "Hör till"-knappar
 
 ![Mockup för subtil färg på "Hör till"-knappar](./docs/images/ide_för_hör_till_knappar.png)
+
+### BL-029: Konsolidera selectedPack till en källa
+- **Kategori:** REFACTOR
+- **Stackrank:** 5
+- **Beskrivning:** Två källor till sanning för selectedPack skapar risk för ur-synk
+- **Problem:**
+  - `window.selectedPack` (global i game.js) - används av challengeSystem.js, app.js
+  - `GameController.selectedPack` - används av gameController.js för tracking
+  - Synkas manuellt i game.js rad 875-877
+  - Risk för ur-synk om någon läser värdet före synkning
+- **Åtgärd:**
+  - Gör GameController.selectedPack till enda källan
+  - Ersätt alla `window.selectedPack` → `window.GameController.selectedPack`
+  - Testa: challenge creation, single player, resultatskärm, pack selection
+- **Nytta:** En källa till sanning, mindre risk för buggar vid refaktorering
+- **Riskanalys:** Medium-high (påverkar ~10 ställen i game.js, challengeSystem.js, app.js)
+- **Rekommendation:** Separat branch med noggrann testning
 
 ### BL-023: Säkra Firebase med autentisering
 - **Kategori:** SECURITY

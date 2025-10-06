@@ -124,10 +124,10 @@ class GameData {
         }
     }
 
-    // Helper to get pack configuration by name
-    async getPackConfig(packName) {
+    // Helper to get pack configuration by ID
+    async getPackConfig(packId) {
         const packs = await this.loadAvailablePacks();
-        return packs.find(p => p.name === packName);
+        return packs.find(p => p.id === packId);
     }
     
     // Populate pack selector dropdowns - loads from packs.json

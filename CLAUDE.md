@@ -106,7 +106,13 @@ Fallbacks döljer problem och leder till svårhittade buggar. Istället:
 - ❌ Dåligt: Firebase nere → Använd hårdkodad fallback-lista → Användaren ser inte problemet
 - ✅ Bra: Firebase nere → Visa "Kunde inte ladda frågepaket, försök igen senare"
 
-**Undantag där fallback är OK:**
+**VIKTIGT: Undvik fallback-lösningar i kod**
+- **Aldrig** implementera fallback-logik utan explicit godkännande
+- Fallbacks kan dölja buggar som behöver fixas
+- Om data inte hittas → kasta error, fixa roten till problemet
+- Exempel: Om `packId` inte hittas, fallback till `packName` → NEJ! Fixa så rätt ID används överallt
+
+**Undantag där fallback är OK (kräver explicit godkännande):**
 - Demo-läge när Firebase inte är konfigurerat alls (utvecklingsmiljö)
 - Temporär cache medan ny data laddas (men visa laddningsindikator)
 

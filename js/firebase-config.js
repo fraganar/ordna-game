@@ -386,8 +386,6 @@ const FirebaseAPI = {
         }
 
         try {
-            console.log('🔍 DEBUG updatePlayedPack - packId:', packId, 'type:', typeof packId);
-
             const playerRef = db.collection('players').doc(playerId);
             const packRef = playerRef.collection('playedPacks').doc(packId);
 
