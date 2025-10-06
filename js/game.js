@@ -787,8 +787,23 @@ async function endSinglePlayerGame() {
                 challengeQuestionScores
             );
 
+            // Track played pack for opponent
+            try {
+                const challengeData = await FirebaseAPI.getChallenge(window.challengeId);
+                const packId = challengeData.packId;
+
+                if (!packId) {
+                    console.error('Challenge missing packId - cannot track played pack');
+                } else if (playerId && window.FirebaseAPI) {
+                    await window.FirebaseAPI.updatePlayedPack(playerId, packId, playerScore);
+                }
+            } catch (error) {
+                console.error('Failed to track played pack for opponent:', error);
+                // Non-blocking error - game continues normally
+            }
+
             // No longer save to localStorage - Firebase is our source of truth
-            
+
             // Show result comparison view
             await window.ChallengeSystem.showChallengeResultView(window.challengeId);
             
