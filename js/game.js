@@ -774,44 +774,25 @@ async function endSinglePlayerGame() {
                 currentPlayer = player;
                 players = window.PlayerManager.getPlayers();
             }
-            
+
             const playerName = player?.name || currentPlayer?.name || 'Unknown';
             const playerScore = player?.score || 0;
             const playerId = localStorage.getItem('playerId') || 'unknown_player';
 
-            await FirebaseAPI.completeChallenge(
+            // Delegate to ChallengeSystem for full opponent completion flow
+            await window.ChallengeSystem.acceptChallenge(
                 window.challengeId,
                 playerId,
                 playerName,
-                playerScore,
-                challengeQuestionScores
+                challengeQuestionScores,
+                playerScore
             );
 
-            // Track played pack for opponent
-            try {
-                const challengeData = await FirebaseAPI.getChallenge(window.challengeId);
-                const packId = challengeData.packId;
-
-                if (!packId) {
-                    console.error('Challenge missing packId - cannot track played pack');
-                } else if (playerId && window.FirebaseAPI) {
-                    await window.FirebaseAPI.updatePlayedPack(playerId, packId, playerScore);
-                }
-            } catch (error) {
-                console.error('Failed to track played pack for opponent:', error);
-                // Non-blocking error - game continues normally
-            }
-
-            // No longer save to localStorage - Firebase is our source of truth
-
-            // Show result comparison view
-            await window.ChallengeSystem.showChallengeResultView(window.challengeId);
-            
         } catch (error) {
             console.error('Failed to complete challenge:', error);
             UI?.showError('Kunde inte spara resultat. Försök igen.');
             UI?.showEndScreen();
-            
+
             // Använd PlayerManager för säker score-hämtning
             const player = window.PlayerManager?.getCurrentPlayer();
             const errorFallbackScore = player?.score || 0;

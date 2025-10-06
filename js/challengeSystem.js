@@ -219,31 +219,35 @@ class ChallengeSystem {
         }
     }
     
-    // Accept a challenge
-    async acceptChallenge(challengeId, playerName, scores, totalScore) {
+    // Accept a challenge - full opponent completion flow
+    async acceptChallenge(challengeId, playerId, playerName, scores, totalScore) {
         try {
-            await FirebaseAPI.acceptChallenge(challengeId, {
-                opponentName: playerName,
-                scores: scores,
-                totalScore: totalScore
-            });
+            // Complete the challenge in Firebase
+            await FirebaseAPI.completeChallenge(
+                challengeId,
+                playerId,
+                playerName,
+                totalScore,
+                scores
+            );
 
             // Track played pack for opponent
-            const playerId = localStorage.getItem('playerId');
-            const challengeData = await FirebaseAPI.getChallenge(challengeId);
-            const packId = challengeData.packId; // Must be present in challenge data
+            try {
+                const challengeData = await FirebaseAPI.getChallenge(challengeId);
+                const packId = challengeData.packId;
 
-            if (!packId) {
-                console.error('Challenge missing packId - cannot track played pack');
-                // This should never happen if challenges are created correctly
-            } else if (playerId && window.FirebaseAPI) {
-                try {
+                if (!packId) {
+                    console.error('Challenge missing packId - cannot track played pack');
+                } else if (playerId && window.FirebaseAPI) {
                     await window.FirebaseAPI.updatePlayedPack(playerId, packId, totalScore);
-                } catch (error) {
-                    console.error('Failed to track played pack:', error);
-                    // Non-blocking error - game continues normally
                 }
+            } catch (error) {
+                console.error('Failed to track played pack for opponent:', error);
+                // Non-blocking error - game continues normally
             }
+
+            // Show result comparison view
+            await this.showChallengeResultView(challengeId);
 
             return true;
         } catch (error) {
