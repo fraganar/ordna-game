@@ -200,33 +200,45 @@ class HamburgerNav {
     }
 
     goToStart() {
-        // Clear challenge parameter from URL (important!)
+        // Stop any challenge polling
+        if (window.ChallengeSystem && window.ChallengeSystem.stopPolling) {
+            window.ChallengeSystem.stopPolling();
+        }
+
+        // Clear challenge parameter from URL
         const url = new URL(window.location);
         url.searchParams.delete('challenge');
         window.history.pushState({}, '', url);
 
-        // Clear challenge ID from window to prevent re-showing accept dialog
+        // Clear challenge ID from window
         window.challengeId = null;
 
-        // Use the existing restartGame() function which handles everything correctly:
-        // - Stops polling
-        // - Resets game state
-        // - Invalidates cache
-        // - Reloads challenges (important for refreshing "Mina utmaningar"!)
-        if (typeof window.restartGame === 'function') {
-            window.restartGame();
-        } else {
-            // Fallback: Simple navigation if restartGame doesn't exist
-            console.warn('restartGame() not found, using fallback navigation');
-            document.getElementById('game-screen').classList.add('hidden');
-            document.getElementById('end-screen').classList.add('hidden');
-            document.getElementById('player-setup').classList.add('hidden');
-            document.getElementById('player-name-setup').classList.add('hidden');
-            document.getElementById('challenge-form').classList.add('hidden');
-            document.getElementById('challenge-accept').classList.add('hidden');
-            document.getElementById('challenge-blocked').classList.add('hidden');
-            document.getElementById('start-screen').classList.remove('hidden');
-            document.getElementById('start-main').classList.remove('hidden');
+        // Hide all screens explicitly (same as challenge result button)
+        const gameScreen = window.UI?.get('gameScreen');
+        const endScreen = window.UI?.get('endScreen');
+        const playerSetup = window.UI?.get('playerSetup');
+        const challengeForm = window.UI?.get('challengeForm');
+        const challengeAccept = window.UI?.get('challengeAccept');
+        const challengeBlocked = window.UI?.get('challengeBlocked');
+        const startScreen = window.UI?.get('startScreen');
+        const startMain = window.UI?.get('startMain');
+
+        if (gameScreen) gameScreen.classList.add('hidden');
+        if (endScreen) endScreen.classList.add('hidden');
+        if (playerSetup) playerSetup.classList.add('hidden');
+        if (challengeForm) challengeForm.classList.add('hidden');
+        if (challengeAccept) challengeAccept.classList.add('hidden');
+        if (challengeBlocked) challengeBlocked.classList.add('hidden');
+
+        // Show start screen
+        if (startScreen) startScreen.classList.remove('hidden');
+        if (startMain) startMain.classList.remove('hidden');
+
+        // Reset challenge state
+        if (window.ChallengeSystem) {
+            window.ChallengeSystem.reset();
+            window.ChallengeSystem.invalidateCache();
+            window.ChallengeSystem.loadMyChallenges();
         }
     }
 

@@ -1636,6 +1636,12 @@ async function restartGame() {
     singlePlayerFinal.classList.add('hidden');
     finalScoreboard.classList.remove('hidden');
 
+    // Explicitly hide challenge-related screens to prevent them showing on start
+    const challengeAccept = document.getElementById('challenge-accept');
+    const challengeBlocked = document.getElementById('challenge-blocked');
+    if (challengeAccept) challengeAccept.classList.add('hidden');
+    if (challengeBlocked) challengeBlocked.classList.add('hidden');
+
     // Reset game state
     if (window.ChallengeSystem) {
         window.ChallengeSystem.reset();
