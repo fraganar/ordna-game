@@ -205,6 +205,9 @@ class HamburgerNav {
         url.searchParams.delete('challenge');
         window.history.pushState({}, '', url);
 
+        // Clear challenge ID from window to prevent re-showing accept dialog
+        window.challengeId = null;
+
         // Use the existing restartGame() function which handles everything correctly:
         // - Stops polling
         // - Resets game state
