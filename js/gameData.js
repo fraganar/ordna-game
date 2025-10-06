@@ -147,8 +147,8 @@ class GameData {
             // Add packs to selectors
             packs.forEach(pack => {
                 const option = document.createElement('option');
-                option.value = pack.name;
-                option.textContent = pack.name;
+                option.value = pack.id;  // Use ID for tracking, not name
+                option.textContent = pack.name;  // Display name to user
 
                 // Add to both selectors
                 if (packSelect) {
@@ -161,10 +161,10 @@ class GameData {
 
             // Set default selection to first pack
             if (packSelect && packs.length > 0) {
-                packSelect.value = packs[0].name;
+                packSelect.value = packs[0].id;
             }
             if (challengePackSelect && packs.length > 0) {
-                challengePackSelect.value = packs[0].name;
+                challengePackSelect.value = packs[0].id;
             }
 
         } catch (error) {
