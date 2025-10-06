@@ -170,7 +170,7 @@ class HamburgerNav {
         }, 300); // Match animation duration
     }
 
-    handleBackToStart() {
+    async handleBackToStart() {
         // Check if game is active
         const gameScreen = document.getElementById('game-screen');
         this.isGameActive = !gameScreen.classList.contains('hidden');
@@ -183,15 +183,19 @@ class HamburgerNav {
                 this.openModal('confirm');
             }, 350);
         } else {
-            // Just go back to start
-            this.goToStart();
+            // Use restartGame() for consistency with other back-to-start flows
+            if (typeof window.restartGame === 'function') {
+                await window.restartGame();
+            }
             this.closeMenu();
         }
     }
 
-    confirmBackToStart() {
+    async confirmBackToStart() {
         this.closeConfirmDialog();
-        this.goToStart();
+        if (typeof window.restartGame === 'function') {
+            await window.restartGame();
+        }
     }
 
     closeConfirmDialog() {
@@ -199,48 +203,6 @@ class HamburgerNav {
         this.closeModal('confirm');
     }
 
-    goToStart() {
-        // Stop any challenge polling
-        if (window.ChallengeSystem && window.ChallengeSystem.stopPolling) {
-            window.ChallengeSystem.stopPolling();
-        }
-
-        // Clear challenge parameter from URL
-        const url = new URL(window.location);
-        url.searchParams.delete('challenge');
-        window.history.pushState({}, '', url);
-
-        // Clear challenge ID from window
-        window.challengeId = null;
-
-        // Hide all screens explicitly (same as challenge result button)
-        const gameScreen = window.UI?.get('gameScreen');
-        const endScreen = window.UI?.get('endScreen');
-        const playerSetup = window.UI?.get('playerSetup');
-        const challengeForm = window.UI?.get('challengeForm');
-        const challengeAccept = window.UI?.get('challengeAccept');
-        const challengeBlocked = window.UI?.get('challengeBlocked');
-        const startScreen = window.UI?.get('startScreen');
-        const startMain = window.UI?.get('startMain');
-
-        if (gameScreen) gameScreen.classList.add('hidden');
-        if (endScreen) endScreen.classList.add('hidden');
-        if (playerSetup) playerSetup.classList.add('hidden');
-        if (challengeForm) challengeForm.classList.add('hidden');
-        if (challengeAccept) challengeAccept.classList.add('hidden');
-        if (challengeBlocked) challengeBlocked.classList.add('hidden');
-
-        // Show start screen
-        if (startScreen) startScreen.classList.remove('hidden');
-        if (startMain) startMain.classList.remove('hidden');
-
-        // Reset challenge state
-        if (window.ChallengeSystem) {
-            window.ChallengeSystem.reset();
-            window.ChallengeSystem.invalidateCache();
-            window.ChallengeSystem.loadMyChallenges();
-        }
-    }
 
     handleChangeName() {
         this.closeMenu();

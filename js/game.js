@@ -1575,6 +1575,14 @@ async function restartGame() {
         stopChallengePolling();
     }
 
+    // Clear challenge parameter from URL
+    const url = new URL(window.location);
+    url.searchParams.delete('challenge');
+    window.history.pushState({}, '', url);
+
+    // Clear challenge ID from window
+    window.challengeId = null;
+
     // Reset game state - PlayerManager handles player reset
     currentQuestionIndex = 0;
     window.currentQuestionIndex = 0; // Sync global variable
