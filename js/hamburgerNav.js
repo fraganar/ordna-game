@@ -338,10 +338,12 @@ class HamburgerNav {
             try {
                 // Load all packs from packs.json
                 const allPacks = await window.GameData.loadAvailablePacks();
+                console.log('🔍 DEBUG allPacks IDs:', allPacks.map(p => p.id));
 
                 // Load played packs from Firebase
                 const playerId = localStorage.getItem('playerId');
                 const playedPacks = await window.FirebaseAPI.getPlayedPacks(playerId);
+                console.log('🔍 DEBUG playedPacks keys:', Object.keys(playedPacks));
 
                 // Render list
                 this.renderPacksList(allPacks, playedPacks);

@@ -386,6 +386,8 @@ const FirebaseAPI = {
         }
 
         try {
+            console.log('🔍 DEBUG updatePlayedPack - packId:', packId, 'type:', typeof packId);
+
             const playerRef = db.collection('players').doc(playerId);
             const packRef = playerRef.collection('playedPacks').doc(packId);
 
@@ -399,6 +401,7 @@ const FirebaseAPI = {
                     timesPlayed: data.timesPlayed + 1,
                     bestScore: Math.max(data.bestScore, score)
                 });
+                console.log('✅ Updated existing pack in Firebase');
             } else {
                 // Create new
                 await packRef.set({
@@ -406,6 +409,7 @@ const FirebaseAPI = {
                     timesPlayed: 1,
                     bestScore: score
                 });
+                console.log('✅ Created new pack in Firebase');
             }
 
             console.log('Tracked played pack:', packId, 'Score:', score);
