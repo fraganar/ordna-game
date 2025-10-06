@@ -773,38 +773,8 @@ class ChallengeSystem {
             const backToStartBtn = document.getElementById('back-to-start-result');
 
             if (backToStartBtn) {
-                backToStartBtn.addEventListener('click', () => {
-                    // Go directly to start screen without showing end screen
-                    this.stopPolling();
-
-                    // Clear the challenge parameter from URL
-                    const url = new URL(window.location);
-                    url.searchParams.delete('challenge');
-                    window.history.pushState({}, '', url);
-
-                    // Hide all screens first
-                    const gameScreen = window.UI?.get('gameScreen');
-                    const playerSetup = window.UI?.get('playerSetup');
-                    const challengeForm = window.UI?.get('challengeForm');
-                    const challengeAccept = window.UI?.get('challengeAccept');
-                    const startScreen = window.UI?.get('startScreen');
-                    const startMain = window.UI?.get('startMain');
-
-                    if (gameScreen) gameScreen.classList.add('hidden');
-                    if (endScreen) endScreen.classList.add('hidden');
-                    if (playerSetup) playerSetup.classList.add('hidden');
-                    if (challengeForm) challengeForm.classList.add('hidden');
-                    if (challengeAccept) challengeAccept.classList.add('hidden');
-
-                    // Show start screen
-                    if (startScreen) startScreen.classList.remove('hidden');
-                    if (startMain) startMain.classList.remove('hidden');
-
-                    // Reset game state
-                    this.reset();
-
-                    // Reload my challenges
-                    this.loadMyChallenges();
+                backToStartBtn.addEventListener('click', async () => {
+                    await window.NavigationManager.resetToStartScreen();
                 });
             }
             

@@ -1568,32 +1568,11 @@ function endMultiplayerGame() {
 }
 
 async function restartGame() {
-    // Stop any ongoing polling
-    if (window.ChallengeSystem && window.ChallengeSystem.stopPolling) {
-        window.ChallengeSystem.stopPolling();
-    } else if (typeof stopChallengePolling === 'function') {
-        stopChallengePolling();
-    }
-
-    // Clear challenge parameter from URL
-    const url = new URL(window.location);
-    url.searchParams.delete('challenge');
-    window.history.pushState({}, '', url);
-
-    // Clear challenge ID from window
-    window.challengeId = null;
-
-    // Reset game state - PlayerManager handles player reset
+    // Game-specific reset - reset game state variables
     currentQuestionIndex = 0;
     window.currentQuestionIndex = 0; // Sync global variable
     currentPlayerIndex = 0;
     questionStarterIndex = 0;
-    // Reset challenge and game state
-    if (window.ChallengeSystem && window.ChallengeSystem.reset) {
-        window.ChallengeSystem.reset();
-    } else {
-        resetChallengeState();
-    }
     selectedPack = null;
 
     // Hide player status bar
@@ -1602,7 +1581,7 @@ async function restartGame() {
         playerStatusBar.classList.add('hidden');
     }
 
-    // Restore endScreen HTML
+    // Restore endScreen HTML to default (non-challenge) state
     const endScreen = document.getElementById('end-screen');
     if (endScreen) {
         endScreen.innerHTML = `
@@ -1630,7 +1609,7 @@ async function restartGame() {
         if (restartBtn) {
             restartBtn.addEventListener('click', restartGame);
         }
-    } // Close the if (endScreen) block
+    }
 
     // Update element references
     endScreenSubtitle = document.getElementById('end-screen-subtitle');
@@ -1638,30 +1617,12 @@ async function restartGame() {
     singleFinalScore = document.getElementById('single-final-score');
     finalScoreboard = document.getElementById('final-scoreboard');
 
-    UI?.showStartScreen();
+    // Reset single player display elements
+    if (singlePlayerFinal) singlePlayerFinal.classList.add('hidden');
+    if (finalScoreboard) finalScoreboard.classList.remove('hidden');
 
-    // Reset single player display
-    singlePlayerFinal.classList.add('hidden');
-    finalScoreboard.classList.remove('hidden');
-
-    // Explicitly hide challenge-related screens to prevent them showing on start
-    const challengeAccept = document.getElementById('challenge-accept');
-    const challengeBlocked = document.getElementById('challenge-blocked');
-    if (challengeAccept) challengeAccept.classList.add('hidden');
-    if (challengeBlocked) challengeBlocked.classList.add('hidden');
-
-    // Reset game state
-    if (window.ChallengeSystem) {
-        window.ChallengeSystem.reset();
-    } else {
-        resetChallengeState();
-    }
-
-    // Invalidate cache and reload challenges
-    if (window.ChallengeSystem) {
-        window.ChallengeSystem.invalidateCache();
-        await window.ChallengeSystem.loadMyChallenges();
-    }
+    // Use NavigationManager for all navigation/screen transitions
+    await window.NavigationManager.resetToStartScreen();
 }
 
 // --- Pack Shop Functions ---
