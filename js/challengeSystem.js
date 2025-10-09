@@ -165,7 +165,7 @@ class ChallengeSystem {
             const completeScores = [...window.challengeQuestionScores];
 
             // Get pack name for display (if specific pack selected)
-            const packName = window.selectedPack ? await this.getPackName(window.selectedPack) : null;
+            const packName = window.GameController.selectedPack ? await this.getPackName(window.GameController.selectedPack) : null;
 
             const newChallengeId = await FirebaseAPI.createChallenge(
                 playerName,
@@ -173,14 +173,14 @@ class ChallengeSystem {
                 window.challengeQuestions,
                 finalScore,
                 completeScores,
-                packName,               // Display name (e.g. "Frågepaket 1")
-                window.selectedPack     // Pack ID (e.g. "fragepaket-1.json")
+                packName,                              // Display name (e.g. "Frågepaket 1")
+                window.GameController.selectedPack    // Pack ID (e.g. "fragepaket-1.json")
             );
 
             window.challengeId = newChallengeId;
 
             // Track played pack for challenger
-            const packId = window.selectedPack;
+            const packId = window.GameController.selectedPack;
             if (playerId && packId && window.FirebaseAPI) {
                 try {
                     await window.FirebaseAPI.updatePlayedPack(playerId, packId, finalScore);
@@ -830,13 +830,12 @@ class ChallengeSystem {
         try {
             // Set selected pack from challenge dropdown before loading questions
             const challengePackSelect = window.UI?.get('challengePackSelect');
-            const selectedPack = challengePackSelect?.value || null;
-            window.selectedPack = selectedPack; // Also set global for compatibility
+            window.GameController.selectedPack = challengePackSelect?.value || null;
 
             // Load questions using GameData (working implementation moved there)
             if (window.GameData && window.GameData.loadQuestionsForGame) {
                 try {
-                    await window.GameData.loadQuestionsForGame(selectedPack);
+                    await window.GameData.loadQuestionsForGame(window.GameController.selectedPack);
                 } catch (loadError) {
                     // Show user-friendly error message
                     alert(`❌ Kunde inte ladda frågepaket\n\n${loadError.message}\n\nVänligen välj ett annat frågepaket.`);

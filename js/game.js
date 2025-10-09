@@ -161,9 +161,9 @@ const questionPacks = [
 let currentQuestionIndex = 0;
 window.currentQuestionIndex = 0; // Sync global variable
 let questionsToPlay = [];
-let userOrder = []; 
+let userOrder = [];
 let selectedPacks = questionPacks.map(p => p.name);
-let selectedPack = null; // Currently selected pack for playing
+// selectedPack removed - use window.GameController.selectedPack instead
 
 // Game State - Unified for both single and multiplayer
 let currentPlayerIndex = 0;
@@ -431,33 +431,6 @@ function resetChallengeState() {
     }
 }
 
-// Show challenge acceptance screen
-async function showChallengeAcceptScreen() {
-    try {
-        // Get challenge details from Firebase
-        challengeData = await FirebaseAPI.getChallenge(window.challengeId);
-        
-        UI?.setChallengerDisplayName(challengeData.challenger?.name || 'Någon');
-        
-        const startMain = UI.get('startMain');
-        const playerSetup = UI.get('playerSetup');
-        const challengeForm = UI.get('challengeForm');
-        const challengeAccept = UI.get('challengeAccept');
-        
-        if (startMain) startMain.classList.add('hidden');
-        if (playerSetup) playerSetup.classList.add('hidden');
-        if (challengeForm) challengeForm.classList.add('hidden');
-        if (challengeAccept) challengeAccept.classList.remove('hidden');
-    } catch (error) {
-        console.error('Failed to load challenge:', error);
-        UI?.showError('Utmaningen kunde inte laddas. Kontrollera länken.');
-        const challengeAccept = UI.get('challengeAccept');
-        const startMain = UI.get('startMain');
-        if (challengeAccept) challengeAccept.classList.add('hidden');
-        if (startMain) startMain.classList.remove('hidden');
-    }
-}
-
 
 // Check for new challenge results
 async function checkForNotifications() {
@@ -560,7 +533,7 @@ async function startChallengeGame() {
         // via Firebase playerId instead of localStorage
         
         // Set selected pack from challenge (for display purposes)
-        selectedPack = challengeData.packName || null;
+        window.GameController.selectedPack = challengeData.packName || null;
 
         // Set up game with the same questions
         challengeQuestions = challengeData.questions;
@@ -644,8 +617,8 @@ async function startChallengeGame() {
 
 // Polling mechanism
 
-// Show result screen for regular games (pack and standard)
-function showGameResultScreen(score, gameType, totalQuestions) {
+// Show result screen for single player games (pack and standard)
+function showSinglePlayerResultScreen(score, gameType, totalQuestions) {
     
     const gameTypeName = gameType || 'Allmänna frågor';
     
@@ -691,7 +664,7 @@ function showGameResultScreen(score, gameType, totalQuestions) {
             if (challengeForm) challengeForm.classList.add('hidden');
         
             // Reset game state
-            selectedPack = null;
+            window.GameController.selectedPack = null;
             
             // Reload my challenges
             if (window.ChallengeSystem) {
@@ -814,12 +787,12 @@ async function endSinglePlayerGame() {
         const currentPlayer = window.PlayerManager.getCurrentPlayer();
         const finalScore = currentPlayer ? currentPlayer.score : 0;
         
-        if (selectedPack) {
+        if (window.GameController.selectedPack) {
             // Pack-based game
-            showGameResultScreen(finalScore, selectedPack, questionsToPlay.length);
+            showSinglePlayerResultScreen(finalScore, window.GameController.selectedPack, questionsToPlay.length);
         } else {
             // Standard game with all questions
-            showGameResultScreen(finalScore, 'Grund', questionsToPlay.length);
+            showSinglePlayerResultScreen(finalScore, 'Grund', questionsToPlay.length);
         }
     }
 }
@@ -866,16 +839,11 @@ async function initializeGame() {
     
     // Set selected pack from dropdown
     const packSelect = UI?.get('packSelect');
-    selectedPack = packSelect?.value || null;
-
-    // Also sync to GameController for tracking
-    if (window.GameController) {
-        window.GameController.selectedPack = selectedPack;
-    }
+    window.GameController.selectedPack = packSelect?.value || null;
 
     // Load questions using GameData (working implementation moved there)
     try {
-        allQuestions = await window.GameData.loadQuestionsForGame(selectedPack);
+        allQuestions = await window.GameData.loadQuestionsForGame(window.GameController.selectedPack);
     } catch (loadError) {
         // Show user-friendly error message
         alert(`❌ Kunde inte ladda frågepaket\n\n${loadError.message}\n\nVänligen välj ett annat frågepaket och försök igen.`);
@@ -1027,18 +995,6 @@ function updateGameControls() {
             window.AnimationEngine.updateStopButtonPoints();
         }
     }
-}
-
-function setDifficultyBadge(difficulty) {
-    const badge = UI.get('difficultyBadge');
-    if (!badge) return;
-    
-    badge.textContent = difficulty.charAt(0).toUpperCase() + difficulty.slice(1);
-    let baseClasses = 'text-xs font-bold px-2 py-1 rounded-full ';
-    
-    if (difficulty === 'lätt') badge.className = baseClasses + 'bg-teal-100 text-teal-800';
-    else if (difficulty === 'medel') badge.className = baseClasses + 'bg-yellow-100 text-yellow-800';
-    else badge.className = baseClasses + 'bg-rose-100 text-rose-800';
 }
 
 function loadQuestion() {
@@ -1554,7 +1510,7 @@ async function restartGame() {
     window.currentQuestionIndex = 0; // Sync global variable
     currentPlayerIndex = 0;
     questionStarterIndex = 0;
-    selectedPack = null;
+    window.GameController.selectedPack = null;
 
     // Hide player status bar
     const playerStatusBar = document.getElementById('player-status-bar');

@@ -215,8 +215,8 @@ class App {
         }
         
         // Set default selected pack
-        if (typeof window.selectedPack !== 'undefined') {
-            window.selectedPack = 'Blandat med B';
+        if (window.GameController) {
+            window.GameController.selectedPack = 'Blandat med B';
         }
         
         // Ensure notifications area is hidden at startup

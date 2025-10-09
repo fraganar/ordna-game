@@ -183,6 +183,12 @@ class HamburgerNav {
                 this.openModal('confirm');
             }, 350);
         } else {
+            // Explicitly hide challenge dialogs first (prevents showing after navigation)
+            const challengeAccept = document.getElementById('challenge-accept');
+            const challengeBlocked = document.getElementById('challenge-blocked');
+            if (challengeAccept) challengeAccept.classList.add('hidden');
+            if (challengeBlocked) challengeBlocked.classList.add('hidden');
+
             // Use restartGame() for consistency with other back-to-start flows
             if (typeof window.restartGame === 'function') {
                 await window.restartGame();
@@ -193,6 +199,13 @@ class HamburgerNav {
 
     async confirmBackToStart() {
         this.closeConfirmDialog();
+
+        // Explicitly hide challenge dialogs first (prevents showing after navigation)
+        const challengeAccept = document.getElementById('challenge-accept');
+        const challengeBlocked = document.getElementById('challenge-blocked');
+        if (challengeAccept) challengeAccept.classList.add('hidden');
+        if (challengeBlocked) challengeBlocked.classList.add('hidden');
+
         if (typeof window.restartGame === 'function') {
             await window.restartGame();
         }

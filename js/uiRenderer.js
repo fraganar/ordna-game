@@ -151,12 +151,17 @@ class UIRenderer {
 
     updateDifficultyBadge(difficulty) {
         const badge = this.get('difficultyBadge');
-        if (badge) {
-            badge.textContent = difficulty;
-            badge.className = 'difficulty-badge';
-            if (difficulty === 'lätt') badge.classList.add('easy');
-            else if (difficulty === 'medel') badge.classList.add('medium');
-            else if (difficulty === 'svår') badge.classList.add('hard');
+        if (!badge) return;
+
+        badge.textContent = difficulty.charAt(0).toUpperCase() + difficulty.slice(1);
+        const baseClasses = 'text-xs font-bold px-2 py-1 rounded-full ';
+
+        if (difficulty === 'lätt') {
+            badge.className = baseClasses + 'bg-teal-100 text-teal-800';
+        } else if (difficulty === 'medel') {
+            badge.className = baseClasses + 'bg-yellow-100 text-yellow-800';
+        } else {
+            badge.className = baseClasses + 'bg-rose-100 text-rose-800';
         }
     }
 
@@ -616,18 +621,6 @@ class UIRenderer {
         this.hide('scoreboard');
     }
 
-    // Challenge UI - MOVED from game.js (ID:7)
-    showChallengeAcceptScreen(challengerName) {
-        const challengerDisplayName = this.get('challengerDisplayName');
-        if (challengerDisplayName) {
-            challengerDisplayName.textContent = challengerName;
-        }
-        
-        this.hide('startMain');
-        this.hide('playerSetup');
-        this.hide('challengeForm');
-        this.show('challengeAccept');
-    }
 
     hideChallengeAcceptScreen() {
         this.hide('challengeAccept');
@@ -710,14 +703,6 @@ class UIRenderer {
         const element = this.get(elementName);
         if (element) {
             element.innerHTML = '';
-        }
-    }
-
-    updateDifficultyBadgeText(difficulty) {
-        // COPIED from working code in game.js:1243
-        const badge = this.get('difficultyBadge');
-        if (badge) {
-            badge.textContent = difficulty.charAt(0).toUpperCase() + difficulty.slice(1);
         }
     }
 
