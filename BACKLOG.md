@@ -9,16 +9,15 @@
 
 ### Kommande arbete (sorterat efter stackrank - högst första)
 
-1. **BL-009** (60) - Poänganimering före totalpoäng
-2. **BL-026** (45) - Admin-panel: Manuell playerId-redigering
-3. **BL-025** (40) - Account Recovery UI
-4. **BL-023** (35) - Säkra Firebase med autentisering
-5. **BL-018** (30) - Unificera slutskärmsfunktioner
-6. **BL-019** (25) - Duplicerad showChallengeAcceptScreen implementation
-7. **BL-020** (20) - Duplicerad difficulty badge implementation
+1. **BL-034** (100) - Identitetsförvirring vid länköppning på samma enhet
+2. **BL-009** (60) - Poänganimering före totalpoäng
+3. **BL-026** (45) - Admin-panel: Manuell playerId-redigering
+4. **BL-025** (40) - Account Recovery UI
+5. **BL-023** (35) - Säkra Firebase med autentisering
+6. **BL-033** (25) - Progressbar fungerar inte i challenge-läge som opponent
+7. **BL-032** (15) - Admin-panel visar inga challenges
 8. **BL-022** (12) - Lägg till browser fallbacks för moderna CSS-effekter
 9. **BL-024** (10) - Redesigna "Hör till"-knappar enligt ny mockup
-10. **BL-029** (5) - Konsolidera selectedPack till en källa
 
 ---
 
@@ -29,46 +28,33 @@
 - **Stackrank:** 60
 - **Beskrivning:** Totalpoäng ökar före animationen landar i multi och kanske i singel också
 
-### BL-018: Unificera slutskärmsfunktioner
-- **Kategori:** REFACTOR
-- **Stackrank:** 30
-- **Beskrivning:** Förvirrande namn på `showGameResultScreen` som låter generell men används bara för normal singleplayer
-- **Egentliga problemet:** Namnet är missvisande - strukturen är faktiskt ganska symmetrisk som den är
-- **Nuvarande struktur:**
-  - `endSinglePlayerGame()` → `showGameResultScreen()` för normal, ChallengeSystem för utmaningar
-  - `endMultiplayerGame()` → genererar HTML direkt
-- **Förslag:** 
-  - Alt 1: Byt namn till `showSinglePlayerResultScreen` för tydlighet
-  - Alt 2: Behåll som det är men dokumentera bättre vad funktionen gör
-- **Nytta:** Mindre förvirring kring vad funktionerna faktiskt gör
+### BL-034: Identitetsförvirring vid länköppning på samma enhet
+- **Kategori:** BUG
+- **Stackrank:** 100 (HÖGSTA PRIORITET)
+- **Beskrivning:** Förvirring kring spelaridentitet när man öppnar appen via olika länkar (challenge, normal start) på samma enhet
+- **Problem:** Om man först spelar normalt (får playerId A), sedan öppnar en challenge-länk som opponent, kan systemet använda fel identitet
+- **Root cause:** localStorage playerId/playerName kan bli ur synk med användarens förväntade identitet
+- **Impact:** KRITISK - Challenges sparas med fel playerId, användaren ser inte sina egna challenges
+- **Exempel-scenario:**
+  1. Användare spelar normalt på sin telefon (blir playerId_123)
+  2. Samma användare öppnar challenge-länk från vän på samma telefon
+  3. Systemet använder playerId_123 för opponent (fel!)
+  4. Challenge registreras med fel opponent-ID
+- **Lösningsriktning:** Behöver session-based identity eller explicit "Vem spelar?"-prompt vid challenge-accept
 
-### BL-019: Duplicerad showChallengeAcceptScreen implementation
-- **Kategori:** REFACTOR
+### BL-033: Progressbar fungerar inte i challenge-läge som opponent
+- **Kategori:** BUG
 - **Stackrank:** 25
-- **Beskrivning:** Tre olika implementationer av showChallengeAcceptScreen finns i kodbasen
-- **Problem:**
-  - `game.js:433` - Global async funktion (används ej)
-  - `app.js` - App-klassens metod (detta är den som används)
-  - `uiRenderer.js` - UIRenderer metod (används ej)
-- **Åtgärd:**
-  - Ta bort de oanvända versionerna i game.js och uiRenderer.js
-  - Behåll endast app.js versionen som faktiskt används
-- **Nytta:** Minskar förvirring, tar bort död kod, tydligare ansvarsseparation
+- **Beskrivning:** När man spelar som utmanad (opponent) så visas inte progressbaren korrekt under spelet
+- **Impact:** Användaren ser inte hur långt hen kommit i utmaningen
+- **Note:** Inte en regression - befintlig bug
 
-### BL-020: Duplicerad difficulty badge implementation
-- **Kategori:** REFACTOR
-- **Stackrank:** 20
-- **Beskrivning:** Tre olika funktioner för att uppdatera difficulty badge
-- **Problem:**
-  - `setDifficultyBadge(difficulty)` i game.js - global funktion som anropar UI.updateDifficultyBadge
-  - `UI.updateDifficultyBadge(difficulty)` i uiRenderer.js - huvudimplementationen
-  - `UI.updateDifficultyBadgeText(difficulty)` i uiRenderer.js - ytterligare en variant
-  - Onödig indirektion: game.js anropar UI-metoden via wrapper-funktion
-- **Åtgärd:**
-  - Ta bort `setDifficultyBadge` från game.js
-  - Använd `UI.updateDifficultyBadge` direkt överallt
-  - Undersök om `updateDifficultyBadgeText` behövs eller kan slås ihop
-- **Nytta:** Enklare kodflöde, mindre förvirring
+### BL-032: Admin-panel visar inga challenges
+- **Kategori:** BUG
+- **Stackrank:** 15
+- **Beskrivning:** Admin-panelen (admin.html) visar inte challenges från Firebase trots att de finns i databasen
+- **Root cause:** Okänd - inte en regression, har inte fungerat sedan början
+- **Impact:** Admin-funktionalitet fungerar inte, men påverkar inte slutanvändare
 
 ### BL-022: Lägg till browser fallbacks för moderna CSS-effekter
 - **Kategori:** ENHANCEMENT
@@ -124,23 +110,6 @@
 
 ![Mockup för subtil färg på "Hör till"-knappar](./docs/images/ide_för_hör_till_knappar.png)
 
-### BL-029: Konsolidera selectedPack till en källa
-- **Kategori:** REFACTOR
-- **Stackrank:** 5
-- **Beskrivning:** Två källor till sanning för selectedPack skapar risk för ur-synk
-- **Problem:**
-  - `window.selectedPack` (global i game.js) - används av challengeSystem.js, app.js
-  - `GameController.selectedPack` - används av gameController.js för tracking
-  - Synkas manuellt i game.js rad 875-877
-  - Risk för ur-synk om någon läser värdet före synkning
-- **Åtgärd:**
-  - Gör GameController.selectedPack till enda källan
-  - Ersätt alla `window.selectedPack` → `window.GameController.selectedPack`
-  - Testa: challenge creation, single player, resultatskärm, pack selection
-- **Nytta:** En källa till sanning, mindre risk för buggar vid refaktorering
-- **Riskanalys:** Medium-high (påverkar ~10 ställen i game.js, challengeSystem.js, app.js)
-- **Rekommendation:** Separat branch med noggrann testning
-
 ### BL-023: Säkra Firebase med autentisering
 - **Kategori:** SECURITY
 - **Stackrank:** 35
@@ -192,6 +161,10 @@
 ## ✅ Slutförda Items (endast rubriker)
 
 Se LOG.md för detaljer om slutförda items:
+- BL-029: Konsolidera selectedPack till en källa ✅
+- BL-020: Duplicerad difficulty badge implementation ✅
+- BL-019: Duplicerad showChallengeAcceptScreen implementation ✅
+- BL-018: Unificera slutskärmsfunktioner ✅
 - BL-031: Konsolidera navigation till start screen ✅
 - BL-030: Refaktorera opponent completion till challengeSystem ✅
 - BL-002: Multiplayer Hör-till Bugg ✅
@@ -230,4 +203,4 @@ Se LOG.md för detaljer om kasserade items:
 
 ---
 
-*Senast uppdaterad: 2025-08-27*
+*Senast uppdaterad: 2025-10-09*
