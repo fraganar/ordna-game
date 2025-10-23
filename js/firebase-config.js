@@ -12,6 +12,7 @@ const firebaseConfig = {
 
 // Initialize Firebase
 let db = null;
+let auth = null;
 let firebaseInitialized = false;
 
 function initializeFirebase() {
@@ -32,8 +33,9 @@ function initializeFirebase() {
         // Initialize Firebase
         firebase.initializeApp(firebaseConfig);
         db = firebase.firestore();
+        auth = firebase.auth();
         firebaseInitialized = true;
-        
+
         console.log('Firebase initialized successfully');
         return true;
     } catch (error) {
@@ -444,8 +446,61 @@ const FirebaseAPI = {
     }
 };
 
+/**
+ * Ensure user is authenticated (anonymous initially, can upgrade later)
+ * Returns the user's UID to use as playerId
+ * @returns {Promise<string|null>} Firebase Auth UID or null if failed
+ */
+async function ensureAuthUser() {
+    if (!firebaseInitialized) {
+        console.log('Firebase not initialized, skipping auth');
+        return null;
+    }
+
+    return new Promise((resolve) => {
+        // Listen for auth state changes
+        const unsubscribe = auth.onAuthStateChanged(async (user) => {
+            if (user) {
+                // Already signed in (from previous session)
+                console.log('✅ Auth user found:', user.uid, user.isAnonymous ? '(anonymous)' : '(permanent)');
+                resolve(user.uid);
+            } else {
+                // Sign in anonymously
+                try {
+                    const credential = await auth.signInAnonymously();
+                    console.log('✅ Anonymous sign-in successful:', credential.user.uid);
+                    resolve(credential.user.uid);
+                } catch (error) {
+                    console.error('❌ Anonymous sign-in failed:', error);
+                    resolve(null);
+                }
+            }
+            unsubscribe(); // Stop listening after first event
+        });
+    });
+}
+
+/**
+ * Get current player ID (Firebase Auth UID)
+ * Synchronous function - returns current user's UID or null
+ * @returns {string|null} Current user's UID or null if not authenticated
+ */
+function getCurrentPlayerId() {
+    if (!firebaseInitialized || !auth) {
+        console.warn('Firebase not initialized');
+        return null;
+    }
+
+    const user = auth.currentUser;
+    return user ? user.uid : null;
+}
+
 // Export FirebaseAPI to window for global access
 window.FirebaseAPI = FirebaseAPI;
+
+// Export auth helpers for global access
+window.ensureAuthUser = ensureAuthUser;
+window.getCurrentPlayerId = getCurrentPlayerId;
 
 // Initialize Firebase when script loads
 initializeFirebase();

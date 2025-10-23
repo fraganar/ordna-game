@@ -150,7 +150,7 @@ class HamburgerNav {
     }
 
     updatePlayerInfo() {
-        const playerId = localStorage.getItem('playerId');
+        const playerId = window.getCurrentPlayerId();
         const playerName = localStorage.getItem('playerName');
 
         const menuName = document.getElementById('menu-player-name');
@@ -274,7 +274,7 @@ class HamburgerNav {
             }
 
             // Sync to Firebase
-            const playerId = localStorage.getItem('playerId');
+            const playerId = window.getCurrentPlayerId();
             if (playerId && window.FirebaseAPI) {
                 await FirebaseAPI.upsertPlayer(playerId, newName);
             }
@@ -335,7 +335,7 @@ class HamburgerNav {
                 const allPacks = await window.GameData.loadAvailablePacks();
 
                 // Load played packs from Firebase
-                const playerId = localStorage.getItem('playerId');
+                const playerId = window.getCurrentPlayerId();
                 const playedPacks = await window.FirebaseAPI.getPlayedPacks(playerId);
 
                 // Render list

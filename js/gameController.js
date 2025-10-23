@@ -409,7 +409,7 @@ class GameController {
         if (!player) return;
 
         // Track played pack (only if specific pack was selected)
-        const playerId = localStorage.getItem('playerId');
+        const playerId = window.getCurrentPlayerId();
         const packId = this.selectedPack; // e.g. "fragepaket-1.json" or null
         const finalScore = player.score;
 

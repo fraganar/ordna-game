@@ -66,7 +66,7 @@ class App {
     // Initialize player identity with Firebase sync
     // Update menu display with player info
     updateMenuPlayerInfo() {
-        const playerId = localStorage.getItem('playerId');
+        const playerId = window.getCurrentPlayerId ? window.getCurrentPlayerId() : null;
         const playerName = localStorage.getItem('playerName');
 
         const menuName = document.getElementById('menu-player-name');
@@ -79,26 +79,32 @@ class App {
     }
 
     async initializePlayer() {
-        let playerId = localStorage.getItem('playerId');
-        let playerName = localStorage.getItem('playerName');
+        // Get playerId from Firebase Auth (NOT localStorage)
+        let playerId = null;
 
-        if (!playerId) {
-            // New player - generate ID
-            playerId = 'player_' + Date.now() + '_' + Math.random().toString(36).substr(2, 9);
-            localStorage.setItem('playerId', playerId);
+        if (window.ensureAuthUser) {
+            playerId = await window.ensureAuthUser();
         }
 
-        // Update menu player info
-        this.updateMenuPlayerInfo();
+        if (!playerId) {
+            console.error('❌ Firebase Auth failed - cannot initialize player');
+            alert('Firebase Authentication krävs för att använda appen. Kontrollera din internetanslutning och ladda om sidan.');
+            return;
+        }
+
+        console.log('✅ Player initialized with Auth UID:', playerId);
+
+        // Get player name from localStorage
+        let playerName = localStorage.getItem('playerName');
 
         if (!playerName) {
             // Create unique default name with timestamp
-            const timestamp = Date.now().toString().slice(-5); // Last 5 digits of timestamp
+            const timestamp = Date.now().toString().slice(-5);
             playerName = `Spelare_${timestamp}`;
             localStorage.setItem('playerName', playerName);
         }
 
-        // Update menu player info after setting name
+        // Update menu player info
         this.updateMenuPlayerInfo();
 
         // Set player name in PlayerManager (check if function exists)
@@ -109,7 +115,7 @@ class App {
         // Sync with Firebase (background job - must not block)
         this.syncPlayerToFirebase(playerId, playerName);
 
-        // Clean up old localStorage data (except playerId and playerName)
+        // Clean up old localStorage data (only keep playerName and selectedPacks)
         this.cleanupLocalStorage();
     }
 
@@ -162,7 +168,7 @@ class App {
 
     // Clean up old localStorage entries
     cleanupLocalStorage() {
-        const keysToKeep = ['playerId', 'playerName', 'selectedPacks'];
+        const keysToKeep = ['playerName', 'selectedPacks'];
         const keysToRemove = [];
 
         for (let i = 0; i < localStorage.length; i++) {
@@ -341,7 +347,7 @@ class App {
             }
 
             // Check if I am the challenger (can't play my own challenge)
-            const myPlayerId = localStorage.getItem('playerId');
+            const myPlayerId = window.getCurrentPlayerId ? window.getCurrentPlayerId() : null;
             if (challenge.challenger?.playerId === myPlayerId) {
                 this.showChallengeBlocked('own', challenge);
                 return;
@@ -453,7 +459,7 @@ class App {
             blockedCompleted.classList.remove('hidden');
 
             // Check if I was part of the challenge to show result button
-            const myPlayerId = localStorage.getItem('playerId');
+            const myPlayerId = window.getCurrentPlayerId ? window.getCurrentPlayerId() : null;
             const viewResultBtn = document.getElementById('view-result-btn');
             if (viewResultBtn) {
                 if (challenge.challenger?.playerId === myPlayerId ||

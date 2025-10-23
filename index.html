@@ -69,6 +69,11 @@
     <!-- Firebase CDN -->
     <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-auth-compat.js"></script>
+
+    <!-- FirebaseUI (pre-built auth dialogs) -->
+    <script src="https://www.gstatic.com/firebasejs/ui/6.1.0/firebase-ui-auth.js"></script>
+    <link type="text/css" rel="stylesheet" href="https://www.gstatic.com/firebasejs/ui/6.1.0/firebase-ui-auth.css" />
     
     <!-- Firebase config -->
     <script src="js/firebase-config.js"></script>
@@ -93,6 +98,9 @@
 
     <!-- Hamburger Navigation Menu -->
     <script src="js/hamburgerNav.js" defer></script>
+
+    <!-- Auth UI Module -->
+    <script src="js/authUI.js" defer></script>
 
     <!-- App Initializer (load last) -->
     <script src="js/app.js" defer></script>
@@ -165,6 +173,18 @@
                         Mina frågepaket
                     </span>
                     <svg class="w-5 h-5 text-slate-400 group-hover:text-primary transition-colors" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path>
+                    </svg>
+                </button>
+
+                <button onclick="logout()" class="w-full bg-white hover:bg-slate-50 text-slate-800 font-semibold py-4 px-6 rounded-xl border-2 border-slate-200 hover:border-red-400 transition-all duration-300 flex items-center justify-between group">
+                    <span class="flex items-center">
+                        <svg class="w-6 h-6 mr-3 text-red-500" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1"></path>
+                        </svg>
+                        Logga ut
+                    </span>
+                    <svg class="w-5 h-5 text-slate-400 group-hover:text-red-500 transition-colors" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path>
                     </svg>
                 </button>
@@ -695,6 +715,34 @@
                     Bekräfta val & Stäng
                 </button>
             </div>
+        </div>
+    </div>
+
+    <!-- Firebase Auth Modal -->
+    <div id="auth-modal" class="modal hidden fixed inset-0 bg-black bg-opacity-60 z-[100] flex items-center justify-center p-4">
+        <div class="modal-content bg-white w-full max-w-md rounded-2xl shadow-2xl p-6">
+            <!-- Close button -->
+            <div class="flex justify-between items-center mb-4">
+                <h2 class="text-2xl font-bold text-slate-800">Logga in</h2>
+                <button onclick="window.hideAuthDialog()" class="text-slate-400 hover:text-slate-600 transition-colors">
+                    <svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
+                    </svg>
+                </button>
+            </div>
+
+            <!-- Info text -->
+            <p class="text-slate-600 mb-4">
+                Logga in eller skapa konto för att dela dina utmaningar och se resultat överallt.
+            </p>
+
+            <!-- Helpful tip -->
+            <p class="text-sm text-slate-500 mb-6">
+                💡 <strong>Tips:</strong> Använd samma inloggningsmetod som du använde tidigare.
+            </p>
+
+            <!-- FirebaseUI container -->
+            <div id="firebaseui-container"></div>
         </div>
     </div>
 

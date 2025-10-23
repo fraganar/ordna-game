@@ -154,7 +154,7 @@ class ChallengeSystem {
             // CRITICAL FIX: Use localStorage for player name, not PlayerManager (which can have wrong state)
             const playerName = localStorage.getItem('playerName') || 'Spelare';
             // Use the real playerId from localStorage, not the temporary one from the game
-            const playerId = localStorage.getItem('playerId');
+            const playerId = window.getCurrentPlayerId();
 
             if (!playerId) {
                 console.error('No playerId found - cannot create challenge');
@@ -360,7 +360,7 @@ class ChallengeSystem {
     
     // Get my challenges from Firebase with caching
     async getMyChallenges() {
-        const playerId = localStorage.getItem('playerId');
+        const playerId = window.getCurrentPlayerId();
         if (!playerId) {
             return [];
         }
@@ -454,7 +454,7 @@ class ChallengeSystem {
         const myChallengesList = document.getElementById('my-challenges-list');
 
         // Get playerId from localStorage
-        const myPlayerId = localStorage.getItem('playerId');
+        const myPlayerId = window.getCurrentPlayerId();
 
         if (!myPlayerId) {
             // No playerId = no challenges to show
@@ -720,7 +720,7 @@ class ChallengeSystem {
             }
             
             // Use playerId-based identification (most reliable method)
-            const myPlayerId = localStorage.getItem('playerId');
+            const myPlayerId = window.getCurrentPlayerId();
             const isChallenger = challenge.challenger?.playerId === myPlayerId;
 
             const myData = isChallenger ? challenge.challenger : challenge.opponent;
@@ -793,6 +793,17 @@ class ChallengeSystem {
     
     // Create a new challenge - starts the game immediately (moved from game.js)
     async createChallenge() {
+        // Check if user is anonymous - require account upgrade before creating challenge
+        if (window.isAnonymousUser && window.isAnonymousUser()) {
+            console.log('🔐 User is anonymous - showing auth dialog to upgrade account');
+            if (window.showAuthDialog) {
+                window.showAuthDialog();
+            } else {
+                alert('⚠️ Du måste skapa ett konto för att dela utmaningar. Ladda om sidan och försök igen.');
+            }
+            return; // Don't create challenge yet
+        }
+
         // CRITICAL FIX: Use localStorage for player name, not PlayerManager
         const playerName = localStorage.getItem('playerName') || 'Spelare';
 
@@ -800,7 +811,8 @@ class ChallengeSystem {
         console.log('🎮 createChallenge starting with name sources:', {
             localStorageName: playerName,
             playerManagerName: window.PlayerManager?.getPlayerName?.(),
-            playerId: localStorage.getItem('playerId'),
+            playerId: window.getCurrentPlayerId(),
+            isAnonymous: window.isAnonymousUser ? window.isAnonymousUser() : 'unknown',
             timestamp: new Date().toISOString()
         });
 

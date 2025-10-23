@@ -174,7 +174,7 @@ async function handleSavePlayerName() {
     }
 
     // Sync to Firebase when name changes
-    const playerId = localStorage.getItem('playerId');
+    const playerId = window.getCurrentPlayerId();
     if (playerId && window.FirebaseAPI) {
         try {
             await FirebaseAPI.upsertPlayer(playerId, name);

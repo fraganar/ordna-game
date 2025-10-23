@@ -10,10 +10,10 @@
 ### Kommande arbete (sorterat efter stackrank - högst första)
 
 1. **BL-034** (100) - Identitetsförvirring vid länköppning på samma enhet
-2. **BL-009** (60) - Poänganimering före totalpoäng
-3. **BL-026** (45) - Admin-panel: Manuell playerId-redigering
-4. **BL-025** (40) - Account Recovery UI
-5. **BL-023** (35) - Säkra Firebase med autentisering
+2. **BL-035** (90) - Aktivera Firebase Security Rules i Console
+3. **BL-009** (60) - Poänganimering före totalpoäng
+4. **BL-026** (45) - Admin-panel: Manuell playerId-redigering
+5. **BL-025** (40) - Account Recovery UI
 6. **BL-033** (25) - Progressbar fungerar inte i challenge-läge som opponent
 7. **BL-032** (15) - Admin-panel visar inga challenges
 8. **BL-022** (12) - Lägg till browser fallbacks för moderna CSS-effekter
@@ -110,19 +110,20 @@
 
 ![Mockup för subtil färg på "Hör till"-knappar](./docs/images/ide_för_hör_till_knappar.png)
 
-### BL-023: Säkra Firebase med autentisering
-- **Kategori:** SECURITY
-- **Stackrank:** 35
-- **Beskrivning:** Implementera Firebase Authentication så bara appen kan läsa/skriva till databasen
+### BL-035: Aktivera Firebase Security Rules i Console
+- **Kategori:** CONFIG
+- **Stackrank:** 90
+- **Beskrivning:** Aktivera Firebase Security Rules i Firebase Console för att säkra databasen
+- **Status:** Kodimplementation klar ✅ (Firebase Auth redan implementerad), endast console-konfiguration kvarstår
 - **Problem:**
-  - Firebase security rules är för närvarande helt öppna
+  - Firebase security rules är för närvarande helt öppna (`if true`)
   - Firebase varnar om osäkra regler och hotar med att stänga databasen
   - Vem som helst kan teoretiskt läsa/skriva data
-- **Åtgärd - Firebase Console:**
-  1. Gå till Firebase Console → Authentication → Sign-in method
-  2. Aktivera "Anonymous" och klicka Save
-  3. Gå till Firestore Database → Rules
-  4. Ersätt med följande security rules:
+- **Åtgärd - Firebase Console (DU MÅSTE GÖRA DETTA):**
+  1. Öppna: https://console.firebase.google.com/
+  2. Välj ditt projekt
+  3. Vänstermeny → **Firestore Database** → **Rules**-fliken
+  4. Ersätt nuvarande rules med:
      ```javascript
      rules_version = '2';
      service cloud.firestore {
@@ -133,27 +134,13 @@
        }
      }
      ```
-  5. Klicka "Publish" för att aktivera reglerna
-- **Åtgärd - Kodändringar:**
-  1. **index.html** (rad 47, efter firebase-firestore script):
-     ```html
-     <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-auth-compat.js"></script>
-     ```
-  2. **js/firebase-config.js**:
-     - Lägg till variabel efter rad 15: `let authInitialized = false;`
-     - Gör `initializeFirebase()` async på rad 17: `async function initializeFirebase() {`
-     - Lägg till efter rad 35 (efter `firebaseInitialized = true;`):
-       ```javascript
-       // Initialize anonymous authentication
-       try {
-           await firebase.auth().signInAnonymously();
-           authInitialized = true;
-           console.log('Firebase Auth initialized (anonymous)');
-       } catch (authError) {
-           console.error('Auth initialization failed:', authError);
-       }
-       ```
-- **Nytta:** Säkrare databas, uppfyller Firebase krav, förhindrar missbruk utan att kräva användarregistrering
+  5. Klicka **"Publish"** (uppe till höger)
+  6. Verifiera: Testa att skapa challenge i appen - ska fungera ✅
+- **Varför det fungerar:**
+  - Firebase Auth redan implementerad (Anonymous + Email/Password + Google)
+  - Alla användare autentiseras automatiskt vid app-start
+  - `request.auth != null` kommer alltid vara sant för legitima användare
+- **Nytta:** Säker databas, uppfyller Firebase krav, förhindrar extern missbruk
 
 
 ---
@@ -161,6 +148,7 @@
 ## ✅ Slutförda Items (endast rubriker)
 
 Se LOG.md för detaljer om slutförda items:
+- BL-023: Säkra Firebase med autentisering (kodimplementation) ✅
 - BL-029: Konsolidera selectedPack till en källa ✅
 - BL-020: Duplicerad difficulty badge implementation ✅
 - BL-019: Duplicerad showChallengeAcceptScreen implementation ✅

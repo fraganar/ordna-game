@@ -750,7 +750,7 @@ async function endSinglePlayerGame() {
 
             const playerName = player?.name || currentPlayer?.name || 'Unknown';
             const playerScore = player?.score || 0;
-            const playerId = localStorage.getItem('playerId') || 'unknown_player';
+            const playerId = window.getCurrentPlayerId() || 'unknown_player';
 
             // Delegate to ChallengeSystem for full opponent completion flow
             await window.ChallengeSystem.acceptChallenge(
