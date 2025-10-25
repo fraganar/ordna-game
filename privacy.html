@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<html lang="sv">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Integritetspolicy - Tres Mangos</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        'primary': 'var(--color-primary)',
+                        'primary-dark': 'var(--color-primary-dark)',
+                        'action': 'var(--color-mango)',
+                        'action-dark': 'var(--color-mango-dark)',
+                        'success': 'var(--color-success)',
+                        'success-dark': 'var(--color-success-dark)',
+                        'danger': 'var(--color-danger)',
+                        'danger-dark': 'var(--color-danger-dark)',
+                        'info': 'var(--color-info)',
+                        'info-dark': 'var(--color-info-dark)',
+                        'info-light': 'var(--color-info-light)',
+                        'info-border': 'var(--color-info-border)',
+                        'magic': 'var(--color-magic)',
+                        'magic-dark': 'var(--color-magic-dark)'
+                    }
+                }
+            }
+        }
+    </script>
+    <link rel="stylesheet" href="css/styles.css">
+</head>
+<body class="bg-gradient-to-br from-slate-50 to-slate-100 min-h-screen">
+    <div class="container mx-auto px-4 py-8 max-w-3xl">
+        <!-- Header -->
+        <div class="text-center mb-8">
+            <h1 class="text-4xl font-bold text-slate-800 mb-2">Integritetspolicy</h1>
+            <p class="text-slate-600">Senast uppdaterad: 25 oktober 2025</p>
+        </div>
+
+        <!-- Content -->
+        <div class="bg-white rounded-2xl shadow-lg p-8 space-y-6">
+
+            <section>
+                <h2 class="text-2xl font-bold text-slate-800 mb-3">Vilken data samlar vi in?</h2>
+                <p class="text-slate-700 leading-relaxed mb-3">
+                    Vi samlar bara in det som behövs för att spelet ska fungera:
+                </p>
+                <ul class="list-disc list-inside text-slate-700 space-y-2 leading-relaxed">
+                    <li><strong>Spelarnamn:</strong> Det namn du väljer att använda i spelet</li>
+                    <li><strong>Email:</strong> För att identifiera ditt konto mellan enheter</li>
+                    <li><strong>Speldata:</strong> Dina poäng, utmaningar och vilka frågepaket du spelat</li>
+                    <li><strong>Autentiseringsdata:</strong> Token från Google (om du loggar in med Google)</li>
+                </ul>
+                <p class="text-slate-700 leading-relaxed mt-3">
+                    Vi samlar <strong>INTE</strong> in: IP-adresser, platsdata, cookies för annonsering,
+                    eller annan personlig information.
+                </p>
+            </section>
+
+            <section>
+                <h2 class="text-2xl font-bold text-slate-800 mb-3">Var lagras datan?</h2>
+                <p class="text-slate-700 leading-relaxed">
+                    All speldata lagras i <strong>Google Firebase</strong> (servrar i EU).
+                    Firebase följer GDPR och har säkra servrar. Din data är skyddad med Firebase Authentication.
+                </p>
+            </section>
+
+            <section>
+                <h2 class="text-2xl font-bold text-slate-800 mb-3">Hur används datan?</h2>
+                <ul class="list-disc list-inside text-slate-700 space-y-2 leading-relaxed">
+                    <li>För att visa dina poäng och utmaningar</li>
+                    <li>För att matcha utmaningar mellan spelare</li>
+                    <li>För att synka data mellan dina enheter</li>
+                    <li>För att förbättra spelet (vi tittar på statistik, men aldrig på individuell data)</li>
+                </ul>
+                <p class="text-slate-700 leading-relaxed mt-3">
+                    Vi delar <strong>ALDRIG</strong> din data med tredje part. Vi säljer inte data.
+                    Vi använder inte data för annonsering.
+                </p>
+            </section>
+
+            <section>
+                <h2 class="text-2xl font-bold text-slate-800 mb-3">Cookies</h2>
+                <p class="text-slate-700 leading-relaxed">
+                    Vi använder inga traditionella cookies. Firebase Authentication använder säker session-lagring
+                    för att hålla dig inloggad. Denna data hanteras automatiskt av Firebase och följer säkerhetsstandard.
+                </p>
+            </section>
+
+            <section>
+                <h2 class="text-2xl font-bold text-slate-800 mb-3">Dina rättigheter</h2>
+                <p class="text-slate-700 leading-relaxed mb-3">
+                    Du har rätt att:
+                </p>
+                <ul class="list-disc list-inside text-slate-700 space-y-2 leading-relaxed">
+                    <li><strong>Se din data:</strong> Kontakta oss så får du en kopia</li>
+                    <li><strong>Radera ditt konto:</strong> Kontakta oss så raderar vi all din data från Firebase</li>
+                    <li><strong>Ändra ditt namn:</strong> Gör det direkt i spelets inställningar</li>
+                </ul>
+            </section>
+
+            <section>
+                <h2 class="text-2xl font-bold text-slate-800 mb-3">Säkerhet</h2>
+                <p class="text-slate-700 leading-relaxed">
+                    Vi använder Firebase Authentication för att skydda din data. Endast du (och admin
+                    för felsökning) kan se din speldata. All kommunikation sker över HTTPS (krypterad).
+                </p>
+            </section>
+
+            <section>
+                <h2 class="text-2xl font-bold text-slate-800 mb-3">Barn</h2>
+                <p class="text-slate-700 leading-relaxed">
+                    Spelet är lämpligt för alla åldrar. Vi samlar inte medvetet in data från barn under 13 år.
+                    Om du är förälder och vill att ditt barns data ska raderas, kontakta oss.
+                </p>
+            </section>
+
+            <section>
+                <h2 class="text-2xl font-bold text-slate-800 mb-3">Kontakt</h2>
+                <p class="text-slate-700 leading-relaxed">
+                    Har du frågor om din integritet eller vill radera ditt konto?
+                    Använd "Rapportera problem"-funktionen i spelets meny så får du svar direkt.
+                </p>
+            </section>
+
+            <div class="bg-info-light border-2 border-info-border rounded-xl p-4 mt-8">
+                <p class="text-slate-700 leading-relaxed">
+                    <strong>TL;DR:</strong> Vi sparar bara det vi måste (namn, poäng, utmaningar).
+                    Data lagras säkert i Firebase. Vi säljer aldrig data. Du kan radera ditt konto
+                    när som helst. 🔒
+                </p>
+            </div>
+        </div>
+
+        <!-- Back button -->
+        <div class="text-center mt-8">
+            <a href="/" class="inline-block bg-primary hover:bg-primary-dark text-white font-semibold py-3 px-8 rounded-xl transition-all duration-300 shadow-lg hover:shadow-xl">
+                Tillbaka till spelet
+            </a>
+        </div>
+    </div>
+</body>
+</html>

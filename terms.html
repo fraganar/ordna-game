@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="sv">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Användarvillkor - Tres Mangos</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        'primary': 'var(--color-primary)',
+                        'primary-dark': 'var(--color-primary-dark)',
+                        'action': 'var(--color-mango)',
+                        'action-dark': 'var(--color-mango-dark)',
+                        'success': 'var(--color-success)',
+                        'success-dark': 'var(--color-success-dark)',
+                        'danger': 'var(--color-danger)',
+                        'danger-dark': 'var(--color-danger-dark)',
+                        'info': 'var(--color-info)',
+                        'info-dark': 'var(--color-info-dark)',
+                        'info-light': 'var(--color-info-light)',
+                        'info-border': 'var(--color-info-border)',
+                        'magic': 'var(--color-magic)',
+                        'magic-dark': 'var(--color-magic-dark)'
+                    }
+                }
+            }
+        }
+    </script>
+    <link rel="stylesheet" href="css/styles.css">
+</head>
+<body class="bg-gradient-to-br from-slate-50 to-slate-100 min-h-screen">
+    <div class="container mx-auto px-4 py-8 max-w-3xl">
+        <!-- Header -->
+        <div class="text-center mb-8">
+            <h1 class="text-4xl font-bold text-slate-800 mb-2">Användarvillkor</h1>
+            <p class="text-slate-600">Senast uppdaterad: 25 oktober 2025</p>
+        </div>
+
+        <!-- Content -->
+        <div class="bg-white rounded-2xl shadow-lg p-8 space-y-6">
+
+            <section>
+                <h2 class="text-2xl font-bold text-slate-800 mb-3">Vad är Tres Mangos?</h2>
+                <p class="text-slate-700 leading-relaxed">
+                    Ett gratis frågespel där du spelar själv eller utmanar vänner.
+                </p>
+            </section>
+
+            <section>
+                <h2 class="text-2xl font-bold text-slate-800 mb-3">Regler</h2>
+                <ul class="list-disc list-inside text-slate-700 space-y-2 leading-relaxed">
+                    <li><strong>Fuska inte.</strong> Spela ärligt.</li>
+                    <li><strong>Var schysst.</strong> Skapa inte massa fake-konton eller spamma.</li>
+                </ul>
+            </section>
+
+            <div class="bg-info-light border-2 border-info-border rounded-xl p-4 mt-6">
+                <p class="text-slate-700 leading-relaxed text-center">
+                    <strong>Det var allt!</strong> Spela och ha kul. 🥭
+                </p>
+            </div>
+        </div>
+
+        <!-- Back button -->
+        <div class="text-center mt-8">
+            <a href="/" class="inline-block bg-primary hover:bg-primary-dark text-white font-semibold py-3 px-8 rounded-xl transition-all duration-300 shadow-lg hover:shadow-xl">
+                Tillbaka till spelet
+            </a>
+        </div>
+    </div>
+</body>
+</html>

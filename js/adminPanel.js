@@ -58,7 +58,7 @@ class AdminPanel {
         }
     }
 
-    showAdminPanel() {
+    async showAdminPanel() {
         // Check session timeout (30 minutes)
         const authTime = sessionStorage.getItem('adminAuthTime');
         if (authTime && (Date.now() - parseInt(authTime) > 30 * 60 * 1000)) {
@@ -68,11 +68,42 @@ class AdminPanel {
             return;
         }
 
+        // Authenticate with Firebase Auth
+        await this.ensureFirebaseAuth();
+
         this.authenticated = true;
         document.getElementById('authOverlay').style.display = 'none';
         document.getElementById('adminContent').style.display = 'block';
         this.refreshData();
         this.loadFirebaseData();
+    }
+
+    async ensureFirebaseAuth() {
+        // Ensure Firebase Auth is initialized
+        if (!firebase.auth) {
+            console.error('Firebase Auth not available');
+            return;
+        }
+
+        return new Promise((resolve) => {
+            const unsubscribe = firebase.auth().onAuthStateChanged(async (user) => {
+                if (user) {
+                    console.log('✅ Admin already authenticated with Firebase Auth:', user.uid);
+                    resolve();
+                } else {
+                    // Sign in anonymously for admin panel
+                    try {
+                        await firebase.auth().signInAnonymously();
+                        console.log('✅ Admin signed in anonymously to Firebase');
+                        resolve();
+                    } catch (error) {
+                        console.error('❌ Firebase Auth failed for admin:', error);
+                        resolve(); // Continue anyway, but Firestore operations will fail
+                    }
+                }
+                unsubscribe();
+            });
+        });
     }
 
     refreshData() {
@@ -751,6 +782,155 @@ class AdminPanel {
         } else {
             content.classList.add('collapsed');
             titleElement.classList.add('collapsed');
+        }
+    }
+
+    // Load feedback from Firebase
+    async loadFeedback() {
+        const listDiv = document.getElementById('feedbackList');
+        if (!listDiv) return;
+
+        listDiv.innerHTML = '<div style="color: #666;">Laddar feedback...</div>';
+
+        try {
+            const db = firebase.firestore();
+            const snapshot = await db.collection('feedback')
+                .orderBy('timestamp', 'desc')
+                .get();
+
+            if (snapshot.empty) {
+                listDiv.innerHTML = '<div style="color: #666;">Ingen feedback än.</div>';
+                return;
+            }
+
+            // Store feedback for filtering
+            this.allFeedback = snapshot.docs.map(doc => ({
+                id: doc.id,
+                ...doc.data()
+            }));
+
+            this.renderFeedback(this.allFeedback);
+
+        } catch (error) {
+            console.error('Failed to load feedback:', error);
+            listDiv.innerHTML = '<div style="color: red;">❌ Kunde inte ladda feedback: ' + error.message + '</div>';
+        }
+    }
+
+    // Render feedback list
+    renderFeedback(feedbackList) {
+        const listDiv = document.getElementById('feedbackList');
+        if (!feedbackList || feedbackList.length === 0) {
+            listDiv.innerHTML = '<div style="color: #666;">Ingen feedback matchar filtret.</div>';
+            return;
+        }
+
+        const categoryEmoji = {
+            bug: '🐛',
+            question: '❓',
+            suggestion: '💡',
+            other: '💬'
+        };
+
+        const statusBadge = {
+            new: '<span style="background: #3b82f6; color: white; padding: 2px 8px; border-radius: 4px; font-size: 0.75rem;">NY</span>',
+            read: '<span style="background: #f59e0b; color: white; padding: 2px 8px; border-radius: 4px; font-size: 0.75rem;">LÄST</span>',
+            resolved: '<span style="background: #10b981; color: white; padding: 2px 8px; border-radius: 4px; font-size: 0.75rem;">LÖST</span>'
+        };
+
+        let html = '';
+        feedbackList.forEach(feedback => {
+            const date = feedback.timestamp ? new Date(feedback.timestamp.seconds * 1000).toLocaleString('sv-SE') : 'Okänt datum';
+            const status = feedback.status || 'new';
+
+            html += `
+                <div style="border: 2px solid #e5e7eb; border-radius: 8px; padding: 15px; margin-bottom: 15px; background: ${status === 'new' ? '#f0f9ff' : 'white'};">
+                    <div style="display: flex; justify-content: space-between; align-items: start; margin-bottom: 10px;">
+                        <div>
+                            <strong>${categoryEmoji[feedback.category] || '💬'} ${feedback.category.toUpperCase()}</strong>
+                            ${statusBadge[status]}
+                        </div>
+                        <small style="color: #666;">${date}</small>
+                    </div>
+                    <div style="margin-bottom: 10px;">
+                        <strong>Från:</strong> ${feedback.playerName} (${feedback.playerId.substring(0, 20)}...)
+                    </div>
+                    <div style="background: white; padding: 10px; border-radius: 4px; border: 1px solid #e5e7eb; white-space: pre-wrap;">
+                        ${feedback.message}
+                    </div>
+                    <div style="margin-top: 10px; display: flex; gap: 10px;">
+                        ${status === 'new' ? `<button onclick="window.adminPanel.updateFeedbackStatus('${feedback.id}', 'read')" class="admin-btn btn-primary" style="font-size: 0.875rem; padding: 6px 12px;">Markera som läst</button>` : ''}
+                        ${status === 'read' ? `<button onclick="window.adminPanel.updateFeedbackStatus('${feedback.id}', 'resolved')" class="admin-btn btn-success" style="font-size: 0.875rem; padding: 6px 12px;">Markera som löst</button>` : ''}
+                        ${status === 'resolved' ? `<button onclick="window.adminPanel.updateFeedbackStatus('${feedback.id}', 'new')" class="admin-btn" style="font-size: 0.875rem; padding: 6px 12px;">Återställ till ny</button>` : ''}
+                        <button onclick="window.adminPanel.deleteFeedback('${feedback.id}')" class="admin-btn btn-danger" style="font-size: 0.875rem; padding: 6px 12px;">Radera</button>
+                    </div>
+                    <details style="margin-top: 10px;">
+                        <summary style="cursor: pointer; color: #666; font-size: 0.875rem;">Teknisk info</summary>
+                        <div style="font-size: 0.75rem; color: #666; margin-top: 5px; font-family: monospace;">
+                            <div>URL: ${feedback.url || 'N/A'}</div>
+                            <div>User Agent: ${feedback.userAgent ? feedback.userAgent.substring(0, 100) + '...' : 'N/A'}</div>
+                        </div>
+                    </details>
+                </div>
+            `;
+        });
+
+        listDiv.innerHTML = html;
+    }
+
+    // Filter feedback
+    filterFeedback() {
+        if (!this.allFeedback) return;
+
+        const statusFilter = document.getElementById('feedbackFilter').value;
+        const categoryFilter = document.getElementById('feedbackCategoryFilter').value;
+
+        let filtered = this.allFeedback;
+
+        if (statusFilter !== 'all') {
+            filtered = filtered.filter(f => (f.status || 'new') === statusFilter);
+        }
+
+        if (categoryFilter !== 'all') {
+            filtered = filtered.filter(f => f.category === categoryFilter);
+        }
+
+        this.renderFeedback(filtered);
+    }
+
+    // Update feedback status
+    async updateFeedbackStatus(feedbackId, newStatus) {
+        try {
+            const db = firebase.firestore();
+            await db.collection('feedback').doc(feedbackId).update({
+                status: newStatus
+            });
+
+            console.log(`✅ Feedback ${feedbackId} status updated to ${newStatus}`);
+            await this.loadFeedback(); // Reload to show changes
+
+        } catch (error) {
+            console.error('Failed to update feedback status:', error);
+            alert('❌ Kunde inte uppdatera status: ' + error.message);
+        }
+    }
+
+    // Delete feedback
+    async deleteFeedback(feedbackId) {
+        if (!confirm('Är du säker på att du vill radera denna feedback?')) {
+            return;
+        }
+
+        try {
+            const db = firebase.firestore();
+            await db.collection('feedback').doc(feedbackId).delete();
+
+            console.log(`✅ Feedback ${feedbackId} deleted`);
+            await this.loadFeedback(); // Reload to show changes
+
+        } catch (error) {
+            console.error('Failed to delete feedback:', error);
+            alert('❌ Kunde inte radera feedback: ' + error.message);
         }
     }
 

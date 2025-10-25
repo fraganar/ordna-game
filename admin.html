@@ -387,6 +387,37 @@
             </div>
         </div>
 
+        <!-- Feedback Section -->
+        <div class="admin-section">
+            <h2 class="section-title" onclick="window.adminPanel.toggleSection(this)">
+                <span>Användarfeedback</span>
+                <span class="toggle-icon">▼</span>
+            </h2>
+            <div class="section-content">
+                <div style="margin-bottom: 15px; display: flex; gap: 10px; flex-wrap: wrap;">
+                    <button onclick="window.adminPanel.loadFeedback()" class="admin-btn btn-primary">
+                        🔄 Uppdatera
+                    </button>
+                    <select id="feedbackFilter" onchange="window.adminPanel.filterFeedback()" style="padding: 8px; border: 1px solid #ddd; border-radius: 4px;">
+                        <option value="all">Alla</option>
+                        <option value="new">Nya</option>
+                        <option value="read">Lästa</option>
+                        <option value="resolved">Lösta</option>
+                    </select>
+                    <select id="feedbackCategoryFilter" onchange="window.adminPanel.filterFeedback()" style="padding: 8px; border: 1px solid #ddd; border-radius: 4px;">
+                        <option value="all">Alla kategorier</option>
+                        <option value="bug">🐛 Buggar</option>
+                        <option value="question">❓ Frågor</option>
+                        <option value="suggestion">💡 Förslag</option>
+                        <option value="other">💬 Annat</option>
+                    </select>
+                </div>
+                <div id="feedbackList" style="color: #666;">
+                    Klicka på "Uppdatera" för att ladda feedback...
+                </div>
+            </div>
+        </div>
+
         <!-- Switch Player Section -->
         <div class="admin-section">
             <h2 class="section-title" onclick="window.adminPanel.toggleSection(this)">
@@ -415,6 +446,7 @@
     <!-- Firebase Scripts -->
     <script src="https://www.gstatic.com/firebasejs/9.0.0/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.0.0/firebase-firestore-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.0.0/firebase-auth-compat.js"></script>
 
     <!-- Admin Panel Script -->
     <script src="js/firebase-config.js"></script>
