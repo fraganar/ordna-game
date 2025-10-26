@@ -55,7 +55,9 @@ function showToast(message, type = 'success', duration = 3000) {
         });
     });
 
-    // Auto-remove after duration
+    // Auto-remove after duration (errors stay longer for readability)
+    const displayDuration = type === 'error' ? Math.max(duration, 5000) : duration;
+
     setTimeout(() => {
         toast.classList.remove('opacity-100');
         toast.classList.add('opacity-0');
@@ -64,7 +66,7 @@ function showToast(message, type = 'success', duration = 3000) {
         setTimeout(() => {
             toast.remove();
         }, 300);
-    }, duration);
+    }, displayDuration);
 }
 
 // Export globally

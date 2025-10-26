@@ -211,6 +211,52 @@ Fallbacks döljer problem och leder till svårhittade buggar. Istället:
 - **Views**: Waiting screen (with polling), Result comparison, "My Challenges" list
 - **Features**: WhatsApp sharing, 7-day expiration, duplicate play prevention
 
+## Toast Notification System
+Modern, non-intrusive notifications for user feedback.
+
+**File**: `js/toastNotification.js`
+
+### Usage
+```javascript
+window.showToast(message, type, duration);
+```
+
+**Parameters**:
+- `message` (string): The message to display
+- `type` (string): `'success'`, `'error'`, or `'info'` (default: 'success')
+- `duration` (number): Milliseconds before auto-hide (default: 3000)
+
+### Examples
+```javascript
+// Success (green)
+showToast('Sparat!', 'success', 3000);
+
+// Error (red) - stays 5 seconds minimum
+showToast('Kunde inte ladda data', 'error', 5000);
+
+// Info (blue)
+showToast('Tips: Använd piltangenterna', 'info', 4000);
+```
+
+### When to Use Toast
+✅ **Use toast for**:
+- Confirmations that don't require user action ("Feedback submitted!")
+- Non-critical errors users should be aware of
+- Brief informational messages
+- Success feedback after actions
+
+❌ **Don't use toast for**:
+- Critical errors that prevent app function → Use `alert()`
+- Confirmations requiring user decision → Use modal
+- Important information that must not be missed → Use modal
+
+### Design Details
+- **Position**: Fixed bottom-right (`bottom-4 right-4`)
+- **Animation**: Fade in/out (300ms)
+- **Max-width**: 384px (24rem)
+- **Auto-hide**: After duration (errors stay minimum 5 seconds for readability)
+- **Icons**: ✅ (success), ❌ (error), ℹ️ (info)
+
 ## Admin Panel
 Admin-panelen (`admin.html` och `js/adminPanel.js`) är designad som en separat modul från huvudspelet.
 

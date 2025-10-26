@@ -477,8 +477,13 @@ class App {
 
     // Show error message
     showError(message) {
-        // Log error to console - these are rare edge cases
+        // Log error to console
         console.error('Challenge error:', message);
+
+        // Show user-friendly toast notification
+        if (window.showToast) {
+            window.showToast('Ett oväntat fel uppstod. Försök igen.', 'error', 5000);
+        }
     }
 }
 
