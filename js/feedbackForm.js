@@ -92,7 +92,11 @@ async function submitFeedback() {
 
         // Success!
         hideFeedbackDialog();
-        alert('✅ Tack för din feedback! Vi läser alla meddelanden.');
+
+        // Show toast notification instead of alert
+        if (window.showToast) {
+            window.showToast('Tack för din feedback! Vi läser alla meddelanden.', 'success', 3000);
+        }
 
         console.log('✅ Feedback submitted successfully');
 
