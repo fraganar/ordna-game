@@ -28,14 +28,29 @@ const uiConfig = {
             if (isNewUser) {
                 const currentName = localStorage.getItem('playerName');
                 if (!currentName || isDummyName(currentName)) {
-                    // Show inline name input instead of prompt
-                    showNameInput(playerId);
-                    return false; // Don't reload yet
+                    // Prompt for name
+                    const name = prompt('Vad heter du?');
+                    if (name && name.trim()) {
+                        localStorage.setItem('playerName', name.trim());
+                        // Sync to Firebase
+                        if (window.FirebaseAPI) {
+                            window.FirebaseAPI.upsertPlayer(playerId, name.trim());
+                        }
+                    }
                 }
             }
 
-            // Close modal and reload
+            // Close modal
             hideAuthDialog();
+
+            // Show appropriate message based on whether user is new or existing
+            if (isNewUser) {
+                alert('✅ Konto skapat! Nu kan du dela din utmaning.');
+            } else {
+                alert('✅ Inloggad! Välkommen tillbaka.');
+            }
+
+            // Reload page to refresh UI with new auth state
             window.location.reload();
 
             return false; // Don't redirect
@@ -69,28 +84,28 @@ const uiConfig = {
 
                         return Promise.resolve();
                     } else {
-                        showAuthError('Använd en annan email-adress eller logga in med rätt metod.');
+                        alert('Använd en annan email-adress eller logga in med rätt metod.');
                         return Promise.resolve();
                     }
                 }).catch(fetchError => {
                     console.error('Error fetching sign-in methods:', fetchError);
-                    showAuthError('Kunde inte kontrollera inloggningsmetoder: ' + fetchError.message);
+                    alert('❌ Kunde inte kontrollera inloggningsmetoder: ' + fetchError.message);
                 });
             }
 
-            // Show clear, user-friendly error messages inline (not alert)
+            // Show clear, user-friendly error messages
             if (error.code === 'auth/email-already-in-use') {
-                showAuthError('Den emailen används redan. Försök logga in istället, eller använd en annan email.');
+                alert('⚠️ Den emailen används redan. Försök logga in istället, eller använd en annan email.');
             } else if (error.code === 'auth/wrong-password') {
-                showAuthError('Fel lösenord. Försök igen.');
+                alert('❌ Fel lösenord. Försök igen.');
             } else if (error.code === 'auth/user-not-found') {
-                showAuthError('Inget konto hittat med den emailen. Skapa ett nytt konto.');
+                alert('❌ Inget konto hittat med den emailen. Skapa ett nytt konto.');
             } else if (error.code === 'auth/weak-password') {
-                showAuthError('Lösenordet är för svagt. Använd minst 6 tecken.');
+                alert('❌ Lösenordet är för svagt. Använd minst 6 tecken.');
             } else if (error.code === 'auth/invalid-email') {
-                showAuthError('Ogiltig email-adress.');
+                alert('❌ Ogiltig email-adress.');
             } else {
-                showAuthError('Inloggning misslyckades: ' + error.message);
+                alert('❌ Inloggning misslyckades: ' + error.message);
             }
         }
     },
@@ -124,96 +139,10 @@ const uiConfig = {
     credentialHelper: firebaseui.auth.CredentialHelper.GOOGLE_YOLO,
 
     // Terms of service and privacy policy URLs
+    // TODO: Create actual T&S and Privacy Policy pages before production
     tosUrl: '/terms.html',
     privacyPolicyUrl: '/privacy.html'
 };
-
-/**
- * Show error message inline in auth modal
- * @param {string} message - Error message to display
- */
-function showAuthError(message) {
-    const errorDiv = document.getElementById('auth-error');
-    const errorMessage = document.getElementById('auth-error-message');
-
-    if (errorDiv && errorMessage) {
-        errorMessage.textContent = message;
-        errorDiv.classList.remove('hidden');
-
-        // Auto-hide after 5 seconds
-        setTimeout(() => {
-            errorDiv.classList.add('hidden');
-        }, 5000);
-    } else {
-        // Fallback to console if error div doesn't exist
-        console.error('Auth error:', message);
-    }
-}
-
-/**
- * Show inline name input form
- * @param {string} playerId - User's Firebase UID
- */
-function showNameInput(playerId) {
-    const firebaseContainer = document.getElementById('firebaseui-container');
-    const nameInputDiv = document.getElementById('auth-name-input');
-    const nameField = document.getElementById('auth-name-field');
-    const submitBtn = document.getElementById('auth-name-submit');
-
-    if (!firebaseContainer || !nameInputDiv || !nameField || !submitBtn) {
-        console.error('Name input elements not found');
-        // Fallback to old prompt behavior
-        const name = prompt('Vad heter du?');
-        if (name && name.trim()) {
-            saveName(playerId, name.trim());
-        }
-        hideAuthDialog();
-        window.location.reload();
-        return;
-    }
-
-    // Hide FirebaseUI, show name input
-    firebaseContainer.classList.add('hidden');
-    nameInputDiv.classList.remove('hidden');
-
-    // Focus on input field
-    nameField.focus();
-
-    // Handle submit
-    const handleSubmit = () => {
-        const name = nameField.value.trim();
-        if (name) {
-            saveName(playerId, name);
-            hideAuthDialog();
-            window.location.reload();
-        } else {
-            nameField.classList.add('border-red-500');
-            setTimeout(() => nameField.classList.remove('border-red-500'), 1000);
-        }
-    };
-
-    // Submit on button click
-    submitBtn.onclick = handleSubmit;
-
-    // Submit on Enter key
-    nameField.onkeypress = (e) => {
-        if (e.key === 'Enter') {
-            handleSubmit();
-        }
-    };
-}
-
-/**
- * Save player name to localStorage and Firebase
- * @param {string} playerId - User's Firebase UID
- * @param {string} name - Player name
- */
-function saveName(playerId, name) {
-    localStorage.setItem('playerName', name);
-    if (window.FirebaseAPI) {
-        window.FirebaseAPI.upsertPlayer(playerId, name);
-    }
-}
 
 /**
  * Show FirebaseUI authentication dialog
@@ -221,23 +150,10 @@ function saveName(playerId, name) {
 function showAuthDialog() {
     const modal = document.getElementById('auth-modal');
     const container = document.getElementById('firebaseui-container');
-    const nameInputDiv = document.getElementById('auth-name-input');
 
     if (!modal || !container) {
         console.error('Auth modal or container not found in DOM');
         return;
-    }
-
-    // Hide any previous errors
-    const errorDiv = document.getElementById('auth-error');
-    if (errorDiv) {
-        errorDiv.classList.add('hidden');
-    }
-
-    // Show FirebaseUI container, hide name input
-    container.classList.remove('hidden');
-    if (nameInputDiv) {
-        nameInputDiv.classList.add('hidden');
     }
 
     // Show modal
@@ -253,7 +169,6 @@ function showAuthDialog() {
         authUI.start('#firebaseui-container', uiConfig);
     } else {
         console.error('FirebaseUI not available');
-        // Critical error - Firebase UI couldn't load (keep alert for this)
         alert('❌ Firebase UI kunde inte laddas. Kontrollera din internetanslutning.');
     }
 }
@@ -271,16 +186,6 @@ function hideAuthDialog() {
     const authUI = getAuthUI();
     if (authUI) {
         authUI.reset();
-    }
-
-    // Reset name input
-    const nameInputDiv = document.getElementById('auth-name-input');
-    const nameField = document.getElementById('auth-name-field');
-    if (nameInputDiv) {
-        nameInputDiv.classList.add('hidden');
-    }
-    if (nameField) {
-        nameField.value = '';
     }
 }
 
@@ -325,13 +230,12 @@ async function logout() {
         localStorage.clear();
 
         console.log('✅ User logged out successfully');
+        alert('✅ Utloggad! Du kommer automatiskt bli inloggad anonymt igen.');
 
-        // No alert needed - page reload will show logged-out state
         // Reload page to re-initialize with anonymous auth
         window.location.reload();
     } catch (error) {
         console.error('❌ Logout error:', error);
-        // Critical error - keep alert for this
         alert('❌ Något gick fel vid utloggning: ' + error.message);
     }
 }

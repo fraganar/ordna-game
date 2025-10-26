@@ -439,12 +439,7 @@ class App {
         const blockedCompleted = document.getElementById('challenge-blocked-completed');
 
         if (!blockedDialog) {
-            // Fallback to alert if dialog doesn't exist
-            if (type === 'own') {
-                alert('Du kan inte spela din egen utmaning! Dela länken med en vän istället.');
-            } else if (type === 'completed') {
-                alert('Denna utmaning är redan slutförd!');
-            }
+            console.error('Challenge blocked dialog not found');
             return;
         }
 
@@ -482,14 +477,8 @@ class App {
 
     // Show error message
     showError(message) {
-        // Try to use the blocked dialog for errors
-        const blockedDialog = document.getElementById('challenge-blocked');
-        if (blockedDialog) {
-            // Could extend this to show generic errors in dialog
-            alert(message);
-        } else {
-            alert(message);
-        }
+        // Log error to console - these are rare edge cases
+        console.error('Challenge error:', message);
     }
 }
 
