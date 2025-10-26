@@ -158,6 +158,17 @@ class HamburgerNav {
 
         if (menuName) menuName.textContent = playerName || 'Inte satt';
         if (menuId) menuId.textContent = playerId || 'Inget ID';
+
+        // Show/hide logout button based on auth status
+        const isAnonymous = window.isAnonymousUser ? window.isAnonymousUser() : true;
+        const logoutBtn = document.getElementById('menu-logout-btn');
+        if (logoutBtn) {
+            if (isAnonymous) {
+                logoutBtn.classList.add('hidden');
+            } else {
+                logoutBtn.classList.remove('hidden');
+            }
+        }
     }
 
     closeMenu() {
