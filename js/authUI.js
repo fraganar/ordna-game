@@ -196,11 +196,11 @@ function showNameInput(playerId) {
     submitBtn.onclick = handleSubmit;
 
     // Submit on Enter key
-    nameField.onkeypress = (e) => {
+    nameField.addEventListener('keydown', (e) => {
         if (e.key === 'Enter') {
             handleSubmit();
         }
-    };
+    });
 }
 
 /**
@@ -310,13 +310,48 @@ function getCurrentAuthUser() {
 }
 
 /**
- * Logout current user
+ * Show logout confirmation modal
  */
-async function logout() {
-    if (!confirm('Är du säker på att du vill logga ut?')) {
-        return;
+function logout() {
+    const modal = document.getElementById('logout-modal');
+    if (modal) {
+        modal.classList.add('show');
+    } else {
+        // Fallback to confirm if modal doesn't exist
+        if (confirm('Är du säker på att du vill logga ut?')) {
+            performLogout();
+        }
+    }
+}
+
+/**
+ * Cancel logout and hide modal
+ */
+function cancelLogout() {
+    const modal = document.getElementById('logout-modal');
+    if (modal) {
+        modal.classList.remove('show');
+    }
+}
+
+/**
+ * Confirm logout and perform the action
+ */
+async function confirmLogout() {
+    // Hide modal
+    const modal = document.getElementById('logout-modal');
+    if (modal) {
+        modal.classList.remove('show');
     }
 
+    // Perform logout
+    await performLogout();
+}
+
+/**
+ * Actually perform the logout operation
+ */
+async function performLogout() {
     try {
         // Sign out from Firebase
         await firebase.auth().signOut();
@@ -331,7 +366,7 @@ async function logout() {
         window.location.reload();
     } catch (error) {
         console.error('❌ Logout error:', error);
-        // Critical error - keep alert for this
+        // Critical error - keep alert for this rare case
         alert('❌ Något gick fel vid utloggning: ' + error.message);
     }
 }
@@ -342,3 +377,5 @@ window.hideAuthDialog = hideAuthDialog;
 window.isAnonymousUser = isAnonymousUser;
 window.getCurrentAuthUser = getCurrentAuthUser;
 window.logout = logout;
+window.cancelLogout = cancelLogout;
+window.confirmLogout = confirmLogout;
