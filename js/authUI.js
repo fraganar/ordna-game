@@ -16,7 +16,7 @@ function getAuthUI() {
 // FirebaseUI configuration
 const uiConfig = {
     callbacks: {
-        signInSuccessWithAuthResult: (authResult) => {
+        signInSuccessWithAuthResult: async (authResult) => {
             // User signed in successfully - now has permanent account
             const user = authResult.user;
             const playerId = user.uid;
@@ -24,18 +24,45 @@ const uiConfig = {
 
             console.log('✅ User authenticated:', playerId, isNewUser ? '(new user)' : '(existing user)');
 
-            // Check if user needs to set a real name (only for new users)
-            if (isNewUser) {
+            // NEW: Fetch name from Firebase FIRST (for returning users)
+            let playerName = null;
+            if (!isNewUser && window.FirebaseAPI) {
+                try {
+                    const firebasePlayer = await FirebaseAPI.getPlayer(playerId);
+                    if (firebasePlayer && firebasePlayer.name && !isDummyName(firebasePlayer.name)) {
+                        playerName = firebasePlayer.name;
+                        // Save to localStorage immediately
+                        localStorage.setItem('playerName', playerName);
+                        if (window.PlayerManager) {
+                            window.PlayerManager.setPlayerName(playerName);
+                        }
+                        console.log('✅ Restored name from Firebase:', playerName);
+                    }
+                } catch (error) {
+                    console.error('Failed to fetch player from Firebase:', error);
+                }
+            }
+
+            // Check if user needs to set a name
+            if (!playerName) {
+                // No name in Firebase or new user - show name input
                 const currentName = localStorage.getItem('playerName');
-                if (!currentName || isDummyName(currentName)) {
-                    // Show inline name input instead of prompt
-                    showNameInput(playerId);
+                if (isNewUser || !currentName || isDummyName(currentName)) {
+                    showNameInput(playerId, isNewUser);
                     return false; // Don't reload yet
                 }
             }
 
-            // Close modal and reload
+            // User has name - proceed
             hideAuthDialog();
+
+            // Show welcome message for returning users
+            if (!isNewUser && playerName) {
+                if (window.showToast) {
+                    window.showToast(`Välkommen tillbaka, ${playerName}!`, 'success', 3000);
+                }
+            }
+
             window.location.reload();
 
             return false; // Don't redirect
@@ -154,7 +181,7 @@ function showAuthError(message) {
  * Show inline name input form
  * @param {string} playerId - User's Firebase UID
  */
-function showNameInput(playerId) {
+function showNameInput(playerId, isNewUser = true) {
     const firebaseContainer = document.getElementById('firebaseui-container');
     const nameInputDiv = document.getElementById('auth-name-input');
     const nameField = document.getElementById('auth-name-field');
@@ -163,7 +190,10 @@ function showNameInput(playerId) {
     if (!firebaseContainer || !nameInputDiv || !nameField || !submitBtn) {
         console.error('Name input elements not found');
         // Fallback to old prompt behavior
-        const name = prompt('Vad heter du?');
+        const promptText = isNewUser
+            ? 'Välj ett namn för ditt spelarkonto:'
+            : 'Vad heter du? (Detta namn kommer sparas till ditt konto)';
+        const name = prompt(promptText);
         if (name && name.trim()) {
             saveName(playerId, name.trim());
         }
@@ -176,6 +206,14 @@ function showNameInput(playerId) {
     firebaseContainer.classList.add('hidden');
     nameInputDiv.classList.remove('hidden');
 
+    // Update prompt text based on whether user is new
+    const promptTitle = nameInputDiv.querySelector('h3');
+    if (promptTitle) {
+        promptTitle.textContent = isNewUser
+            ? 'Välj ett namn'
+            : 'Vad heter du?';
+    }
+
     // Focus on input field
     nameField.focus();
 
@@ -185,6 +223,12 @@ function showNameInput(playerId) {
         if (name) {
             saveName(playerId, name);
             hideAuthDialog();
+
+            // Show welcome toast for new users
+            if (isNewUser && window.showToast) {
+                window.showToast(`Välkommen, ${name}!`, 'success', 3000);
+            }
+
             window.location.reload();
         } else {
             nameField.classList.add('border-red-500');
@@ -385,25 +429,45 @@ function showAuthForSharing(onSuccess) {
     // Modify the UI config callback to handle sharing flow
     const originalCallback = uiConfig.callbacks.signInSuccessWithAuthResult;
 
-    uiConfig.callbacks.signInSuccessWithAuthResult = (authResult) => {
+    uiConfig.callbacks.signInSuccessWithAuthResult = async (authResult) => {
         const user = authResult.user;
         const playerId = user.uid;
         const isNewUser = authResult.additionalUserInfo?.isNewUser;
 
         console.log('✅ User authenticated for sharing:', playerId, isNewUser ? '(new user)' : '(existing user)');
 
-        // Check if user needs to set a real name
-        const currentName = localStorage.getItem('playerName');
-        if (!currentName || isDummyName(currentName)) {
-            // Show inline name input
-            showNameInputForSharing(playerId);
-            return false; // Don't reload yet
+        // NEW: Fetch name from Firebase FIRST (for returning users)
+        let playerName = null;
+        if (!isNewUser && window.FirebaseAPI) {
+            try {
+                const firebasePlayer = await FirebaseAPI.getPlayer(playerId);
+                if (firebasePlayer && firebasePlayer.name && !isDummyName(firebasePlayer.name)) {
+                    playerName = firebasePlayer.name;
+                    localStorage.setItem('playerName', playerName);
+                    if (window.PlayerManager) {
+                        window.PlayerManager.setPlayerName(playerName);
+                    }
+                    console.log('✅ Restored name from Firebase for sharing:', playerName);
+                }
+            } catch (error) {
+                console.error('Failed to fetch player from Firebase:', error);
+            }
         }
 
-        // User has real name - execute callback
+        // Check if we need to ask for name
+        if (!playerName) {
+            const currentName = localStorage.getItem('playerName');
+            if (!currentName || isDummyName(currentName)) {
+                showNameInputForSharing(playerId, isNewUser);
+                return false;
+            }
+            playerName = currentName;
+        }
+
+        // User has name - execute sharing callback
         hideAuthDialog();
         if (window._authSharingCallback) {
-            window._authSharingCallback(playerId, currentName);
+            window._authSharingCallback(playerId, playerName);
             delete window._authSharingCallback;
         }
 
@@ -420,8 +484,9 @@ function showAuthForSharing(onSuccess) {
 /**
  * Show name input specifically for sharing flow
  * @param {string} playerId - User's Firebase UID
+ * @param {boolean} isNewUser - Whether this is a new user or returning user
  */
-function showNameInputForSharing(playerId) {
+function showNameInputForSharing(playerId, isNewUser = true) {
     const firebaseContainer = document.getElementById('firebaseui-container');
     const nameInputDiv = document.getElementById('auth-name-input');
     const nameField = document.getElementById('auth-name-field');
@@ -430,7 +495,10 @@ function showNameInputForSharing(playerId) {
     if (!firebaseContainer || !nameInputDiv || !nameField || !submitBtn) {
         console.error('Name input elements not found');
         // Fallback to prompt
-        const name = prompt('Vad heter du?');
+        const promptText = isNewUser
+            ? 'Välj ett namn för ditt spelarkonto:'
+            : 'Vad heter du? (Detta namn kommer sparas till ditt konto)';
+        const name = prompt(promptText);
         if (name && name.trim()) {
             saveName(playerId, name.trim());
             hideAuthDialog();
@@ -445,6 +513,14 @@ function showNameInputForSharing(playerId) {
     // Hide FirebaseUI, show name input
     firebaseContainer.classList.add('hidden');
     nameInputDiv.classList.remove('hidden');
+
+    // Update prompt text based on whether user is new
+    const promptTitle = nameInputDiv.querySelector('h3');
+    if (promptTitle) {
+        promptTitle.textContent = isNewUser
+            ? 'Välj ett namn'
+            : 'Vad heter du?';
+    }
 
     // Focus on input field
     nameField.focus();
