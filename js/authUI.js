@@ -56,11 +56,9 @@ const uiConfig = {
             // User has name - proceed
             hideAuthDialog();
 
-            // Show welcome message for returning users
+            // Save flag to show welcome toast AFTER reload (for returning users)
             if (!isNewUser && playerName) {
-                if (window.showToast) {
-                    window.showToast(`Välkommen tillbaka, ${playerName}!`, 'success', 3000);
-                }
+                sessionStorage.setItem('showWelcomeToast', playerName);
             }
 
             window.location.reload();
@@ -466,6 +464,12 @@ function showAuthForSharing(onSuccess) {
 
         // User has name - execute sharing callback
         hideAuthDialog();
+
+        // Save flag to show welcome toast (for returning users)
+        if (!isNewUser && playerName) {
+            sessionStorage.setItem('showWelcomeToast', playerName);
+        }
+
         if (window._authSharingCallback) {
             window._authSharingCallback(playerId, playerName);
             delete window._authSharingCallback;

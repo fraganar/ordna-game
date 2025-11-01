@@ -45,6 +45,20 @@ class App {
                 await window.ChallengeSystem.loadMyChallenges();
             }
 
+            // NEW: Check if we should show welcome toast after login
+            const welcomeName = sessionStorage.getItem('showWelcomeToast');
+            if (welcomeName) {
+                // Clear flag
+                sessionStorage.removeItem('showWelcomeToast');
+
+                // Show toast after short delay (let page settle)
+                setTimeout(() => {
+                    if (window.showToast) {
+                        window.showToast(`Välkommen tillbaka, ${welcomeName}!`, 'success', 3000);
+                    }
+                }, 500); // 500ms delay to ensure page is ready
+            }
+
             this.initialized = true;
 
         } catch (error) {
