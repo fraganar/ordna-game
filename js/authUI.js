@@ -56,10 +56,8 @@ const uiConfig = {
             // User has name - proceed
             hideAuthDialog();
 
-            // Save flag to show welcome toast AFTER reload (for returning users)
-            if (!isNewUser && playerName) {
-                sessionStorage.setItem('showWelcomeToast', playerName);
-            }
+            // REMOVED: Welcome toast - conflicts with "Resultat sparat!" toast
+            // Users get feedback from the "Resultat sparat!" message instead
 
             window.location.reload();
 
@@ -144,6 +142,9 @@ const uiConfig = {
 
     // Use popup instead of redirect (better for PWA/WebView)
     signInFlow: 'popup',
+
+    // Suppress FirebaseUI "No redirect URL" warning
+    signInSuccessUrl: '#',
 
     // Enable account chooser to help with provider conflicts
     credentialHelper: firebaseui.auth.CredentialHelper.GOOGLE_YOLO,
@@ -465,10 +466,8 @@ function showAuthForSharing(onSuccess) {
         // User has name - execute sharing callback
         hideAuthDialog();
 
-        // Save flag to show welcome toast (for returning users)
-        if (!isNewUser && playerName) {
-            sessionStorage.setItem('showWelcomeToast', playerName);
-        }
+        // REMOVED: Welcome toast - conflicts with "Resultat sparat!" toast
+        // Users get feedback from the success message when challenge is saved
 
         if (window._authSharingCallback) {
             window._authSharingCallback(playerId, playerName);
