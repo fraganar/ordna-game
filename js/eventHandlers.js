@@ -156,6 +156,17 @@ function initializeAllEventListeners() {
     if (backFromCompletedBtn) {
         backFromCompletedBtn.addEventListener('click', handleBackFromBlocked);
     }
+
+    // Post-game share screen buttons (NEW)
+    const shareChallengeBtn = document.getElementById('share-challenge-btn');
+    if (shareChallengeBtn) {
+        shareChallengeBtn.addEventListener('click', handleShareChallenge);
+    }
+
+    const postGamePlayAgainBtn = document.getElementById('post-game-play-again-btn');
+    if (postGamePlayAgainBtn) {
+        postGamePlayAgainBtn.addEventListener('click', handlePostGamePlayAgain);
+    }
 }
 
 // Handler functions that use UI.get() for DOM access
@@ -239,27 +250,20 @@ function handleAcceptChallenge() {
 }
 
 function handleShowChallengeForm() {
-    const playerName = window.PlayerManager ? window.PlayerManager.getPlayerName() : null;
-    if (!playerName) {
-        // Show name setup first
-        pendingChallengeCreation = true;
-        const startMain = UI.get('startMain');
-        const playerNameSetup = UI.get('playerNameSetup');
-        if (startMain) startMain.classList.add('hidden');
-        if (playerNameSetup) playerNameSetup.classList.remove('hidden');
-        return;
-    }
-    
+    // REMOVED: Name prompt before game - users can play anonymously now
+    // Name will be requested when sharing the challenge after completing it
+
+    const playerName = localStorage.getItem('playerName') || 'Spelare';
     const challengerNameDisplay = UI.get('challengerNameDisplay');
     const startMain = UI.get('startMain');
     const challengeForm = UI.get('challengeForm');
     const challengeSuccess = UI.get('challengeSuccess');
     const createChallengeBtn = UI.get('createChallengeBtn');
-    
+
     if (challengerNameDisplay) challengerNameDisplay.textContent = playerName;
     if (startMain) startMain.classList.add('hidden');
     if (challengeForm) challengeForm.classList.remove('hidden');
-    
+
     // Reset form state
     if (challengeSuccess) challengeSuccess.classList.add('hidden');
     if (createChallengeBtn) createChallengeBtn.classList.remove('hidden');
@@ -368,8 +372,71 @@ async function handleShare() {
 function handleDeclineChallenge() {
     const challengeAccept = UI.get('challengeAccept');
     const startMain = UI.get('startMain');
-    
+
     if (challengeAccept) challengeAccept.classList.add('hidden');
+    if (startMain) startMain.classList.remove('hidden');
+}
+
+// NEW: Handle "Share Challenge" button in post-game screen
+async function handleShareChallenge() {
+    console.log('🎯 User wants to share challenge - initiating auth flow');
+
+    // Check if user is already authenticated
+    if (window.isAnonymousUser && !window.isAnonymousUser()) {
+        console.log('✅ User already authenticated, saving challenge directly');
+        await saveAndShowChallengeLink();
+        return;
+    }
+
+    // User is anonymous - show auth dialog
+    if (window.showAuthForSharing) {
+        window.showAuthForSharing(async (playerId, playerName) => {
+            console.log('✅ Auth successful, saving challenge with:', { playerId, playerName });
+            await saveAndShowChallengeLink(playerId, playerName);
+        });
+    } else {
+        console.error('showAuthForSharing not available');
+        alert('Kunde inte öppna inloggning. Ladda om sidan och försök igen.');
+    }
+}
+
+// Helper: Save challenge and show sharing link
+async function saveAndShowChallengeLink(playerId = null, playerName = null) {
+    try {
+        // Get current auth user if not provided
+        if (!playerId) {
+            playerId = window.getCurrentPlayerId();
+        }
+        if (!playerName) {
+            playerName = localStorage.getItem('playerName') || 'Spelare';
+        }
+
+        // Save the completed challenge
+        const challengeId = await window.ChallengeSystem.saveCompletedChallenge(playerId, playerName);
+
+        // Show the waiting view with share link
+        window.ChallengeSystem.showWaitingForOpponentView(challengeId);
+
+    } catch (error) {
+        console.error('Failed to save and share challenge:', error);
+        alert('❌ Kunde inte spara utmaningen. Försök igen.');
+    }
+}
+
+// NEW: Handle "Play Again" button in post-game screen
+function handlePostGamePlayAgain() {
+    console.log('🔄 User chose to play again without sharing');
+
+    // Reset game state
+    if (window.ChallengeSystem) {
+        window.ChallengeSystem.reset();
+    }
+
+    // Go back to start screen
+    const postGameShare = document.getElementById('post-game-share');
+    const startMain = UI.get('startMain');
+
+    if (postGameShare) postGameShare.classList.add('hidden');
     if (startMain) startMain.classList.remove('hidden');
 }
 

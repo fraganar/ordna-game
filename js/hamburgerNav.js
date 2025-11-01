@@ -10,6 +10,7 @@ class HamburgerNav {
         this.closeMenuBtn = document.getElementById('close-menu-btn');
         this.menuHomeBtn = document.getElementById('menu-home-btn');
         this.menuChangeNameBtn = document.getElementById('menu-change-name-btn');
+        this.menuLoginBtn = document.getElementById('menu-login-btn'); // NEW
         this.menuHelpBtn = document.getElementById('menu-help-btn');
         this.confirmDialog = document.getElementById('confirm-dialog');
         this.confirmYesBtn = document.getElementById('confirm-yes-btn');
@@ -53,6 +54,7 @@ class HamburgerNav {
         // Menu actions
         this.menuHomeBtn.addEventListener('click', () => this.handleBackToStart());
         this.menuChangeNameBtn.addEventListener('click', () => this.handleChangeName());
+        this.menuLoginBtn.addEventListener('click', () => this.handleLogin()); // NEW
         this.menuHelpBtn.addEventListener('click', () => this.openHelpModal());
         this.packsBtn.addEventListener('click', () => this.openPacksModal());
 
@@ -159,14 +161,24 @@ class HamburgerNav {
         if (menuName) menuName.textContent = playerName || 'Inte satt';
         if (menuId) menuId.textContent = playerId || 'Inget ID';
 
-        // Show/hide logout button based on auth status
+        // Show/hide login and logout buttons based on auth status
         const isAnonymous = window.isAnonymousUser ? window.isAnonymousUser() : true;
+        const loginBtn = document.getElementById('menu-login-btn');
         const logoutBtn = document.getElementById('menu-logout-btn');
+
+        if (loginBtn) {
+            if (isAnonymous) {
+                loginBtn.classList.remove('hidden'); // Show login if anonymous
+            } else {
+                loginBtn.classList.add('hidden'); // Hide login if authenticated
+            }
+        }
+
         if (logoutBtn) {
             if (isAnonymous) {
-                logoutBtn.classList.add('hidden');
+                logoutBtn.classList.add('hidden'); // Hide logout if anonymous
             } else {
-                logoutBtn.classList.remove('hidden');
+                logoutBtn.classList.remove('hidden'); // Show logout if authenticated
             }
         }
     }
@@ -334,6 +346,21 @@ class HamburgerNav {
     closeHelpModal() {
         this.helpModal.classList.add('hidden');
         this.closeModal('help');
+    }
+
+    // NEW: Handle login button click
+    handleLogin() {
+        console.log('🔐 User clicked login from menu');
+        this.closeMenu();
+
+        setTimeout(() => {
+            if (window.showAuthDialog) {
+                window.showAuthDialog();
+            } else {
+                console.error('showAuthDialog not available');
+                alert('Kunde inte öppna inloggning. Ladda om sidan och försök igen.');
+            }
+        }, 350);
     }
 
     // Open packs modal

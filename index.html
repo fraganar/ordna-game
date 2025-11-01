@@ -159,6 +159,19 @@
                     </svg>
                 </button>
 
+                <!-- Login button (hidden if already logged in) -->
+                <button id="menu-login-btn" class="w-full bg-white hover:bg-slate-50 text-slate-800 font-semibold py-4 px-6 rounded-xl border-2 border-slate-200 hover:border-blue-400 transition-all duration-300 flex items-center justify-between group">
+                    <span class="flex items-center">
+                        <svg class="w-6 h-6 mr-3 text-blue-500" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"></path>
+                        </svg>
+                        Logga in / Skapa konto
+                    </span>
+                    <svg class="w-5 h-5 text-slate-400 group-hover:text-blue-500 transition-colors" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path>
+                    </svg>
+                </button>
+
                 <button id="menu-help-btn" class="w-full bg-white hover:bg-slate-50 text-slate-800 font-semibold py-4 px-6 rounded-xl border-2 border-slate-200 hover:border-primary transition-all duration-300 flex items-center justify-between group">
                     <span class="flex items-center">
                         <svg class="w-6 h-6 mr-3 text-primary" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
@@ -695,21 +708,59 @@
         <div id="end-screen" class="hidden text-center p-6 sm:p-8 lg:p-12">
             <h2 class="text-3xl sm:text-4xl font-bold text-slate-900 mb-2">Spelet är slut!</h2>
             <p id="end-screen-subtitle" class="text-slate-600 mb-6 text-base sm:text-lg">Bra kämpat allihopa!</p>
-            
+
             <!-- Single Player Final Score -->
             <div id="single-player-final" class="hidden text-slate-800 py-8 mb-8">
                 <p class="text-lg text-slate-600 mb-2">Din slutpoäng:</p>
                 <p id="single-final-score" class="text-7xl font-bold text-primary"></p>
             </div>
-            
+
             <!-- Multiplayer Final Scoreboard -->
             <div id="final-scoreboard" class="space-y-3 sm:space-y-4 mb-8">
                 <!-- Final player scores will be listed here -->
             </div>
-            
+
             <button id="restart-btn" class="w-full bg-gradient-to-r from-magic to-primary text-white font-bold py-3 px-6 rounded-lg text-lg sm:text-xl hover:from-primary hover:to-magic-dark transition-colors shadow-md">
                 Spela igen
             </button>
+        </div>
+
+        <!-- Post-Game Share Screen (for anonymous users who completed a challenge) -->
+        <div id="post-game-share" class="hidden text-center p-6 sm:p-8 lg:p-12">
+            <h2 class="text-3xl sm:text-4xl font-bold text-slate-900 mb-2">Bra jobbat!</h2>
+            <p class="text-slate-600 mb-6 text-base sm:text-lg">Du klarade alla 12 frågor</p>
+
+            <!-- Final Score -->
+            <div class="text-slate-800 py-8 mb-8">
+                <p class="text-lg text-slate-600 mb-2">Din slutpoäng:</p>
+                <p id="post-game-final-score" class="text-7xl font-bold text-primary">0</p>
+            </div>
+
+            <!-- Info box about sharing -->
+            <div class="bg-info-light border-l-4 border-info rounded-lg p-4 mb-6 text-left">
+                <p class="text-base text-slate-700 mb-2">
+                    <strong>🎯 Vill du utmana en vän?</strong>
+                </p>
+                <p class="text-sm text-slate-600">
+                    För att dela din utmaning och se vem som får högst poäng behöver du logga in.
+                </p>
+            </div>
+
+            <!-- Action buttons -->
+            <div class="space-y-4">
+                <button id="share-challenge-btn" class="w-full bg-gradient-to-r from-magic to-primary text-white font-bold py-4 px-6 rounded-lg text-lg sm:text-xl hover:from-primary hover:to-magic-dark transition-colors shadow-md">
+                    🎯 Dela utmaning och utmana vän
+                </button>
+
+                <button id="post-game-play-again-btn" class="w-full bg-slate-200 text-slate-800 font-bold py-3 px-6 rounded-lg text-lg sm:text-xl hover:bg-slate-300 transition-colors">
+                    🔄 Spela igen
+                </button>
+            </div>
+
+            <!-- Small print -->
+            <p class="text-xs text-slate-500 mt-6">
+                💡 Du kan alltid logga in senare från menyn för att skapa och dela utmaningar
+            </p>
         </div>
     </div>
 

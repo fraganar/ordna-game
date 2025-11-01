@@ -793,18 +793,10 @@ class ChallengeSystem {
     
     // Create a new challenge - starts the game immediately (moved from game.js)
     async createChallenge() {
-        // Check if user is anonymous - require account upgrade before creating challenge
-        if (window.isAnonymousUser && window.isAnonymousUser()) {
-            console.log('🔐 User is anonymous - showing auth dialog to upgrade account');
-            if (window.showAuthDialog) {
-                window.showAuthDialog();
-            } else {
-                alert('⚠️ Du måste skapa ett konto för att dela utmaningar. Ladda om sidan och försök igen.');
-            }
-            return; // Don't create challenge yet
-        }
+        // REMOVED: Authentication check - users can now play anonymously
+        // Authentication will be required when SHARING the challenge after completing it
 
-        // CRITICAL FIX: Use localStorage for player name, not PlayerManager
+        // Use dummy name for now - real name will be set during sharing flow if user logs in
         const playerName = localStorage.getItem('playerName') || 'Spelare';
 
         // Debug logging for hybrid-system analysis
@@ -939,6 +931,56 @@ class ChallengeSystem {
             if (typeof window.showError === 'function') {
                 window.showError('Kunde inte skapa utmaning. Försök igen.');
             }
+        }
+    }
+
+    // Save a completed challenge after user authentication (NEW)
+    // Called after user finishes game anonymously and decides to share
+    async saveCompletedChallenge(playerId, playerName) {
+        try {
+            if (!this.isChallengeMode || !window.challengeQuestions || !window.challengeQuestionScores) {
+                throw new Error('No challenge data to save');
+            }
+
+            // Get final score
+            const finalScore = window.PlayerManager?.getCurrentPlayer()?.score || 0;
+            const completeScores = [...window.challengeQuestionScores];
+
+            // Get pack info
+            const packId = window.GameController?.selectedPack || null;
+            let packName = null;
+            if (packId && window.GameData) {
+                packName = await this.getPackName(packId);
+            }
+
+            console.log('💾 Saving completed challenge:', {
+                playerId,
+                playerName,
+                finalScore,
+                questions: window.challengeQuestions.length,
+                packId,
+                packName
+            });
+
+            // Create challenge in Firebase
+            const challengeId = await FirebaseAPI.createChallenge(
+                playerName,
+                playerId,
+                window.challengeQuestions,
+                finalScore,
+                completeScores,
+                packName,
+                packId
+            );
+
+            this.challengeId = challengeId;
+            console.log('✅ Challenge saved:', challengeId);
+
+            return challengeId;
+
+        } catch (error) {
+            console.error('Failed to save completed challenge:', error);
+            throw error;
         }
     }
 

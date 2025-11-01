@@ -371,9 +371,117 @@ async function performLogout() {
     }
 }
 
+/**
+ * Show authentication dialog specifically for sharing challenges
+ * This is called after a user completes a challenge anonymously and wants to share it
+ * @param {function} onSuccess - Callback function (playerId, playerName) => void
+ */
+function showAuthForSharing(onSuccess) {
+    console.log('🔐 Showing auth dialog for challenge sharing');
+
+    // Store the callback for use after successful auth
+    window._authSharingCallback = onSuccess;
+
+    // Modify the UI config callback to handle sharing flow
+    const originalCallback = uiConfig.callbacks.signInSuccessWithAuthResult;
+
+    uiConfig.callbacks.signInSuccessWithAuthResult = (authResult) => {
+        const user = authResult.user;
+        const playerId = user.uid;
+        const isNewUser = authResult.additionalUserInfo?.isNewUser;
+
+        console.log('✅ User authenticated for sharing:', playerId, isNewUser ? '(new user)' : '(existing user)');
+
+        // Check if user needs to set a real name
+        const currentName = localStorage.getItem('playerName');
+        if (!currentName || isDummyName(currentName)) {
+            // Show inline name input
+            showNameInputForSharing(playerId);
+            return false; // Don't reload yet
+        }
+
+        // User has real name - execute callback
+        hideAuthDialog();
+        if (window._authSharingCallback) {
+            window._authSharingCallback(playerId, currentName);
+            delete window._authSharingCallback;
+        }
+
+        // Restore original callback
+        uiConfig.callbacks.signInSuccessWithAuthResult = originalCallback;
+
+        return false; // Don't redirect
+    };
+
+    // Show the auth dialog
+    showAuthDialog();
+}
+
+/**
+ * Show name input specifically for sharing flow
+ * @param {string} playerId - User's Firebase UID
+ */
+function showNameInputForSharing(playerId) {
+    const firebaseContainer = document.getElementById('firebaseui-container');
+    const nameInputDiv = document.getElementById('auth-name-input');
+    const nameField = document.getElementById('auth-name-field');
+    const submitBtn = document.getElementById('auth-name-submit');
+
+    if (!firebaseContainer || !nameInputDiv || !nameField || !submitBtn) {
+        console.error('Name input elements not found');
+        // Fallback to prompt
+        const name = prompt('Vad heter du?');
+        if (name && name.trim()) {
+            saveName(playerId, name.trim());
+            hideAuthDialog();
+            if (window._authSharingCallback) {
+                window._authSharingCallback(playerId, name.trim());
+                delete window._authSharingCallback;
+            }
+        }
+        return;
+    }
+
+    // Hide FirebaseUI, show name input
+    firebaseContainer.classList.add('hidden');
+    nameInputDiv.classList.remove('hidden');
+
+    // Focus on input field
+    nameField.focus();
+
+    // Handle submit
+    const handleSubmit = () => {
+        const name = nameField.value.trim();
+        if (name) {
+            saveName(playerId, name);
+            hideAuthDialog();
+
+            // Execute the sharing callback
+            if (window._authSharingCallback) {
+                window._authSharingCallback(playerId, name);
+                delete window._authSharingCallback;
+            }
+        } else {
+            nameField.classList.add('border-red-500');
+            setTimeout(() => nameField.classList.remove('border-red-500'), 1000);
+        }
+    };
+
+    // Submit on button click
+    submitBtn.onclick = handleSubmit;
+
+    // Submit on Enter key
+    nameField.addEventListener('keydown', (e) => {
+        if (e.key === 'Enter') {
+            handleSubmit();
+        }
+    });
+}
+
 // Export functions globally
 window.showAuthDialog = showAuthDialog;
 window.hideAuthDialog = hideAuthDialog;
+window.showAuthForSharing = showAuthForSharing;
 window.isAnonymousUser = isAnonymousUser;
 window.getCurrentAuthUser = getCurrentAuthUser;
 window.logout = logout;

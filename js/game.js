@@ -714,26 +714,38 @@ async function endSinglePlayerGame() {
     const challengeResult = UI?.get('challengeResult');
     if (finalScoreboard) finalScoreboard.classList.add('hidden');
     if (challengeResult) challengeResult.classList.add('hidden');
-    
+
     UI?.hideGameScreen();
-    
-    // If this is challenge creation mode, complete the challenge
+
+    // If this is challenge creation mode (user just finished playing)
     if (window.ChallengeSystem && window.ischallengeMode && !window.challengeId) {
-        try {
-            const result = await window.ChallengeSystem.completeChallenge();
-        } catch (error) {
-            console.error('Failed to complete challenge:', error);
-            UI?.showError('Kunde inte skapa utmaning. Försök igen.');
-            const singlePlayerFinal = UI?.get('singlePlayerFinal');
-            const finalScoreboard = UI?.get('finalScoreboard');
-            const singleFinalScore = UI?.get('singleFinalScore');
-            
-            UI?.showEndScreen();
-            if (singlePlayerFinal) singlePlayerFinal.classList.remove('hidden');
-            if (finalScoreboard) finalScoreboard.classList.add('hidden');
-            if (singleFinalScore) {
-                const errorFallbackScore = window.PlayerManager.getCurrentPlayer()?.score || 0;
-                UI?.setFinalScore(errorFallbackScore);
+        // NEW: Check if user is anonymous - show post-game share screen instead of auto-saving
+        const isAnonymous = window.isAnonymousUser && window.isAnonymousUser();
+        const currentPlayer = window.PlayerManager?.getCurrentPlayer();
+        const finalScore = currentPlayer?.score || 0;
+
+        if (isAnonymous) {
+            // Show post-game share screen for anonymous users
+            console.log('📊 Anonymous user completed challenge - showing post-game share screen');
+            showPostGameShareScreen(finalScore);
+        } else {
+            // User is authenticated - auto-save challenge (original behavior)
+            try {
+                const result = await window.ChallengeSystem.completeChallenge();
+            } catch (error) {
+                console.error('Failed to complete challenge:', error);
+                UI?.showError('Kunde inte skapa utmaning. Försök igen.');
+                const singlePlayerFinal = UI?.get('singlePlayerFinal');
+                const finalScoreboard = UI?.get('finalScoreboard');
+                const singleFinalScore = UI?.get('singleFinalScore');
+
+                UI?.showEndScreen();
+                if (singlePlayerFinal) singlePlayerFinal.classList.remove('hidden');
+                if (finalScoreboard) finalScoreboard.classList.add('hidden');
+                if (singleFinalScore) {
+                    const errorFallbackScore = window.PlayerManager.getCurrentPlayer()?.score || 0;
+                    UI?.setFinalScore(errorFallbackScore);
+                }
             }
         }
     }
@@ -795,6 +807,38 @@ async function endSinglePlayerGame() {
             showSinglePlayerResultScreen(finalScore, 'Grund', questionsToPlay.length);
         }
     }
+}
+
+// NEW: Show post-game share screen for anonymous users
+function showPostGameShareScreen(finalScore) {
+    console.log('📊 Showing post-game share screen with score:', finalScore);
+
+    // Hide all other screens
+    const gameScreen = document.getElementById('game-screen');
+    const endScreen = document.getElementById('end-screen');
+    const startScreen = document.getElementById('start-screen');
+
+    if (gameScreen) gameScreen.classList.add('hidden');
+    if (endScreen) endScreen.classList.add('hidden');
+    if (startScreen) startScreen.classList.add('hidden');
+
+    // Show post-game share screen
+    const postGameShare = document.getElementById('post-game-share');
+    if (!postGameShare) {
+        console.error('post-game-share element not found');
+        // Fallback to normal end screen
+        UI?.showEndScreen();
+        return;
+    }
+
+    // Set the final score
+    const postGameFinalScore = document.getElementById('post-game-final-score');
+    if (postGameFinalScore) {
+        postGameFinalScore.textContent = finalScore;
+    }
+
+    // Show the screen
+    postGameShare.classList.remove('hidden');
 }
 
 // Populate pack selection dropdown
