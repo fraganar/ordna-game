@@ -763,25 +763,35 @@ async function endSinglePlayerGame() {
             const playerName = player?.name || currentPlayer?.name || 'Unknown';
             const playerScore = player?.score || 0;
             const playerId = window.getCurrentPlayerId() || 'unknown_player';
+            const isAnonymous = window.isAnonymousUser && window.isAnonymousUser();
 
-            // Delegate to ChallengeSystem for full opponent completion flow
-            await window.ChallengeSystem.acceptChallenge(
-                window.challengeId,
-                playerId,
-                playerName,
-                challengeQuestionScores,
-                playerScore
-            );
+            if (isAnonymous) {
+                // NEW: For anonymous opponents - show result WITHOUT saving first
+                // They can choose to login and save after seeing result
+                await window.ChallengeSystem.showChallengeResultForAnonymous(
+                    window.challengeId,
+                    playerScore
+                );
+            } else {
+                // Authenticated opponent - save and show result (existing behavior)
+                await window.ChallengeSystem.acceptChallenge(
+                    window.challengeId,
+                    playerId,
+                    playerName,
+                    challengeQuestionScores,
+                    playerScore
+                );
+            }
 
         } catch (error) {
             console.error('Failed to complete challenge:', error);
-            UI?.showError('Kunde inte spara resultat. Försök igen.');
+            UI?.showError('Kunde inte visa resultat. Försök igen.');
             UI?.showEndScreen();
 
             // Använd PlayerManager för säker score-hämtning
             const player = window.PlayerManager?.getCurrentPlayer();
             const errorFallbackScore = player?.score || 0;
-            
+
             const singlePlayerFinal = UI?.get('singlePlayerFinal');
             const finalScoreboard = UI?.get('finalScoreboard');
             if (singlePlayerFinal) singlePlayerFinal.classList.remove('hidden');

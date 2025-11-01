@@ -256,7 +256,178 @@ class ChallengeSystem {
             throw error;
         }
     }
-    
+
+    // Show challenge result for anonymous users (without saving)
+    async showChallengeResultForAnonymous(challengeId, opponentScore) {
+        try {
+            // Load challenge data to get challenger info
+            const challenge = await FirebaseAPI.getChallenge(challengeId);
+
+            if (!challenge) {
+                throw new Error('Challenge not found');
+            }
+
+            const challengerScore = challenge.challenger?.totalScore || 0;
+            const challengerName = challenge.challenger?.name || 'Utmanare';
+
+            // Determine winner
+            let resultMessage, resultClass;
+            if (opponentScore > challengerScore) {
+                resultMessage = 'Du vann!';
+                resultClass = 'text-success';
+            } else if (opponentScore < challengerScore) {
+                resultMessage = `${challengerName} vann!`;
+                resultClass = 'text-danger';
+            } else {
+                resultMessage = 'Oavgjort!';
+                resultClass = 'text-slate-700';
+            }
+
+            // Show result view with login prompt
+            this.showAnonymousOpponentResultView(
+                challengerName,
+                challengerScore,
+                opponentScore,
+                resultMessage,
+                resultClass,
+                challengeId
+            );
+
+        } catch (error) {
+            console.error('Failed to show anonymous result:', error);
+            throw error;
+        }
+    }
+
+    // Display result view for anonymous opponents with login prompt
+    showAnonymousOpponentResultView(challengerName, challengerScore, opponentScore, resultMessage, resultClass, challengeId) {
+        // Hide game screen
+        const gameScreen = document.getElementById('game-screen');
+        if (gameScreen) gameScreen.classList.add('hidden');
+
+        // Get or create result container
+        const endScreen = document.getElementById('end-screen');
+        if (!endScreen) return;
+
+        // Show end screen
+        endScreen.classList.remove('hidden');
+
+        // Build result HTML with login prompt
+        const resultHTML = `
+            <h2 class="text-3xl sm:text-4xl font-bold ${resultClass} mb-4">${resultMessage}</h2>
+            <p class="text-slate-600 mb-8 text-base sm:text-lg">Här är jämförelsen</p>
+
+            <div class="space-y-3 mb-8">
+                <!-- Challenger -->
+                <div class="flex items-center justify-between p-4 bg-slate-100 rounded-lg border-2 border-slate-200">
+                    <div>
+                        <p class="text-sm text-slate-500">Utmanare</p>
+                        <p class="text-xl font-bold text-slate-800">${challengerName}</p>
+                    </div>
+                    <p class="text-2xl font-bold text-slate-700">${challengerScore}p</p>
+                </div>
+
+                <!-- Opponent (You) -->
+                <div class="flex items-center justify-between p-4 bg-slate-100 rounded-lg border-2 ${opponentScore >= challengerScore ? 'border-success' : 'border-slate-200'}">
+                    <div>
+                        <p class="text-sm text-slate-500">Du</p>
+                        <p class="text-xl font-bold text-slate-800">Din poäng</p>
+                    </div>
+                    <p class="text-2xl font-bold ${opponentScore >= challengerScore ? 'text-success' : 'text-slate-700'}">${opponentScore}p</p>
+                </div>
+            </div>
+
+            <!-- Login prompt for anonymous users -->
+            <div class="bg-blue-50 border-l-4 border-blue-400 rounded-lg p-4 mb-6 text-left">
+                <p class="text-base text-slate-700 mb-2">
+                    <strong>🎯 Vill du spela mot fler vänner?</strong>
+                </p>
+                <p class="text-sm text-slate-600">
+                    Logga in för att spara ditt resultat, skapa egna utmaningar och se din spelhistorik.
+                </p>
+            </div>
+
+            <div class="space-y-3">
+                <button id="opponent-result-login-btn" class="w-full bg-gradient-to-r from-magic to-primary text-white font-bold py-4 px-6 rounded-lg text-lg hover:from-primary hover:to-magic-dark transition-colors shadow-md">
+                    🔐 Logga in och spara resultat
+                </button>
+
+                <button id="opponent-result-back-btn" class="w-full bg-slate-200 text-slate-800 font-bold py-3 px-6 rounded-lg text-lg hover:bg-slate-300 transition-colors">
+                    Tillbaka till start
+                </button>
+            </div>
+
+            <p class="text-xs text-slate-500 mt-4">
+                💡 Du kan alltid logga in senare från menyn
+            </p>
+        `;
+
+        // Set content
+        endScreen.innerHTML = `<div class="text-center p-6 sm:p-8 lg:p-12">${resultHTML}</div>`;
+
+        // Add event listeners
+        const loginBtn = document.getElementById('opponent-result-login-btn');
+        const backBtn = document.getElementById('opponent-result-back-btn');
+
+        if (loginBtn) {
+            loginBtn.addEventListener('click', () => this.handleOpponentResultLogin(challengeId));
+        }
+
+        if (backBtn) {
+            backBtn.addEventListener('click', () => {
+                endScreen.classList.add('hidden');
+                const startScreen = document.getElementById('start-screen');
+                if (startScreen) startScreen.classList.remove('hidden');
+
+                // Reset challenge state
+                this.reset();
+
+                // Show info toast
+                if (window.showToast) {
+                    window.showToast('Du kan logga in från menyn för att spara resultat', 'info', 4000);
+                }
+            });
+        }
+    }
+
+    // Handle login from anonymous opponent result view
+    async handleOpponentResultLogin(challengeId) {
+        console.log('🔐 Anonymous opponent wants to login and save result');
+
+        if (!window.showAuthForSharing) {
+            alert('Auth system not available');
+            return;
+        }
+
+        window.showAuthForSharing(async (playerId, playerName) => {
+            console.log('✅ Opponent authenticated, now saving result');
+
+            try {
+                // Get stored game data
+                const player = window.PlayerManager?.getCurrentPlayer();
+                const playerScore = player?.score || 0;
+
+                // Now save the result to Firebase
+                await this.acceptChallenge(
+                    challengeId,
+                    playerId,
+                    playerName,
+                    window.challengeQuestionScores,
+                    playerScore
+                );
+
+                // Show success message
+                if (window.showToast) {
+                    window.showToast('✅ Resultat sparat! Nu kan du skapa egna utmaningar.', 'success', 5000);
+                }
+
+            } catch (error) {
+                console.error('Failed to save opponent result:', error);
+                alert('❌ Kunde inte spara resultat. Försök igen.');
+            }
+        });
+    }
+
     // Load challenge data
     async loadChallenge(challengeId) {
         try {
