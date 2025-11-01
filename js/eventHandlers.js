@@ -420,6 +420,11 @@ async function saveAndShowChallengeLink(playerId = null, playerName = null) {
             postGameShare.classList.add('hidden');
         }
 
+        // Show success toast (same as opponent flow)
+        if (window.showToast) {
+            window.showToast('✅ Resultat sparat! Dina spelade paket har uppdaterats.', 'success', 5000);
+        }
+
         // Show the waiting view with share link
         window.ChallengeSystem.showWaitingForOpponentView(challengeId);
 

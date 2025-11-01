@@ -1144,6 +1144,19 @@ class ChallengeSystem {
                 packId
             );
 
+            // Track played pack for challenger (NEW - same as acceptChallenge does for opponent)
+            if (packId && playerId && window.FirebaseAPI) {
+                try {
+                    await window.FirebaseAPI.updatePlayedPack(playerId, packId, finalScore);
+                    console.log('✅ Played pack tracked for challenger:', packId);
+                } catch (error) {
+                    console.error('Failed to track played pack for challenger:', error);
+                    // Non-blocking error - challenge creation continues
+                }
+            } else if (!packId) {
+                console.log('Blandat läge - trackar inte played pack');
+            }
+
             this.challengeId = challengeId;
             console.log('✅ Challenge saved:', challengeId);
 
