@@ -109,6 +109,35 @@
 
 ![Mockup för subtil färg på "Hör till"-knappar](./docs/images/ide_för_hör_till_knappar.png)
 
+### BL-036: Testa Firebase redirect-flow istället för popup
+- **Kategori:** EXPERIMENT
+- **Stackrank:** 5 (Låg prioritet - nuvarande lösning fungerar bra)
+- **Beskrivning:** Utvärdera om vi bör byta från popup-flow till redirect-flow för FirebaseUI
+- **Nuläge:**
+  - Använder `signInFlow: 'popup'` med custom callback-logik
+  - Vi hämtar namn från Firebase och visar namnprompt
+  - Returnerar `false` och hanterar navigation själva
+  - Behöver `signInSuccessUrl: '#'` för att tysta varning
+- **Alternativ:**
+  - Byta till `signInFlow: 'redirect'`
+  - Låta FirebaseUI hantera navigation med `signInSuccessUrl: '/index.html'`
+  - Returnera `true` från callback
+- **Fördelar med redirect:**
+  - ✅ Följer Firebase standard pattern mer slaviskt
+  - ✅ Ingen varning om saknad URL
+  - ✅ Enklare konfiguration
+- **Nackdelar med redirect:**
+  - ❌ Förlorar custom logik (hämta namn från Firebase före prompt)
+  - ❌ Kan inte visa namnprompt direkt vid login
+  - ❌ Kan inte köra `showAuthForSharing` callback
+  - ❌ Sämre UX - hela sidan redirectar istället för popup
+- **Utvärdering:**
+  - Testa redirect-flow i testmiljö
+  - Jämför UX mot nuvarande popup-flow
+  - Beslut: Behåll popup om inte redirect ger tydlig fördel
+- **Tidsuppskattning:** 1-2 timmar för test och utvärdering
+- **Varför denna item finns:** Varning "No redirect URL has been found" triggas i async callback (commit 95e8b98). Vi tystar den med `signInSuccessUrl: '#'` men bör testa om redirect-flow är bättre långsiktigt.
+
 
 ---
 
