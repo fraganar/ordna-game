@@ -414,6 +414,12 @@ async function saveAndShowChallengeLink(playerId = null, playerName = null) {
         // Save the completed challenge
         const challengeId = await window.ChallengeSystem.saveCompletedChallenge(playerId, playerName);
 
+        // Hide post-game share screen before showing waiting view
+        const postGameShare = document.getElementById('post-game-share');
+        if (postGameShare) {
+            postGameShare.classList.add('hidden');
+        }
+
         // Show the waiting view with share link
         window.ChallengeSystem.showWaitingForOpponentView(challengeId);
 
