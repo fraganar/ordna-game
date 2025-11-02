@@ -202,11 +202,31 @@ class AdminPanel {
 
     async loadPlayers() {
         try {
-            const playersSnapshot = await firebase.firestore().collection('players').get();
+            const db = firebase.firestore();
+            const playersSnapshot = await db.collection('players').get();
             const players = [];
 
+            // Get all challenges once for counting
+            const challengesSnapshot = await db.collection('challenges').get();
+            const challenges = challengesSnapshot.docs.map(doc => doc.data());
+
             playersSnapshot.forEach(doc => {
-                players.push({ id: doc.id, ...doc.data() });
+                const playerData = doc.data();
+                const playerId = playerData.playerId || doc.id;
+
+                // Count challenges for this player
+                const asChallenger = challenges.filter(c => c.challenger?.playerId === playerId).length;
+                const asOpponent = challenges.filter(c => c.opponent?.playerId === playerId).length;
+
+                players.push({
+                    id: doc.id,
+                    ...playerData,
+                    // Override stats with real counts
+                    stats: {
+                        challengesCreated: asChallenger,
+                        challengesPlayed: asOpponent
+                    }
+                });
             });
 
             // Sort by lastSeen (newest first)
@@ -320,6 +340,8 @@ class AdminPanel {
                     ...doc.data()
                 });
             });
+
+            console.log(`📊 Loaded ${this.firebaseData.length} challenges from Firebase`);
 
             // Sort by creation date (newest first)
             // FIX: Use 'created' field, not 'createdAt'
@@ -445,6 +467,18 @@ class AdminPanel {
             container.innerHTML = '<div class="empty-state">Inga challenges att visa</div>';
             return;
         }
+
+        // Add summary header
+        const summaryDiv = document.createElement('div');
+        summaryDiv.style.cssText = 'padding: 10px; background: #f0f9ff; border-left: 4px solid #2196F3; border-radius: 4px; margin-bottom: 15px;';
+        summaryDiv.innerHTML = `
+            <strong>📊 Visar ${this.firebaseData.length} challenges</strong>
+            <span style="color: #666; margin-left: 10px;">
+                (${this.firebaseData.filter(c => c.opponent?.totalScore !== undefined).length} slutförda,
+                ${this.firebaseData.filter(c => c.opponent?.totalScore === undefined).length} väntande)
+            </span>
+        `;
+        container.appendChild(summaryDiv);
 
         this.firebaseData.forEach(challenge => {
             const challengeDiv = document.createElement('div');
