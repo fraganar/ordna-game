@@ -252,11 +252,16 @@ class AdminPanel {
                     <td>${created}</td>
                     <td>${lastSeen}</td>
                     <td>Skapade: ${stats.challengesCreated || 0}, Spelade: ${stats.challengesPlayed || 0}</td>
-                    <td>
+                    <td style="display: flex; gap: 5px;">
                         <button onclick="window.adminPanel.quickSwitchPlayer('${playerId}')"
-                                class="action-btn"
+                                class="action-btn btn-primary"
                                 style="padding: 2px 8px; font-size: 11px;">
                             Använd
+                        </button>
+                        <button onclick="window.adminPanel.deletePlayer('${playerId}', '${player.name || 'Okänd'}')"
+                                class="action-btn btn-danger"
+                                style="padding: 2px 8px; font-size: 11px;">
+                            Ta bort
                         </button>
                     </td>
                 </tr>
@@ -317,9 +322,10 @@ class AdminPanel {
             });
 
             // Sort by creation date (newest first)
+            // FIX: Use 'created' field, not 'createdAt'
             this.firebaseData.sort((a, b) => {
-                const dateA = a.createdAt?.toDate ? a.createdAt.toDate() : new Date(0);
-                const dateB = b.createdAt?.toDate ? b.createdAt.toDate() : new Date(0);
+                const dateA = a.created?.toDate ? a.created.toDate() : new Date(0);
+                const dateB = b.created?.toDate ? b.created.toDate() : new Date(0);
                 return dateB - dateA;
             });
 
@@ -667,29 +673,22 @@ class AdminPanel {
         // Calculate statistics
         const localStorageCount = localStorage.length;
         const challengeCount = this.firebaseData.length;
-        const pendingChallenges = this.firebaseData.filter(c => c.opponentScore === undefined).length;
-        const completedChallenges = this.firebaseData.filter(c => c.opponentScore !== undefined).length;
 
-        // Count local challenges
-        let localChallengeCount = 0;
-        for (let i = 0; i < localStorage.length; i++) {
-            const key = localStorage.key(i);
-            if (key.startsWith('challenge_')) {
-                localChallengeCount++;
-            }
-        }
+        // FIX: Use correct field structure (opponent.totalScore, not opponentScore)
+        const pendingChallenges = this.firebaseData.filter(c =>
+            c.opponent?.totalScore === undefined).length;
+        const completedChallenges = this.firebaseData.filter(c =>
+            c.opponent?.totalScore !== undefined).length;
 
-        // Get player info
+        // Get player info from Firebase Auth (not just localStorage)
         const playerName = localStorage.getItem('playerName');
+        const playerId = window.getCurrentPlayerId ? window.getCurrentPlayerId() : 'Not authenticated';
+        const isDummy = playerName && playerName.startsWith('Spelare_');
 
         statsGrid.innerHTML = `
             <div class="stat-card">
                 <div class="stat-value">${localStorageCount}</div>
                 <div class="stat-label">LocalStorage-poster</div>
-            </div>
-            <div class="stat-card">
-                <div class="stat-value">${localChallengeCount}</div>
-                <div class="stat-label">Lokala challenges</div>
             </div>
             <div class="stat-card">
                 <div class="stat-value">${challengeCount}</div>
@@ -705,7 +704,11 @@ class AdminPanel {
             </div>
             <div class="stat-card">
                 <div class="stat-value">${playerName || 'Ej satt'}</div>
-                <div class="stat-label">Spelarnamn</div>
+                <div class="stat-label">Spelarnamn ${isDummy ? '(Dummy)' : ''}</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-value" style="font-size: 0.9rem; word-break: break-all;">${playerId}</div>
+                <div class="stat-label">Player ID</div>
             </div>
         `;
     }
@@ -721,11 +724,6 @@ class AdminPanel {
             return;
         }
 
-        if (!playerId.startsWith('player_')) {
-            resultDiv.innerHTML = '<div style="color: red;">⚠️ Ogiltigt format. Player ID ska börja med "player_"</div>';
-            return;
-        }
-
         try {
             resultDiv.innerHTML = '<div style="color: blue;">⏳ Verifierar Player ID...</div>';
 
@@ -734,10 +732,11 @@ class AdminPanel {
                 throw new Error('Firebase är inte tillgängligt');
             }
 
+            // Verify player exists in Firebase (works for both old and new format)
             const playerData = await FirebaseAPI.verifyPlayerId(playerId);
 
             if (playerData) {
-                // Save to localStorage
+                // Save to localStorage - This will work for both old player_xxx and new Firebase UIDs
                 localStorage.setItem('playerId', playerData.playerId || playerId);
                 localStorage.setItem('playerName', playerData.name || 'Okänd spelare');
 
@@ -934,15 +933,103 @@ class AdminPanel {
         }
     }
 
+    // Delete a player from Firebase (with all related data)
+    async deletePlayer(playerId, playerName) {
+        // Double-confirm (critical operation)
+        if (!confirm(`⚠️ Vill du verkligen ta bort spelaren "${playerName}"?\n\nDetta kommer att radera:\n- Spelarprofilen\n- Alla spelade paket (playedPacks subcollection)\n- PlayerIds från challenges (namn behålls för historik)\n\nDetta kan INTE ångras!`)) {
+            return;
+        }
+
+        if (!confirm(`Är du HELT säker? Detta är en permanent operation för "${playerName}".`)) {
+            return;
+        }
+
+        try {
+            const db = firebase.firestore();
+
+            // 1. Delete playedPacks subcollection (batch delete)
+            const packsSnapshot = await db.collection('players')
+                .doc(playerId)
+                .collection('playedPacks')
+                .get();
+
+            const batch = db.batch();
+            packsSnapshot.docs.forEach(doc => {
+                batch.delete(doc.ref);
+            });
+            await batch.commit();
+            console.log(`✅ Deleted ${packsSnapshot.size} played packs for ${playerId}`);
+
+            // 2. Delete player document
+            await db.collection('players').doc(playerId).delete();
+            console.log(`✅ Deleted player document: ${playerId}`);
+
+            // 3. Update challenges - remove playerId references but keep names for history
+            // (This is optional - we could also leave challenges as-is since they're historical)
+            const challengesAsChallenger = await db.collection('challenges')
+                .where('challenger.playerId', '==', playerId)
+                .get();
+
+            const challengesAsOpponent = await db.collection('challenges')
+                .where('opponent.playerId', '==', playerId)
+                .get();
+
+            const updateBatch = db.batch();
+            challengesAsChallenger.docs.forEach(doc => {
+                updateBatch.update(doc.ref, {
+                    'challenger.playerId': null,
+                    'challenger.deleted': true
+                });
+            });
+            challengesAsOpponent.docs.forEach(doc => {
+                updateBatch.update(doc.ref, {
+                    'opponent.playerId': null,
+                    'opponent.deleted': true
+                });
+            });
+            await updateBatch.commit();
+            console.log(`✅ Updated ${challengesAsChallenger.size + challengesAsOpponent.size} challenges`);
+
+            alert(`✅ Spelare "${playerName}" har tagits bort från Firebase!`);
+
+            // Refresh displays
+            await this.loadPlayers();
+            await this.loadFirebaseData();
+
+        } catch (error) {
+            console.error('Failed to delete player:', error);
+            alert(`❌ Kunde inte radera spelare: ${error.message}`);
+        }
+    }
+
+    // Reset current player from localStorage (for testing new account flow)
+    resetCurrentPlayer() {
+        if (confirm('🧪 Rensa aktuell spelare från localStorage?\n\nDetta rensar:\n- playerId\n- playerName\n\nNästa besök på huvudsidan → tvingar nytt konto-flöde.')) {
+            const oldPlayerId = localStorage.getItem('playerId');
+            const oldPlayerName = localStorage.getItem('playerName');
+
+            localStorage.removeItem('playerId');
+            localStorage.removeItem('playerName');
+
+            console.log('🧪 Test reset:', { oldPlayerId, oldPlayerName });
+
+            alert(`✅ Rensat!\n\nTidigare: ${oldPlayerName} (${oldPlayerId})\n\n→ Gå till huvudsidan för att skapa nytt konto.`);
+
+            // Refresh statistics to show changes
+            this.refreshData();
+        }
+    }
+
     // Load played packs from Firebase
     async loadPlayedPacks() {
         const content = document.getElementById('playedPacksContent');
         content.innerHTML = '<p>Laddar...</p>';
 
         try {
-            const playerId = localStorage.getItem('playerId');
+            // FIX: Use getCurrentPlayerId() instead of localStorage
+            const playerId = window.getCurrentPlayerId ? window.getCurrentPlayerId() : null;
             if (!playerId) {
-                content.innerHTML = '<p style="color: orange;">⚠️ Ingen playerId hittades i localStorage</p>';
+                content.innerHTML = '<p style="color: orange;">⚠️ Ingen playerId (ej autentiserad med Firebase Auth)</p>';
                 return;
             }
 
