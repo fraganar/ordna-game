@@ -48,10 +48,10 @@
                     Vi samlar bara in det som behövs för att spelet ska fungera:
                 </p>
                 <ul class="list-disc list-inside text-slate-700 space-y-2 leading-relaxed">
-                    <li><strong>Spelarnamn:</strong> Det namn du väljer att använda i spelet</li>
-                    <li><strong>Email:</strong> För att identifiera ditt konto mellan enheter</li>
-                    <li><strong>Speldata:</strong> Dina poäng, utmaningar och vilka frågepaket du spelat</li>
-                    <li><strong>Autentiseringsdata:</strong> Token från Google (om du loggar in med Google)</li>
+                    <li><strong>Spelarnamn:</strong> Det namn du väljer att använda i spelet (lagras i vår databas)</li>
+                    <li><strong>Email och autentiseringsdata:</strong> Hanteras av Firebase Authentication (Google) för att säkra ditt konto. Email-adressen lagras INTE i vår appdatabas utan endast i Firebase Authentication-tjänsten som körs från USA.</li>
+                    <li><strong>Speldata:</strong> Dina poäng, utmaningar och vilka frågepaket du spelat (lagras i vår databas)</li>
+                    <li><strong>Unik identifierare (User ID):</strong> En anonym kod från Firebase Authentication som kopplar din speldata till dig, utan att exponera din email</li>
                 </ul>
                 <p class="text-slate-700 leading-relaxed mt-3">
                     Vi samlar <strong>INTE</strong> in: IP-adresser, platsdata, cookies för annonsering,
@@ -61,10 +61,43 @@
 
             <section>
                 <h2 class="text-2xl font-bold text-slate-800 mb-3">Var lagras datan?</h2>
-                <p class="text-slate-700 leading-relaxed">
-                    All speldata lagras i <strong>Google Firebase</strong> (servrar i EU).
-                    Firebase följer GDPR och har säkra servrar. Din data är skyddad med Firebase Authentication.
-                </p>
+                <div class="text-slate-700 leading-relaxed space-y-3">
+                    <p>
+                        <strong>Speldata (namn, poäng, utmaningar):</strong> Lagras i Google Firebase Firestore-databas.
+                    </p>
+                    <p>
+                        <strong>Autentiseringsdata (email, lösenord):</strong> Hanteras av <strong>Firebase Authentication</strong>
+                        som är en separat tjänst som körs från USA. Google agerar som "databehandlare" (data processor)
+                        enligt GDPR och följer säkerhetsstandard och Standard Contractual Clauses (SCCs) för dataöverföring.
+                    </p>
+                    <p>
+                        <strong>Viktig information:</strong> Din email-adress delas INTE med andra spelare eller lagras i vår appdatabas.
+                        Vi använder endast en anonym identifierare (User ID) för att koppla din speldata till ditt konto.
+                    </p>
+                </div>
+            </section>
+
+            <section>
+                <h2 class="text-2xl font-bold text-slate-800 mb-3">Tredjepartstjänster</h2>
+                <div class="text-slate-700 leading-relaxed space-y-3">
+                    <p>
+                        Vi använder <strong>Firebase Authentication</strong> (Google) för att hantera inloggning och kontosäkerhet.
+                        Firebase är en databehandlare som agerar på våra instruktioner enligt GDPR.
+                    </p>
+                    <p>
+                        <strong>Vad Firebase Authentication behandlar:</strong>
+                    </p>
+                    <ul class="list-disc list-inside text-slate-700 space-y-2 leading-relaxed ml-4">
+                        <li>Email-adress (för inloggning med email/lösenord)</li>
+                        <li>Lösenord (krypterat)</li>
+                        <li>Google-kontoinformation (om du loggar in med Google)</li>
+                        <li>IP-adress och user agent (för säkerhet och missbruksskydd)</li>
+                    </ul>
+                    <p>
+                        Firebase Authentication-tjänsten körs från datacenter i USA. För mer information, se
+                        <a href="https://firebase.google.com/support/privacy" target="_blank" class="text-primary hover:underline">Firebase Privacy Policy</a>.
+                    </p>
+                </div>
             </section>
 
             <section>
