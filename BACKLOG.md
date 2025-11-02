@@ -14,9 +14,10 @@
 3. **BL-026** (45) - Admin-panel: Manuell playerId-redigering
 4. **BL-025** (40) - Account Recovery UI
 5. **BL-033** (25) - Progressbar fungerar inte i challenge-läge som opponent
-6. **BL-032** (15) - Admin-panel visar inga challenges
-7. **BL-022** (12) - Lägg till browser fallbacks för moderna CSS-effekter
-8. **BL-024** (10) - Redesigna "Hör till"-knappar enligt ny mockup
+6. **BL-037** (20) - Varna/blockera login under pågående spel
+7. **BL-032** (15) - Admin-panel visar inga challenges
+8. **BL-022** (12) - Lägg till browser fallbacks för moderna CSS-effekter
+9. **BL-024** (10) - Redesigna "Hör till"-knappar enligt ny mockup
 
 ---
 
@@ -138,6 +139,11 @@
 - **Tidsuppskattning:** 1-2 timmar för test och utvärdering
 - **Varför denna item finns:** Varning "No redirect URL has been found" triggas i async callback (commit 95e8b98). Vi tystar den med `signInSuccessUrl: '#'` men bör testa om redirect-flow är bättre långsiktigt.
 
+### BL-037: Login under pågående spel avbryter spelet
+- **Kategori:** UX
+- **Stackrank:** 20
+- **Beskrivning:** Om användare loggar in från hamburgarmenyn medan ett spel pågår, hamnar de tillbaka på startsidan utan varning och förlorar sitt pågående spel.
+- **Impact:** Dålig användarupplevelse - oväntat beteende kan frustrera användare
 
 ---
 
