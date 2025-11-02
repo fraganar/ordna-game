@@ -244,7 +244,14 @@ class AdminPanel {
 
     displayPlayers(players) {
         let playersHtml = `
-            <h3>Spelare (${players.length})</h3>
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px;">
+                <h3 style="margin: 0;">Spelare (${players.length})</h3>
+                <a href="https://console.firebase.google.com/u/0/project/ordna-game/authentication/users"
+                   target="_blank"
+                   style="color: #007bff; text-decoration: none; font-size: 14px;">
+                    🔗 Firebase Authentication →
+                </a>
+            </div>
             <table class="data-table">
                 <thead>
                     <tr>
@@ -1033,6 +1040,78 @@ class AdminPanel {
         } catch (error) {
             console.error('Failed to delete player:', error);
             alert(`❌ Kunde inte radera spelare: ${error.message}`);
+        }
+    }
+
+    // Delete orphaned challenges (challenges where neither challenger nor opponent exists in players collection)
+    async deleteOrphanedChallenges() {
+        if (!confirm('🧹 Radera alla challenges där varken challenger eller opponent finns i players-tabellen?\n\nDetta tar bort test-challenges som inte hör till några aktiva spelare.\n\nFortsätt?')) {
+            return;
+        }
+
+        try {
+            const db = firebase.firestore();
+
+            // 1. Get all player IDs
+            const playersSnapshot = await db.collection('players').get();
+            const validPlayerIds = new Set(playersSnapshot.docs.map(doc => doc.id));
+            console.log(`📊 Found ${validPlayerIds.size} valid players`);
+
+            // 2. Get all challenges
+            const challengesSnapshot = await db.collection('challenges').get();
+            console.log(`📊 Found ${challengesSnapshot.size} total challenges`);
+
+            // 3. Find orphaned challenges
+            const orphanedChallenges = [];
+            challengesSnapshot.forEach(doc => {
+                const challenge = doc.data();
+                const challengerId = challenge.challenger?.playerId;
+                const opponentId = challenge.opponent?.playerId;
+
+                // Challenge is orphaned if BOTH challenger AND opponent are missing/invalid
+                const challengerExists = challengerId && validPlayerIds.has(challengerId);
+                const opponentExists = opponentId && validPlayerIds.has(opponentId);
+
+                if (!challengerExists && !opponentExists) {
+                    orphanedChallenges.push(doc.id);
+                }
+            });
+
+            if (orphanedChallenges.length === 0) {
+                alert('✅ Inga orphaned challenges hittades. Allt är redan städat!');
+                return;
+            }
+
+            // 4. Confirm deletion
+            if (!confirm(`🗑️ Hittade ${orphanedChallenges.length} orphaned challenges.\n\nRadera dessa nu?`)) {
+                return;
+            }
+
+            // 5. Delete in batches (Firestore batch limit = 500)
+            const batchSize = 500;
+            let deletedCount = 0;
+
+            for (let i = 0; i < orphanedChallenges.length; i += batchSize) {
+                const batch = db.batch();
+                const batchIds = orphanedChallenges.slice(i, i + batchSize);
+
+                batchIds.forEach(challengeId => {
+                    batch.delete(db.collection('challenges').doc(challengeId));
+                });
+
+                await batch.commit();
+                deletedCount += batchIds.length;
+                console.log(`✅ Deleted batch ${Math.floor(i / batchSize) + 1}: ${batchIds.length} challenges`);
+            }
+
+            alert(`✅ Raderade ${deletedCount} orphaned challenges!`);
+
+            // Refresh displays
+            await this.loadFirebaseData();
+
+        } catch (error) {
+            console.error('Failed to delete orphaned challenges:', error);
+            alert(`❌ Kunde inte radera challenges: ${error.message}`);
         }
     }
 

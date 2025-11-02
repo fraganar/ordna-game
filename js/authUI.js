@@ -32,6 +32,12 @@ const uiConfig = {
 
             // Returning users: reload immediately
             // Name restoration from Firebase happens in app.js syncPlayerToFirebase()
+
+            // Save authProvider before reload (we know user is authenticated here)
+            const authProvider = user.isAnonymous ? 'anonymous' :
+                user.providerData?.[0]?.providerId || 'unknown';
+            localStorage.setItem('authProvider', authProvider);
+
             hideAuthDialog();
             window.location.reload();
 
@@ -219,11 +225,23 @@ function showNameInput(playerId, isNewUser = true) {
 
 /**
  * Save player name to localStorage and Firebase
+ * Also saves authProvider from current auth state
  * @param {string} playerId - User's Firebase UID
  * @param {string} name - Player name
  */
 function saveName(playerId, name) {
     localStorage.setItem('playerName', name);
+
+    // Save authProvider from current auth state (we're in callback, user is authenticated)
+    if (firebase && firebase.auth) {
+        const user = firebase.auth().currentUser;
+        if (user) {
+            const authProvider = user.isAnonymous ? 'anonymous' :
+                user.providerData?.[0]?.providerId || 'unknown';
+            localStorage.setItem('authProvider', authProvider);
+        }
+    }
+
     if (window.FirebaseAPI) {
         window.FirebaseAPI.upsertPlayer(playerId, name);
     }

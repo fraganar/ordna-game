@@ -13,11 +13,12 @@
 2. **BL-009** (60) - Poänganimering före totalpoäng
 3. **BL-026** (45) - Admin-panel: Manuell playerId-redigering
 4. **BL-025** (40) - Account Recovery UI
-5. **BL-033** (25) - Progressbar fungerar inte i challenge-läge som opponent
-6. **BL-037** (20) - Varna/blockera login under pågående spel
-7. **BL-032** (15) - Admin-panel visar inga challenges
-8. **BL-022** (12) - Lägg till browser fallbacks för moderna CSS-effekter
-9. **BL-024** (10) - Redesigna "Hör till"-knappar enligt ny mockup
+5. **BL-038** (30) - Ta bort oanvänt stats-fält från Firebase players
+6. **BL-033** (25) - Progressbar fungerar inte i challenge-läge som opponent
+7. **BL-037** (20) - Varna/blockera login under pågående spel
+8. **BL-032** (15) - Admin-panel visar inga challenges
+9. **BL-022** (12) - Lägg till browser fallbacks för moderna CSS-effekter
+10. **BL-024** (10) - Redesigna "Hör till"-knappar enligt ny mockup
 
 ---
 
@@ -144,6 +145,35 @@
 - **Stackrank:** 20
 - **Beskrivning:** Om användare loggar in från hamburgarmenyn medan ett spel pågår, hamnar de tillbaka på startsidan utan varning och förlorar sitt pågående spel.
 - **Impact:** Dålig användarupplevelse - oväntat beteende kan frustrera användare
+
+### BL-038: Ta bort oanvänt stats-fält från Firebase players
+- **Kategori:** REFACTOR
+- **Stackrank:** 30
+- **Beskrivning:** `players.stats.challengesCreated`, `challengesPlayed` och `totalScore` uppdateras aldrig och är misleading. Admin-panelen räknar redan dessa värden i realtid från challenges collection.
+- **Implementation:**
+  1. **Ta bort stats från nya spelare:**
+     - `firebase-config.js` rad 220-230: Ta bort `stats`-objektet från `upsertPlayer()`
+  2. **Rensa befintliga stats från Firebase:**
+     - Lägg till migration-funktion i `adminPanel.js`: `cleanupPlayerStats()`
+     - Batch-radera `stats`-fältet från alla befintliga spelare
+     - Lägg till knapp i `admin.html` (Test Environment-sektionen): "🧹 Rensa stats-fält från alla spelare"
+  3. **Ta bort fallback:**
+     - `adminPanel.js` rad 265: Ta bort `const stats = player.stats || {}`
+- **Vad påverkas INTE:**
+  - `challenge.challenger.totalScore` - Behålls (används för challenge-resultat)
+  - `challenge.opponent.totalScore` - Behålls (används för challenge-resultat)
+  - `PlayerManager.totalScore` - Behålls (spellogik)
+- **Säkerhet:**
+  - Admin-panelen räknar redan challenges i realtid (sedan tidigare fix)
+  - Ingen annan kod använder `players.stats`
+  - Migration-knappen kräver dubbel-confirm
+- **Testplan:**
+  1. Gör kodändringar
+  2. Skapa ny spelare → Verifiera att stats-fält INTE skapas
+  3. I admin-panelen: Klicka "🧹 Rensa stats-fält från alla spelare"
+  4. Verifiera i Firebase Console att stats-fält är borta
+  5. Verifiera att "Skapade/Spelade" fortfarande visas korrekt
+- **Tidsuppskattning:** 10-15 minuter
 
 ---
 

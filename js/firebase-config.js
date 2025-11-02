@@ -211,17 +211,27 @@ const FirebaseAPI = {
 
             if (doc.exists) {
                 // Update existing player
-                await playerRef.update({
+                const updateData = {
                     name: playerName,
                     lastSeen: new Date()
-                });
+                };
+
+                // Only update authProvider if we have it in localStorage
+                const authProvider = localStorage.getItem('authProvider');
+                if (authProvider) {
+                    updateData.authProvider = authProvider;
+                }
+
+                await playerRef.update(updateData);
             } else {
                 // Create new player
+                const authProvider = localStorage.getItem('authProvider') || 'unknown';
                 await playerRef.set({
                     playerId: playerId,
                     name: playerName,
                     created: new Date(),
                     lastSeen: new Date(),
+                    authProvider: authProvider,
                     stats: {
                         challengesCreated: 0,
                         challengesPlayed: 0,
@@ -463,12 +473,22 @@ async function ensureAuthUser() {
             if (user) {
                 // Already signed in (from previous session)
                 console.log('✅ Auth user found:', user.uid, user.isAnonymous ? '(anonymous)' : '(permanent)');
+
+                // Save authProvider to localStorage
+                const authProvider = user.isAnonymous ? 'anonymous' :
+                    user.providerData?.[0]?.providerId || 'unknown';
+                localStorage.setItem('authProvider', authProvider);
+
                 resolve(user.uid);
             } else {
                 // Sign in anonymously
                 try {
                     const credential = await auth.signInAnonymously();
                     console.log('✅ Anonymous sign-in successful:', credential.user.uid);
+
+                    // Save anonymous authProvider to localStorage
+                    localStorage.setItem('authProvider', 'anonymous');
+
                     resolve(credential.user.uid);
                 } catch (error) {
                     console.error('❌ Anonymous sign-in failed:', error);
@@ -495,12 +515,39 @@ function getCurrentPlayerId() {
     return user ? user.uid : null;
 }
 
+/**
+ * Get current auth provider type
+ * Returns raw provider ID like "google.com", "password", "anonymous", or "unknown"
+ * @returns {string} Provider ID
+ */
+function getAuthProvider() {
+    if (!firebaseInitialized || !auth) {
+        return 'unknown';
+    }
+
+    const user = auth.currentUser;
+    if (!user) {
+        return 'unknown';
+    }
+
+    if (user.isAnonymous) {
+        return 'anonymous';
+    }
+
+    if (user.providerData && user.providerData.length > 0) {
+        return user.providerData[0].providerId;
+    }
+
+    return 'unknown';
+}
+
 // Export FirebaseAPI to window for global access
 window.FirebaseAPI = FirebaseAPI;
 
 // Export auth helpers for global access
 window.ensureAuthUser = ensureAuthUser;
 window.getCurrentPlayerId = getCurrentPlayerId;
+window.getAuthProvider = getAuthProvider;
 
 // Initialize Firebase when script loads
 initializeFirebase();
