@@ -16,7 +16,7 @@ function getAuthUI() {
 // FirebaseUI configuration
 const uiConfig = {
     callbacks: {
-        signInSuccessWithAuthResult: async (authResult) => {
+        signInSuccessWithAuthResult: (authResult) => {
             // User signed in successfully - now has permanent account
             const user = authResult.user;
             const playerId = user.uid;
@@ -24,41 +24,15 @@ const uiConfig = {
 
             console.log('✅ User authenticated:', playerId, isNewUser ? '(new user)' : '(existing user)');
 
-            // NEW: Fetch name from Firebase FIRST (for returning users)
-            let playerName = null;
-            if (!isNewUser && window.FirebaseAPI) {
-                try {
-                    const firebasePlayer = await FirebaseAPI.getPlayer(playerId);
-                    if (firebasePlayer && firebasePlayer.name && !isDummyName(firebasePlayer.name)) {
-                        playerName = firebasePlayer.name;
-                        // Save to localStorage immediately
-                        localStorage.setItem('playerName', playerName);
-                        if (window.PlayerManager) {
-                            window.PlayerManager.setPlayerName(playerName);
-                        }
-                        console.log('✅ Restored name from Firebase:', playerName);
-                    }
-                } catch (error) {
-                    console.error('Failed to fetch player from Firebase:', error);
-                }
+            // Only show name input for BRAND NEW Firebase accounts
+            if (isNewUser) {
+                showNameInput(playerId, true);
+                return false; // Don't reload yet
             }
 
-            // Check if user needs to set a name
-            if (!playerName) {
-                // No name in Firebase or new user - show name input
-                const currentName = localStorage.getItem('playerName');
-                if (isNewUser || !currentName || isDummyName(currentName)) {
-                    showNameInput(playerId, isNewUser);
-                    return false; // Don't reload yet
-                }
-            }
-
-            // User has name - proceed
+            // Returning users: reload immediately
+            // Name restoration from Firebase happens in app.js syncPlayerToFirebase()
             hideAuthDialog();
-
-            // REMOVED: Welcome toast - conflicts with "Resultat sparat!" toast
-            // Users get feedback from the "Resultat sparat!" message instead
-
             window.location.reload();
 
             return false; // Don't redirect
@@ -142,9 +116,6 @@ const uiConfig = {
 
     // Use popup instead of redirect (better for PWA/WebView)
     signInFlow: 'popup',
-
-    // Suppress FirebaseUI "No redirect URL" warning
-    signInSuccessUrl: '#',
 
     // Enable account chooser to help with provider conflicts
     credentialHelper: firebaseui.auth.CredentialHelper.GOOGLE_YOLO,
@@ -435,39 +406,47 @@ function showAuthForSharing(onSuccess) {
 
         console.log('✅ User authenticated for sharing:', playerId, isNewUser ? '(new user)' : '(existing user)');
 
-        // NEW: Fetch name from Firebase FIRST (for returning users)
-        let playerName = null;
-        if (!isNewUser && window.FirebaseAPI) {
-            try {
-                const firebasePlayer = await FirebaseAPI.getPlayer(playerId);
-                if (firebasePlayer && firebasePlayer.name && !isDummyName(firebasePlayer.name)) {
-                    playerName = firebasePlayer.name;
-                    localStorage.setItem('playerName', playerName);
-                    if (window.PlayerManager) {
-                        window.PlayerManager.setPlayerName(playerName);
-                    }
-                    console.log('✅ Restored name from Firebase for sharing:', playerName);
-                }
-            } catch (error) {
-                console.error('Failed to fetch player from Firebase:', error);
-            }
+        // Only show name input for BRAND NEW Firebase accounts
+        if (isNewUser) {
+            showNameInputForSharing(playerId, true);
+            return false;
         }
 
-        // Check if we need to ask for name
-        if (!playerName) {
-            const currentName = localStorage.getItem('playerName');
-            if (!currentName || isDummyName(currentName)) {
-                showNameInputForSharing(playerId, isNewUser);
+        // Returning users: Fetch name from Firebase (REQUIRED - no fallback)
+        let playerName = null;
+
+        if (!window.FirebaseAPI) {
+            console.error('❌ FirebaseAPI not available');
+            alert('Firebase är inte tillgängligt. Ladda om sidan och försök igen.');
+            // Restore original callback before returning
+            uiConfig.callbacks.signInSuccessWithAuthResult = originalCallback;
+            return false;
+        }
+
+        try {
+            console.log('🔍 Fetching name from Firebase for sharing flow...');
+            const firebasePlayer = await FirebaseAPI.getPlayer(playerId);
+            if (firebasePlayer?.name && !isDummyName(firebasePlayer.name)) {
+                playerName = firebasePlayer.name;
+                localStorage.setItem('playerName', playerName);
+                console.log('✅ Restored name from Firebase for sharing:', playerName);
+            } else {
+                // User exists in Firebase but has no real name - should not happen
+                console.error('❌ No valid name in Firebase for returning user');
+                alert('Kunde inte hitta ditt namn i databasen. Kontakta support.');
+                // Restore original callback before returning
+                uiConfig.callbacks.signInSuccessWithAuthResult = originalCallback;
                 return false;
             }
-            playerName = currentName;
+        } catch (error) {
+            console.error('❌ Failed to fetch player from Firebase:', error);
+            alert('Kunde inte hämta din data från servern. Försök igen.');
+            // Restore original callback before returning
+            uiConfig.callbacks.signInSuccessWithAuthResult = originalCallback;
+            return false;
         }
 
-        // User has name - execute sharing callback
         hideAuthDialog();
-
-        // REMOVED: Welcome toast - conflicts with "Resultat sparat!" toast
-        // Users get feedback from the success message when challenge is saved
 
         if (window._authSharingCallback) {
             window._authSharingCallback(playerId, playerName);

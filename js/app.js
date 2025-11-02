@@ -98,14 +98,35 @@ class App {
 
         console.log('✅ Player initialized with Auth UID:', playerId);
 
+        // Check if user is authenticated (not anonymous)
+        const isAnonymous = window.isAnonymousUser ? window.isAnonymousUser() : true;
+
         // Get player name from localStorage
         let playerName = localStorage.getItem('playerName');
 
+        // For AUTHENTICATED users: Fetch from Firebase BEFORE creating dummy name
+        // This ensures returning users get their real name after logout/login
+        if (!isAnonymous && !playerName && window.FirebaseAPI) {
+            try {
+                console.log('🔍 Authenticated user with no local name - fetching from Firebase...');
+                const firebasePlayer = await FirebaseAPI.getPlayer(playerId);
+                if (firebasePlayer?.name && !isDummyName(firebasePlayer.name)) {
+                    playerName = firebasePlayer.name;
+                    localStorage.setItem('playerName', playerName);
+                    console.log('✅ Restored name from Firebase:', playerName);
+                }
+            } catch (error) {
+                console.error('Failed to fetch player from Firebase:', error);
+                // Continue with dummy name creation below
+            }
+        }
+
+        // Only create dummy name if still no name (anonymous users or Firebase had no name)
         if (!playerName) {
-            // Create unique default name with timestamp
             const timestamp = Date.now().toString().slice(-5);
             playerName = `Spelare_${timestamp}`;
             localStorage.setItem('playerName', playerName);
+            console.log('📝 Created dummy name:', playerName);
         }
 
         // Update menu player info
