@@ -956,9 +956,19 @@ async function initializeGame() {
     // Process questions and filter by selected packs
     const processedQuestions = processQuestions(allQuestions);
     questionsToPlay = processedQuestions.filter(q => selectedPacks.includes(q.pack));
-    
+
     if (questionsToPlay.length === 0) {
         questionsToPlay = [...processedQuestions];
+    }
+
+    // Filter out vilken-frågor in multiplayer mode (they don't work with turn-based gameplay)
+    if (playerCount > 1) {
+        const beforeFilter = questionsToPlay.length;
+        questionsToPlay = questionsToPlay.filter(q => q.typ !== 'vilken');
+        const removed = beforeFilter - questionsToPlay.length;
+        if (removed > 0) {
+            console.log(`Filtered out ${removed} vilken-questions for multiplayer mode`);
+        }
     }
     
     UI?.showGameScreen();
@@ -1141,13 +1151,17 @@ function loadQuestion() {
 
     // Set instructions
     if (question.typ === 'ordna') {
-        UI.setQuestionInstruction(window.PlayerManager?.isSinglePlayerMode() ? 
+        UI.setQuestionInstruction(window.PlayerManager?.isSinglePlayerMode() ?
             'Klicka på alternativen i rätt ordning. Ett fel och du förlorar frågans poäng.' :
             'Klicka på alternativen i rätt ordning.');
-    } else { // 'hör_till'
+    } else if (question.typ === 'hör_till') {
         UI.setQuestionInstruction(window.PlayerManager?.isSinglePlayerMode() ?
             'Bedöm varje alternativ. Ett fel och du förlorar frågans poäng.' :
             'Bedöm varje alternativ.');
+    } else if (question.typ === 'vilken') {
+        UI.setQuestionInstruction(window.PlayerManager?.isSinglePlayerMode() ?
+            'Välj rätt alternativ. Ett fel och du förlorar frågans poäng.' :
+            'Välj rätt alternativ.');
     }
     
     // Use GameController for rendering (functions moved there from game.js)
@@ -1705,9 +1719,70 @@ function createPlayerInputs() {
     }
 }
 
+// Handle vilken-frågor (single correct answer)
+function handleVilkenClick(button, optionText) {
+    const currentPlayer = window.PlayerManager.getCurrentPlayer();
+
+    // Check player is active
+    if (!window.PlayerManager.isPlayerActive(currentPlayer)) return;
+
+    // Prevent double-clicks
+    if (button.disabled) return;
+
+    const question = getCurrentQuestion();
+    const isCorrect = (optionText === question.rätt_svar);
+
+    // Mark button as answered and disable all options
+    button.dataset.answered = 'true';
+    UI?.setAllOptionsDisabled(true);
+
+    if (isCorrect) {
+        // Rätt svar
+        button.className = 'option-btn w-full text-left p-4 rounded-lg border-2 correct-step';
+        button.disabled = true;
+
+        // Lägg till poäng (trigger animationer automatiskt)
+        window.PlayerManager.addPointToCurrentPlayer(button, currentQuestionIndex);
+
+        // Auto-secure och visa facit efter kort delay
+        setTimeout(() => {
+            if (window.GameController) {
+                window.GameController.handleQuestionFullyCompleted();
+            }
+            setTimeout(() => {
+                showCorrectAnswers();
+                // Show challenger hint immediately with correct answers
+                if (window.ChallengeSystem && typeof window.ChallengeSystem.showHint === 'function') {
+                    window.ChallengeSystem.showHint(currentQuestionIndex);
+                }
+                updateGameControls();
+            }, 2000);
+        }, 100);
+
+    } else {
+        // Fel svar
+        button.classList.add('incorrect-step');
+        button.disabled = true;
+
+        // Eliminera spelare
+        eliminateCurrentPlayer();
+
+        // Visa facit efter animation (eliminateCurrentPlayer har redan callback)
+        // Men vi behöver också visa facit explicit för vilken-frågor
+        setTimeout(() => {
+            showCorrectAnswers();
+            // Show challenger hint immediately with correct answers
+            if (window.ChallengeSystem && typeof window.ChallengeSystem.showHint === 'function') {
+                window.ChallengeSystem.showHint(currentQuestionIndex);
+            }
+        }, 2000);
+    }
+}
+
 // Expose functions globally for gameController.js
 window.handleOrderClick = handleOrderClick;
 window.handleBelongsDecision = handleBelongsDecision;
+window.handleVilkenClick = handleVilkenClick;
 
 // Expose functions globally for eventHandlers.js
 window.playerStops = playerStops;  // FIX för BL-002: Multiplayer Hör-till bugg

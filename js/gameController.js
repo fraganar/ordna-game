@@ -128,11 +128,13 @@ class GameController {
     renderQuestionOptions(question) {
         const optionsGrid = UI?.get('optionsGrid');
         if (!optionsGrid) return;
-        
+
         if (question.typ === 'ordna') {
             this.renderOrderOptions(question, optionsGrid);
         } else if (question.typ === 'hör_till') {
             this.renderBelongsOptions(question, optionsGrid);
+        } else if (question.typ === 'vilken') {
+            this.renderVilkenOptions(question, optionsGrid);
         }
     }
     
@@ -187,7 +189,20 @@ class GameController {
             optionsGrid.appendChild(container);
         });
     }
-    
+
+    // Create vilken option - SAME UI as ordna but single answer validation
+    renderVilkenOptions(question, optionsGrid) {
+        const shuffledOptions = window.GameData.shuffleArray(question.alternativ);
+
+        shuffledOptions.forEach(optionText => {
+            const button = document.createElement('button');
+            button.className = 'option-btn w-full text-left p-3 sm:p-4 rounded-lg border-2 border-slate-300 bg-white hover:bg-slate-50 hover:border-purple-400 text-sm sm:text-base';
+            button.textContent = optionText;
+            button.addEventListener('click', () => window.handleVilkenClick(button, optionText));
+            optionsGrid.appendChild(button);
+        });
+    }
+
     // Use GameData.shuffleArray for consistency
     
     // Handle correct answer for order questions

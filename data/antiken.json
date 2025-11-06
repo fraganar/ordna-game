@@ -1,0 +1,227 @@
+{
+  "name": "Antiken",
+  "description": "Antikens Grekland och Rom - filosofer, kejsare och tidiga kristendomen",
+  "questions": [
+    {
+      "typ": "hör_till",
+      "svårighetsgrad": "medel",
+      "fråga": "Vilka av följande påståenden om de antika filosoferna är sanna?",
+      "kategori": "Historia",
+      "alternativ": [
+        "Sokrates var lärare till Platon, som i sin tur var lärare till Aristoteles.",
+        "Aristoteles grundade sin egen skola Lykeion i Sparta.",
+        "Platon grundade akademin i Aten omkring 387 f.Kr.",
+        "Sokrates skrev flera berömda dialoger om filosofi."
+      ],
+      "tillhör_index": [
+        0,
+        2
+      ],
+      "förklaring": "Sokrates var lärare till Platon, och Platon undervisade Aristoteles i cirka 20 år vid sin akademi. Platon grundade verkligen akademin i Aten omkring 387 f.Kr., en av världshistoriens första högskolor. Däremot grundade Aristoteles Lykeion i Aten, inte Sparta. Sokrates skrev själv inga texter - det är Platon som skrev dialoger med Sokrates som huvudperson.",
+      "id": "786f7cd1-8e3b-4e5c-81e1-b24204c272bc"
+    },
+    {
+      "typ": "hör_till",
+      "svårighetsgrad": "lätt",
+      "fråga": "De antika olympiska spelen var en viktig tradition. Vilka av dessa påståenden om de olympiska spelen i antiken är sanna?",
+      "kategori": "Historia",
+      "alternativ": [
+        "De första olympiska spelen hölls år 776 f.Kr. i Olympia.",
+        "Spelen hölls vartannat år till Poseidons ära.",
+        "Kvinnor deltog aktivt i alla grenar vid de antika spelen.",
+        "Kejsar Theodosius förbjöd spelen år 393 e.Kr."
+      ],
+      "tillhör_index": [
+        0,
+        3
+      ],
+      "förklaring": "De första dokumenterade olympiska spelen ägde rum år 776 f.Kr. i Olympia. År 393 e.Kr. förbjöd den kristne kejsaren Theodosius spelen eftersom han såg dem som en hednisk festival. Det skulle dröja över 1500 år innan spelen återuppstod i modern form 1896. Däremot hölls spelen var fjärde år (inte vartannat år) och de var tillägnade Zeus, inte Poseidon. Kvinnor fick inte delta - tävlingarna var förbehållna män.",
+      "id": "be4b8c07-4324-44f5-9ce3-950416beacf5"
+    },
+    {
+      "typ": "hör_till",
+      "svårighetsgrad": "medel",
+      "fråga": "Det antika romarriket efterlämnade många kulturella arv. Vilka av följande påståenden om romarrikets bidrag är sanna?",
+      "kategori": "Historia",
+      "alternativ": [
+        "Romarnas akvedukter kunde transportera vatten över hundratals kilometer.",
+        "Pantheons kupol var världens största i nästan 2000 år och hade en unik fyrkantig form.",
+        "Det latinska alfabetet bygger på det etruskiska alfabetet.",
+        "Romarriket uppfann demokratin som styrelseskick."
+      ],
+      "tillhör_index": [
+        0,
+        2
+      ],
+      "förklaring": "Romarnas akvedukter var tekniska underverk - vid sin höjdpunkt mätte Roms akvedukter totalt 435 kilometer vattenledningar. Det latinska alfabetet byggde verkligen på det etruskiska, som i sin tur baserades på det grekiska alfabetet. Däremot var Pantheons kupol rund, inte fyrkantig (den har en diameter på 43,3 meter). Demokratin uppfanns av grekerna, inte romarna - Aten införde demokrati 508/507 f.Kr. under Kleisthenes ledning.",
+      "id": "a8836665-665c-45c3-87df-75104efa97d5"
+    },
+    {
+      "typ": "hör_till",
+      "svårighetsgrad": "svår",
+      "fråga": "Vilka av följande påståenden om de sju underverk i antiken är sanna?",
+      "kategori": "Historia",
+      "alternativ": [
+        "Pyramiderna i Giza är det enda av de sju underverken som fortfarande står kvar.",
+        "Kolossen på Rhodos byggdes efter Alexander den stores död 323 f.Kr.",
+        "Alla sju underverk låg inom det gamla romarrikets gränser.",
+        "Artemistemplet i Efesos brann ned samma natt som Alexander den store föddes."
+      ],
+      "tillhör_index": [
+        0,
+        1,
+        3
+      ],
+      "förklaring": "Cheopspyramiden är det äldsta och det enda av de sju antika underverken som finns kvar idag. Kolossen på Rhodos byggdes efter Alexander den stores död år 323 f.Kr. och blev det kortlivade av underverken. Artemistemplet i Efesos brann faktiskt ned år 356 f.Kr., samma natt som Alexander den store föddes. Däremot låg inte alla underverk inom romarrikets gränser - exempelvis de hängande trädgårdarna i Babylon låg i Mesopotamien.",
+      "id": "f5019374-abb0-4d5a-b1f4-40d30e57b2b5"
+    },
+    {
+      "typ": "ordna",
+      "svårighetsgrad": "medel",
+      "fråga": "Ordna dessa romerska kejsare i kronologisk ordning efter när de blev kejsare (äldst till nyast).",
+      "kategori": "Historia",
+      "alternativ": [
+        "Augustus",
+        "Marcus Aurelius",
+        "Nero",
+        "Konstantin den store"
+      ],
+      "rätt_ordning": [
+        "Augustus",
+        "Nero",
+        "Marcus Aurelius",
+        "Konstantin den store"
+      ],
+      "förklaring": "Augustus blev Roms förste kejsare år 27 f.Kr. efter att ha besegrat Marcus Antonius och Kleopatra. Nero regerade 54-68 e.Kr. och var den sista kejsaren i den julio-claudiska dynastin. Marcus Aurelius, filosofkejsaren, regerade 161-180 e.Kr. och var en av de fem goda kejsarna. Konstantin den store regerade 306-337 e.Kr. och legaliserade kristendomen genom ediktet i Milano år 313 e.Kr.",
+      "id": "bba3c086-194f-42b8-9f99-7cdd9c024c9e"
+    },
+    {
+      "typ": "ordna",
+      "svårighetsgrad": "svår",
+      "fråga": "Ordna dessa viktiga händelser i antikens historia kronologiskt (äldst till nyast).",
+      "kategori": "Historia",
+      "alternativ": [
+        "Slaget vid Marathon",
+        "Julius Caesar mördas",
+        "Alexander den store dör i Babylon",
+        "Romarriket delas i väst och öst"
+      ],
+      "rätt_ordning": [
+        "Slaget vid Marathon",
+        "Alexander den store dör i Babylon",
+        "Julius Caesar mördas",
+        "Romarriket delas i väst och öst"
+      ],
+      "förklaring": "Slaget vid Marathon utkämpades år 490 f.Kr. när Aten besegrade den persiska armén trots numerärt underläge. Alexander den store dog i Babylon den 10 juni 323 f.Kr., bara 32 år gammal. Julius Caesar mördades den 15 mars 44 f.Kr. (idus Martiae) av cirka 60 senatorer. Romarriket delades slutligen i Västrom och Östrom år 395 e.Kr. under kejsar Theodosius I.",
+      "id": "30be28b6-4a73-4079-87f0-922ad2ea92fe"
+    },
+    {
+      "typ": "vilken",
+      "svårighetsgrad": "medel",
+      "fråga": "Vilken filosof tvingades dricka gift (odört) år 399 f.Kr. efter att ha anklagats för att förneka gudarna och förvirra ungdomen?",
+      "kategori": "Historia",
+      "alternativ": [
+        "Platon",
+        "Sokrates",
+        "Aristoteles",
+        "Pythagoras"
+      ],
+      "rätt_svar": "Sokrates",
+      "förklaring": "Sokrates (469-399 f.Kr.) dömdes till döden av en Atensk domstol och tvingades dricka odört (gift) år 399 f.Kr. Han anklagades för att förneka gudarna och korrumpera ungdomen genom sina frågor och dialoger. Platon, som var cirka 31 år gammal vid tillfället, var närvarande vid rättegången och skrev senare flera dialoger där Sokrates är huvudperson. Sokrates vägrade att fly och accepterade sitt öde i enlighet med Atens lagar.",
+      "id": "15378eb4-1730-44c8-8b8e-97d5cb7551d9"
+    },
+    {
+      "typ": "vilken",
+      "svårighetsgrad": "lätt",
+      "fråga": "Vilket år blev kristendomen officiell statsreligion i romarriket under kejsar Theodosius I?",
+      "kategori": "Historia",
+      "alternativ": [
+        "313 e.Kr.",
+        "325 e.Kr.",
+        "380 e.Kr.",
+        "476 e.Kr."
+      ],
+      "rätt_svar": "380 e.Kr.",
+      "förklaring": "År 380 e.Kr. gjorde kejsar Theodosius I kristendomen till romarrikets officiella statsreligion, vilket avslutade den religiösa friheten som funnits sedan Konstantin den stores edikt i Milano år 313 e.Kr. Detta är inte samma sak som 313 e.Kr. då Konstantin endast gav religionsfrihet, eller 325 e.Kr. då kyrkomötet i Nicaea hölls. År 476 e.Kr. föll västromarriket.",
+      "id": "ecb25484-18f2-4612-9eaa-55194eef9fbc"
+    },
+    {
+      "typ": "ordna",
+      "svårighetsgrad": "lätt",
+      "fråga": "Ordna dessa antika filosofer efter födelseår (äldst till yngst).",
+      "kategori": "Historia",
+      "alternativ": [
+        "Sokrates",
+        "Platon",
+        "Aristoteles",
+        "Epikuros"
+      ],
+      "rätt_ordning": [
+        "Sokrates",
+        "Platon",
+        "Aristoteles",
+        "Epikuros"
+      ],
+      "förklaring": "Sokrates föddes cirka 469 f.Kr. och var lärare till Platon som föddes 428 f.Kr. Platon undervisade i sin tur Aristoteles som föddes 384 f.Kr. Epikuros föddes 341 f.Kr. och grundade den epikureiska filosofiskolan som betonade njutning och sinnesro som vägen till lycka. Detta visar hur den grekiska filosofin utvecklades genom flera generationer.",
+      "id": "663b3ec9-065b-4e74-8891-727e3dfadc7e"
+    },
+    {
+      "typ": "ordna",
+      "svårighetsgrad": "svår",
+      "fråga": "Ordna dessa antika slag kronologiskt (äldst till nyast).",
+      "kategori": "Historia",
+      "alternativ": [
+        "Slaget vid Thermopyle",
+        "Slaget vid Marathon",
+        "Slaget vid Salamis",
+        "Slaget vid Actium"
+      ],
+      "rätt_ordning": [
+        "Slaget vid Marathon",
+        "Slaget vid Thermopyle",
+        "Slaget vid Salamis",
+        "Slaget vid Actium"
+      ],
+      "förklaring": "Slaget vid Marathon utkämpades 490 f.Kr. när Aten besegrade perserna. Slaget vid Thermopyle skedde i augusti 480 f.Kr. där kung Leonidas och hans 300 spartaner höll stånd i två dagar. Slaget vid Salamis ägde rum i september 480 f.Kr., samma år som Thermopyle. Slaget vid Actium kom mycket senare, år 31 f.Kr., när Octavianus besegrade Marcus Antonius och Kleopatra.",
+      "id": "15bc5d20-cb7c-467a-b2bd-c0b58763edf4"
+    },
+    {
+      "typ": "hör_till",
+      "svårighetsgrad": "medel",
+      "fråga": "Vilka av följande påståenden om den tidiga kristendomen är sanna?",
+      "kategori": "Historia",
+      "alternativ": [
+        "Petrus och Paulus avrättades båda under kejsar Neros regeringstid omkring 64 e.Kr.",
+        "Kyrkomötet i Nicaea år 325 e.Kr. definierade Kristi natur.",
+        "Jesus föddes år 0 enligt den gregorianska kalendern.",
+        "Aposteln Paulus var ursprungligen farisé och hette Saul."
+      ],
+      "tillhör_index": [
+        0,
+        1,
+        3
+      ],
+      "förklaring": "Petrus och Paulus avrättades båda under Neros förföljelser omkring år 64-65 e.Kr. Kyrkomötet i Nicaea hölls 325 e.Kr. under kejsar Konstantin och definierade att Kristus var 'sann Gud, född inte skapad, av samma väsen som Fadern'. Paulus var verkligen ursprungligen en farisé vid namn Saul som omvände sig till kristendomen. Däremot föddes Jesus troligen omkring 6-4 f.Kr., inte år 0 - vår tideräkning har ett litet fel i beräkningen.",
+      "id": "b6a75944-a36f-4f37-9d79-75ceb7c8272d"
+    },
+    {
+      "typ": "hör_till",
+      "svårighetsgrad": "lätt",
+      "fråga": "Vilka av följande påståenden om Alexander den store är sanna?",
+      "kategori": "Historia",
+      "alternativ": [
+        "Alexander den store blev kung av Makedonien vid 20 års ålder.",
+        "Hans rike sträckte sig från Donau till Indus under hans levnad.",
+        "Alexander dog i Babylon vid 32 års ålder.",
+        "Han blev aldrig besegrad i något slag under sin livstid."
+      ],
+      "tillhör_index": [
+        1,
+        2,
+        3
+      ],
+      "förklaring": "Alexanders rike sträckte sig verkligen från Donau till Indus på 13 år, ett otroligt militärt prestation. Han dog i Babylon den 10 juni 323 f.Kr., endast 32 år gammal. Under sin livstid förblev han obesegrad i slag och är en av historiens största militära ledare. Däremot blev han kung vid 20 års ålder år 336 f.Kr., inte vid 16 års ålder (även om han ledde sin första militära kampanj vid 16).",
+      "id": "9cf2b344-95b3-4ee1-aba4-94c14db6704e"
+    }
+  ]
+}

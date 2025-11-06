@@ -1,56 +1,74 @@
 [
   {
-    "id": "fragepaket-1.json",
-    "name": "Frågepaket 1",
-    "description": "Teknik, historia, språk, musik, byggnader och samhälle",
+    "id": "antiken.json",
+    "name": "Antiken",
+    "description": "Antikens Grekland och Rom - filosofer, kejsare och tidiga kristendomen",
     "order": 1
   },
   {
-    "id": "fragepaket-2.json",
-    "name": "Frågepaket 2",
+    "id": "blandat-1.json",
+    "name": "Blandat #1",
+    "description": "Teknik, historia, språk, musik, byggnader och samhälle",
+    "order": 101
+  },
+  {
+    "id": "blandat-2.json",
+    "name": "Blandat #2",
     "description": "Kuriosa, populärkultur och litteratur genom tiderna",
-    "order": 2
+    "order": 102
   },
   {
-    "id": "fragepaket-3.json",
-    "name": "Frågepaket 3",
+    "id": "blandat-3.json",
+    "name": "Blandat #3",
     "description": "Planeter, städer, djur och naturvetenskapliga fakta",
-    "order": 3
+    "order": 103
   },
   {
-    "id": "fragepaket-4.json",
-    "name": "Frågepaket 4",
+    "id": "blandat-4.json",
+    "name": "Blandat #4",
     "description": "Språk, krig, religion och kultur genom tiderna",
-    "order": 4
+    "order": 104
   },
   {
-    "id": "fragepaket-5.json",
-    "name": "Frågepaket 5",
+    "id": "blandat-5.json",
+    "name": "Blandat #5",
     "description": "Konstnärer, uppfinningar och vetenskapliga genombrott",
-    "order": 5
+    "order": 105
   },
   {
-    "id": "fragepaket-6.json",
-    "name": "Frågepaket 6",
+    "id": "blandat-6.json",
+    "name": "Blandat #6",
     "description": "Sport, medicinska upptäckter, tekniska uppfinningar och svenska fakta",
-    "order": 6
+    "order": 106
   },
   {
-    "id": "fragepaket-7.json",
-    "name": "Frågepaket 7",
+    "id": "blandat-7.json",
+    "name": "Blandat #7",
     "description": "Världshistoria, geografiska fakta och livets stadier",
-    "order": 7
+    "order": 107
   },
   {
-    "id": "fragepaket-8.json",
-    "name": "Frågepaket 8",
+    "id": "blandat-8.json",
+    "name": "Blandat #8",
     "description": "Historia, arkitektur, konst, sport, kultur, musik och uppfinningar",
-    "order": 8
+    "order": 108
   },
   {
-    "id": "fragepaket-9.json",
-    "name": "Frågepaket 9",
+    "id": "blandat-9.json",
+    "name": "Blandat #9",
     "description": "Historia, film, litteratur, språk, idrott, arkitektur och kultur",
-    "order": 9
+    "order": 109
+  },
+  {
+    "id": "blandat-10.json",
+    "name": "Blandat #10",
+    "description": "Vetenskapens giganter och banbrytande upptäckter",
+    "order": 110
+  },
+  {
+    "id": "blandat-11.json",
+    "name": "Blandat #11",
+    "description": "Vetenskapens giganter och historiska upptäckter",
+    "order": 111
   }
 ]

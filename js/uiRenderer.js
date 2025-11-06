@@ -273,19 +273,39 @@ class UIRenderer {
     showOrderCorrectAnswers(question) {
         const grid = this.get('optionsGrid');
         if (!grid) return;
-        
+
         // Show correct order for all buttons
         const buttons = grid.querySelectorAll('.option-btn');
-        
+
         buttons.forEach((button) => {
             const optionText = button.textContent;
             const correctIndex = question.rätt_ordning.indexOf(optionText);
-            
+
             // If not already shown as correct (green)
             if (!button.classList.contains('correct-step') && correctIndex !== -1) {
                 // Show order number using same format as correct answers, but WITHOUT green background
                 button.innerHTML = `<span class="inline-flex items-center justify-center w-6 h-6 mr-3 bg-white text-green-600 rounded-full font-bold">${correctIndex + 1}</span> ${optionText}`;
             }
+        });
+    }
+
+    // Show correct answer for vilken questions
+    showVilkenCorrectAnswer(question) {
+        const grid = this.get('optionsGrid');
+        if (!grid) return;
+
+        const buttons = grid.querySelectorAll('.option-btn');
+        buttons.forEach(button => {
+            // Extract text content (might have order number already)
+            const buttonText = button.textContent.trim();
+
+            if (buttonText === question.rätt_svar) {
+                // Highlight correct answer if not already marked correct
+                if (!button.classList.contains('correct-step')) {
+                    button.classList.add('correct-answer-highlight');
+                }
+            }
+            button.disabled = true;
         });
     }
     
@@ -299,6 +319,8 @@ class UIRenderer {
                 window.feedbackBelongsTo();
             }
             this.showBelongsCorrectAnswers(question);
+        } else if (question.typ === 'vilken') {
+            this.showVilkenCorrectAnswer(question);
         }
     }
 
