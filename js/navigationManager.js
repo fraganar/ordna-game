@@ -44,6 +44,12 @@ class NavigationManager {
             // IMPORTANT: await loadMyChallenges to prevent race condition
             await window.ChallengeSystem.loadMyChallenges();
         }
+
+        // 7. Re-populate pack selectors to reflect updated played status from Firebase
+        // This ensures that if the user just played a challenge pack, it shows as played
+        if (window.GameData && typeof window.GameData.populatePackSelectors === 'function') {
+            await window.GameData.populatePackSelectors();
+        }
     }
 }
 

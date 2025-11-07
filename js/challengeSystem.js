@@ -1003,14 +1003,16 @@ class ChallengeSystem {
         }
         
         try {
-            // Set selected pack from challenge dropdown before loading questions
-            const challengePackSelect = window.UI?.get('challengePackSelect');
-            window.GameController.selectedPack = challengePackSelect?.value || null;
+            // Set selected pack from challenge selector before loading questions
+            window.GameController.selectedPack = window.GameData?.getSelectedPack('challenge-pack-select') || null;
 
             // Load questions using GameData (working implementation moved there)
             if (window.GameData && window.GameData.loadQuestionsForGame) {
                 try {
                     await window.GameData.loadQuestionsForGame(window.GameController.selectedPack);
+
+                    // Note: Pack tracking is handled later via FirebaseAPI.updatePlayedPack()
+                    // See createChallengeAfterGame() for challenger and acceptChallenge() for opponent
                 } catch (loadError) {
                     // Show user-friendly error message
                     alert(`❌ Kunde inte ladda frågepaket\n\n${loadError.message}\n\nVänligen välj ett annat frågepaket.`);

@@ -891,13 +891,15 @@ async function initializeGame() {
     // Reset challenge state when starting normal game
     resetChallengeState();
     
-    // Set selected pack from dropdown
-    const packSelect = UI?.get('packSelect');
-    window.GameController.selectedPack = packSelect?.value || null;
+    // Set selected pack from selector
+    window.GameController.selectedPack = window.GameData?.getSelectedPack('pack-select') || null;
 
     // Load questions using GameData (working implementation moved there)
     try {
         allQuestions = await window.GameData.loadQuestionsForGame(window.GameController.selectedPack);
+
+        // Note: Pack tracking is handled later via FirebaseAPI.updatePlayedPack()
+        // when the game ends (see gameController.js endGame() function)
     } catch (loadError) {
         // Show user-friendly error message
         alert(`❌ Kunde inte ladda frågepaket\n\n${loadError.message}\n\nVänligen välj ett annat frågepaket och försök igen.`);
@@ -1627,6 +1629,7 @@ async function restartGame() {
     if (finalScoreboard) finalScoreboard.classList.remove('hidden');
 
     // Use NavigationManager for all navigation/screen transitions
+    // Note: NavigationManager.resetToStartScreen() now handles populatePackSelectors()
     await window.NavigationManager.resetToStartScreen();
 }
 

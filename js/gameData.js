@@ -130,7 +130,7 @@ class GameData {
         return packs.find(p => p.id === packId);
     }
     
-    // Populate pack selector dropdowns - loads from packs.json
+    // Populate pack selector grids - loads from packs.json and Firebase
     async populatePackSelectors() {
         // Use direct DOM access since UI might not be ready yet
         const packSelect = document.getElementById('pack-select');
@@ -138,54 +138,161 @@ class GameData {
 
         try {
             // Load packs from packs.json
-            const packs = await this.loadAvailablePacks();
+            let packs = await this.loadAvailablePacks();
 
-            // Clear existing options
+            // Load played packs from Firebase
+            let playedPackIds = [];
+            try {
+                const playerId = window.getCurrentPlayerId?.();
+                if (playerId && window.FirebaseAPI) {
+                    const playedPacksData = await window.FirebaseAPI.getPlayedPacks(playerId);
+                    playedPackIds = Object.keys(playedPacksData); // ['antiken.json', 'blandat-1.json', ...]
+                    console.log('GameData: Loaded played packs from Firebase:', playedPackIds.length);
+                }
+            } catch (firebaseError) {
+                console.error('GameData: Failed to load played packs from Firebase:', firebaseError);
+                // Show user-friendly notification
+                if (window.showToast) {
+                    window.showToast('⚠️ Kunde inte ladda spelhistorik från servern', 'info', 3000);
+                }
+                // Continue with empty playedPackIds (all packs shown as unplayed in demo mode)
+            }
+
+            // Sort packs by played status (using Firebase data)
+            packs = this.sortPacksByPlayedStatus(packs, playedPackIds);
+
+            // Clear existing content
             if (packSelect) packSelect.innerHTML = '';
             if (challengePackSelect) challengePackSelect.innerHTML = '';
 
-            // Add packs to selectors
-            packs.forEach(pack => {
-                const option = document.createElement('option');
-                option.value = pack.id;  // Use ID for tracking, not name
-                option.textContent = pack.name;  // Display name to user
+            // Set first pack as selected by default
+            let selectedPackId = packs.length > 0 ? packs[0].id : null;
 
-                // Add to both selectors
+            // Track if we need a separator
+            const unplayedCount = packs.filter(p => !playedPackIds.includes(p.id)).length;
+            const playedCount = packs.length - unplayedCount;
+            let separatorAdded = false;
+
+            // Setup event delegation (once per container) to prevent memory leaks
+            if (packSelect && !packSelect.dataset.hasEventListener) {
+                packSelect.addEventListener('click', (e) => {
+                    const card = e.target.closest('.pack-card');
+                    if (card && card.dataset.packId) {
+                        this.selectPack('pack-select', card.dataset.packId);
+                    }
+                });
+                packSelect.dataset.hasEventListener = 'true';
+            }
+            if (challengePackSelect && !challengePackSelect.dataset.hasEventListener) {
+                challengePackSelect.addEventListener('click', (e) => {
+                    const card = e.target.closest('.pack-card');
+                    if (card && card.dataset.packId) {
+                        this.selectPack('challenge-pack-select', card.dataset.packId);
+                    }
+                });
+                challengePackSelect.dataset.hasEventListener = 'true';
+            }
+
+            // Add packs as cards (without individual event listeners - delegation handles clicks)
+            packs.forEach((pack, index) => {
+                const isPlayed = playedPackIds.includes(pack.id);
+                const isSelected = pack.id === selectedPackId;
+
+                // Add separator before first played pack
+                if (isPlayed && !separatorAdded && playedCount > 0 && unplayedCount > 0) {
+                    const separator = this.createPackSeparator();
+                    if (packSelect) packSelect.appendChild(separator);
+                    if (challengePackSelect) challengePackSelect.appendChild(separator.cloneNode(true));
+                    separatorAdded = true;
+                }
+
+                const card = this.createPackCard(pack, isPlayed, isSelected);
+
+                // Add to both selectors (no event listeners attached - delegation handles it)
                 if (packSelect) {
-                    packSelect.appendChild(option.cloneNode(true));
+                    packSelect.appendChild(card);
                 }
                 if (challengePackSelect) {
-                    challengePackSelect.appendChild(option.cloneNode(true));
+                    challengePackSelect.appendChild(card.cloneNode(true));
                 }
             });
 
-            // Set default selection to first pack
-            if (packSelect && packs.length > 0) {
-                packSelect.value = packs[0].id;
+            // Store selected pack for both containers
+            if (packSelect && selectedPackId) {
+                packSelect.dataset.selectedPack = selectedPackId;
             }
-            if (challengePackSelect && packs.length > 0) {
-                challengePackSelect.value = packs[0].id;
+            if (challengePackSelect && selectedPackId) {
+                challengePackSelect.dataset.selectedPack = selectedPackId;
             }
 
         } catch (error) {
             console.error('GameData: Kunde inte populera paketväljare:', error);
 
-            // Show error in dropdowns
-            const errorOption = document.createElement('option');
-            errorOption.value = '';
-            errorOption.textContent = '❌ Kunde inte ladda frågepaket';
-            errorOption.disabled = true;
-            errorOption.selected = true;
+            // Show error message
+            const errorMsg = document.createElement('div');
+            errorMsg.className = 'text-danger-dark text-center p-4 bg-red-50 rounded-lg border border-red-200';
+            errorMsg.textContent = '❌ Kunde inte ladda frågepaket';
 
             if (packSelect) {
                 packSelect.innerHTML = '';
-                packSelect.appendChild(errorOption.cloneNode(true));
+                packSelect.appendChild(errorMsg.cloneNode(true));
             }
             if (challengePackSelect) {
                 challengePackSelect.innerHTML = '';
-                challengePackSelect.appendChild(errorOption.cloneNode(true));
+                challengePackSelect.appendChild(errorMsg.cloneNode(true));
             }
         }
+    }
+
+    // Create a visual pack card
+    createPackCard(pack, isPlayed, isSelected) {
+        const card = document.createElement('div');
+        card.className = 'pack-card';
+        card.dataset.packId = pack.id;
+
+        if (isPlayed) card.classList.add('played');
+        if (isSelected) card.classList.add('selected');
+
+        card.innerHTML = `
+            <div class="pack-card-header">
+                <span class="pack-card-name">${pack.name}</span>
+                ${isPlayed ? '<span class="pack-card-badge">✓</span>' : ''}
+            </div>
+            <p class="pack-card-description">${pack.description}</p>
+        `;
+
+        return card;
+    }
+
+    // Create separator between unplayed and played packs
+    createPackSeparator() {
+        const separator = document.createElement('div');
+        separator.className = 'pack-separator';
+        separator.innerHTML = '<span>Tidigare spelade</span>';
+        return separator;
+    }
+
+    // Select a pack (click handler)
+    selectPack(containerId, packId) {
+        const container = document.getElementById(containerId);
+        if (!container) return;
+
+        // Update visual selection
+        container.querySelectorAll('.pack-card').forEach(card => {
+            card.classList.remove('selected');
+            if (card.dataset.packId === packId) {
+                card.classList.add('selected');
+            }
+        });
+
+        // Store selected pack
+        container.dataset.selectedPack = packId;
+    }
+
+    // Get selected pack from container
+    getSelectedPack(containerId) {
+        const container = document.getElementById(containerId);
+        return container?.dataset.selectedPack || null;
     }
     
     // Utility: Shuffle array
@@ -196,6 +303,19 @@ class GameData {
             [shuffled[i], shuffled[j]] = [shuffled[j], shuffled[i]];
         }
         return shuffled;
+    }
+
+    // Sort packs: unplayed first, then played (both by order)
+    // Uses playedPackIds array from Firebase (e.g., ['antiken.json', 'blandat-1.json'])
+    sortPacksByPlayedStatus(packs, playedPackIds = []) {
+        const unplayed = packs.filter(p => !playedPackIds.includes(p.id));
+        const played = packs.filter(p => playedPackIds.includes(p.id));
+
+        // Sort each group by order field
+        unplayed.sort((a, b) => (a.order || 0) - (b.order || 0));
+        played.sort((a, b) => (a.order || 0) - (b.order || 0));
+
+        return [...unplayed, ...played];
     }
 }
 
