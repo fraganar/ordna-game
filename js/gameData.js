@@ -7,6 +7,11 @@ class GameData {
         this.availablePacks = [];
         this.cachedPacks = null; // Cache for packs.json
         this.dataPath = '/data/';
+
+        // Constants for pack selector
+        this.PACK_SELECTOR_ID = 'pack-select';
+        this.CHALLENGE_PACK_SELECTOR_ID = 'challenge-pack-select';
+        this.SEPARATOR_TEXT = 'Tidigare spelade';
     }
     
     // REMOVED: initialize() - replaced by on-demand loading (loadQuestionsForGame)
@@ -133,8 +138,8 @@ class GameData {
     // Populate pack selector grids - loads from packs.json and Firebase
     async populatePackSelectors() {
         // Use direct DOM access since UI might not be ready yet
-        const packSelect = document.getElementById('pack-select');
-        const challengePackSelect = document.getElementById('challenge-pack-select');
+        const packSelect = document.getElementById(this.PACK_SELECTOR_ID);
+        const challengePackSelect = document.getElementById(this.CHALLENGE_PACK_SELECTOR_ID);
 
         try {
             // Load packs from packs.json
@@ -179,7 +184,7 @@ class GameData {
                 packSelect.addEventListener('click', (e) => {
                     const card = e.target.closest('.pack-card');
                     if (card && card.dataset.packId) {
-                        this.selectPack('pack-select', card.dataset.packId);
+                        this.selectPack(this.PACK_SELECTOR_ID, card.dataset.packId);
                     }
                 });
                 packSelect._packSelectorListener = true;
@@ -188,7 +193,7 @@ class GameData {
                 challengePackSelect.addEventListener('click', (e) => {
                     const card = e.target.closest('.pack-card');
                     if (card && card.dataset.packId) {
-                        this.selectPack('challenge-pack-select', card.dataset.packId);
+                        this.selectPack(this.CHALLENGE_PACK_SELECTOR_ID, card.dataset.packId);
                     }
                 });
                 challengePackSelect._packSelectorListener = true;
@@ -245,7 +250,13 @@ class GameData {
         }
     }
 
-    // Create a visual pack card
+    /**
+     * Create a visual pack card HTML element
+     * @param {Object} pack - Pack object with id, name, description
+     * @param {boolean} isPlayed - Whether this pack has been played before
+     * @param {boolean} isSelected - Whether this pack is currently selected
+     * @returns {HTMLDivElement} Pack card element
+     */
     createPackCard(pack, isPlayed, isSelected) {
         const card = document.createElement('div');
         card.className = 'pack-card';
@@ -265,15 +276,23 @@ class GameData {
         return card;
     }
 
-    // Create separator between unplayed and played packs
+    /**
+     * Create visual separator element between unplayed and played packs
+     * @returns {HTMLDivElement} Separator element with text "Tidigare spelade"
+     */
     createPackSeparator() {
         const separator = document.createElement('div');
         separator.className = 'pack-separator';
-        separator.innerHTML = '<span>Tidigare spelade</span>';
+        separator.innerHTML = `<span>${this.SEPARATOR_TEXT}</span>`;
         return separator;
     }
 
-    // Select a pack (click handler)
+    /**
+     * Handle pack selection (click handler)
+     * Updates visual selection state and stores selected pack ID
+     * @param {string} containerId - ID of the pack selector container
+     * @param {string} packId - ID of the selected pack
+     */
     selectPack(containerId, packId) {
         const container = document.getElementById(containerId);
         if (!container) return;
@@ -290,7 +309,11 @@ class GameData {
         container.dataset.selectedPack = packId;
     }
 
-    // Get selected pack from container
+    /**
+     * Get the currently selected pack ID from a container
+     * @param {string} containerId - ID of the pack selector container
+     * @returns {string|null} Selected pack ID, or null if none selected
+     */
     getSelectedPack(containerId) {
         const container = document.getElementById(containerId);
         return container?.dataset.selectedPack || null;
@@ -306,8 +329,13 @@ class GameData {
         return shuffled;
     }
 
-    // Sort packs: unplayed first, then played (both by order)
-    // Uses playedPackIds array from Firebase (e.g., ['antiken.json', 'blandat-1.json'])
+    /**
+     * Sort packs by played status: unplayed first, then played
+     * Within each group, packs are sorted by their order field
+     * @param {Array} packs - Array of pack objects
+     * @param {Array} playedPackIds - Array of played pack IDs from Firebase
+     * @returns {Array} Sorted array of packs
+     */
     sortPacksByPlayedStatus(packs, playedPackIds = []) {
         const unplayed = packs.filter(p => !playedPackIds.includes(p.id));
         const played = packs.filter(p => playedPackIds.includes(p.id));

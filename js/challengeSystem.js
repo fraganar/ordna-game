@@ -261,7 +261,15 @@ class ChallengeSystem {
             return true;
         } catch (error) {
             console.error('Failed to accept challenge:', error);
-            window.UI?.showError('Kunde inte acceptera utmaning. Kontrollera din internetanslutning.');
+
+            // Provide specific error message based on error type
+            if (error.message && error.message.includes('redan slutförts')) {
+                window.UI?.showError('Denna utmaning har redan slutförts av någon annan.');
+            } else if (error.code === 'permission-denied') {
+                window.UI?.showError('Du har inte behörighet att acceptera denna utmaning.');
+            } else {
+                window.UI?.showError('Kunde inte acceptera utmaning. Kontrollera din internetanslutning.');
+            }
             throw error;
         }
     }
@@ -309,7 +317,17 @@ class ChallengeSystem {
 
             } catch (error) {
                 console.error('Failed to link opponent result to account:', error);
-                alert('❌ Kunde inte koppla resultat till konto. Försök igen.');
+
+                // Provide specific error message
+                let errorMsg = '❌ Kunde inte koppla resultat till konto.';
+                if (error.code === 'permission-denied') {
+                    errorMsg += '\n\nDu saknar behörighet att uppdatera denna utmaning.';
+                } else if (error.message && error.message.includes('not found')) {
+                    errorMsg += '\n\nUtmaningen kunde inte hittas.';
+                } else {
+                    errorMsg += '\n\nFörsök igen eller kontrollera din internetanslutning.';
+                }
+                alert(errorMsg);
             }
         });
     }
