@@ -358,7 +358,7 @@ class ChallengeSystem {
             </div>
 
             <p class="text-xs text-slate-500 mt-4">
-                💡 Du kan alltid logga in senare från menyn
+                ⚠️ Logga in nu för att spara ditt resultat - annars går det förlorat
             </p>
         `;
 
@@ -374,18 +374,19 @@ class ChallengeSystem {
         }
 
         if (backBtn) {
-            backBtn.addEventListener('click', () => {
-                endScreen.classList.add('hidden');
-                const startScreen = document.getElementById('start-screen');
-                if (startScreen) startScreen.classList.remove('hidden');
+            backBtn.addEventListener('click', async () => {
+                // Warn user about losing results if they don't log in
+                const confirmed = confirm('⚠️ För att spara ditt resultat måste du logga in.\n\nOm du går tillbaka till start utan att logga in går ditt resultat förlorat.\n\nVill du fortsätta utan att logga in?');
+
+                if (!confirmed) {
+                    return; // User cancelled - stay on result screen
+                }
+
+                // Navigate to start screen properly
+                await window.NavigationManager.resetToStartScreen();
 
                 // Reset challenge state
                 this.reset();
-
-                // Show info toast
-                if (window.showToast) {
-                    window.showToast('Du kan logga in från menyn för att spara resultat', 'info', 4000);
-                }
             });
         }
     }
