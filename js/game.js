@@ -717,6 +717,13 @@ async function endSinglePlayerGame() {
 
     UI?.hideGameScreen();
 
+    // CRITICAL: Clear stale challengeId if we're creating a new challenge
+    // This prevents triggering opponent flow when we're actually challenger
+    if (window.isChallenger && window.challengeId) {
+        console.warn('🔧 Clearing stale challengeId - we are challenger, not opponent');
+        window.challengeId = null;
+    }
+
     // If this is challenge creation mode (user just finished playing)
     if (window.ChallengeSystem && window.ischallengeMode && !window.challengeId) {
         // NEW: Check if user is anonymous - show post-game share screen instead of auto-saving
