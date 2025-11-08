@@ -222,6 +222,13 @@ class ChallengeSystem {
     // Accept a challenge - full opponent completion flow
     async acceptChallenge(challengeId, playerId, playerName, scores, totalScore, isAnonymous = false) {
         try {
+            // Check if challenge has already been completed (duplicate protection)
+            const challenge = await FirebaseAPI.getChallenge(challengeId);
+            if (challenge.status === 'completed') {
+                console.warn('Challenge already completed - cannot accept again');
+                throw new Error('Denna utmaning har redan slutförts av någon annan.');
+            }
+
             // Complete the challenge in Firebase (ALWAYS - even for anonymous)
             await FirebaseAPI.completeChallenge(
                 challengeId,
