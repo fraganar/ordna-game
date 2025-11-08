@@ -174,23 +174,24 @@ class GameData {
             let separatorAdded = false;
 
             // Setup event delegation (once per container) to prevent memory leaks
-            if (packSelect && !packSelect.dataset.hasEventListener) {
+            // Use element property (not dataset) so flag is lost if element replaced
+            if (packSelect && !packSelect._packSelectorListener) {
                 packSelect.addEventListener('click', (e) => {
                     const card = e.target.closest('.pack-card');
                     if (card && card.dataset.packId) {
                         this.selectPack('pack-select', card.dataset.packId);
                     }
                 });
-                packSelect.dataset.hasEventListener = 'true';
+                packSelect._packSelectorListener = true;
             }
-            if (challengePackSelect && !challengePackSelect.dataset.hasEventListener) {
+            if (challengePackSelect && !challengePackSelect._packSelectorListener) {
                 challengePackSelect.addEventListener('click', (e) => {
                     const card = e.target.closest('.pack-card');
                     if (card && card.dataset.packId) {
                         this.selectPack('challenge-pack-select', card.dataset.packId);
                     }
                 });
-                challengePackSelect.dataset.hasEventListener = 'true';
+                challengePackSelect._packSelectorListener = true;
             }
 
             // Add packs as cards (without individual event listeners - delegation handles clicks)
