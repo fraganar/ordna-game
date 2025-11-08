@@ -751,7 +751,7 @@ async function endSinglePlayerGame() {
     }
     // If this is accepting a challenge (opponent completing a challenge)
     // Check that we're not the challenger creating a new one
-    else if (ischallengeMode && window.challengeId && !window.isChallenger) {
+    else if (window.challengeId && !window.isChallenger) {
         try {
             // Säkerställ att globala variabler är synkade
             const player = window.PlayerManager?.getCurrentPlayer();
@@ -765,23 +765,17 @@ async function endSinglePlayerGame() {
             const playerId = window.getCurrentPlayerId() || 'unknown_player';
             const isAnonymous = window.isAnonymousUser && window.isAnonymousUser();
 
-            if (isAnonymous) {
-                // NEW: For anonymous opponents - show result WITHOUT saving first
-                // They can choose to login and save after seeing result
-                await window.ChallengeSystem.showChallengeResultForAnonymous(
-                    window.challengeId,
-                    playerScore
-                );
-            } else {
-                // Authenticated opponent - save and show result (existing behavior)
-                await window.ChallengeSystem.acceptChallenge(
-                    window.challengeId,
-                    playerId,
-                    playerName,
-                    challengeQuestionScores,
-                    playerScore
-                );
-            }
+            // ALWAYS save challenge result to Firebase (even for anonymous)
+            // This ensures: challenge marked as completed, opponent score saved,
+            // challenger can see result, link cannot be reused
+            await window.ChallengeSystem.acceptChallenge(
+                window.challengeId,
+                playerId,
+                playerName,
+                challengeQuestionScores,
+                playerScore,
+                isAnonymous  // Pass flag to show login prompt if anonymous
+            );
 
         } catch (error) {
             console.error('Failed to complete challenge:', error);
