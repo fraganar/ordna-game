@@ -375,18 +375,39 @@ class ChallengeSystem {
 
         if (backBtn) {
             backBtn.addEventListener('click', async () => {
-                // Warn user about losing results if they don't log in
-                const confirmed = confirm('⚠️ För att spara ditt resultat måste du logga in.\n\nOm du går tillbaka till start utan att logga in går ditt resultat förlorat.\n\nVill du fortsätta utan att logga in?');
+                // Show custom dialog instead of confirm()
+                const dialog = document.getElementById('challenge-result-back-dialog');
+                const confirmBtn = document.getElementById('challenge-result-back-confirm-btn');
+                const cancelBtn = document.getElementById('challenge-result-back-cancel-btn');
 
-                if (!confirmed) {
-                    return; // User cancelled - stay on result screen
+                if (!dialog) {
+                    console.error('Challenge result back dialog not found');
+                    return;
                 }
 
-                // Navigate to start screen properly
-                await window.NavigationManager.resetToStartScreen();
+                // Show dialog
+                dialog.classList.remove('hidden');
 
-                // Reset challenge state
-                this.reset();
+                // One-time listeners for this dialog instance
+                const handleConfirm = async () => {
+                    dialog.classList.add('hidden');
+                    await window.NavigationManager.resetToStartScreen();
+                    this.reset();
+                    cleanup();
+                };
+
+                const handleCancel = () => {
+                    dialog.classList.add('hidden');
+                    cleanup();
+                };
+
+                const cleanup = () => {
+                    confirmBtn.removeEventListener('click', handleConfirm);
+                    cancelBtn.removeEventListener('click', handleCancel);
+                };
+
+                confirmBtn.addEventListener('click', handleConfirm);
+                cancelBtn.addEventListener('click', handleCancel);
             });
         }
     }
