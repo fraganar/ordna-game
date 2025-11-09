@@ -573,9 +573,22 @@ body {
     display: grid;
     grid-template-columns: 1fr;
     gap: 12px;
-    max-height: 400px;
+    max-height: 280px; /* Reduced for mobile to keep button visible */
     overflow-y: auto;
     padding: 4px;
+}
+
+/* Larger max-height on bigger screens */
+@media (min-height: 700px) {
+    .pack-selector-grid {
+        max-height: 350px;
+    }
+}
+
+@media (min-height: 900px) {
+    .pack-selector-grid {
+        max-height: 400px;
+    }
 }
 
 /* Pack Card */
