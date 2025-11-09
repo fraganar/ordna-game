@@ -608,10 +608,16 @@ body {
     border-color: var(--color-primary);
 }
 
+.pack-card:active {
+    transform: translateY(0) scale(0.98);
+    transition: all 0.1s ease;
+}
+
 .pack-card.selected {
     background: linear-gradient(135deg, rgba(255, 152, 0, 0.08) 0%, rgba(255, 183, 77, 0.08) 100%);
     border-color: var(--color-primary);
     box-shadow: 0 0 0 3px rgba(255, 152, 0, 0.2);
+    animation: selectedGlow 2s ease-in-out infinite;
 }
 
 .pack-card.played {
@@ -808,6 +814,15 @@ body {
     }
     50% {
         box-shadow: 0 0 30px rgba(251, 146, 60, 0.6), 0 0 50px rgba(251, 146, 60, 0.3);
+    }
+}
+
+@keyframes selectedGlow {
+    0%, 100% {
+        box-shadow: 0 0 0 3px rgba(255, 152, 0, 0.2);
+    }
+    50% {
+        box-shadow: 0 0 0 3px rgba(255, 152, 0, 0.4), 0 0 20px rgba(255, 152, 0, 0.15);
     }
 }
 
