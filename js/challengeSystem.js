@@ -220,9 +220,16 @@ class ChallengeSystem {
     }
     
     // Accept a challenge - full opponent completion flow
-    async acceptChallenge(challengeId, playerId, playerName, scores, totalScore) {
+    async acceptChallenge(challengeId, playerId, playerName, scores, totalScore, isAnonymous = false) {
         try {
-            // Complete the challenge in Firebase
+            // Check if challenge has already been completed (duplicate protection)
+            const challenge = await FirebaseAPI.getChallenge(challengeId);
+            if (challenge.status === 'completed') {
+                console.warn('Challenge already completed - cannot accept again');
+                throw new Error('Denna utmaning har redan slutförts av någon annan.');
+            }
+
+            // Complete the challenge in Firebase (ALWAYS - even for anonymous)
             await FirebaseAPI.completeChallenge(
                 challengeId,
                 playerId,
@@ -231,162 +238,39 @@ class ChallengeSystem {
                 scores
             );
 
-            // Track played pack for opponent
-            try {
-                const challengeData = await FirebaseAPI.getChallenge(challengeId);
-                const packId = challengeData.packId;
+            // Track played pack for opponent (only for authenticated users)
+            if (!isAnonymous) {
+                try {
+                    const challengeData = await FirebaseAPI.getChallenge(challengeId);
+                    const packId = challengeData.packId;
 
-                if (!packId) {
-                    console.error('Challenge missing packId - cannot track played pack');
-                } else if (playerId && window.FirebaseAPI) {
-                    await window.FirebaseAPI.updatePlayedPack(playerId, packId, totalScore);
+                    if (!packId) {
+                        console.error('Challenge missing packId - cannot track played pack');
+                    } else if (playerId && window.FirebaseAPI) {
+                        await window.FirebaseAPI.updatePlayedPack(playerId, packId, totalScore);
+                    }
+                } catch (error) {
+                    console.error('Failed to track played pack for opponent:', error);
+                    // Non-blocking error - game continues normally
                 }
-            } catch (error) {
-                console.error('Failed to track played pack for opponent:', error);
-                // Non-blocking error - game continues normally
             }
 
-            // Show result comparison view
-            await this.showChallengeResultView(challengeId);
+            // Show result comparison view (with login prompt if anonymous)
+            await this.showChallengeResultView(challengeId, isAnonymous);
 
             return true;
         } catch (error) {
             console.error('Failed to accept challenge:', error);
-            window.UI?.showError('Kunde inte acceptera utmaning. Kontrollera din internetanslutning.');
-            throw error;
-        }
-    }
 
-    // Show challenge result for anonymous users (without saving)
-    async showChallengeResultForAnonymous(challengeId, opponentScore) {
-        try {
-            // Load challenge data to get challenger info
-            const challenge = await FirebaseAPI.getChallenge(challengeId);
-
-            if (!challenge) {
-                throw new Error('Challenge not found');
-            }
-
-            const challengerScore = challenge.challenger?.totalScore || 0;
-            const challengerName = challenge.challenger?.name || 'Utmanare';
-
-            // Determine winner
-            let resultMessage, resultClass;
-            if (opponentScore > challengerScore) {
-                resultMessage = 'Du vann!';
-                resultClass = 'text-success';
-            } else if (opponentScore < challengerScore) {
-                resultMessage = `${challengerName} vann!`;
-                resultClass = 'text-danger';
+            // Provide specific error message based on error type
+            if (error.message && error.message.includes('redan slutförts')) {
+                window.UI?.showError('Denna utmaning har redan slutförts av någon annan.');
+            } else if (error.code === 'permission-denied') {
+                window.UI?.showError('Du har inte behörighet att acceptera denna utmaning.');
             } else {
-                resultMessage = 'Oavgjort!';
-                resultClass = 'text-slate-700';
+                window.UI?.showError('Kunde inte acceptera utmaning. Kontrollera din internetanslutning.');
             }
-
-            // Show result view with login prompt
-            this.showAnonymousOpponentResultView(
-                challengerName,
-                challengerScore,
-                opponentScore,
-                resultMessage,
-                resultClass,
-                challengeId
-            );
-
-        } catch (error) {
-            console.error('Failed to show anonymous result:', error);
             throw error;
-        }
-    }
-
-    // Display result view for anonymous opponents with login prompt
-    showAnonymousOpponentResultView(challengerName, challengerScore, opponentScore, resultMessage, resultClass, challengeId) {
-        // Hide game screen
-        const gameScreen = document.getElementById('game-screen');
-        if (gameScreen) gameScreen.classList.add('hidden');
-
-        // Get or create result container
-        const endScreen = document.getElementById('end-screen');
-        if (!endScreen) return;
-
-        // Show end screen
-        endScreen.classList.remove('hidden');
-
-        // Build result HTML with login prompt
-        const resultHTML = `
-            <h2 class="text-3xl sm:text-4xl font-bold ${resultClass} mb-4">${resultMessage}</h2>
-            <p class="text-slate-600 mb-8 text-base sm:text-lg">Här är jämförelsen</p>
-
-            <div class="space-y-3 mb-8">
-                <!-- Challenger -->
-                <div class="flex items-center justify-between p-4 bg-slate-100 rounded-lg border-2 border-slate-200">
-                    <div>
-                        <p class="text-sm text-slate-500">Utmanare</p>
-                        <p class="text-xl font-bold text-slate-800">${challengerName}</p>
-                    </div>
-                    <p class="text-2xl font-bold text-slate-700">${challengerScore}p</p>
-                </div>
-
-                <!-- Opponent (You) -->
-                <div class="flex items-center justify-between p-4 bg-slate-100 rounded-lg border-2 ${opponentScore >= challengerScore ? 'border-success' : 'border-slate-200'}">
-                    <div>
-                        <p class="text-sm text-slate-500">Du</p>
-                        <p class="text-xl font-bold text-slate-800">Din poäng</p>
-                    </div>
-                    <p class="text-2xl font-bold ${opponentScore >= challengerScore ? 'text-success' : 'text-slate-700'}">${opponentScore}p</p>
-                </div>
-            </div>
-
-            <!-- Login prompt for anonymous users -->
-            <div class="bg-blue-50 border-l-4 border-blue-400 rounded-lg p-4 mb-6 text-left">
-                <p class="text-base text-slate-700 mb-2">
-                    <strong>🎯 Vill du spela mot fler vänner?</strong>
-                </p>
-                <p class="text-sm text-slate-600">
-                    Logga in för att spara ditt resultat, skapa egna utmaningar och se din spelhistorik.
-                </p>
-            </div>
-
-            <div class="space-y-3">
-                <button id="opponent-result-login-btn" class="w-full bg-gradient-to-r from-magic to-primary text-white font-bold py-4 px-6 rounded-lg text-lg hover:from-primary hover:to-magic-dark transition-colors shadow-md">
-                    🔐 Logga in och spara resultat
-                </button>
-
-                <button id="opponent-result-back-btn" class="w-full bg-slate-200 text-slate-800 font-bold py-3 px-6 rounded-lg text-lg hover:bg-slate-300 transition-colors">
-                    Tillbaka till start
-                </button>
-            </div>
-
-            <p class="text-xs text-slate-500 mt-4">
-                💡 Du kan alltid logga in senare från menyn
-            </p>
-        `;
-
-        // Set content
-        endScreen.innerHTML = `<div class="text-center p-6 sm:p-8 lg:p-12">${resultHTML}</div>`;
-
-        // Add event listeners
-        const loginBtn = document.getElementById('opponent-result-login-btn');
-        const backBtn = document.getElementById('opponent-result-back-btn');
-
-        if (loginBtn) {
-            loginBtn.addEventListener('click', () => this.handleOpponentResultLogin(challengeId));
-        }
-
-        if (backBtn) {
-            backBtn.addEventListener('click', () => {
-                endScreen.classList.add('hidden');
-                const startScreen = document.getElementById('start-screen');
-                if (startScreen) startScreen.classList.remove('hidden');
-
-                // Reset challenge state
-                this.reset();
-
-                // Show info toast
-                if (window.showToast) {
-                    window.showToast('Du kan logga in från menyn för att spara resultat', 'info', 4000);
-                }
-            });
         }
     }
 
@@ -400,30 +284,50 @@ class ChallengeSystem {
         }
 
         window.showAuthForSharing(async (playerId, playerName) => {
-            console.log('✅ Opponent authenticated, now saving result');
+            console.log('✅ Opponent authenticated, now linking result to account');
 
             try {
-                // Get stored game data
-                const player = window.PlayerManager?.getCurrentPlayer();
-                const playerScore = player?.score || 0;
+                // Update opponent playerId in Firebase (result already saved)
+                await FirebaseAPI.updateChallenge(challengeId, {
+                    'opponent.playerId': playerId,
+                    'opponent.name': playerName
+                });
 
-                // Now save the result to Firebase
-                await this.acceptChallenge(
-                    challengeId,
-                    playerId,
-                    playerName,
-                    window.challengeQuestionScores,
-                    playerScore
-                );
+                // Track played pack for this user
+                try {
+                    const challengeData = await FirebaseAPI.getChallenge(challengeId);
+                    const packId = challengeData.packId;
+                    const playerScore = challengeData.opponent?.totalScore || 0;
 
-                // Show success message
-                if (window.showToast) {
-                    window.showToast('✅ Resultat sparat! Nu kan du skapa egna utmaningar.', 'success', 5000);
+                    if (packId && window.FirebaseAPI) {
+                        await window.FirebaseAPI.updatePlayedPack(playerId, packId, playerScore);
+                    }
+                } catch (error) {
+                    console.error('Failed to track played pack after login:', error);
+                    // Non-blocking error
                 }
 
+                // Show success message and refresh view
+                if (window.showToast) {
+                    window.showToast('✅ Resultat kopplat till ditt konto!', 'success', 5000);
+                }
+
+                // Refresh result view (now shows as authenticated user)
+                await this.showChallengeResultView(challengeId, false);
+
             } catch (error) {
-                console.error('Failed to save opponent result:', error);
-                alert('❌ Kunde inte spara resultat. Försök igen.');
+                console.error('Failed to link opponent result to account:', error);
+
+                // Provide specific error message
+                let errorMsg = '❌ Kunde inte koppla resultat till konto.';
+                if (error.code === 'permission-denied') {
+                    errorMsg += '\n\nDu saknar behörighet att uppdatera denna utmaning.';
+                } else if (error.message && error.message.includes('not found')) {
+                    errorMsg += '\n\nUtmaningen kunde inte hittas.';
+                } else {
+                    errorMsg += '\n\nFörsök igen eller kontrollera din internetanslutning.';
+                }
+                alert(errorMsg);
             }
         });
     }
@@ -881,27 +785,58 @@ class ChallengeSystem {
     }
     
     // Show challenge result comparison view (fullscreen mode only)
-    async showChallengeResultView(challengeId) {
+    async showChallengeResultView(challengeId, isAnonymousOpponent = false) {
         try {
             // Get challenge data from Firebase
             const challenge = await FirebaseAPI.getChallenge(challengeId);
-            
+
             if (!challenge) {
                 throw new Error('Challenge not found');
             }
-            
+
             // Use playerId-based identification (most reliable method)
             const myPlayerId = window.getCurrentPlayerId();
             const isChallenger = challenge.challenger?.playerId === myPlayerId;
 
             const myData = isChallenger ? challenge.challenger : challenge.opponent;
             const opponentData = isChallenger ? challenge.opponent : challenge.challenger;
-            
+
+            // Determine winner message
+            let winnerText;
+            if (myData.totalScore > opponentData.totalScore) {
+                winnerText = '<p class="text-xl font-bold text-green-600">🎉 Du vann!</p>';
+            } else if (myData.totalScore < opponentData.totalScore) {
+                winnerText = '<p class="text-xl font-bold text-red-600">Du förlorade!</p>';
+            } else {
+                winnerText = '<p class="text-xl font-bold text-blue-600">Oavgjort!</p>';
+            }
+
+            // Show login buttons if opponent is anonymous
+            const buttonsHTML = isAnonymousOpponent ? `
+                <div class="space-y-3">
+                    <button id="opponent-result-login-btn" class="w-full bg-gradient-to-r from-magic to-primary text-white font-bold py-4 px-6 rounded-lg text-lg hover:from-primary hover:to-magic-dark transition-colors shadow-md">
+                        🔐 Logga in och spara resultat
+                    </button>
+
+                    <button id="opponent-result-back-btn" class="w-full bg-slate-200 text-slate-800 font-bold py-3 px-6 rounded-lg text-lg hover:bg-slate-300 transition-colors">
+                        Tillbaka till start
+                    </button>
+                </div>
+
+                <p class="text-xs text-slate-500 mt-4">
+                    ⚠️ Logga in nu för att spara ditt resultat - annars går det förlorat
+                </p>
+            ` : `
+                <button id="back-to-start-result" class="w-full bg-blue-600 text-white font-bold py-3 px-6 rounded-lg text-lg hover:bg-blue-700 transition-colors">
+                    Tillbaka till start
+                </button>
+            `;
+
             // Create result view HTML
             const resultHTML = `
                 <div class="p-6 sm:p-8 lg:p-12">
                     <h2 class="text-2xl sm:text-3xl font-bold text-slate-900 mb-6 text-center">Utmaning avslutad!</h2>
-                    
+
                     <div class="grid grid-cols-2 gap-4 mb-6">
                         <div class="text-center">
                             <h3 class="font-bold text-lg mb-2">${myData.name}</h3>
@@ -918,22 +853,15 @@ class ChallengeSystem {
                             </div>
                         </div>
                     </div>
-                    
+
                     <div class="bg-slate-100 rounded-lg p-4 mb-6 text-center">
-                        ${myData.totalScore > opponentData.totalScore ? 
-                            '<p class="text-xl font-bold text-green-600">🎉 Du vann!</p>' :
-                            myData.totalScore < opponentData.totalScore ?
-                            '<p class="text-xl font-bold text-red-600">Du förlorade!</p>' :
-                            '<p class="text-xl font-bold text-blue-600">Oavgjort!</p>'
-                        }
+                        ${winnerText}
                     </div>
 
-                    <button id="back-to-start-result" class="w-full bg-blue-600 text-white font-bold py-3 px-6 rounded-lg text-lg hover:bg-blue-700 transition-colors">
-                        Tillbaka till start
-                    </button>
+                    ${buttonsHTML}
                 </div>
             `;
-            
+
             // This function is only used for fullscreen challenge results
             // (not for inline expansion in challenge list)
             const endScreen = window.UI?.get('endScreen');
@@ -941,18 +869,64 @@ class ChallengeSystem {
                 endScreen.innerHTML = resultHTML;
                 endScreen.classList.remove('hidden');
             }
-            
-            // No longer using localStorage for challenge state
-            
-            // Add event listener
-            const backToStartBtn = document.getElementById('back-to-start-result');
 
-            if (backToStartBtn) {
-                backToStartBtn.addEventListener('click', async () => {
-                    await window.NavigationManager.resetToStartScreen();
-                });
+            // Add event listeners
+            if (isAnonymousOpponent) {
+                // Anonymous opponent - show login option
+                const loginBtn = document.getElementById('opponent-result-login-btn');
+                const backBtn = document.getElementById('opponent-result-back-btn');
+
+                if (loginBtn) {
+                    loginBtn.addEventListener('click', () => this.handleOpponentResultLogin(challengeId));
+                }
+
+                if (backBtn) {
+                    backBtn.addEventListener('click', async () => {
+                        // Show custom dialog instead of confirm()
+                        const dialog = document.getElementById('challenge-result-back-dialog');
+                        const confirmBtn = document.getElementById('challenge-result-back-confirm-btn');
+                        const cancelBtn = document.getElementById('challenge-result-back-cancel-btn');
+
+                        if (!dialog) {
+                            console.error('Challenge result back dialog not found');
+                            return;
+                        }
+
+                        // Show dialog
+                        dialog.classList.remove('hidden');
+
+                        // One-time listeners for this dialog instance
+                        const handleConfirm = async () => {
+                            dialog.classList.add('hidden');
+                            await window.NavigationManager.resetToStartScreen();
+                            this.reset();
+                            cleanup();
+                        };
+
+                        const handleCancel = () => {
+                            dialog.classList.add('hidden');
+                            cleanup();
+                        };
+
+                        const cleanup = () => {
+                            confirmBtn.removeEventListener('click', handleConfirm);
+                            cancelBtn.removeEventListener('click', handleCancel);
+                        };
+
+                        confirmBtn.addEventListener('click', handleConfirm);
+                        cancelBtn.addEventListener('click', handleCancel);
+                    });
+                }
+            } else {
+                // Authenticated user - just show back button
+                const backToStartBtn = document.getElementById('back-to-start-result');
+                if (backToStartBtn) {
+                    backToStartBtn.addEventListener('click', async () => {
+                        await window.NavigationManager.resetToStartScreen();
+                    });
+                }
             }
-            
+
         } catch (error) {
             console.error('Failed to show challenge result:', error);
             window.UI?.showError('Kunde inte ladda resultat');
@@ -1003,14 +977,16 @@ class ChallengeSystem {
         }
         
         try {
-            // Set selected pack from challenge dropdown before loading questions
-            const challengePackSelect = window.UI?.get('challengePackSelect');
-            window.GameController.selectedPack = challengePackSelect?.value || null;
+            // Set selected pack from challenge selector before loading questions
+            window.GameController.selectedPack = window.GameData?.getSelectedPack('challenge-pack-select') || null;
 
             // Load questions using GameData (working implementation moved there)
             if (window.GameData && window.GameData.loadQuestionsForGame) {
                 try {
                     await window.GameData.loadQuestionsForGame(window.GameController.selectedPack);
+
+                    // Note: Pack tracking is handled later via FirebaseAPI.updatePlayedPack()
+                    // See createChallengeAfterGame() for challenger and acceptChallenge() for opponent
                 } catch (loadError) {
                     // Show user-friendly error message
                     alert(`❌ Kunde inte ladda frågepaket\n\n${loadError.message}\n\nVänligen välj ett annat frågepaket.`);

@@ -717,6 +717,13 @@ async function endSinglePlayerGame() {
 
     UI?.hideGameScreen();
 
+    // CRITICAL: Clear stale challengeId if we're creating a new challenge
+    // This prevents triggering opponent flow when we're actually challenger
+    if (window.isChallenger && window.challengeId) {
+        console.warn('🔧 Clearing stale challengeId - we are challenger, not opponent');
+        window.challengeId = null;
+    }
+
     // If this is challenge creation mode (user just finished playing)
     if (window.ChallengeSystem && window.ischallengeMode && !window.challengeId) {
         // NEW: Check if user is anonymous - show post-game share screen instead of auto-saving
@@ -751,7 +758,7 @@ async function endSinglePlayerGame() {
     }
     // If this is accepting a challenge (opponent completing a challenge)
     // Check that we're not the challenger creating a new one
-    else if (ischallengeMode && window.challengeId && !window.isChallenger) {
+    else if (window.challengeId && !window.isChallenger) {
         try {
             // Säkerställ att globala variabler är synkade
             const player = window.PlayerManager?.getCurrentPlayer();
@@ -765,23 +772,17 @@ async function endSinglePlayerGame() {
             const playerId = window.getCurrentPlayerId() || 'unknown_player';
             const isAnonymous = window.isAnonymousUser && window.isAnonymousUser();
 
-            if (isAnonymous) {
-                // NEW: For anonymous opponents - show result WITHOUT saving first
-                // They can choose to login and save after seeing result
-                await window.ChallengeSystem.showChallengeResultForAnonymous(
-                    window.challengeId,
-                    playerScore
-                );
-            } else {
-                // Authenticated opponent - save and show result (existing behavior)
-                await window.ChallengeSystem.acceptChallenge(
-                    window.challengeId,
-                    playerId,
-                    playerName,
-                    challengeQuestionScores,
-                    playerScore
-                );
-            }
+            // ALWAYS save challenge result to Firebase (even for anonymous)
+            // This ensures: challenge marked as completed, opponent score saved,
+            // challenger can see result, link cannot be reused
+            await window.ChallengeSystem.acceptChallenge(
+                window.challengeId,
+                playerId,
+                playerName,
+                challengeQuestionScores,
+                playerScore,
+                isAnonymous  // Pass flag to show login prompt if anonymous
+            );
 
         } catch (error) {
             console.error('Failed to complete challenge:', error);
@@ -891,13 +892,15 @@ async function initializeGame() {
     // Reset challenge state when starting normal game
     resetChallengeState();
     
-    // Set selected pack from dropdown
-    const packSelect = UI?.get('packSelect');
-    window.GameController.selectedPack = packSelect?.value || null;
+    // Set selected pack from selector
+    window.GameController.selectedPack = window.GameData?.getSelectedPack('pack-select') || null;
 
     // Load questions using GameData (working implementation moved there)
     try {
         allQuestions = await window.GameData.loadQuestionsForGame(window.GameController.selectedPack);
+
+        // Note: Pack tracking is handled later via FirebaseAPI.updatePlayedPack()
+        // when the game ends (see gameController.js endGame() function)
     } catch (loadError) {
         // Show user-friendly error message
         alert(`❌ Kunde inte ladda frågepaket\n\n${loadError.message}\n\nVänligen välj ett annat frågepaket och försök igen.`);
@@ -1627,6 +1630,7 @@ async function restartGame() {
     if (finalScoreboard) finalScoreboard.classList.remove('hidden');
 
     // Use NavigationManager for all navigation/screen transitions
+    // Note: NavigationManager.resetToStartScreen() now handles populatePackSelectors()
     await window.NavigationManager.resetToStartScreen();
 }
 

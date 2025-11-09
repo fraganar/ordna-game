@@ -568,17 +568,123 @@ body {
     opacity: 0;
 }
 
-.pack-card {
-    transition: all 0.2s ease-in-out;
-    position: relative;
+/* Pack Selector Grid */
+.pack-selector-grid {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 12px;
+    max-height: 400px;
+    overflow-y: auto;
+    padding: 4px;
 }
 
-.pack-card.selected {
-    transform: translateY(-4px);
-    box-shadow: 0 0 0 3px var(--color-primary);
+/* Pack Card */
+.pack-card {
+    position: relative;
+    background: white;
+    border: 2px solid var(--color-gray-200);
+    border-radius: 12px;
+    padding: 16px;
+    cursor: pointer;
+    transition: all 0.25s ease;
+}
+
+.pack-card:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
     border-color: var(--color-primary);
 }
 
+.pack-card.selected {
+    background: linear-gradient(135deg, rgba(255, 152, 0, 0.08) 0%, rgba(255, 183, 77, 0.08) 100%);
+    border-color: var(--color-primary);
+    box-shadow: 0 0 0 3px rgba(255, 152, 0, 0.2);
+}
+
+.pack-card.played {
+    background: var(--color-gray-100);
+    border-color: var(--color-gray-300);
+    opacity: 0.8;
+}
+
+.pack-card.played:hover {
+    opacity: 1;
+}
+
+.pack-card.played.selected {
+    background: linear-gradient(135deg, rgba(255, 152, 0, 0.08) 0%, rgba(255, 183, 77, 0.08) 100%);
+    border-color: var(--color-primary);
+    opacity: 1;
+}
+
+/* Pack Card Header */
+.pack-card-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 8px;
+}
+
+.pack-card-name {
+    font-weight: 600;
+    font-size: 16px;
+    color: var(--color-deep-space);
+}
+
+.pack-card-badge {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 24px;
+    height: 24px;
+    background: var(--color-success);
+    color: white;
+    border-radius: 50%;
+    font-size: 14px;
+    font-weight: bold;
+}
+
+.pack-card-description {
+    font-size: 14px;
+    color: var(--color-gray-500);
+    line-height: 1.4;
+    margin: 0;
+}
+
+/* Pack Separator */
+.pack-separator {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 16px 0;
+    position: relative;
+}
+
+.pack-separator::before,
+.pack-separator::after {
+    content: '';
+    flex: 1;
+    height: 1px;
+    background: var(--color-gray-300);
+}
+
+.pack-separator::before {
+    margin-right: 12px;
+}
+
+.pack-separator::after {
+    margin-left: 12px;
+}
+
+.pack-separator span {
+    font-size: 13px;
+    color: var(--color-gray-400);
+    font-weight: 500;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+/* Old pack-card styles for pack-shop modal (keep for backwards compatibility) */
 .pack-card .selected-check {
     display: none;
     position: absolute;

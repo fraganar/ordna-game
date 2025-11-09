@@ -1195,6 +1195,60 @@ class AdminPanel {
             content.innerHTML = `<p style="color: red;">❌ Fel vid laddning: ${error.message}</p>`;
         }
     }
+
+    // Clear all played packs for current player
+    async clearPlayedPacks() {
+        const playerId = window.getCurrentPlayerId ? window.getCurrentPlayerId() : null;
+
+        if (!playerId) {
+            alert('❌ Ingen playerId hittades. Kan inte rensa spelade paket.');
+            return;
+        }
+
+        // Confirmation dialog
+        if (!confirm(`⚠️ Vill du verkligen rensa ALLA spelade paket för player ${playerId}?\n\nDetta kommer att:\n- Ta bort all historik om spelade paket\n- Nollställa statistik (timesPlayed, bestScore, playedAt)\n- Göra att alla paket visas som ospelade i paketväljaren\n\nDetta kan INTE ångras!`)) {
+            return;
+        }
+
+        const content = document.getElementById('playedPacksContent');
+        content.innerHTML = '<p>Rensar spelade paket...</p>';
+
+        try {
+            // Get all played packs first
+            const playedPacks = await window.FirebaseAPI.getPlayedPacks(playerId);
+            const packIds = Object.keys(playedPacks);
+
+            if (packIds.length === 0) {
+                alert('ℹ️ Inga spelade paket att rensa.');
+                content.innerHTML = '<p style="color: #666;">Inga spelade paket hittades.</p>';
+                return;
+            }
+
+            // Delete each pack document from playedPacks subcollection
+            const db = firebase.firestore();
+            const playerRef = db.collection('players').doc(playerId);
+            const batch = db.batch();
+
+            for (const packId of packIds) {
+                const packRef = playerRef.collection('playedPacks').doc(packId);
+                batch.delete(packRef);
+            }
+
+            await batch.commit();
+
+            console.log(`✅ Cleared ${packIds.length} played packs for player ${playerId}`);
+
+            alert(`✅ Rensade ${packIds.length} spelade paket!\n\nNu visas alla paket som ospelade i paketväljaren.`);
+
+            // Refresh the played packs view
+            await this.loadPlayedPacks();
+
+        } catch (error) {
+            console.error('Failed to clear played packs:', error);
+            alert(`❌ Kunde inte rensa spelade paket:\n\n${error.message}`);
+            content.innerHTML = `<p style="color: red;">❌ Fel vid rensning: ${error.message}</p>`;
+        }
+    }
 }
 
 // Initialize admin panel when DOM is ready
