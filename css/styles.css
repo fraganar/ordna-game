@@ -1006,15 +1006,6 @@ body {
     -webkit-text-fill-color: transparent;
     background-clip: text;
     opacity: 0.85;
-    line-height: 1.2;
-    overflow: visible;
-}
-
-/* Prevent gradient text clipping on larger screens */
-@media (min-width: 640px) {
-    .mango-title {
-        padding-bottom: 0.12em;
-    }
 }
 
 /* Hamburger button gradient - same soft mango gradient as title */
