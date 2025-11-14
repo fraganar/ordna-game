@@ -1123,14 +1123,14 @@ body::before {
 /* Mobile adjustments for hamburger button */
 @media (max-width: 640px) {
     #hamburger-btn {
-        top: 12px;
+        top: 8px;
         right: 12px;
-        padding: 10px;
+        padding: 8px;
     }
 
     #hamburger-btn svg {
-        width: 20px;
-        height: 20px;
+        width: 18px;
+        height: 18px;
     }
 }
 
