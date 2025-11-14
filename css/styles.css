@@ -1123,7 +1123,7 @@ body::before {
 /* Mobile adjustments for hamburger button */
 @media (max-width: 640px) {
     #hamburger-btn {
-        top: 8px;
+        top: 6px;
         right: 12px;
         padding: 8px;
     }
