@@ -333,17 +333,18 @@ class UIRenderer {
         const singlePlayerProgress = this.get('singlePlayerProgress');
         const singlePlayerScore = this.get('singlePlayerScore');
         const scoreboard = this.get('scoreboard');
-        
-        if (playerStatusBar) playerStatusBar.classList.remove('hidden');
-        
+
         // Get player data from PlayerManager
         if (!window.PlayerManager) return;
-        
+
         const players = window.PlayerManager.getPlayers();
         const currentPlayerIndex = window.PlayerManager.currentPlayerIndex;
-        
+
         if (window.PlayerManager.isSinglePlayerMode()) {
             // Single player display
+            // Hide player status bar (not needed in single player)
+            if (playerStatusBar) playerStatusBar.classList.add('hidden');
+
             // Don't show anything in activePlayerDisplay for single player - totalpoäng shown in header
             if (activePlayerDisplay) {
                 activePlayerDisplay.textContent = '';
@@ -369,8 +370,11 @@ class UIRenderer {
             if (scoreboard) scoreboard.classList.add('hidden');
         } else {
             // Multiplayer display
+            // Show player status bar (needed for multiplayer)
+            if (playerStatusBar) playerStatusBar.classList.remove('hidden');
+
             const currentPlayer = players[currentPlayerIndex];
-            
+
             if (activePlayerDisplay && currentPlayer) {
                 activePlayerDisplay.textContent = `${currentPlayer.name}s tur`;
                 activePlayerDisplay.classList.add('active-player-highlight');
