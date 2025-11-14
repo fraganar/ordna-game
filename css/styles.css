@@ -1008,6 +1008,15 @@ body {
     opacity: 0.85;
 }
 
+/* Prevent gradient text clipping on larger screens */
+@media (min-width: 640px) {
+    .mango-title {
+        line-height: 1.2;
+        padding-bottom: 0.12em;
+        overflow: visible;
+    }
+}
+
 /* Hamburger button gradient - same soft mango gradient as title */
 .hamburger-gradient {
     background: linear-gradient(135deg,
