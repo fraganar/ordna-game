@@ -33,6 +33,31 @@ Detta arkiv innehåller historiska dokument från projektets utveckling. Alla vi
 **Sammanfattning flyttad till:** CLAUDE.md (Firebase Challenge System - Teknisk Översikt)
 **Varför arkiverad:** Migration klar, behålls för historisk referens
 
+### FIREBASE_AUTH_INTEGRATION_PLAN_V2.md
+**Datum:** 2025-01-12 (v2 - ren lösning)
+**Innehåll:** Detaljerad plan för Firebase Authentication integration
+**Status:** Implementerad ✅ (BL-023 - Firebase Auth)
+**Sammanfattning flyttad till:** CLAUDE.md
+**Varför arkiverad:** Implementation komplett, behålls för referens
+
+### PLAYED_PACKS_FEATURE.md
+**Datum:** 2025-10-06
+**Innehåll:** Feature plan för spelade frågepaket tracking
+**Status:** Implementerad ✅
+**Varför arkiverad:** Feature implementerad, dokumentation i kod
+
+### NAVIGATION_REDESIGN.md + NAVIGATION_MENU.md
+**Datum:** 2025-10-01
+**Innehåll:** Navigation redesign (challenge-flöde som primärt)
+**Status:** Implementerad ✅ (BL-027)
+**Varför arkiverad:** Redesign komplett
+
+### DUMMY_NAME_HANDLING_PLAN.md
+**Datum:** 2025-10-03
+**Innehåll:** Plan för hantering av dummy-namn i Firebase
+**Status:** Implementerad ✅
+**Varför arkiverad:** Dummy-namn logik implementerad
+
 ## Aktiv Dokumentation
 
 För uppdaterad information, se:
@@ -45,4 +70,14 @@ För uppdaterad information, se:
 
 ---
 
-*Arkiverad: 2025-09-30*
+## Borttagna Filer (2025-11-15)
+
+Följande planer implementerades och togs helt bort (ej arkiverade):
+- `REFACTOR_OPPONENT_COMPLETION.md` - Implementerad ✅ (BL-030)
+- `CONSOLIDATE_NAVIGATION.md` - Implementerad ✅ (BL-031)
+- `REMOVE_ALERT_POPUPS_PLAN.md` + `TESTING.md` - Implementerad ✅
+- `FIXED_BOX_IMPLEMENTATION_SPEC.md` - Gammal bugfix, ej längre relevant
+
+---
+
+*Senast uppdaterad: 2025-11-15*

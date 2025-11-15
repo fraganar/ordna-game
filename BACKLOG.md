@@ -9,17 +9,15 @@
 
 ### Kommande arbete (sorterat efter stackrank - högst första)
 
-1. **BL-034** (100) - Identitetsförvirring vid länköppning på samma enhet
-2. **BL-009** (60) - Poänganimering före totalpoäng
-3. **BL-026** (45) - Admin-panel: Manuell playerId-redigering
-4. **BL-025** (40) - Account Recovery UI
-5. **BL-038** (30) - Ta bort oanvänt stats-fält från Firebase players
-6. **BL-033** (25) - Progressbar fungerar inte i challenge-läge som opponent
-7. **BL-037** (20) - Varna/blockera login under pågående spel
-8. **BL-039** (18) - Tangentbordsnavigering för desktop-användare
-9. **BL-032** (15) - Admin-panel visar inga challenges
-10. **BL-022** (12) - Lägg till browser fallbacks för moderna CSS-effekter
-11. **BL-024** (10) - Redesigna "Hör till"-knappar enligt ny mockup
+1. **BL-009** (60) - Poänganimering före totalpoäng
+2. **BL-026** (45) - Admin-panel: Manuell playerId-redigering
+3. **BL-038** (30) - Ta bort oanvänt stats-fält från Firebase players
+4. **BL-033** (25) - Progressbar fungerar inte i challenge-läge som opponent
+5. **BL-037** (20) - Varna/blockera login under pågående spel
+6. **BL-039** (18) - Tangentbordsnavigering för desktop-användare
+7. **BL-032** (15) - Admin-panel visar inga challenges
+8. **BL-022** (12) - Lägg till browser fallbacks för moderna CSS-effekter
+9. **BL-024** (10) - Redesigna "Hör till"-knappar enligt ny mockup
 
 ---
 
@@ -29,20 +27,6 @@
 - **Kategori:** BUG
 - **Stackrank:** 60
 - **Beskrivning:** Totalpoäng ökar före animationen landar i multi och kanske i singel också
-
-### BL-034: Identitetsförvirring vid länköppning på samma enhet
-- **Kategori:** BUG
-- **Stackrank:** 100 (HÖGSTA PRIORITET)
-- **Beskrivning:** Förvirring kring spelaridentitet när man öppnar appen via olika länkar (challenge, normal start) på samma enhet
-- **Problem:** Om man först spelar normalt (får playerId A), sedan öppnar en challenge-länk som opponent, kan systemet använda fel identitet
-- **Root cause:** localStorage playerId/playerName kan bli ur synk med användarens förväntade identitet
-- **Impact:** KRITISK - Challenges sparas med fel playerId, användaren ser inte sina egna challenges
-- **Exempel-scenario:**
-  1. Användare spelar normalt på sin telefon (blir playerId_123)
-  2. Samma användare öppnar challenge-länk från vän på samma telefon
-  3. Systemet använder playerId_123 för opponent (fel!)
-  4. Challenge registreras med fel opponent-ID
-- **Lösningsriktning:** Behöver session-based identity eller explicit "Vem spelar?"-prompt vid challenge-accept
 
 ### BL-033: Progressbar fungerar inte i challenge-läge som opponent
 - **Kategori:** BUG
@@ -82,18 +66,6 @@
 - **Användningsfall:** Återställa gamla challenges genom att manuellt sätta rätt playerId
 - **Benefit:** Löser migration-problemet för enskilda användare manuellt
 - **Tidsuppskattning:** 30-60 minuter
-
-### BL-025: Account Recovery UI - Återställ konto via playerId
-- **Kategori:** FEATURE
-- **Stackrank:** 40
-- **Beskrivning:** Lägg till funktion för att återställa konto på annan enhet via playerId
-- **Implementation:**
-  - Använd `FirebaseAPI.verifyPlayerId()` (finns redan i firebase-config.js rad 250-265)
-  - Flow: Prompt för playerId → Verifiera mot Firebase → Återställ localStorage → Reload
-  - Kan läggas i settings eller som dialog
-- **Användningsfall:** Användare byter enhet eller rensar localStorage och vill få tillbaka sitt konto och challenge-historik
-- **Benefit:** Löser cross-device-problemet som gjorde migration-modulen omöjlig
-- **Tidsuppskattning:** 1-2 timmar
 
 ### BL-024: Lägg till subtil färgad ram runt "Hör till"-knappar
 - **Kategori:** ENHANCEMENT
@@ -225,6 +197,7 @@
 ## ✅ Slutförda Items (endast rubriker)
 
 Se LOG.md för detaljer om slutförda items:
+- BL-034: Identitetsförvirring vid länköppning på samma enhet ✅
 - BL-035: Aktivera Firebase Security Rules i Console ✅
 - BL-023: Säkra Firebase med autentisering (kodimplementation) ✅
 - BL-029: Konsolidera selectedPack till en källa ✅
@@ -254,6 +227,7 @@ Se LOG.md för detaljer om slutförda items:
 ## ❌ Kasserade Items (endast rubriker)
 
 Se LOG.md för detaljer om kasserade items:
+- BL-025: Account Recovery UI ❌
 - BL-001: GameLogger System ❌
 
 ---
