@@ -16,9 +16,10 @@
 5. **BL-038** (30) - Ta bort oanvänt stats-fält från Firebase players
 6. **BL-033** (25) - Progressbar fungerar inte i challenge-läge som opponent
 7. **BL-037** (20) - Varna/blockera login under pågående spel
-8. **BL-032** (15) - Admin-panel visar inga challenges
-9. **BL-022** (12) - Lägg till browser fallbacks för moderna CSS-effekter
-10. **BL-024** (10) - Redesigna "Hör till"-knappar enligt ny mockup
+8. **BL-039** (18) - Tangentbordsnavigering för desktop-användare
+9. **BL-032** (15) - Admin-panel visar inga challenges
+10. **BL-022** (12) - Lägg till browser fallbacks för moderna CSS-effekter
+11. **BL-024** (10) - Redesigna "Hör till"-knappar enligt ny mockup
 
 ---
 
@@ -174,6 +175,50 @@
   4. Verifiera i Firebase Console att stats-fält är borta
   5. Verifiera att "Skapade/Spelade" fortfarande visas korrekt
 - **Tidsuppskattning:** 10-15 minuter
+
+### BL-039: Tangentbordsnavigering för desktop-användare
+- **Kategori:** ENHANCEMENT
+- **Stackrank:** 18
+- **Beskrivning:** Utöka keyboard shortcuts för bättre desktop-upplevelse
+- **Status:** Parkerad - Proof of concept finns i branch `feature/keyboard-pack-navigation`
+- **Nuvarande keyboard shortcuts:**
+  1. `Escape` - Stäng menyer/modaler (hamburgerNav.js:100)
+  2. `ArrowUp/Down` - Navigera frågepaket (gameData.js:334) ✅ **Implementerat i branch**
+  3. `Enter` - Submit namn i olika formulär (authUI.js, hamburgerNav.js, adminPanel.js)
+- **Förslag på ytterligare shortcuts:**
+  1. `Space` - Tryck "Stanna"-knapp under spel (Hög prioritet)
+  2. `Enter` - Tryck "Nästa fråga"-knapp under spel (Medel prioritet)
+  3. `?` - Öppna hjälp (Låg prioritet)
+  4. `1-9` - Välj svarsalternativ i "Ordna"-frågor (Låg prioritet)
+  5. `Y/N` - Ja/Nej i "Hör till"-frågor (Låg prioritet)
+- **Implementation i branch:**
+  - ✅ Pack selector navigation med ArrowUp/Down
+  - ✅ Auto-scroll så valt paket är synligt
+  - ✅ Modal/menu detection (förhindrar konflikt)
+  - ✅ Smooth animations
+  - ✅ Code review genomförd (7.5/10)
+  - ✅ Alla regressionstester passerar
+- **Branch:** `feature/keyboard-pack-navigation`
+- **Commits:** 5 commits med progressiv förbättring
+  ```
+  1fad19a - fix: Förhindra keyboard navigation när menyer/modaler är öppna
+  d5bc5b6 - feat: Lägg till auto-scroll vid tangentbordsnavigering
+  b837dd8 - fix: Ta bort onödig fokus-logik och fixa keyboard navigation bug
+  1294e13 - refactor: Förenkla keyboard navigation - direkt selection med piltangenter
+  04809c2 - feat: Lägg till tangentbordsnavigering för frågepaket
+  ```
+- **Beslut:** Parkerad - Mobile-first app där keyboard är sekundär interaktion. Kan aktiveras senare om user feedback visar behov.
+- **Review-resultat:**
+  - ✅ Kod är redo att merga (inga buggar)
+  - ✅ Ingen regression risk
+  - ✅ Performance utmärkt
+  - 🟡 Men begränsad nytta för mobile-first app
+- **Tidsuppskattning om aktiverad:**
+  - Pack navigation: 0h (redan klart i branch)
+  - Space/Enter för spelknappar: +30 min
+  - Dokumentation: +15 min
+  - Total: ~45 minuter
+- **Referens:** Se conversation med code review för full analys
 
 ---
 
