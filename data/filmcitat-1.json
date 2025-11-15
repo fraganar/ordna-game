@@ -1,0 +1,206 @@
+{
+  "name": "Filmcitat 1",
+  "description": "Blandade frågor om kända filmrepliker från olika filmer.",
+  "questions": [
+    {
+      "typ": "vilken",
+      "svårighetsgrad": "lätt",
+      "fråga": "Vilken film innehåller citatet 'May the Force be with you'?",
+      "kategori": "Science Fiction",
+      "alternativ": [
+        "Stjärnornas krig (Star Wars)",
+        "Star Trek: The Motion Picture",
+        "E.T. the Extra-Terrestrial",
+        "The Matrix"
+      ],
+      "rätt_svar": "Stjärnornas krig (Star Wars)",
+      "förklaring": "'May the Force be with you' är en klassisk replik från *Stjärnornas krig* (1977), det vill säga den första *Star Wars*-filmen. Ingen av de andra filmerna använder den frasen – i *Star Trek* säger man till exempel 'Live long and prosper', inte 'May the Force...'.",
+      "id": "62ef67ae-fc4c-4e2d-aaf7-e824fa87e92a"
+    },
+    {
+      "typ": "vilken",
+      "svårighetsgrad": "lätt",
+      "fråga": "Vilken film kommer citatet 'Jag kan flyga. Jag är inte rädd.' ifrån?",
+      "kategori": "Svensk film",
+      "alternativ": [
+        "Sällskapsresan (1980)",
+        "Göta kanal (1981)",
+        "Top Gun (1986)",
+        "Armageddon (1998)"
+      ],
+      "rätt_svar": "Sällskapsresan (1980)",
+      "förklaring": "Repliken 'Jag kan flyga, jag är inte rädd' upprepas av huvudpersonen Stig-Helmer i den svenska komediklassikern *Sällskapsresan* (1980). De andra alternativen är fel: repliken förekommer varken i *Göta kanal*, actionfilmen *Top Gun* eller katastroffilmen *Armageddon*.",
+      "id": "da38c9cb-6973-427c-b4ac-4b42c226d495"
+    },
+    {
+      "typ": "vilken",
+      "svårighetsgrad": "medel",
+      "fråga": "I vilken film sägs den berömda repliken 'You talkin' to me?'?",
+      "kategori": "Filmklassiker",
+      "alternativ": [
+        "Taxi Driver",
+        "Scarface",
+        "Gudfadern del II",
+        "Raging Bull"
+      ],
+      "rätt_svar": "Taxi Driver",
+      "förklaring": "Den ikoniska repliken 'You talkin' to me?' kommer från Martin Scorseses *Taxi Driver* (1976), där Robert De Niro i rollen som Travis Bickle improviserar fram den i en spegelscen. Den förekommer inte i *Scarface* (1983), där Al Pacino istället utbrister 'Say hello to my little friend!', och inte heller i de andra listade filmerna.",
+      "id": "a0cdcc7c-af58-40ed-b3f6-e336c4cc9566"
+    },
+    {
+      "typ": "vilken",
+      "svårighetsgrad": "medel",
+      "fråga": "Ur vilken skräckfilm kommer citatet 'Here's Johnny!'?",
+      "kategori": "Skräck",
+      "alternativ": [
+        "The Shining (1980)",
+        "Exorcisten (1973)",
+        "Fredagen den 13:e (1980)",
+        "Poltergeist (1982)"
+      ],
+      "rätt_svar": "The Shining (1980)",
+      "förklaring": "Repliken 'Here's Johnny!' kommer från skräckklassikern *The Shining* (1980), där Jack Nicholsons karaktär yxar sönder en dörr och ropar frasen. Alternativen *Exorcisten*, *Fredagen den 13:e* och *Poltergeist* innehåller inte den repliken.",
+      "id": "5ec30316-ab4e-4c10-838a-77d2fa68ccb9"
+    },
+    {
+      "typ": "vilken",
+      "svårighetsgrad": "svår",
+      "fråga": "I vilken film förekommer det mystiska filmcitatet 'Rosebud'?",
+      "kategori": "Filmhistoria",
+      "alternativ": [
+        "Citizen Kane (1941)",
+        "Casablanca (1942)",
+        "Borta med vinden (1939)",
+        "Psycho (1960)"
+      ],
+      "rätt_svar": "Citizen Kane (1941)",
+      "förklaring": "Ordet 'Rosebud' yttras som den berömda sista repliken i Orson Welles film *Citizen Kane* från 1941. Det förekommer inte i de andra filmerna – till exempel är *Casablanca* (1942) mest känd för repliken 'Here's looking at you, kid' och *Borta med vinden* (1939) avslutas med 'After all, tomorrow is another day'.",
+      "id": "95b52612-a65c-4fee-af5a-473f29e69dc3"
+    },
+    {
+      "typ": "vilken",
+      "svårighetsgrad": "svår",
+      "fråga": "Vilken var den första James Bond-filmen där repliken 'Bond, James Bond' sägs?",
+      "kategori": "Filmhistoria",
+      "alternativ": [
+        "Dr. No (1962)",
+        "Goldfinger (1964)",
+        "Agent 007 ser rött (1963)",
+        "Casino Royale (2006)"
+      ],
+      "rätt_svar": "Dr. No (1962)",
+      "förklaring": "Den första Bond-filmen, *Dr. No* från 1962, är också första gången som Sean Connery introducerar sig med den klassiska repliken 'Bond... James Bond'. Varken *Agent 007 ser rött* (From Russia with Love) eller *Goldfinger* kommer före *Dr. No* och *Casino Royale* (2006) är en modern reboot.",
+      "id": "54892a71-4fdf-4ad7-be8d-193e8ef60b49"
+    },
+    {
+      "typ": "hör_till",
+      "svårighetsgrad": "medel",
+      "fråga": "Vilka av följande filmrepliker har yttrats av Arnold Schwarzenegger i film?",
+      "kategori": "Hör till: Arnold Schwarzenegger-repliker",
+      "alternativ": [
+        "I'll be back.",
+        "Yippee-ki-yay, motherf***er!",
+        "Get to the chopper!",
+        "Say hello to my little friend!"
+      ],
+      "tillhör_index": [
+        0,
+        2
+      ],
+      "förklaring": "Arnold Schwarzenegger ligger bakom två av dessa klassiska oneliners: 'I'll be back' säger han som Terminator i *The Terminator* (1984), och 'Get to the chopper!' ropar han som Major Dutch i *Predator* (1987). De andra två citaten är från andra skådespelare – 'Yippee-ki-yay, motherf***er!' är Bruce Willis berömda replik som John McClane in *Die Hard* (1988), och 'Say hello to my little friend!' sägs av Al Pacino i gangstereposet *Scarface* (1983).",
+      "id": "b1f437ce-8cf8-4148-847f-320bdf03b127"
+    },
+    {
+      "typ": "hör_till",
+      "svårighetsgrad": "lätt",
+      "fråga": "Vilka av följande citat kommer från *Star Wars*-filmerna?",
+      "kategori": "Hör till: citat från Star Wars",
+      "alternativ": [
+        "May the Force be with you.",
+        "No, I am your father.",
+        "Live long and prosper.",
+        "Beam me up, Scotty!"
+      ],
+      "tillhör_index": [
+        0,
+        1
+      ],
+      "förklaring": "Både 'May the Force be with you' och 'No, I am your father' (Darth Vaders avslöjande i *Rymdimperiet slår tillbaka*, 1980) hör till *Star Wars*-sagan. De andra två – 'Live long and prosper' och 'Beam me up, Scotty!' – är klassiska fraser från *Star Trek*, inte *Star Wars*.",
+      "id": "29d45201-ccb6-4524-9bda-8ec9c35740ee"
+    },
+    {
+      "typ": "hör_till",
+      "svårighetsgrad": "svår",
+      "fråga": "Vilka av följande kända filmrepliker sägs ha improviserats av skådespelarna?",
+      "kategori": "Hör till: improviserade filmcitat",
+      "alternativ": [
+        "Here's looking at you, kid.",
+        "You're gonna need a bigger boat.",
+        "May the Force be with you.",
+        "Here's Johnny!"
+      ],
+      "tillhör_index": [
+        0,
+        1,
+        3
+      ],
+      "förklaring": "Tre av citaten – 'Here's looking at you, kid' (Humphrey Bogart i *Casablanca*, 1942), 'You're gonna need a bigger boat' (Roy Scheider i *Hajen*, 1975) och 'Here's Johnny!' (Jack Nicholson i *The Shining*, 1980) – uppstod genom skådespelarnas improvisation. Det fjärde citatet, 'May the Force be with you', var däremot ett planerat inslag i manus för *Star Wars* och inte någon spontan improvisation.",
+      "id": "2ede265b-9ddf-4023-80d6-06bb41733752"
+    },
+    {
+      "typ": "hör_till",
+      "svårighetsgrad": "medel",
+      "fråga": "Vilka av följande repliker kommer från filmen *The Matrix* (1999)?",
+      "kategori": "Hör till: citat från The Matrix",
+      "alternativ": [
+        "There is no spoon.",
+        "I'll be back.",
+        "You talkin' to me?",
+        "Why so serious?"
+      ],
+      "tillhör_index": [
+        0
+      ],
+      "förklaring": "Av dessa är det endast 'There is no spoon' som förekommer i *The Matrix* (1999) – det är repliken från barnet ('Spoon Boy') som lär Neo att förstå att verkligheten är illusorisk. De övriga citaten kommer från andra filmer: 'I'll be back' sägs av Terminator (Arnold Schwarzenegger), 'You talkin' to me?' är från *Taxi Driver*, och 'Why so serious?' yttras av Jokern i *The Dark Knight* (2008).",
+      "id": "cdf2ceff-a116-4520-b534-fd6e30c3856b"
+    },
+    {
+      "typ": "ordna",
+      "svårighetsgrad": "medel",
+      "fråga": "Ordna dessa filmcitat efter filmens premiärår, från äldst till nyast.",
+      "alternativ": [
+        "I'm gonna make him an offer he can't refuse.",
+        "I'm the king of the world!",
+        "Here's looking at you, kid.",
+        "Frankly, my dear, I don't give a damn."
+      ],
+      "rätt_ordning": [
+        "Frankly, my dear, I don't give a damn.",
+        "Here's looking at you, kid.",
+        "I'm gonna make him an offer he can't refuse.",
+        "I'm the king of the world!"
+      ],
+      "förklaring": "Kronologiskt sett kom dessa filmklassiker i följande ordning: *Borta med vinden* (1939) med repliken 'Frankly, my dear, I don't give a damn', därefter *Casablanca* (1942) – 'Here's looking at you, kid' –, sedan *Gudfadern* (1972) med 'I'm gonna make him an offer he can't refuse', och sist *Titanic* (1997) med 'I'm the king of the world!'.",
+      "id": "50419806-6d99-44dc-805d-2bfc5d34e135"
+    },
+    {
+      "typ": "ordna",
+      "svårighetsgrad": "medel",
+      "fråga": "Ordna dessa filmcitat efter filmens premiärår, från äldst till nyast.",
+      "alternativ": [
+        "You can't handle the truth!",
+        "Here's Johnny!",
+        "Why so serious?",
+        "Yippee-ki-yay, motherf***er!"
+      ],
+      "rätt_ordning": [
+        "Here's Johnny!",
+        "Yippee-ki-yay, motherf***er!",
+        "You can't handle the truth!",
+        "Why so serious?"
+      ],
+      "förklaring": "I åldersordning kom först *The Shining* (1980) med 'Here's Johnny!', sedan *Die Hard* (1988) med 'Yippee-ki-yay, motherf***er!', därefter *A Few Good Men* (1992) med 'You can't handle the truth!', och till sist *The Dark Knight* (2008) med Jokerns 'Why so serious?'.",
+      "id": "3efac1db-1f94-4b25-af3d-7ab859ee2e61"
+    }
+  ]
+}

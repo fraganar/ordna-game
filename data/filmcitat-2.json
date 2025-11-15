@@ -1,0 +1,202 @@
+{
+  "name": "Filmcitat 2",
+  "description": "Ikoniska repliker från filmhistorien",
+  "questions": [
+    {
+      "typ": "vilken",
+      "svårighetsgrad": "lätt",
+      "fråga": "Vilken film innehåller det berömda citatet: 'I'll be back'?",
+      "kategori": "Underhållning & Konst",
+      "alternativ": [
+        "Die Hard",
+        "The Terminator",
+        "Predator",
+        "Total Recall"
+      ],
+      "rätt_svar": "The Terminator",
+      "förklaring": "Arnold Schwarzenegger säger 'I'll be back' som T-800 i The Terminator (1984), regisserad av James Cameron. Replikens blev så ikonisk att den placerade sig på plats #37 på AFI:s lista över filmhistoriens 100 bästa citat.",
+      "id": "c3822df0-4ef4-4783-b3fe-901ffaeb896d"
+    },
+    {
+      "typ": "vilken",
+      "svårighetsgrad": "lätt",
+      "fråga": "Vilken skådespelare sa repliken 'May the Force be with you' för första gången i Star Wars (1977)?",
+      "kategori": "Underhållning & Konst",
+      "alternativ": [
+        "Mark Hamill",
+        "Harrison Ford",
+        "Alec Guinness",
+        "Alex McCrindle"
+      ],
+      "rätt_svar": "Alex McCrindle",
+      "förklaring": "Alex McCrindle, som spelade General Jan Dodonna, var först att säga 'May the Force be with you' vid briefingen inför Death Star-uppdraget. Harrison Ford säger det senare till Luke, men Dodonna var först. Citatet rankades #8 på AFI:s lista.",
+      "id": "da8d3495-726a-41f9-b965-2d5b451975f3"
+    },
+    {
+      "typ": "vilken",
+      "svårighetsgrad": "medel",
+      "fråga": "Vilken är den KORREKTA versionen av det berömda Star Wars-citatet?",
+      "kategori": "Underhållning & Konst",
+      "alternativ": [
+        "Luke, I am your father",
+        "No, I am your father",
+        "Luke, you are my son",
+        "I am your father, Luke"
+      ],
+      "rätt_svar": "No, I am your father",
+      "förklaring": "I The Empire Strikes Back (1980) säger Darth Vader 'No, I am your father' - inte 'Luke, I am your father' som många tror. Studier visar att 63% av människor minns citatet fel, medan bara 17% kommer ihåg det korrekt.",
+      "id": "d6a9f716-432c-4a6f-bd4d-44eb79cfa8ab"
+    },
+    {
+      "typ": "vilken",
+      "svårighetsgrad": "medel",
+      "fråga": "Vad säger Humphrey Bogart EGENTLIGEN i Casablanca angående pianisten Sam?",
+      "kategori": "Underhållning & Konst",
+      "alternativ": [
+        "Play it again, Sam",
+        "Play it!",
+        "Once more, Sam",
+        "Play it one more time"
+      ],
+      "rätt_svar": "Play it!",
+      "förklaring": "Bogart säger bara 'Play it!' - aldrig 'Play it again, Sam'. Det är Ingrid Bergman som säger 'Play it once, Sam' och 'Play it, Sam'. Felcitatet populariserades av Woody Allens film 'Play It Again, Sam' (1972).",
+      "id": "51c1d2ad-1c14-4c02-8f5a-87b4d5d67690"
+    },
+    {
+      "typ": "vilken",
+      "svårighetsgrad": "svår",
+      "fråga": "Vilken skådespelare vann en postumt Oscar för en roll där karaktären säger 'Why so serious?'?",
+      "kategori": "Underhållning & Konst",
+      "alternativ": [
+        "Jack Nicholson",
+        "Heath Ledger",
+        "Jared Leto",
+        "Joaquin Phoenix"
+      ],
+      "rätt_svar": "Heath Ledger",
+      "förklaring": "Heath Ledger vann postumt Oscar för bästa manliga biroll som Joker i The Dark Knight (2008). Han dog i januari 2008, filmen släpptes i juli samma år. Han var den första skådespelaren från en serietidningsfilm att vinna Oscar.",
+      "id": "c1b5828d-f64a-4a51-b5bd-e71fad5ac752"
+    },
+    {
+      "typ": "vilken",
+      "svårighetsgrad": "medel",
+      "fråga": "Vilken karaktär säger 'You can't handle the truth!' i A Few Good Men?",
+      "kategori": "Underhållning & Konst",
+      "alternativ": [
+        "Kapten Jack Ross",
+        "Löjtnant Daniel Kaffee",
+        "Överste Nathan Jessup",
+        "Korpral Harold Dawson"
+      ],
+      "rätt_svar": "Överste Nathan Jessup",
+      "förklaring": "Jack Nicholson spelar Överste Nathan Jessup som skriker denna replik till Tom Cruise karaktär i den klimatiska rättegångsscenen. Nicholson nominerades till Oscar för bästa manliga biroll - hans tionde Oscar-nominering.",
+      "id": "f46f79bb-971b-4857-a102-3133bd9907a8"
+    },
+    {
+      "typ": "vilken",
+      "svårighetsgrad": "svår",
+      "fråga": "Vilken ikonisk filmreplik var HELT improviserad av skådespelaren framför spegeln?",
+      "kategori": "Underhållning & Konst",
+      "alternativ": [
+        "'I'll be back' i The Terminator",
+        "'You talkin' to me?' i Taxi Driver",
+        "'Here's looking at you, kid' i Casablanca",
+        "'Show me the money!' i Jerry Maguire"
+      ],
+      "rätt_svar": "'You talkin' to me?' i Taxi Driver",
+      "förklaring": "Robert De Niro improviserade helt spegelscenen där Travis Bickle säger 'You talkin' to me?' i Taxi Driver (1976). Regissören Martin Scorsese avslöjade att den ikoniska scenen nästan inte kom med i filmen på grund av tidsbrist. Citatet rankades #10 på AFI:s lista.",
+      "id": "38c6b892-9db4-4d1f-8655-8710490ce44e"
+    },
+    {
+      "typ": "vilken",
+      "svårighetsgrad": "lätt",
+      "fråga": "I vilken film från 1994 säger Tom Hanks: 'My mama always said life was like a box of chocolates'?",
+      "kategori": "Underhållning & Konst",
+      "alternativ": [
+        "Philadelphia",
+        "Forrest Gump",
+        "Apollo 13",
+        "The Green Mile"
+      ],
+      "rätt_svar": "Forrest Gump",
+      "förklaring": "Tom Hanks spelar titelrollen i Forrest Gump (1994) och säger 'My mama always said life WAS like a box of chocolates'. Många minns fel och tror han säger 'life IS like' - ett exempel på Mandela-effekten. Hanks vann Oscar för bästa manliga huvudroll.",
+      "id": "6ed8c555-e606-411e-acb3-d65fb9c9c064"
+    },
+    {
+      "typ": "hör_till",
+      "svårighetsgrad": "medel",
+      "fråga": "Vilka av följande påståenden om filmcitat är sanna?",
+      "kategori": "Hör till: sanna påståenden om filmcitat",
+      "alternativ": [
+        "Marlon Brando tackade nej till sin Oscar för rollen där han säger 'I'm going to make him an offer he can't refuse'.",
+        "Replikerna 'I see dead people' gjordes av en skådespelare som tidigare spelat Forrest Gumps son som femåring.",
+        "Arnold Schwarzenegger ville ändra 'I'll be back' till 'I will be back' men regissören vägrade.",
+        "Casablanca är den film med flest citat på AFI:s lista över de 100 bästa filmcitaten."
+      ],
+      "tillhör_index": [
+        0,
+        1,
+        2,
+        3
+      ],
+      "förklaring": "Alla fyra påståendena är sanna! Brando bojkottade Oscar-ceremonin i protest. Haley Joel Osment (The Sixth Sense) spelade Forrest Gumps son. Schwarzenegger ville säga 'I will' men Cameron insisterade på 'I'll'. Casablanca har 6 citat på AFI:s lista - flest av alla filmer.",
+      "id": "a5144518-0223-4272-95b1-8bfe43626779"
+    },
+    {
+      "typ": "hör_till",
+      "svårighetsgrad": "svår",
+      "fråga": "Vilka av följande filmcitat är FELAKTIGT citerade i folkminnet?",
+      "kategori": "Hör till: felciterade filmrepliker",
+      "alternativ": [
+        "'Luke, I am your father' istället för 'No, I am your father'",
+        "'Life is like a box of chocolates' istället för 'Life was like a box of chocolates'",
+        "'Hello, Clarice' istället för 'Good morning' (Hannibal säger aldrig 'Hello Clarice' i The Silence of the Lambs från 1991)",
+        "'You can't handle the truth!' är korrekt citerat från A Few Good Men"
+      ],
+      "tillhör_index": [
+        0,
+        1,
+        2
+      ],
+      "förklaring": "De tre första är felcitat: Star Wars säger 'No' inte 'Luke', Forrest Gump säger 'was' inte 'is', och Hopkins säger aldrig 'Hello Clarice' i 1991-filmen (men däremot i uppföljaren Hannibal 2001). 'You can't handle the truth' är däremot korrekt citerat.",
+      "id": "db5af76d-c711-4f04-8962-54e5b997dec0"
+    },
+    {
+      "typ": "hör_till",
+      "svårighetsgrad": "lätt",
+      "fråga": "Vilka av följande filmer innehåller ikoniska citat som rankats bland AFI:s topp 40?",
+      "kategori": "Hör till: filmer med ikoniska citat",
+      "alternativ": [
+        "The Godfather (1972) - 'I'm going to make him an offer he can't refuse'",
+        "Casablanca (1942) - 'Here's looking at you, kid'",
+        "The Terminator (1984) - 'I'll be back'",
+        "The Dark Knight (2008) - 'Why so serious?'"
+      ],
+      "tillhör_index": [
+        0,
+        1,
+        2
+      ],
+      "förklaring": "The Godfather (#2), Casablanca (#5) och The Terminator (#37) finns alla på AFI:s lista över de 100 bästa filmcitaten. The Dark Knight är från 2008 och kom efter att listan publicerades, så den finns inte med trots att citatet är ikoniskt.",
+      "id": "d008c5a8-c9de-4fc1-937f-eb1d2253031f"
+    },
+    {
+      "typ": "hör_till",
+      "svårighetsgrad": "medel",
+      "fråga": "Vilka av följande påståenden om Oscar-vinnande skådespelare och deras ikoniska citat är sanna?",
+      "kategori": "Hör till: Oscar och filmcitat",
+      "alternativ": [
+        "Tom Hanks vann Oscar för sin roll i Forrest Gump där han säger 'Life was like a box of chocolates'.",
+        "Jack Nicholson vann Oscar för sin roll i A Few Good Men där han säger 'You can't handle the truth!'.",
+        "Cuba Gooding Jr. vann Oscar för sin roll i Jerry Maguire där han säger 'Show me the money!'.",
+        "Judy Garland vann Oscar för bästa kvinnliga huvudroll för The Wizard of Oz där hon säger 'There's no place like home'."
+      ],
+      "tillhör_index": [
+        0,
+        2
+      ],
+      "förklaring": "Tom Hanks vann Oscar för bästa manliga huvudroll för Forrest Gump (1994). Cuba Gooding Jr. vann Oscar för bästa manliga biroll för Jerry Maguire (1996). Jack Nicholson nominerades men vann INTE för A Few Good Men. Judy Garland fick ett Academy Juvenile Award men inte Oscar för bästa kvinnliga huvudroll.",
+      "id": "7f0476bb-cec3-4e09-b5b4-7f569ed200cd"
+    }
+  ]
+}

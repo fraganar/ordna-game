@@ -1,0 +1,222 @@
+{
+  "name": "Musik",
+  "description": "Musikhistoria, artister och instrument genom tiderna",
+  "questions": [
+    {
+      "typ": "hör_till",
+      "svårighetsgrad": "medel",
+      "fråga": "Vilka av följande påståenden om Beatles är sanna?",
+      "kategori": "Hör till: sanna påståenden om Beatles",
+      "alternativ": [
+        "De spelade in majoriteten av sitt debutalbum 'Please Please Me' på en enda dag.",
+        "De hade fler #1-singlar i Storbritannien än Elvis Presley.",
+        "Bandet splittrades officiellt år 1970.",
+        "De grundades ursprungligen i Manchester 1958."
+      ],
+      "tillhör_index": [
+        0,
+        2
+      ],
+      "förklaring": "Beatles spelade in större delen av 'Please Please Me' den 11 februari 1963 på en dag. Bandet splittrades officiellt den 10 april 1970. Elvis hade dock fler #1-singlar i Storbritannien (21 mot Beatles 17-18), och bandet grundades i Liverpool 1960, inte Manchester 1958.",
+      "id": "ccba5b0a-28eb-4d1a-94c5-6c1615e9fb72"
+    },
+    {
+      "typ": "vilken",
+      "svårighetsgrad": "lätt",
+      "fråga": "Vilken artist har det bäst säljande albumet genom tiderna?",
+      "kategori": "Musik",
+      "alternativ": [
+        "Beatles",
+        "Elvis Presley",
+        "Michael Jackson",
+        "Madonna"
+      ],
+      "rätt_svar": "Michael Jackson",
+      "förklaring": "Michael Jacksons 'Thriller' från 1982 är det bäst säljande albumet genom tiderna med 66-70 miljoner sålda exemplar världen över.",
+      "id": "b3ceb890-eac6-453b-b529-e8911badf764"
+    },
+    {
+      "typ": "hör_till",
+      "svårighetsgrad": "svår",
+      "fråga": "Vilka av följande påståenden om musikinstrument är sanna?",
+      "kategori": "Hör till: sanna påståenden om musikinstrument",
+      "alternativ": [
+        "Pianot uppfanns av Bartolomeo Cristofori år 1709.",
+        "Saxofonen fick sitt patent beviljat år 1846.",
+        "Den första elgitarren kallades 'The Stratocaster' och kom 1954.",
+        "Trumpeten uppfanns i Frankrike under 1600-talet."
+      ],
+      "tillhör_index": [
+        0,
+        1
+      ],
+      "förklaring": "Cristofori konstruerade pianot ('un cimbalo piano et forte') 1709. Adolphe Sax fick patent på saxofonen den 22 juni 1846. Den första elgitarren var dock 'The Frying Pan' från 1931, inte Stratocaster. Trumpeten är mycket äldre med ursprung i antiken.",
+      "id": "c2b4a067-e098-468d-82c9-55a2f3d84669"
+    },
+    {
+      "typ": "hör_till",
+      "svårighetsgrad": "medel",
+      "fråga": "Vilka av följande påståenden om musikhistoria är sanna?",
+      "kategori": "Hör till: sanna påståenden om musikhistoria",
+      "alternativ": [
+        "ABBA vann Eurovision Song Contest år 1974 med låten 'Waterloo'.",
+        "MTV:s första musikvideo var 'Video Killed the Radio Star' av The Buggles.",
+        "LP-skivan lanserades först av Columbia Records år 1948.",
+        "CD-skivor sålde mer än LP-skivor för första gången år 1982."
+      ],
+      "tillhör_index": [
+        0,
+        1,
+        2
+      ],
+      "förklaring": "ABBA vann Eurovision den 6 april 1974. MTV lanserades 1 augusti 1981 klockan 12:01 med The Buggles video. LP-skivan (33 rpm) lanserades 21 juni 1948 av Columbia Records. CD-skivor sålde dock mer än LP först 1988, inte 1982.",
+      "id": "9783fc4e-4526-4394-92fe-d839562fdb95"
+    },
+    {
+      "typ": "vilken",
+      "svårighetsgrad": "svår",
+      "fråga": "Vilken låt innehar rekordet för flest veckor på förstaplatsen på Billboard Hot 100?",
+      "kategori": "Musik",
+      "alternativ": [
+        "Despacito av Luis Fonsi",
+        "One Sweet Day av Mariah Carey och Boyz II Men",
+        "Old Town Road av Lil Nas X",
+        "Shape of You av Ed Sheeran"
+      ],
+      "rätt_svar": "Old Town Road av Lil Nas X",
+      "förklaring": "'Old Town Road' av Lil Nas X låg på förstaplatsen i 19 veckor år 2019, vilket är Billboards rekord. Tidigare rekordhållare 'Despacito' och 'One Sweet Day' låg båda på #1 i 16 veckor.",
+      "id": "dfb0fc3d-2ba2-43ba-81a7-278103464abd"
+    },
+    {
+      "typ": "hör_till",
+      "svårighetsgrad": "lätt",
+      "fråga": "Vilka av följande påståenden om Thomas Edison och ljudinspelning är sanna?",
+      "kategori": "Hör till: sanna påståenden om ljudinspelning",
+      "alternativ": [
+        "Thomas Edison spelade in 'Mary Had a Little Lamb' som den första mänskliga röstinspelningen.",
+        "Edison uppfann fonografen år 1877.",
+        "Den första ljudinspelningen gjordes på magnetband.",
+        "CD-skivan introducerades redan på 1970-talet."
+      ],
+      "tillhör_index": [
+        0,
+        1
+      ],
+      "förklaring": "Edison spelade in 'Mary Had a Little Lamb' den 6 december 1877 på sin fonograf – den första inspelningen av en mänsklig röst. CD-skivan introducerades dock först 1982, och magnetband kom långt efter fonografen.",
+      "id": "b05223bd-00e7-4ce6-8a0f-df758e5dc147"
+    },
+    {
+      "typ": "ordna",
+      "svårighetsgrad": "lätt",
+      "fråga": "Ordna dessa musikinstrument efter när de uppfanns, från äldst till nyast.",
+      "alternativ": [
+        "Elgitarr",
+        "Piano",
+        "Saxofon",
+        "Synthesizer"
+      ],
+      "rätt_ordning": [
+        "Piano",
+        "Saxofon",
+        "Elgitarr",
+        "Synthesizer"
+      ],
+      "förklaring": "Piano uppfanns av Cristofori 1709, saxofon av Adolphe Sax 1846, elgitarr 'The Frying Pan' 1931, och synthesizern utvecklades på 1960-talet.",
+      "id": "4d53432f-fe8e-4fdb-8676-d225a882af93"
+    },
+    {
+      "typ": "ordna",
+      "svårighetsgrad": "medel",
+      "fråga": "Ordna dessa klassiska kompositörer efter födelseår, från äldst till yngst.",
+      "alternativ": [
+        "Ludwig van Beethoven",
+        "Wolfgang Amadeus Mozart",
+        "Johann Sebastian Bach",
+        "Frédéric Chopin"
+      ],
+      "rätt_ordning": [
+        "Johann Sebastian Bach",
+        "Wolfgang Amadeus Mozart",
+        "Ludwig van Beethoven",
+        "Frédéric Chopin"
+      ],
+      "förklaring": "Bach föddes 1685, Mozart 1756, Beethoven 1770, och Chopin 1810.",
+      "id": "2b065018-2cdb-40ad-a6bd-22745317195e"
+    },
+    {
+      "typ": "ordna",
+      "svårighetsgrad": "medel",
+      "fråga": "Ordna dessa teknologier för musikuppspelning efter när de introducerades, från äldst till nyast.",
+      "alternativ": [
+        "CD-skiva",
+        "LP-skiva (33 rpm)",
+        "Spotify streaming",
+        "Fonograf"
+      ],
+      "rätt_ordning": [
+        "Fonograf",
+        "LP-skiva (33 rpm)",
+        "CD-skiva",
+        "Spotify streaming"
+      ],
+      "förklaring": "Fonografen uppfanns av Edison 1877, LP-skivan lanserades 1948, CD-skivan introducerades 1982, och Spotify lanserades 2008.",
+      "id": "fdad2920-296c-48f4-b934-7220d862a82a"
+    },
+    {
+      "typ": "ordna",
+      "svårighetsgrad": "svår",
+      "fråga": "Ordna dessa musikgenrer efter när de blev populära, från tidigast till senast.",
+      "alternativ": [
+        "Hip-hop",
+        "Jazz",
+        "Rock and roll",
+        "Barock"
+      ],
+      "rätt_ordning": [
+        "Barock",
+        "Jazz",
+        "Rock and roll",
+        "Hip-hop"
+      ],
+      "förklaring": "Barock var populärt ca 1600-1750, jazz slog igenom på 1920-talet, rock and roll på 1950-talet, och hip-hop uppstod på 1970-talet.",
+      "id": "a5176c26-1272-4917-951b-d890ea2d3e6e"
+    },
+    {
+      "typ": "hör_till",
+      "svårighetsgrad": "svår",
+      "fråga": "Vilka av följande påståenden om rock and roll-historien är sanna?",
+      "kategori": "Hör till: sanna påståenden om rock and roll",
+      "alternativ": [
+        "'Rocket 88' av Jackie Brenston från 1951 anses av många som den första rock and roll-inspelningen.",
+        "Elvis Presleys första singel 'That's All Right' släpptes i juli 1954.",
+        "Chuck Berry skrev och släppte 'Johnny B. Goode' samma år, 1955.",
+        "Little Richard var den första artisten att använda elgitarr på en inspelning."
+      ],
+      "tillhör_index": [
+        0,
+        1
+      ],
+      "förklaring": "'Rocket 88' spelades in i mars 1951 och anses av många som första rock and roll-låten. Elvis 'That's All Right' släpptes 19 juli 1954. Chuck Berry skrev dock 'Johnny B. Goode' 1955 men släppte den först 31 mars 1958. Little Richard var inte först med elgitarr – den användes redan på 1930-40-talen.",
+      "id": "d5a102e2-2bbf-44fd-82cb-95b7fb1bdd4c"
+    },
+    {
+      "typ": "ordna",
+      "svårighetsgrad": "lätt",
+      "fråga": "Ordna dessa artister efter totalt antal sålda skivor, från minst till flest.",
+      "alternativ": [
+        "Madonna",
+        "Michael Jackson",
+        "Beatles",
+        "ABBA"
+      ],
+      "rätt_ordning": [
+        "ABBA",
+        "Madonna",
+        "Michael Jackson",
+        "Beatles"
+      ],
+      "förklaring": "ABBA cirka 150-200 miljoner, Madonna 300 miljoner, Michael Jackson 350 miljoner, Beatles 600 miljoner sålda skivor.",
+      "id": "5509bd76-b4f2-4f97-8448-988e31365e0e"
+    }
+  ]
+}

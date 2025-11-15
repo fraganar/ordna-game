@@ -6,6 +6,42 @@
     "order": 1
   },
   {
+    "id": "filmcitat-1.json",
+    "name": "Filmcitat 1",
+    "description": "Blandade frågor om kända filmrepliker från olika filmer.",
+    "order": 2
+  },
+  {
+    "id": "filmcitat-2.json",
+    "name": "Filmcitat 2",
+    "description": "Ikoniska repliker från filmhistorien",
+    "order": 3
+  },
+  {
+    "id": "musik.json",
+    "name": "Musik",
+    "description": "Musikhistoria, artister och instrument genom tiderna",
+    "order": 4
+  },
+  {
+    "id": "ordsprak-uttryck-1.json",
+    "name": "Svenska ordspråk och uttryck 1",
+    "description": "Idiom, talesätt och deras ursprung i det svenska språket",
+    "order": 5
+  },
+  {
+    "id": "ordsprak-uttryck-2.json",
+    "name": "Svenska ordspråk och uttryck 2",
+    "description": "Svenska ordspråk, uttryck och idiom",
+    "order": 6
+  },
+  {
+    "id": "sport.json",
+    "name": "Sport",
+    "description": "Olympiska spel, idrottshistoria och legendariska atleter",
+    "order": 7
+  },
+  {
     "id": "blandat-1.json",
     "name": "Blandat #1",
     "description": "Teknik, historia, språk, musik, byggnader och samhälle",
