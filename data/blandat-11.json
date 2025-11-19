@@ -19,7 +19,7 @@
         3
       ],
       "förklaring": "Marie Curie var den första kvinnan att vinna Nobelpris (1903 i fysik). Hon fick faktiskt två Nobelpriser – fysik 1903 och kemi 1911. Hon upptäckte grundämnena radium och polonium tillsammans med sin make Pierre Curie 1898.",
-      "id": "1fc88000-703d-4cec-a47d-0d4fc340e8e0"
+      "id": "215498d705a361cc"
     },
     {
       "typ": "ordna",
@@ -39,7 +39,7 @@
       ],
       "förklaring": "Wilhelm Röntgen upptäckte röntgenstrålar 1895. Henri Becquerel upptäckte radioaktivitet 1896. Alexander Fleming upptäckte penicillin 1928. Watson och Crick fastställde DNA:s dubbelhelixstruktur 1953.",
       "kategori": "Vetenskap & Natur",
-      "id": "012015fe-a6e1-4a22-bb9b-4927bcb81244"
+      "id": "df2b03a8731d3f5e"
     },
     {
       "typ": "hör_till",
@@ -58,7 +58,7 @@
         3
       ],
       "förklaring": "Einstein fick faktiskt Nobelpriset 1921 för den fotoelektriska effekten, inte för relativitetsteorin (den var för kontroversiell). Han publicerade den speciella relativitetsteorin med E=mc² 1905. Han föddes i Tyskland 1879 och blev senare amerikansk medborgare.",
-      "id": "7b7c7abf-c9b5-4e33-8d9e-603aade05e2b"
+      "id": "f07201c3323b3fd4"
     },
     {
       "typ": "ordna",
@@ -78,7 +78,7 @@
       ],
       "förklaring": "Teleskopet uppfanns 1609 av Galileo och Hans Lippershey. Edward Jenner vaccinerade första gången mot smittkoppor 1796. Thomas Edison och Joseph Swan patenterade den elektriska glödlampan 1879. Jonas Salks poliovaccin godkändes 1955.",
       "kategori": "Vetenskap & Natur",
-      "id": "3f5a6666-6843-45c3-baf0-c82be6c54241"
+      "id": "973b975ee74f3f92"
     },
     {
       "typ": "hör_till",
@@ -96,7 +96,7 @@
         2
       ],
       "förklaring": "Fleming upptäckte penicillin 1928 av en slump när mögelsvamp dödade bakterier i en glömd petriskål. Detta var före andra världskriget (1939-1945). Fleming fick Nobelpriset 1945 tillsammans med Chain och Florey som utvecklade massproduktion. Det tog över 10 år från upptäckt till massproduktion.",
-      "id": "28a465fa-8fd0-494b-921c-fab1aec38786"
+      "id": "7d4b9a42fd55b8b5"
     },
     {
       "typ": "ordna",
@@ -116,7 +116,7 @@
       ],
       "förklaring": "Newton publicerade Principia Mathematica 1687 med gravitationslagen. Darwin publicerade Om arternas uppkomst 24 november 1859. Mendelejev presenterade periodiska systemet 6 mars 1869. Einstein publicerade den speciella relativitetsteorin 1905.",
       "kategori": "Vetenskap & Natur",
-      "id": "5076294e-a92d-4c98-a64d-4a4e3bf1afa4"
+      "id": "0a52acd7eaa76529"
     },
     {
       "typ": "hör_till",
@@ -135,7 +135,7 @@
         3
       ],
       "förklaring": "Det första Nobelpriset delades ut 1901 efter Alfred Nobels testamente från 1895. Nobel uppfann dynamit 1867 och höll 355 patent. Wilhelm Röntgen fick det allra första Nobelpriset i fysik 1901. Ekonomipriset tillkom först 1968, alltså inte från början.",
-      "id": "17a2898d-aa28-41d4-b08b-10528793cbc9"
+      "id": "85b83b1f6544043f"
     },
     {
       "typ": "ordna",
@@ -155,7 +155,7 @@
       ],
       "förklaring": "Galileo Galilei levde 1564-1642 och använde teleskop för astronomiska upptäckter. Isaac Newton levde 1643-1727 och publicerade gravitationslagen. Charles Darwin levde 1809-1882 och utvecklade evolutionsteorin. Louis Pasteur levde 1822-1895 och uppfann bland annat pastörisering och rabiesvaccin.",
       "kategori": "Vetenskap & Natur",
-      "id": "4f0942d7-6bae-4cbe-ac3d-d9c7413cb150"
+      "id": "1203e29a4c82c7fb"
     }
   ]
 }

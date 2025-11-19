@@ -18,7 +18,7 @@
         2
       ],
       "förklaring": "Uttrycken 'Slå två flugor i en smäll' och 'Dra alla över en kam' är etablerade idiom i svenska språket, medan de övriga två alternativen är påhittade. Till exempel är 'döda två fåglar med en sten' en direktöversättning av ett engelskt talesätt som inte används på svenska.",
-      "id": "2815f473-5a48-496e-9cb8-b33f356a998c"
+      "id": "f066060171aeeb6e"
     },
     {
       "typ": "hör_till",
@@ -37,7 +37,7 @@
         2
       ],
       "förklaring": "Uttrycken 'Högmod går före fall', 'kasta pärlor för svin' och 'vända andra kinden till' kommer alla från Bibeln. 'Högmod går före fall' återfinns i Ordspråksboken 16:18, 'Att kasta pärlor för svin' är ett citat ur Nya Testamentet (Matt. 7:6) och 'Vända andra kinden till' kommer från Jesu lära (Matt. 5:39). 'Borta bra men hemma bäst' är ett klassiskt ordspråk utan bibliskt ursprung.",
-      "id": "5414b757-ca2c-40aa-a7ad-c226e580f231"
+      "id": "a6654b2122357b08"
     },
     {
       "typ": "hör_till",
@@ -55,7 +55,7 @@
         2
       ],
       "förklaring": "Idiomen 'Ana ugglor i mossen' och 'Här ligger en hund begraven' betyder båda att man anar oråd eller misstänker att något skumt pågår. 'Ha en räv bakom örat' betyder att någon är slug och har dolda avsikter, och 'Gå som katten kring het gröt' innebär att man undviker att komma till saken.",
-      "id": "6841df9e-7676-4f44-9566-1272612c30ac"
+      "id": "c0ccba12eedc042e"
     },
     {
       "typ": "hör_till",
@@ -72,7 +72,7 @@
         1
       ],
       "förklaring": "Att 'mota Olle i grind' betyder att man sätter stopp för en oönskad utveckling i tid, inte att man skjuter upp problemet. Dessutom syftar 'Olle' i uttrycket på en tjur. Uttrycket blev allmänt spritt under 1800-talet (inte redan på medeltiden), och liknande uttryck är exempelvis 'stämma i bäcken' eller 'kväva något i sin linda' – inte att skjuta upp saker.",
-      "id": "677cf34e-a716-4ace-837f-14ffe9ca4e92"
+      "id": "7bbde0a2598408e5"
     },
     {
       "typ": "vilken",
@@ -87,7 +87,7 @@
       ],
       "rätt_svar": "Boxning",
       "förklaring": "Uttrycket 'kasta in handduken' kommer från boxning, där en handduk kastas in i ringen som signal om att ge upp en match. Idag används frasen bildligt om att ge upp i största allmänhet.",
-      "id": "b159f3d1-af94-47e5-a18a-b6babe488df7"
+      "id": "ac6cc3e3d6546435"
     },
     {
       "typ": "vilken",
@@ -102,7 +102,7 @@
       ],
       "rätt_svar": "Att dra sig ur en svår situation utan att förlora anseendet.",
       "förklaring": "Att 'ta sin Mats ur skolan' betyder att dra sig ur en besvärlig eller farlig situation utan att förlora ansiktet eller hamna i sämre läge. Det handlar alltså inte bokstavligen om att lämna skolan, utan om att i tid backa ur något innan det går riktigt illa.",
-      "id": "c939132c-8b11-420a-9b43-72a19816b070"
+      "id": "624d316c1971328d"
     },
     {
       "typ": "vilken",
@@ -117,7 +117,7 @@
       ],
       "rätt_svar": "Att göra bort sig rejält eller gå för långt.",
       "förklaring": "Uttrycket 'att skita i det blå skåpet' betyder att göra bort sig ordentligt eller överskrida gränser så att man hamnar i problem. Det är alltså att 'göra en groda' i socialt hänseende – inte att få panik eller ha tur.",
-      "id": "8dc26cb3-c47a-4128-87c1-b692de032b72"
+      "id": "54d9298a5d3af77b"
     },
     {
       "typ": "vilken",
@@ -132,7 +132,7 @@
       ],
       "rätt_svar": "Ingen ko på isen, så länge rumpan är i land.",
       "förklaring": "Det fullständiga ordspråket är 'Ingen ko på isen så länge rumpan är i land'. Det betyder bildligt att det inte är någon fara eller brådska så länge situationen inte är allvarlig ännu. De andra alternativen är påhittade och har inget med den riktiga frasen att göra.",
-      "id": "4e8294a1-8ba6-4a3f-ae35-0439ea9cdd5f"
+      "id": "4fe4453294e2394c"
     },
     {
       "typ": "vilken",
@@ -147,7 +147,7 @@
       ],
       "rätt_svar": "Surt sa räven om rönnbären.",
       "förklaring": "Ordspråket 'Surt sa räven om rönnbären' kommer från Aisopos fabel 'Räven och druvorna'. I fabeln kan räven inte nå druvorna och låtsas då att de ändå är sura – därav uttrycket att nedvärdera något man ändå inte kunde få. De övriga alternativen härstammar inte från Aisopos fabler.",
-      "id": "f255bea6-5b8c-4fac-b343-3b67950ab479"
+      "id": "61272d6a161a6bf4"
     },
     {
       "typ": "vilken",
@@ -162,7 +162,7 @@
       ],
       "rätt_svar": "Lägga rabarber på",
       "förklaring": "Frasen 'lägga rabarber på' (i betydelsen att lägga beslag på något) uppstod genom en felsägning av 'lägga embargo på'. Svenskarna omformade ordet 'embargo' till 'rabarber' – en skämtsam misstolkning som levt kvar. De övriga alternativen är visserligen idiomatiska uttryck, men de har inte uppstått genom felsägningar.",
-      "id": "529fd930-170b-41f5-89a8-a8a61348c0fc"
+      "id": "a0a1fa838efda013"
     },
     {
       "typ": "vilken",
@@ -177,7 +177,7 @@
       ],
       "rätt_svar": "Blod är tjockare än vatten.",
       "förklaring": "'Blod är tjockare än vatten' betyder att släktband är viktigare eller starkare än exempelvis vänskap. Det är just det uttryck som anger att familjen står en närmast. De övriga ordspråken har helt andra betydelser.",
-      "id": "71d77fa8-53a2-484e-8fdf-ef794f4f5d5f"
+      "id": "3e6b0cad05e6d931"
     },
     {
       "typ": "vilken",
@@ -192,7 +192,7 @@
       ],
       "rätt_svar": "Äpplet faller inte långt från trädet.",
       "förklaring": "'Äpplet faller inte långt från trädet' innebär att barn liknar sina föräldrar – precis som talesättet 'sådan far, sådan son'. De andra uttrycken betyder helt andra saker.",
-      "id": "4edd7337-1f8a-4c77-8466-f5f56c1a05ef"
+      "id": "8b9c245288da1392"
     }
   ]
 }

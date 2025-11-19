@@ -18,7 +18,7 @@
         2
       ],
       "förklaring": "Beatles spelade in större delen av 'Please Please Me' den 11 februari 1963 på en dag. Bandet splittrades officiellt den 10 april 1970. Elvis hade dock fler #1-singlar i Storbritannien (21 mot Beatles 17-18), och bandet grundades i Liverpool 1960, inte Manchester 1958.",
-      "id": "ccba5b0a-28eb-4d1a-94c5-6c1615e9fb72"
+      "id": "6cf0a1ec363c7ef3"
     },
     {
       "typ": "vilken",
@@ -33,7 +33,7 @@
       ],
       "rätt_svar": "Michael Jackson",
       "förklaring": "Michael Jacksons 'Thriller' från 1982 är det bäst säljande albumet genom tiderna med 66-70 miljoner sålda exemplar världen över.",
-      "id": "b3ceb890-eac6-453b-b529-e8911badf764"
+      "id": "fd8f7b38bcaf919f"
     },
     {
       "typ": "hör_till",
@@ -51,7 +51,7 @@
         1
       ],
       "förklaring": "Cristofori konstruerade pianot ('un cimbalo piano et forte') 1709. Adolphe Sax fick patent på saxofonen den 22 juni 1846. Den första elgitarren var dock 'The Frying Pan' från 1931, inte Stratocaster. Trumpeten är mycket äldre med ursprung i antiken.",
-      "id": "c2b4a067-e098-468d-82c9-55a2f3d84669"
+      "id": "7ec2c21100a7d762"
     },
     {
       "typ": "hör_till",
@@ -70,7 +70,7 @@
         2
       ],
       "förklaring": "ABBA vann Eurovision den 6 april 1974. MTV lanserades 1 augusti 1981 klockan 12:01 med The Buggles video. LP-skivan (33 rpm) lanserades 21 juni 1948 av Columbia Records. CD-skivor sålde dock mer än LP först 1988, inte 1982.",
-      "id": "9783fc4e-4526-4394-92fe-d839562fdb95"
+      "id": "215168740d287cff"
     },
     {
       "typ": "vilken",
@@ -85,7 +85,7 @@
       ],
       "rätt_svar": "Old Town Road av Lil Nas X",
       "förklaring": "'Old Town Road' av Lil Nas X låg på förstaplatsen i 19 veckor år 2019, vilket är Billboards rekord. Tidigare rekordhållare 'Despacito' och 'One Sweet Day' låg båda på #1 i 16 veckor.",
-      "id": "dfb0fc3d-2ba2-43ba-81a7-278103464abd"
+      "id": "01359891dfec18fa"
     },
     {
       "typ": "hör_till",
@@ -103,7 +103,7 @@
         1
       ],
       "förklaring": "Edison spelade in 'Mary Had a Little Lamb' den 6 december 1877 på sin fonograf – den första inspelningen av en mänsklig röst. CD-skivan introducerades dock först 1982, och magnetband kom långt efter fonografen.",
-      "id": "b05223bd-00e7-4ce6-8a0f-df758e5dc147"
+      "id": "5dda1d6f2856b413"
     },
     {
       "typ": "ordna",
@@ -122,7 +122,7 @@
         "Synthesizer"
       ],
       "förklaring": "Piano uppfanns av Cristofori 1709, saxofon av Adolphe Sax 1846, elgitarr 'The Frying Pan' 1931, och synthesizern utvecklades på 1960-talet.",
-      "id": "4d53432f-fe8e-4fdb-8676-d225a882af93"
+      "id": "71a1fec4ac542da9"
     },
     {
       "typ": "ordna",
@@ -141,7 +141,7 @@
         "Frédéric Chopin"
       ],
       "förklaring": "Bach föddes 1685, Mozart 1756, Beethoven 1770, och Chopin 1810.",
-      "id": "2b065018-2cdb-40ad-a6bd-22745317195e"
+      "id": "192bea4e02baf0ba"
     },
     {
       "typ": "ordna",
@@ -160,7 +160,7 @@
         "Spotify streaming"
       ],
       "förklaring": "Fonografen uppfanns av Edison 1877, LP-skivan lanserades 1948, CD-skivan introducerades 1982, och Spotify lanserades 2008.",
-      "id": "fdad2920-296c-48f4-b934-7220d862a82a"
+      "id": "b0913d9d7f4af00d"
     },
     {
       "typ": "ordna",
@@ -179,7 +179,7 @@
         "Hip-hop"
       ],
       "förklaring": "Barock var populärt ca 1600-1750, jazz slog igenom på 1920-talet, rock and roll på 1950-talet, och hip-hop uppstod på 1970-talet.",
-      "id": "a5176c26-1272-4917-951b-d890ea2d3e6e"
+      "id": "fc61abae61c3c6ff"
     },
     {
       "typ": "hör_till",
@@ -197,7 +197,7 @@
         1
       ],
       "förklaring": "'Rocket 88' spelades in i mars 1951 och anses av många som första rock and roll-låten. Elvis 'That's All Right' släpptes 19 juli 1954. Chuck Berry skrev dock 'Johnny B. Goode' 1955 men släppte den först 31 mars 1958. Little Richard var inte först med elgitarr – den användes redan på 1930-40-talen.",
-      "id": "d5a102e2-2bbf-44fd-82cb-95b7fb1bdd4c"
+      "id": "14075a2faf6fe9c7"
     },
     {
       "typ": "ordna",
@@ -216,7 +216,7 @@
         "Beatles"
       ],
       "förklaring": "ABBA cirka 150-200 miljoner, Madonna 300 miljoner, Michael Jackson 350 miljoner, Beatles 600 miljoner sålda skivor.",
-      "id": "5509bd76-b4f2-4f97-8448-988e31365e0e"
+      "id": "02a86f4b819202cc"
     }
   ]
 }

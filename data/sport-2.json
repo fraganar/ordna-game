@@ -1,0 +1,206 @@
+{
+  "name": "Sportquiz 2",
+  "description": "Ett blandat frågepaket om sport, med fokus på svensk idrottshistoria och några globala inslag.",
+  "questions": [
+    {
+      "typ": "hör_till",
+      "svårighetsgrad": "medel",
+      "fråga": "Vilka av följande påståenden om Tre Kronor (Sveriges herrlandslag i ishockey) är sanna?",
+      "kategori": "Hör till: sanna påståenden om Tre Kronor",
+      "alternativ": [
+        "Sverige har vunnit herrarnas ishockey-VM 11 gånger.",
+        "Sverige har vunnit två OS-guld i ishockey.",
+        "Sverige är det landslag som tagit flest VM-guld i ishockey.",
+        "Sverige blev 2006 första nation att vinna OS- och VM-guld i ishockey samma år."
+      ],
+      "tillhör_index": [
+        0,
+        1,
+        3
+      ],
+      "förklaring": "Tre Kronor (herrlandslaget) har vunnit VM-guld 11 gånger (senast 2018) och dessutom OS-guld 1994 och 2006. År 2006 blev Sverige första land att ta guld i både OS och VM under samma säsong. Sverige har dock **inte** rekordet i VM-guld – Kanada toppar med 28 VM-titlar, följt av Sovjetunionens 22. Sveriges 11 VM-guld räcker till en delad tredjeplats genom tiderna.",
+      "id": "a5a77cb5f857b12f"
+    },
+    {
+      "typ": "hör_till",
+      "svårighetsgrad": "lätt",
+      "fråga": "Vilka av följande påståenden om Zlatan Ibrahimović är sanna?",
+      "kategori": "Hör till: sanna påståenden om Zlatan Ibrahimović",
+      "alternativ": [
+        "Zlatan har aldrig vunnit UEFA Champions League.",
+        "Zlatan är den som gjort flest mål i det svenska herrlandslaget i fotboll.",
+        "Zlatan har spelat över 150 landskamper för Sverige.",
+        "Zlatan har vunnit ligatitlar i fem olika länder."
+      ],
+      "tillhör_index": [
+        0,
+        1
+      ],
+      "förklaring": "Zlatan Ibrahimović vann aldrig Champions League under sin långa klubbkarriär, trots spel i flera toppklubbar. Han gjorde 62 mål för Sveriges herrlandslag, flest genom tiderna. **Däremot** spelade han 122 landskamper (inte över 150), och han har vunnit ligatitlar i **fyra** länder (Nederländerna, Italien, Spanien och Frankrike) – inte fem.",
+      "id": "c0b7ce79720f99a0"
+    },
+    {
+      "typ": "hör_till",
+      "svårighetsgrad": "svår",
+      "fråga": "Vilka av följande påståenden om Björn Borg är sanna?",
+      "kategori": "Hör till: sanna påståenden om Björn Borg",
+      "alternativ": [
+        "Björn Borg vann 11 Grand Slam-titlar i singel under sin tenniskarriär.",
+        "Björn Borg vann aldrig US Open trots att han nådde finalen flera gånger.",
+        "Björn Borg tog en olympisk medalj i tennis.",
+        "Björn Borg spelade tävlingstennis tills han var över 35 år gammal."
+      ],
+      "tillhör_index": [
+        0,
+        1
+      ],
+      "förklaring": "Björn Borg dominerade tennis på 1970-talet och vann 11 Grand Slam-titlar i singel (5 Wimbledon och 6 Franska öppna). Han nådde US Open-finalen fyra gånger men vann aldrig turneringen. **Han tog ingen OS-medalj** – tennis var inte en ordinarie OS-idrott under hans storhetstid (det återkom först 1988). **Inte heller spelade han till 35 års ålder** – Borg chockade världen genom att avsluta karriären redan som 26-åring (1983).",
+      "id": "8d616c740f2f61d0"
+    },
+    {
+      "typ": "hör_till",
+      "svårighetsgrad": "svår",
+      "fråga": "Vilka av följande påståenden om de olympiska spelen är sanna?",
+      "kategori": "Hör till: fakta om olympiska spel",
+      "alternativ": [
+        "Helsingfors 1952 var första OS där kvinnor fick tävla.",
+        "Inga olympiska spel hölls 1940 och 1944 på grund av andra världskriget.",
+        "Sverige har arrangerat både sommar-OS och vinter-OS.",
+        "Sommar-OS har bara ställts in en enda gång i historien."
+      ],
+      "tillhör_index": [
+        1
+      ],
+      "förklaring": "På grund av andra världskriget ställdes både sommar-OS 1940 och 1944 in (inga olympiska spel hölls de åren). **Alla andra påståenden är falska:** Kvinnor fick delta redan vid Paris 1900 (inte först 1952). Sverige har endast varit OS-värd för sommar-OS 1912 (samt ridsport-OS 1956), men aldrig för ett vinter-OS. Dessutom har sommar-OS ställts in **tre** gånger (1916, 1940, 1944) – inte bara en gång.",
+      "id": "84a5dcd8bab23975"
+    },
+    {
+      "typ": "ordna",
+      "svårighetsgrad": "medel",
+      "fråga": "Ordna dessa fotbolls-VM (herr) efter när de ägde rum, från äldst till nyast. (Tips: Det rör sig om de VM där Sverige nådde topp 4.)",
+      "alternativ": [
+        "VM i USA (Sverige brons)",
+        "VM i Frankrike (Sverige 4:e plats)",
+        "VM i Sverige (Sverige silver)",
+        "VM i Brasilien (Sverige brons)"
+      ],
+      "rätt_ordning": [
+        "VM i Frankrike (Sverige 4:e plats)",
+        "VM i Brasilien (Sverige brons)",
+        "VM i Sverige (Sverige silver)",
+        "VM i USA (Sverige brons)"
+      ],
+      "förklaring": "Sveriges herrlandslag i fotboll har nått semifinal/topplacering vid fyra VM-turneringar: **1938 i Frankrike** (4:e plats), **1950 i Brasilien** (bronsmatch vanns, 3:e plats), **1958 på hemmaplan i Sverige** (silver efter finalförlust mot Brasilien) och **1994 i USA** (brons). Den kronologiska ordningen från äldst till nyast är alltså Frankrike 1938 → Brasilien 1950 → Sverige 1958 → USA 1994.",
+      "id": "c03c4e93102d01d4"
+    },
+    {
+      "typ": "ordna",
+      "svårighetsgrad": "svår",
+      "fråga": "Ordna dessa svenska tennisspelare efter antal vunna Grand Slam-titlar i herrsingel, från minst till flest.",
+      "alternativ": [
+        "Stefan Edberg",
+        "Thomas Johansson",
+        "Björn Borg",
+        "Mats Wilander"
+      ],
+      "rätt_ordning": [
+        "Thomas Johansson",
+        "Stefan Edberg",
+        "Mats Wilander",
+        "Björn Borg"
+      ],
+      "förklaring": "**Thomas Johansson** vann 1 Grand Slam-titel (Australian Open 2002). **Stefan Edberg** tog 6 titlar (bl.a. två Wimbledon). **Mats Wilander** vann 7 Grand Slam (inklusive tre olika turneringar: Australian Open, Franska öppna och US Open). **Björn Borg** toppar med 11 titlar (5 Wimbledon och 6 Franska öppna). Ordningen från minst till flest blir alltså: Johansson (1) < Edberg (6) < Wilander (7) < Borg (11).",
+      "id": "8cb5897eab45dbb3"
+    },
+    {
+      "typ": "vilken",
+      "svårighetsgrad": "lätt",
+      "fråga": "Vilken svensk friidrottare innehar världsrekordet i stavhopp (6,23 m)?",
+      "kategori": "Friidrott",
+      "alternativ": [
+        "Armand \"Mondo\" Duplantis",
+        "Patrik Sjöberg",
+        "Stefan Holm",
+        "Christian Olsson"
+      ],
+      "rätt_svar": "Armand \"Mondo\" Duplantis",
+      "förklaring": "Armand Duplantis är nuvarande världsrekordhållare i stavhopp. Han har höjt rekordet flera gånger, senast till 6,23 m (2023). **Patrik Sjöberg** och **Stefan Holm** var höjdhoppare (Sjöberg satte världsrekord i höjd 1987 på 2,42 m), och **Christian Olsson** tävlade i tresteg. Ingen av dem hoppade stav eller har haft världsrekordet där – det gör Duplantis.",
+      "id": "c340e03618fa6298"
+    },
+    {
+      "typ": "vilken",
+      "svårighetsgrad": "medel",
+      "fråga": "Vilken svensk längdskidåkare har vunnit totalt nio OS-medaljer under sin karriär (delat svenskt rekord)?",
+      "kategori": "Längdskidåkning",
+      "alternativ": [
+        "Charlotte Kalla",
+        "Gunde Svan",
+        "Anja Pärson",
+        "Thomas Wassberg"
+      ],
+      "rätt_svar": "Charlotte Kalla",
+      "förklaring": "Charlotte Kalla tog 9 OS-medaljer i längdskidåkning (3 guld och 6 silver) under 2010–2018, vilket är flest av alla svenska idrottare tillsammans med Sixten Jernberg (även han 9 medaljer, dock på 1950-talet). **Gunde Svan** vann 7 OS-medaljer, **Anja Pärson** 6 (i alpint) och **Thomas Wassberg** 4. Kallas medaljskörd (bl.a. guld i stafett och skiathlon) gör henne till en av Sveriges mest framgångsrika olympier någonsin.",
+      "id": "21a822b5feabd7c3"
+    },
+    {
+      "typ": "vilken",
+      "svårighetsgrad": "svår",
+      "fråga": "Vilken fotbollsspelare är den ende som har blivit skyttekung i Premier League, La Liga **och** Serie A?",
+      "kategori": "Fotboll",
+      "alternativ": [
+        "Cristiano Ronaldo",
+        "Zlatan Ibrahimović",
+        "Ruud van Nistelrooy",
+        "David Beckham"
+      ],
+      "rätt_svar": "Cristiano Ronaldo",
+      "förklaring": "Cristiano Ronaldo är ensam om att ha vunnit skytteligan i Englands, Spaniens **och** Italiens högstaligor. Han gjorde flest mål i Premier League 2007/08 (Manchester United), var flera gånger skyttekung i La Liga (Real Madrid) och vann Serie A:s skytteliga 2020/21 (Juventus). **Zlatan Ibrahimović** vann skytteligan i Italien och Frankrike men aldrig i England eller Spanien. **Ruud van Nistelrooy** blev skyttekung i Premier League och La Liga, men spelade aldrig i Serie A. **David Beckham** var mittfältare och ingen utpräglad målskytt, så han vann ingen skytteliga.",
+      "id": "f5a6878c087814fe"
+    },
+    {
+      "typ": "vilken",
+      "svårighetsgrad": "lätt",
+      "fråga": "Vilken fotbollsklubb har vunnit flest SM-guld i herrfotboll?",
+      "kategori": "Fotboll (Allsvenskan)",
+      "alternativ": [
+        "Malmö FF",
+        "IFK Göteborg",
+        "IFK Norrköping",
+        "AIK"
+      ],
+      "rätt_svar": "Malmö FF",
+      "förklaring": "Malmö FF är det herrlag som har flest SM-guld (svenska mästerskap) i fotboll. Malmö har vunnit Allsvenskan **24 gånger**, vilket är rekord. **IFK Göteborg** kommer därefter med 18 SM-guld, följt av **IFK Norrköping** (13 titlar). **AIK** från Stockholm har 12 SM-guld. Malmös dominans började på 1940-talet och klubben har även varit framgångsrik i modern tid.",
+      "id": "cd4aa95d719a6408"
+    },
+    {
+      "typ": "vilken",
+      "svårighetsgrad": "lätt",
+      "fråga": "Vilket land har vunnit flest VM-guld i ishockey för herrar?",
+      "kategori": "Ishockey",
+      "alternativ": [
+        "Kanada",
+        "Sovjetunionen",
+        "Sverige",
+        "Tjeckien"
+      ],
+      "rätt_svar": "Kanada",
+      "förklaring": "Herrhockeyns dominant historiskt är **Kanada**, som har vunnit VM-guld 28 gånger (rekord). **Sovjetunionen** vann 22 VM-guld under sin tid. Sverige har, som jämförelse, 11 VM-guld och **Tjeckien** (inklusive tiden som Tjeckoslovakien) står på totalt 12. Kanada tog sitt första VM-guld redan 1920 och är alltjämt nationen med flest titlar.",
+      "id": "5f5f111bae27c2d5"
+    },
+    {
+      "typ": "vilken",
+      "svårighetsgrad": "medel",
+      "fråga": "Vilken svensk stad arrangerade friidrotts-VM (världsmästerskapen i friidrott) 1995?",
+      "kategori": "Friidrott",
+      "alternativ": [
+        "Göteborg",
+        "Stockholm",
+        "Malmö",
+        "Uppsala"
+      ],
+      "rätt_svar": "Göteborg",
+      "förklaring": "Friidrotts-VM 1995 hölls på Ullevi Stadium i **Göteborg**. Det var första (och hittills enda) gången som Sverige var värd för ett friidrotts-VM. Mästerskapet blev minnesvärt med bland annat världsrekord i tresteg av Jonathan Edwards. **Stockholm**, **Malmö** och **Uppsala** har aldrig arrangerat något friidrotts-VM.",
+      "id": "f2f9778c4c3a9e04"
+    }
+  ]
+}

@@ -20,7 +20,7 @@
       ],
       "förklaring": "Hjulet uppfanns av mesopotamierna omkring 3500 f.Kr., Thomas Savery utvecklade första praktiska ångmaskinen 1698, Karl Benz byggde sin första bil 1885, och Wright-bröderna genomförde första flygningen 1903.",
       "kategori": "Vetenskap & Natur",
-      "id": "89497fe8-d1d0-406a-91c6-90145a421ffd"
+      "id": "dcbf20fc69679eb8"
     },
     {
       "typ": "hör_till",
@@ -39,7 +39,7 @@
         3
       ],
       "förklaring": "Karlsson på taket, Emil i Lönneberga och Pippi Långstrump är alla karaktärer i Astrid Lindgrens berättelser. Lilla My är en figur ur Mumintrollen av Tove Jansson, alltså inte skapad av Lindgren.",
-      "id": "db732407-583e-48e6-9487-b8f4e6a4ec2e"
+      "id": "7351f560e130eff4"
     },
     {
       "typ": "ordna",
@@ -59,7 +59,7 @@
       ],
       "förklaring": "Edward Jenner utvecklade vaccination 1796, Wilhelm Röntgen upptäckte röntgenstrålning 1895, Alexander Fleming upptäckte penicillin 1928, Watson & Crick beskrev DNA:ts struktur 1953.",
       "kategori": "Vetenskap & Natur",
-      "id": "ac5395eb-735a-4c4b-8ff8-7e0cf5156896"
+      "id": "c1b140ee1a01fa5b"
     },
     {
       "typ": "ordna",
@@ -79,7 +79,7 @@
       ],
       "förklaring": "Belgien ~30 000 km²; Sverige ~450 000 km²; Australien ~7,7 miljoner km²; Kanada ~9,98 miljoner km².",
       "kategori": "Geografi",
-      "id": "5d3dc7fa-406f-40d6-b2fc-bf3604156687"
+      "id": "1618b4fb0a1e3a1d"
     },
     {
       "typ": "hör_till",
@@ -97,7 +97,7 @@
         2
       ],
       "förklaring": "En vuxen kropp har 206 ben och huden är vårt största organ. Blod är alltid rött (syre påverkar bara nyansen lite, det är aldrig blått i kroppen). Och vi använder i princip hela hjärnan – 10%-idén är en seglivad myt.",
-      "id": "f09d2c9d-ea87-4156-b93d-57006f0c00d1"
+      "id": "ee3ade57f54b4c0d"
     },
     {
       "typ": "ordna",
@@ -117,7 +117,7 @@
       ],
       "förklaring": "Mont Blanc 4 808 m; Kilimanjaro 5 895 m; K2 8 611 m; Mount Everest 8 848 m över havet.",
       "kategori": "Geografi",
-      "id": "bf41113e-be66-4fdd-a7ec-6bf9cd37584c"
+      "id": "c2b048c620ebf854"
     },
     {
       "typ": "hör_till",
@@ -136,7 +136,7 @@
         3
       ],
       "förklaring": "Estland, Georgien och Ukraina var tre av de 15 sovjetrepublikerna (med i Sovjetunionen 1922–1991). Polen var aldrig en del av Sovjetunionen (även om landet tillhörde det kommunistiska östblocket).",
-      "id": "c78ef162-a633-4a07-ae38-905408064141"
+      "id": "1b97af30cbfc56d9"
     },
     {
       "typ": "hör_till",
@@ -155,7 +155,7 @@
         3
       ],
       "förklaring": "Mars, Jupiter och Venus är alla bland de åtta planeterna i solsystemet. Pluto räknas sedan 2006 som en dvärgplanet och är inte längre en av de huvudsakliga planeterna.",
-      "id": "4683649c-8ee0-4f9e-b65a-1a3423c92340"
+      "id": "4d13692194c75dd3"
     },
     {
       "typ": "hör_till",
@@ -173,7 +173,7 @@
         3
       ],
       "förklaring": "Abba slog igenom när de vann ESC 1974 med 'Waterloo'. Gruppnamnet bildas av medlemmarnas förnamn (Agnetha, Björn, Benny, Anni-Frid), inte efternamnen. Musikalen 'Mamma Mia' (1999) bygger helt på Abbas låtar. Abba bildades i Stockholm (inte Göteborg).",
-      "id": "b86c7ce7-439d-42b8-9737-c9d1a34e1c27"
+      "id": "0d075d7b711add39"
     },
     {
       "typ": "hör_till",
@@ -192,7 +192,7 @@
         3
       ],
       "förklaring": "Brasilien (5 titlar), Tyskland (4) och Argentina (3) har vunnit VM-guld. Nederländerna har däremot aldrig vunnit (de har förlorat tre finaler).",
-      "id": "b98733ba-037b-42cf-a229-498016ad778f"
+      "id": "6279dc5337f855ed"
     },
     {
       "typ": "ordna",
@@ -212,7 +212,7 @@
       ],
       "förklaring": "Telegrafen uppfanns på 1830–40-talet (Morse skickade första telegrammet 1844); telefonen patenterades 1876; televisionens första demonstration skedde 1927; internet (ARPANET) kom 1969.",
       "kategori": "Vetenskap & Natur",
-      "id": "974d21de-57c7-46a9-a47e-82a2c48c4d8d"
+      "id": "452677049ec95693"
     },
     {
       "typ": "ordna",
@@ -232,7 +232,7 @@
       ],
       "förklaring": "Svenska har ca 10 miljoner modersmålstalare; franska ~77 miljoner; arabiska ~300 miljoner; mandarin-kinesiska ~920 miljoner.",
       "kategori": "Geografi",
-      "id": "ed0a7ec8-61ab-4397-9d59-8b62a3879530"
+      "id": "1da307250b729b8d"
     }
   ]
 }

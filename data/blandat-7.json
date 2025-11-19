@@ -18,7 +18,7 @@
         3
       ],
       "förklaring": "Jane Austen skrev klassiker som \"Stolthet och fördom\" (1813) och \"Förnuft och känsla\" (1811). \"Jane Eyre\" skrevs av Charlotte Brontë och \"Svindlande höjder\" av Emily Brontë.",
-      "id": "348bf9e5-ee9e-4ccb-b282-87638bffff25"
+      "id": "a42eb277166e7d46"
     },
     {
       "typ": "hör_till",
@@ -36,7 +36,7 @@
         3
       ],
       "förklaring": "Skräck och action är filmgenrer. Sonett är en diktform och symfoni är ett musikaliskt verk, inte filmgenrer.",
-      "id": "47067717-e6c2-419d-a864-3f5674af4128"
+      "id": "ba266e269917b9fb"
     },
     {
       "typ": "ordna",
@@ -56,7 +56,7 @@
       ],
       "förklaring": "Merkurius är minst av dessa, därefter Mars. Venus är något mindre än jorden, som är störst bland dessa fyra planeter.",
       "kategori": "Vetenskap & Natur",
-      "id": "ba67a206-de33-45ed-ab05-e44b9c279a76"
+      "id": "9d4dab456996b04e"
     },
     {
       "typ": "hör_till",
@@ -74,7 +74,7 @@
         3
       ],
       "förklaring": "\"Super Mario 64\" (1996) och \"The Legend of Zelda: Ocarina of Time\" (1998) kom under 90-talet. \"The Sims\" kom år 2000 och arkadklassikern \"Pac-Man\" redan 1980.",
-      "id": "0878d01e-f707-44ef-80e5-4da214c4f141"
+      "id": "d2d756b3f00e90b3"
     },
     {
       "typ": "hör_till",
@@ -92,7 +92,7 @@
         3
       ],
       "förklaring": "Brasilien och Argentina är sydamerikanska länder. Mexiko ligger i Nordamerika, och Spanien ligger i Europa.",
-      "id": "49fb7d07-d207-45b5-a6fa-70687a8c8242"
+      "id": "383f37edf4cacdee"
     },
     {
       "typ": "ordna",
@@ -112,7 +112,7 @@
       ],
       "förklaring": "Järn är billigast, silver mer värt. Guld är dyrbarare än silver, och platina anses mest värdefull av dessa metaller.",
       "kategori": "Vetenskap & Natur",
-      "id": "f01974b0-6c1a-4c95-b450-d03370d76cac"
+      "id": "8a538b2b6deddf2b"
     },
     {
       "typ": "hör_till",
@@ -130,7 +130,7 @@
         3
       ],
       "förklaring": "En visp och en kavel hör hemma i köket. En hammare och en skruvmejsel är verktyg för snickeri, inte matlagning.",
-      "id": "77c11a85-d1d8-4674-95cb-89f09cc3d6b2"
+      "id": "9969accba4d03050"
     },
     {
       "typ": "ordna",
@@ -150,7 +150,7 @@
       ],
       "förklaring": "Japan har 1 officiellt språk, Kanada har 2 (engelska och franska), Schweiz har 4, och Sydafrika har hela 11 officiella språk.",
       "kategori": "Geografi",
-      "id": "e67738cb-56b9-416a-bec4-0a67098a2093"
+      "id": "212c72cc76ec66d4"
     },
     {
       "typ": "ordna",
@@ -170,7 +170,7 @@
       ],
       "förklaring": "Ensam hemma kom 1990, Jurassic Park 1993, Titanic 1997 och The Matrix 1999. Det gör att de i kronologisk ordning släpptes i just den ordningen från tidigast till senast.",
       "kategori": "Underhållning",
-      "id": "fcd8314e-174b-4763-85b1-46ca66ea9fed"
+      "id": "f74628c891abb576"
     },
     {
       "typ": "ordna",
@@ -190,7 +190,7 @@
       ],
       "förklaring": "Amerikanska revolutionen skedde 1775–1783, sedan kom franska revolutionen 1789. Ryska revolutionen inträffade 1917 och sist inträffade Kinas kulturrevolution 1966–1976.",
       "kategori": "Historia",
-      "id": "14bd6e18-977c-4af0-ab9e-a2fe5fc609d2"
+      "id": "3619c754ebb410b7"
     },
     {
       "typ": "hör_till",
@@ -208,7 +208,7 @@
         3
       ],
       "förklaring": "Blåvalen och fladdermusen är däggdjur (de diar sina ungar och andas luft). En pingvin är en fågel och en haj är en fisk – inga däggdjur.",
-      "id": "e1de472f-5f34-418e-a703-1df02ecdd272"
+      "id": "84d16900443d82b8"
     },
     {
       "typ": "ordna",
@@ -228,7 +228,7 @@
       ],
       "förklaring": "Först kommer barndomen, sedan tonåren, därefter vuxenlivet och till sist ålderdomen. Så ser de typiska stadierna i en människas liv ut i kronologisk ordning.",
       "kategori": "Vetenskap & Natur",
-      "id": "42d8a959-bf11-4237-bee6-5e7bc01cc718"
+      "id": "18ce4ed449678af7"
     }
   ]
 }

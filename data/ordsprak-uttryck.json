@@ -1,0 +1,196 @@
+{
+  "name": "Ordspråk och uttryck",
+  "description": "Svenska idiom, talesätt och deras ursprung",
+  "questions": [
+    {
+      "typ": "vilken",
+      "svårighetsgrad": "lätt",
+      "fråga": "Från vilken sport har det svenska uttrycket 'kasta in handduken' fått sitt ursprung?",
+      "kategori": "Språk",
+      "alternativ": [
+        "Boxning",
+        "Fotboll",
+        "Tennis",
+        "Brottning"
+      ],
+      "rätt_svar": "Boxning",
+      "förklaring": "Uttrycket 'kasta in handduken' kommer från boxning, där en handduk kastas in i ringen som signal om att ge upp en match. Idag används frasen bildligt om att ge upp i största allmänhet.",
+      "id": "ac6cc3e3d6546435"
+    },
+    {
+      "typ": "vilken",
+      "svårighetsgrad": "svår",
+      "fråga": "Vad betyder uttrycket 'ta sin Mats ur skolan'?",
+      "kategori": "Språk",
+      "alternativ": [
+        "Att dra sig ur en svår situation utan att förlora anseendet.",
+        "Att hoppa av sin utbildning i förtid.",
+        "Att misslyckas trots att man verkligen försökt.",
+        "Att ta på sig skulden för något man inte gjort."
+      ],
+      "rätt_svar": "Att dra sig ur en svår situation utan att förlora anseendet.",
+      "förklaring": "Att 'ta sin Mats ur skolan' betyder att dra sig ur en besvärlig eller farlig situation utan att förlora ansiktet eller hamna i sämre läge. Det handlar alltså inte bokstavligen om att lämna skolan, utan om att i tid backa ur något innan det går riktigt illa.",
+      "id": "624d316c1971328d"
+    },
+    {
+      "typ": "vilken",
+      "svårighetsgrad": "medel",
+      "fråga": "Vad menas med uttrycket 'att skita i det blå skåpet'?",
+      "kategori": "Språk",
+      "alternativ": [
+        "Att göra bort sig rejält eller gå för långt.",
+        "Att få panik i en pressad situation.",
+        "Att lyckas med något av en ren slump.",
+        "Att slösa tid på något onödigt."
+      ],
+      "rätt_svar": "Att göra bort sig rejält eller gå för långt.",
+      "förklaring": "Uttrycket 'att skita i det blå skåpet' betyder att göra bort sig ordentligt eller överskrida gränser så att man hamnar i problem. Det är alltså att 'göra en groda' i socialt hänseende – inte att få panik eller ha tur.",
+      "id": "54d9298a5d3af77b"
+    },
+    {
+      "typ": "vilken",
+      "svårighetsgrad": "medel",
+      "fråga": "Vilket svenskt ordspråk har sitt ursprung i en fabel av Aisopos (Aesop)?",
+      "kategori": "Språk",
+      "alternativ": [
+        "Surt sa räven om rönnbären.",
+        "När katten är borta dansar råttorna på bordet.",
+        "Ulv i fårakläder.",
+        "Borta bra men hemma bäst."
+      ],
+      "rätt_svar": "Surt sa räven om rönnbären.",
+      "förklaring": "Ordspråket 'Surt sa räven om rönnbären' kommer från Aisopos fabel 'Räven och druvorna'. I fabeln kan räven inte nå druvorna och låtsas då att de ändå är sura – därav uttrycket att nedvärdera något man ändå inte kunde få. De övriga alternativen härstammar inte från Aisopos fabler.",
+      "id": "61272d6a161a6bf4"
+    },
+    {
+      "typ": "hör_till",
+      "svårighetsgrad": "medel",
+      "fråga": "Vilka av följande uttryck är riktiga svenska idiom?",
+      "kategori": "Hör till: svenska idiom",
+      "alternativ": [
+        "Slå två flugor i en smäll",
+        "Döda två fåglar med en sten",
+        "Dra alla över en kam",
+        "Dra alla under en kam"
+      ],
+      "tillhör_index": [
+        0,
+        2
+      ],
+      "förklaring": "Uttrycken 'Slå två flugor i en smäll' och 'Dra alla över en kam' är etablerade idiom i svenska språket, medan de övriga två alternativen är påhittade. Till exempel är 'döda två fåglar med en sten' en direktöversättning av ett engelskt talesätt som inte används på svenska.",
+      "id": "f066060171aeeb6e"
+    },
+    {
+      "typ": "vilken",
+      "svårighetsgrad": "medel",
+      "fråga": "Hur lyder hela ordspråket som börjar med 'Ingen ko på isen'?",
+      "kategori": "Språk",
+      "alternativ": [
+        "Ingen ko på isen, så länge rumpan är i land.",
+        "Ingen ko på isen, om vattnet hunnit frysa.",
+        "Ingen ko på isen, men en katt i potatislandet.",
+        "Ingen ko på isen, det är bara en istapp."
+      ],
+      "rätt_svar": "Ingen ko på isen, så länge rumpan är i land.",
+      "förklaring": "Det fullständiga ordspråket är 'Ingen ko på isen så länge rumpan är i land'. Det betyder bildligt att det inte är någon fara eller brådska så länge situationen inte är allvarlig ännu. De andra alternativen är påhittade och har inget med den riktiga frasen att göra.",
+      "id": "4fe4453294e2394c"
+    },
+    {
+      "typ": "vilken",
+      "svårighetsgrad": "svår",
+      "fråga": "Vilket uttryck uppstod genom en felsägning av frasen 'lägga embargo på'?",
+      "kategori": "Språk",
+      "alternativ": [
+        "Lägga rabarber på",
+        "Lägga benen på ryggen",
+        "Lägga korten på bordet",
+        "Lägga huvudet på sned"
+      ],
+      "rätt_svar": "Lägga rabarber på",
+      "förklaring": "Frasen 'lägga rabarber på' (i betydelsen att lägga beslag på något) uppstod genom en felsägning av 'lägga embargo på'. Svenskarna omformade ordet 'embargo' till 'rabarber' – en skämtsam misstolkning som levt kvar. De övriga alternativen är visserligen idiomatiska uttryck, men de har inte uppstått genom felsägningar.",
+      "id": "a0a1fa838efda013"
+    },
+    {
+      "typ": "hör_till",
+      "svårighetsgrad": "medel",
+      "fråga": "Vilka av följande svenska idiom har sitt ursprung i Bibeln?",
+      "kategori": "Hör till: uttryck med bibliskt ursprung",
+      "alternativ": [
+        "Högmod går före fall",
+        "Att kasta pärlor för svin",
+        "Vända andra kinden till",
+        "Borta bra men hemma bäst"
+      ],
+      "tillhör_index": [
+        0,
+        1,
+        2
+      ],
+      "förklaring": "Uttrycken 'Högmod går före fall', 'kasta pärlor för svin' och 'vända andra kinden till' kommer alla från Bibeln. 'Högmod går före fall' återfinns i Ordspråksboken 16:18, 'Att kasta pärlor för svin' är ett citat ur Nya Testamentet (Matt. 7:6) och 'Vända andra kinden till' kommer från Jesu lära (Matt. 5:39). 'Borta bra men hemma bäst' är ett klassiskt ordspråk utan bibliskt ursprung.",
+      "id": "a6654b2122357b08"
+    },
+    {
+      "typ": "vilken",
+      "svårighetsgrad": "medel",
+      "fråga": "Vilket uttryck betyder att man fortsätter med något utan att låta sig hejdas eller påverkas av invändningar?",
+      "kategori": "Svenska idiom",
+      "alternativ": [
+        "Gå på i ullstrumporna",
+        "Gå som katten kring het gröt",
+        "Att sova räv",
+        "Att ha huvudet på skaft"
+      ],
+      "rätt_svar": "Gå på i ullstrumporna",
+      "förklaring": "'Gå på i ullstrumporna' betyder att fortsätta med något utan att låta sig hejdas eller påverkas av invändningar. Uttrycket kommer från den gamla seden att dra ullstrumpor över vinterskor när det var särskilt halt – ullen gav bättre grepp så man kunde gå på som vanligt utan att bry sig om halkan. 'Gå som katten kring het gröt' betyder att vara undvikande, 'att sova räv' betyder att vara alert medan man verkar sova, och 'att ha huvudet på skaft' betyder att vara skarp och intelligent.",
+      "id": "ba8bd075730c7d29"
+    },
+    {
+      "typ": "hör_till",
+      "svårighetsgrad": "lätt",
+      "fråga": "Vilka av följande är riktiga svenska uttryck med djur?",
+      "kategori": "Hör till: djuruttryck",
+      "alternativ": [
+        "Att ha en räv bakom örat",
+        "Att sätta grodor i hjulet",
+        "Att sova höna",
+        "Att göra en pudel"
+      ],
+      "tillhör_index": [
+        0,
+        3
+      ],
+      "förklaring": "Två av uttrycken är korrekta: 'Att ha en räv bakom örat' (vara slug) och 'Att göra en pudel' (medge att man hade fel). Det korrekta uttrycket är 'Sätta käppar i hjulet' - inte grodor - vilket kommer från att man satte träpinnar mellan vagnshjulets ekrar som broms. Och det heter 'Att sova räv' (vara alert medan man verkar sova) - inte 'sova höna'.",
+      "id": "e2d35437866de22c"
+    },
+    {
+      "typ": "vilken",
+      "svårighetsgrad": "medel",
+      "fråga": "Vilket svenskt uttryck betyder att man tar på sig något som man inte är kapabel att hantera?",
+      "kategori": "Svenska idiom",
+      "alternativ": [
+        "Att ha huvudet på skaft",
+        "Ta sig vatten över huvudet",
+        "Gå som katten kring het gröt",
+        "Dra åt pipsvängen"
+      ],
+      "rätt_svar": "Ta sig vatten över huvudet",
+      "förklaring": "'Ta sig vatten över huvudet' betyder att ta på sig något man inte klarar av. 'Att ha huvudet på skaft' betyder att vara skarp och intelligent, 'Gå som katten kring het gröt' betyder att vara indirekt eller undvikande, och 'Dra åt pipsvängen' betyder att ekonomisera eller dra åt svångremmen.",
+      "id": "a0b07a6e53cdd8dc"
+    },
+    {
+      "typ": "vilken",
+      "svårighetsgrad": "lätt",
+      "fråga": "Vilket uttryck betyder att man varnar för att vara så ivrig med att bli av med något dåligt att man av misstag också blir av med något bra?",
+      "kategori": "Svenska ordspråk",
+      "alternativ": [
+        "Kasta inte ut barnet med badvattnet",
+        "Kasta pärlor för svin",
+        "Skilja agnarna från vetet",
+        "Att sätta käppar i hjulet"
+      ],
+      "rätt_svar": "Kasta inte ut barnet med badvattnet",
+      "förklaring": "'Kasta inte ut barnet med badvattnet' varnar för att vara så ivrig med att bli av med något dåligt att man av misstag också blir av med något bra. Ordspråket kan ha kommit från att barnen traditionellt fått bada sist, och när man tömde tunnan skulle man se till att barnet inte åkte med badvattnet ut. 'Kasta pärlor för svin' betyder att slösa något värdefullt på någon som inte uppskattar det, 'Skilja agnarna från vetet' betyder att separera gott från ont, och 'Sätta käppar i hjulet' betyder att hindra.",
+      "id": "ced8a6af043b4f6d"
+    }
+  ]
+}

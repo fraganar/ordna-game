@@ -17,7 +17,7 @@
         0
       ],
       "förklaring": "Hitchcock hade panisk skräck för ägg (ovofobi) och berättade själv att han aldrig smakat ett. Övriga påståenden är påhittade.",
-      "id": "f16a10ed-8ffb-40da-ac95-062b95d7e68c"
+      "id": "30786bb1deb2cef7"
     },
     {
       "typ": "hör_till",
@@ -34,7 +34,7 @@
         0
       ],
       "förklaring": "Efter Percy Shelleys död bevarade Mary Shelley hans förhärdade hjärta inlindat i siden i sitt skrivbord. Övriga alternativ är falska.",
-      "id": "e0605f10-ab2b-4f5e-b291-8032e4545770"
+      "id": "6e8f01f11362f33a"
     },
     {
       "typ": "hör_till",
@@ -51,7 +51,7 @@
         0
       ],
       "förklaring": "Lee gav ut metal-album, bland annat 'Charlemagne: The Omens of Death', runt sin 90-årsdag. Övriga påståenden är falska.",
-      "id": "d34a040d-2283-4be6-b432-2d6b14bfd8d8"
+      "id": "dfbec25e17ffc6e8"
     },
     {
       "typ": "hör_till",
@@ -68,7 +68,7 @@
         0
       ],
       "förklaring": "Sudan har cirka 250 kända pyramider, fler än Egypten som har omkring 118. Övriga påståenden är felaktiga.",
-      "id": "e9233982-ff64-4ef3-9c70-d63ec15a163b"
+      "id": "0c9e3462fd9a83b7"
     },
     {
       "typ": "hör_till",
@@ -87,7 +87,7 @@
         2
       ],
       "förklaring": "Blå ring = Europa, elden tänds i Olympia i Grekland, första moderna OS hölls 1896. OS har ställts in under världskrigen, så påstående 4 är falskt.",
-      "id": "a657587c-8eb3-4106-a035-8c4846a89375"
+      "id": "2cb4a899a27399da"
     },
     {
       "typ": "hör_till",
@@ -105,7 +105,7 @@
         3
       ],
       "förklaring": "Shakespeare skrev 154 sonetter, och han var både skådespelare och dramatiker. Han gifte sig vid 18 år är fel (han var 18 när han blev fader, men 18-årsmyten bygger på missförstånd). Svenska översättningar kom först på 1700-talet.",
-      "id": "b2036811-545d-4210-9c92-b6223447c5cb"
+      "id": "32b6abe48087488d"
     },
     {
       "typ": "ordna",
@@ -125,7 +125,7 @@
       ],
       "förklaring": "Barbie lanserades 1959, första Bond-film (Dr. No) 1962, Star Wars 1977, iPhone 2007.",
       "kategori": "Underhållning",
-      "id": "1dd945f0-13d5-4616-84c0-0a57415efe48"
+      "id": "6e1b1cc15a3bff34"
     },
     {
       "typ": "ordna",
@@ -145,7 +145,7 @@
       ],
       "förklaring": "Sherlock Holmes debuterade 1887, Musse Pigg 1928, Batman 1939, Harry Potter 1997.",
       "kategori": "Underhållning",
-      "id": "3b2ee980-fed2-489d-978e-347af51f92ac"
+      "id": "8bc6df1a1cc54ce8"
     },
     {
       "typ": "ordna",
@@ -165,7 +165,7 @@
       ],
       "förklaring": "Rock'n'roll slog igenom på 1950-talet, disco på 1970-talet, hip-hop på 1980-talet, grunge på 1990-talet.",
       "kategori": "Underhållning",
-      "id": "c44e93fb-5dda-4c22-a506-62a7db816eed"
+      "id": "b646d92238b80746"
     },
     {
       "typ": "ordna",
@@ -185,7 +185,7 @@
       ],
       "förklaring": "Don Quijote 1605, Moby Dick 1851, 1984 år 1949, Sagan om Ringen 1954–55.",
       "kategori": "Konst & Litteratur",
-      "id": "e3e173f4-31bf-49a1-8d28-598ce6c964ed"
+      "id": "05e47d11b772ec3f"
     },
     {
       "typ": "ordna",
@@ -205,7 +205,7 @@
       ],
       "förklaring": "Aten (1 gång: 2004), Paris (2: 1900, 1924, snart 2024), Los Angeles (2: 1932, 1984, snart 2028), London (3: 1908, 1948, 2012).",
       "kategori": "Sport & Nöje",
-      "id": "7b55ab50-4b4a-4d3b-a890-767ab892c7d7"
+      "id": "e321791f67a28902"
     },
     {
       "typ": "ordna",
@@ -225,7 +225,7 @@
       ],
       "förklaring": "M*A*S*H 1972, The Simpsons 1989, Vänner 1994, Game of Thrones 2011.",
       "kategori": "Underhållning",
-      "id": "8e2a8c59-5396-4eb0-b457-47605f4664e6"
+      "id": "966102b369949fea"
     }
   ]
 }

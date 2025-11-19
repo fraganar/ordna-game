@@ -18,7 +18,7 @@
         1
       ],
       "förklaring": "Vikingarna seglade till Nordamerika (Vinland) omkring år 1000, och de brukade runor för att skriva. Däremot bar de inte horn på hjälmarna, och vikingatiden bestod av många hövdingadömen – ingen enad kung över alla.",
-      "id": "a9d3d62d-97d2-4d55-b117-dc829c28e919"
+      "id": "9922aaabc8a1a47a"
     },
     {
       "typ": "ordna",
@@ -38,7 +38,7 @@
       ],
       "förklaring": "\"E.T.\" kom 1982, \"Ghostbusters\" 1984, \"Jurassic Park\" 1993 och \"Titanic\" 1997.",
       "kategori": "Underhållning",
-      "id": "6ab62804-b036-46da-905f-89b53a8d2a6f"
+      "id": "33450aae30bea4fa"
     },
     {
       "typ": "hör_till",
@@ -56,7 +56,7 @@
         3
       ],
       "förklaring": "Hemingway (1954) och García Márquez (1982) har vunnit Nobelpriset. Mark Twain (USA, död 1910) och Leo Tolstoj (Ryssland, död 1910) fick aldrig Nobelpriset i litteratur.",
-      "id": "71c04b31-012f-4b23-8f77-40ec1cf260c3"
+      "id": "b25ded99f80fa21e"
     },
     {
       "typ": "ordna",
@@ -76,7 +76,7 @@
       ],
       "förklaring": "Mandarin har flest modersmålstalare (ca 920 miljoner), därefter Spanska (ca 470 miljoner), sedan Engelska (ca 370 miljoner) och minst är Svenska (ca 10 miljoner).",
       "kategori": "Geografi",
-      "id": "b00d176b-6348-43a2-a819-a2d8b8c9c849"
+      "id": "a39f553d2518bf28"
     },
     {
       "typ": "hör_till",
@@ -94,7 +94,7 @@
         1
       ],
       "förklaring": "Barbie introducerades 1959 av Mattel, och genom åren har hon haft långt över 200 olika yrken. Dockan skapades av Ruth Handler (inte Disney), och namnet Barbie kom från Handlers dotter Barbara.",
-      "id": "407efcb6-4f10-44ac-94f7-06809b887161"
+      "id": "678b775d3841a6a0"
     },
     {
       "typ": "ordna",
@@ -114,7 +114,7 @@
       ],
       "förklaring": "Antiken (ca 800 f.Kr.–500 e.Kr.) kommer före Medeltiden (ca 500–1500 e.Kr.), därefter Renässansen (ca 1300–1600-tal) och slutligen Upplysningen (1700-tal).",
       "kategori": "Historia",
-      "id": "1a7e9a0b-0fb1-41a0-b307-c90de3d65f51"
+      "id": "004e6c8c67798058"
     },
     {
       "typ": "hör_till",
@@ -132,7 +132,7 @@
         1
       ],
       "förklaring": "Jordan vann NBA 6 gånger (1991–93, 1996–98) och tog OS-guld 1984 och 1992. Däremot är han inte NBA:s poängkung genom tiderna och han blev draftad som nummer tre 1984.",
-      "id": "d280eaac-8e9a-4eee-8ea6-f4fae5023fc8"
+      "id": "82919da4366e8621"
     },
     {
       "typ": "ordna",
@@ -152,7 +152,7 @@
       ],
       "förklaring": "Stonehenge byggdes cirka 2500 f.Kr., Parthenon stod klart 432 f.Kr., Notre Dame invigdes 1345 e.Kr., och Burj Khalifa 2010 – i den ordningen.",
       "kategori": "Historia",
-      "id": "a8ecc18f-c57a-4841-8eed-b676a01ea9e4"
+      "id": "3963822193621630"
     },
     {
       "typ": "hör_till",
@@ -170,7 +170,7 @@
         3
       ],
       "förklaring": "Midsommarfirande och att ta en fika är svenska seder, men Oktoberfest (Tyskland) och Thanksgiving (USA) är inte svenska traditioner.",
-      "id": "6e3432a9-d432-4d2f-82b3-ef1db40ac8c0"
+      "id": "355ca358274851ac"
     },
     {
       "typ": "ordna",
@@ -190,7 +190,7 @@
       ],
       "förklaring": "Friidrottaren Jesse Owens föddes 1913, boxaren Muhammad Ali 1942, tennisstjärnan Serena Williams 1981 och sprintern Usain Bolt 1986.",
       "kategori": "Sport & Nöje",
-      "id": "df9d09e2-5869-4d24-ab29-3d20d72277b9"
+      "id": "5f804d59a74f2dc7"
     },
     {
       "typ": "ordna",
@@ -210,7 +210,7 @@
       ],
       "förklaring": "Telegrafen utvecklades redan på 1830-talet, Telefonen kom 1876, Radion på 1890-talet och Televisionen slog igenom under 1920–30-talen.",
       "kategori": "Vetenskap & Natur",
-      "id": "e4ec22b0-eacd-4062-827d-5c40ccfe516b"
+      "id": "54540a0c23c1593c"
     },
     {
       "typ": "hör_till",
@@ -228,7 +228,7 @@
         1
       ],
       "förklaring": "Eiffeltornet öppnade 1889 till världsutställningen i Paris. Man planerade faktiskt att riva tornet efter 20 år, men det stod kvar då det blev användbart för radio. Gaudí hade inget med tornet att göra (Gustave Eiffel konstruerade det), och antalet trappsteg är cirka 1 665 – inte 10 000.",
-      "id": "81c4a112-e335-4e20-9fc7-705892369d7a"
+      "id": "e352101ab8037615"
     }
   ]
 }

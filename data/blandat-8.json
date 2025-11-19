@@ -18,7 +18,7 @@
         2
       ],
       "förklaring": "Namnet ABBA består av första bokstaven i medlemmarnas förnamn (Agnetha, Björn, Benny, Anni-Frid). Gruppen slog igenom på 1970-talet (de vann Eurovision 1974), alltså inte på 60-talet. Inga av medlemmarna är dessutom syskon – de var två gifta par.",
-      "id": "ba4b07e0-3c5b-41ad-bf6b-f3aec6dc3351"
+      "id": "cca93bd861b5b0bb"
     },
     {
       "typ": "ordna",
@@ -38,7 +38,7 @@
       ],
       "förklaring": "Keopspyramiden uppfördes omkring 2500 f.Kr., Colosseum invigdes ca 80 e.Kr., Notre-Dame stod klar 1345, och Eiffeltornet invigdes 1889. Därför är ordningen från äldst till yngst.",
       "kategori": "Historia",
-      "id": "3fb27e4a-fcab-4a97-8188-608126d47379"
+      "id": "aa3751d4d83dfb77"
     },
     {
       "typ": "hör_till",
@@ -56,7 +56,7 @@
         3
       ],
       "förklaring": "Pippi Långstrump är superstark – hon kan lyfta sin häst Lilla Gubben. Hennes bästa vänner är grannbarnen Tommy och Annika. Hon bor utan syskon (Emil hör till en annan saga) och går inte i skolan som vanliga barn.",
-      "id": "ea7cc645-4dcb-4e05-b639-2c7c3908d600"
+      "id": "40e0dcd7e872ab96"
     },
     {
       "typ": "ordna",
@@ -76,7 +76,7 @@
       ],
       "förklaring": "Renässansen dominerade under 1400–1500-talet, Barocken under 1600-talet, Romantiken under 1800-talet och Modernismen vid 1900-talets början. Således är den kronologiska ordningen som ovan.",
       "kategori": "Konst & Litteratur",
-      "id": "60497565-5a5b-4cd2-aa98-8433a084cd90"
+      "id": "b4d63dcadafaf6ff"
     },
     {
       "typ": "hör_till",
@@ -94,7 +94,7 @@
         3
       ],
       "förklaring": "Curling och skidskytte är båda med i vinter-OS, medan brottning är en sommarolympisk sport och skateboard debuterade som sommarsport år 2020.",
-      "id": "0a29d9d3-82d0-428e-8d3f-87f45c008e2b"
+      "id": "9f2261dbe1a7be3b"
     },
     {
       "typ": "ordna",
@@ -114,7 +114,7 @@
       ],
       "förklaring": "Romarrikets fall skedde år 476 e.Kr., Kolumbus nådde Amerika 1492, Franska revolutionen startade 1789 och första världskriget bröt ut 1914. Alltså är det den kronologiska ordningen.",
       "kategori": "Historia",
-      "id": "d90ffbae-6f1c-4dce-94b1-e9edd41e6643"
+      "id": "11e7032374460cb0"
     },
     {
       "typ": "hör_till",
@@ -132,7 +132,7 @@
         3
       ],
       "förklaring": "Leonardo da Vinci målade Mona Lisa, och han var känd för att ibland skriva sina anteckningar spegelvänt. Däremot skapade han varken statyn David eller Sixtinska kapellets takmålningar – de verken gjordes av Michelangelo.",
-      "id": "b5734c86-4e75-4f35-8640-0a1294091495"
+      "id": "aed72c3a3913c263"
     },
     {
       "typ": "ordna",
@@ -152,7 +152,7 @@
       ],
       "förklaring": "Telefonen uppfanns 1876, glödlampan 1879, flygplanet flög första gången 1903, och internet kom långt senare under 1900-talets andra hälft. Därför är ordningen äldst till yngst.",
       "kategori": "Vetenskap & Natur",
-      "id": "1228cba7-6660-4676-be82-032828fe4879"
+      "id": "15238fc860426c7e"
     },
     {
       "typ": "hör_till",
@@ -170,7 +170,7 @@
         3
       ],
       "förklaring": "Regalskeppet Vasa kantrade och sjönk på sin jungfruresa år 1628. Omkring 30 personer omkom (inte hundratals). Vraket bärgades 1961 och finns nu på museum; naturligtvis kom skeppet aldrig till användning i strid efter bärgningen.",
-      "id": "752e44c9-eb00-4370-8193-2856e2ea40ae"
+      "id": "89b94f818d306163"
     },
     {
       "typ": "ordna",
@@ -190,7 +190,7 @@
       ],
       "förklaring": "Elvis Presley slog igenom på 1950-talet, The Beatles på 1960-talet, ABBA på 1970-talet och Madonna på 1980-talet. Därför är ordningen i tidsföljd som ovan.",
       "kategori": "Underhållning",
-      "id": "a3201bf1-d4df-4863-b7b9-23a2081f2dbb"
+      "id": "42ffb3362c1df88a"
     },
     {
       "typ": "hör_till",
@@ -208,7 +208,7 @@
         3
       ],
       "förklaring": "Midsommar och Lucia är svenska traditioner, medan Oktoberfest (Tyskland) och Thanksgiving (USA) inte hör till svenska högtider.",
-      "id": "b20058b7-6af2-44d4-a384-46828c6da0f6"
+      "id": "db903d19a18b004c"
     },
     {
       "typ": "ordna",
@@ -228,7 +228,7 @@
       ],
       "förklaring": "Vinylskivan började användas under första halvan av 1900-talet, kassettbandet kom på 1960-talet, CD-skivan lanserades 1982 och MP3-formatet slog igenom på 1990-talet. Därför är ordningen från äldst till nyast.",
       "kategori": "Vetenskap & Natur",
-      "id": "e489f7d3-6e76-4ba1-8d05-3c020cc03b6f"
+      "id": "1d4d5fc9665aa9e3"
     }
   ]
 }

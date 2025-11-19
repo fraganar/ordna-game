@@ -1,0 +1,213 @@
+{
+  "name": "Antiken",
+  "description": "Ett blandat frågepaket om antikens mest fascinerande personer, idéer och imperier.",
+  "questions": [
+    {
+      "typ": "hör_till",
+      "svårighetsgrad": "lätt",
+      "fråga": "Vilka av följande är gudar i grekisk mytologi?",
+      "kategori": "Hör till: gudar i grekisk mytologi",
+      "alternativ": [
+        "Zeus",
+        "Athena",
+        "Jupiter",
+        "Oden"
+      ],
+      "tillhör_index": [
+        0,
+        1
+      ],
+      "förklaring": "Zeus och Athena är grekiska gudomligheter. Jupiter är romarnas namn på Zeus, och Oden är en nordisk gud.",
+      "id": "a97699abebca7129"
+    },
+    {
+      "typ": "vilken",
+      "svårighetsgrad": "lätt",
+      "fråga": "Vilken stadsstat i antikens Grekland är känd för att ha infört demokrati?",
+      "kategori": "Historia",
+      "alternativ": [
+        "Aten",
+        "Sparta",
+        "Rom",
+        "Karthago"
+      ],
+      "rätt_svar": "Aten",
+      "förklaring": "Aten införde omkring 500 f.Kr. en tidig form av demokrati där fria manliga medborgare fick rösta. Sparta var en militärstat med två kungar, och Rom och Karthago hade andra styrelseskick.",
+      "id": "1429cd5300f91acd"
+    },
+    {
+      "typ": "vilken",
+      "svårighetsgrad": "medel",
+      "fråga": "Vilken ledare blev Romarrikets förste kejsare?",
+      "kategori": "Historia",
+      "alternativ": [
+        "Julius Caesar",
+        "Augustus",
+        "Nero",
+        "Alexander den store"
+      ],
+      "rätt_svar": "Augustus",
+      "förklaring": "Augustus (Octavianus) blev år 27 f.Kr. Romarrikets förste kejsare när republikens tid upphörde. Julius Caesar var en diktator men aldrig kejsare, och Nero regerade först flera decennier senare. Alexander den store var en grekisk erövrare, inte en romersk kejsare.",
+      "id": "4f221e6e83d4cfa4"
+    },
+    {
+      "typ": "hör_till",
+      "svårighetsgrad": "medel",
+      "fråga": "Alexander den store erövrade ett enormt imperium. Vilka av följande länder ingick i Alexander den stores rike?",
+      "kategori": "Hör till: länder i Alexander den stores rike",
+      "alternativ": [
+        "Egypten",
+        "Persien",
+        "Kina",
+        "Rom"
+      ],
+      "tillhör_index": [
+        0,
+        1
+      ],
+      "förklaring": "Alexander den store erövrade bland annat Persien och Egypten under 330-talet f.Kr. Han tågade österut ända till Indien men nådde aldrig Kina. Rom låg västerut och var ingen stormakt på Alexanders tid.",
+      "id": "3c12b9fc2717dbc2"
+    },
+    {
+      "typ": "vilken",
+      "svårighetsgrad": "medel",
+      "fråga": "Vilken berömd filosof i antikens Grekland var lärare åt Alexander den store?",
+      "kategori": "Historia",
+      "alternativ": [
+        "Sokrates",
+        "Platon",
+        "Aristoteles",
+        "Diogenes"
+      ],
+      "rätt_svar": "Aristoteles",
+      "förklaring": "Aristoteles undervisade den unge Alexander i Makedonien på 300-talet f.Kr. Sokrates var Platons lärare en generation tidigare, och Platon var i sin tur lärare åt Aristoteles. Diogenes var en excentrisk filosof som Alexander beundrade, men han var inte Alexanders lärare.",
+      "id": "3ea9bfb9d11b1c91"
+    },
+    {
+      "typ": "hör_till",
+      "svårighetsgrad": "medel",
+      "fråga": "Antiken sträcker sig från ca 800 f.Kr. till 500 e.Kr. Vilka av följande historiska personer levde under antiken?",
+      "kategori": "Hör till: personer som levde under antiken",
+      "alternativ": [
+        "Aristoteles",
+        "Julius Caesar",
+        "Kleopatra",
+        "Kristoffer Kolumbus"
+      ],
+      "tillhör_index": [
+        0,
+        1,
+        2
+      ],
+      "förklaring": "Aristoteles (384–322 f.Kr.), Julius Caesar (100–44 f.Kr.) och Kleopatra (69–30 f.Kr.) levde alla under antiken. Kristoffer Kolumbus levde på 1400–1500-talet e.Kr., alltså långt efter antiken (som slutade omkring 476 e.Kr.).",
+      "id": "e9e234fd531d0a31"
+    },
+    {
+      "typ": "hör_till",
+      "svårighetsgrad": "svår",
+      "fråga": "Under senantiken anföll olika folk det romerska riket. Vilka av följande folk invaderade delar av Romarriket?",
+      "kategori": "Hör till: folk som invaderade Romarriket",
+      "alternativ": [
+        "Hunner",
+        "Vandaler",
+        "Vikingar",
+        "Mongoler"
+      ],
+      "tillhör_index": [
+        0,
+        1
+      ],
+      "förklaring": "Hunnerna under Attila och de germanska vandalerna angrep Romarriket på 400-talet e.Kr. Vikingar och mongoler framträdde långt senare – vikingatiden började på 700-talet och mongolväldet på 1200-talet.",
+      "id": "781f37297121509b"
+    },
+    {
+      "typ": "hör_till",
+      "svårighetsgrad": "svår",
+      "fråga": "Vilka av följande berömda slag utkämpades under antiken?",
+      "kategori": "Hör till: slag under antiken",
+      "alternativ": [
+        "Slaget vid Marathon",
+        "Slaget vid Hastings",
+        "Slaget vid Waterloo",
+        "Slaget vid Stalingrad"
+      ],
+      "tillhör_index": [
+        0
+      ],
+      "förklaring": "Slaget vid Marathon utkämpades 490 f.Kr. mellan greker och perser under antiken. Slagen vid Hastings (1066), Waterloo (1815) och Stalingrad (1942–43) skedde alla långt efter antiken. Ordet 'maraton' för löplopp kommer av legenden om en budbärare som sprang från Marathon till Aten.",
+      "id": "7b8c57bc5ce7bc4f"
+    },
+    {
+      "typ": "ordna",
+      "svårighetsgrad": "medel",
+      "fråga": "Ordna följande händelser från antikens Grekland i kronologisk ordning (äldst först):",
+      "alternativ": [
+        "Första olympiska spelen",
+        "Perserkrigen",
+        "Peloponnesiska kriget",
+        "Alexander den stores erövringar"
+      ],
+      "rätt_ordning": [
+        "Första olympiska spelen",
+        "Perserkrigen",
+        "Peloponnesiska kriget",
+        "Alexander den stores erövringar"
+      ],
+      "förklaring": "De första antika olympiska spelen hölls 776 f.Kr., vilket ofta ses som starten på Greklands antika storhetstid. Därefter kom perserkrigen (cirka 499–479 f.Kr.), följt av det långvariga peloponnesiska kriget mellan Aten och Sparta (431–404 f.Kr.). Till sist, på 330-talet f.Kr., erövrade Alexander den store Persiens imperium och spred grekisk kultur ända till Indien.",
+      "id": "f68842e1c94389ed"
+    },
+    {
+      "typ": "ordna",
+      "svårighetsgrad": "medel",
+      "fråga": "Ordna följande händelser i kristendomens tidiga historia i kronologisk ordning:",
+      "alternativ": [
+        "Jesu födelse",
+        "Jesu korsfästelse",
+        "Konstantins edikt om religionsfrihet",
+        "Västromerska rikets fall"
+      ],
+      "rätt_ordning": [
+        "Jesu födelse",
+        "Jesu korsfästelse",
+        "Konstantins edikt om religionsfrihet",
+        "Västromerska rikets fall"
+      ],
+      "förklaring": "Enligt traditionen föddes Jesus omkring år 0 och korsfästes runt år 30 e.Kr. Drygt 280 år senare, år 313 e.Kr., utfärdade kejsar Konstantin ett edikt som gav kristendomen religionsfrihet i Romarriket. Västromerska rikets fall år 476 e.Kr. brukar ses som slutpunkten för antiken.",
+      "id": "8768b7764981b560"
+    },
+    {
+      "typ": "ordna",
+      "svårighetsgrad": "svår",
+      "fråga": "Ordna dessa romerska kejsare i kronologisk ordning efter när de regerade:",
+      "alternativ": [
+        "Augustus",
+        "Nero",
+        "Marcus Aurelius",
+        "Konstantin den store"
+      ],
+      "rätt_ordning": [
+        "Augustus",
+        "Nero",
+        "Marcus Aurelius",
+        "Konstantin den store"
+      ],
+      "förklaring": "Augustus regerade 27 f.Kr.–14 e.Kr. som den förste kejsaren. Nero var kejsare på 50–60-talet e.Kr., Marcus Aurelius på 160-talet och Konstantin den store i början av 300-talet. Denna ordning speglar också rikets förändring – från Augustus Pax Romana till Konstantins införande av kristendomen.",
+      "id": "e31ab8858e33963f"
+    },
+    {
+      "typ": "vilken",
+      "svårighetsgrad": "svår",
+      "fråga": "Vilken romersk kejsare gjorde kristendomen till statsreligion i Romarriket?",
+      "kategori": "Historia",
+      "alternativ": [
+        "Konstantin den store",
+        "Theodosius",
+        "Nero",
+        "Hadrianus"
+      ],
+      "rätt_svar": "Theodosius",
+      "förklaring": "Kejsar Theodosius den store gjorde år 380 e.Kr. kristendomen till statsreligion och förbjöd andra kulter. Konstantin den store hade år 313 e.Kr. infört religionsfrihet för de kristna men inte gjort kristendomen till statsreligion. Nero (första århundradet e.Kr.) förföljde kristna, och Hadrianus (100-talet e.Kr.) höll sig till de gamla romerska gudarna.",
+      "id": "8f3f56275ee894ff"
+    }
+  ]
+}

@@ -1,45 +1,69 @@
 [
   {
-    "id": "antiken.json",
+    "id": "filmcitat.json",
+    "name": "Filmcitat",
+    "description": "Ikoniska filmrepliker från filmhistorien",
+    "order": 5
+  },
+  {
+    "id": "ordsprak-uttryck.json",
+    "name": "Ordspråk och uttryck",
+    "description": "Svenska idiom, talesätt och deras ursprung",
+    "order": 9
+  },
+  {
+    "id": "sport-1.json",
+    "name": "Sport",
+    "description": "Olympiska spel, idrottshistoria och legendariska atleter",
+    "order": 10
+  },
+  {
+    "id": "sport-2.json",
+    "name": "Sportquiz 2",
+    "description": "Ett blandat frågepaket om sport, med fokus på svensk idrottshistoria och några globala inslag.",
+    "order": 11
+  },
+  {
+    "id": "antiken-1.json",
+    "name": "Antiken",
+    "description": "Ett blandat frågepaket om antikens mest fascinerande personer, idéer och imperier.",
+    "order": 1
+  },
+  {
+    "id": "antiken-2.json",
     "name": "Antiken",
     "description": "Antikens Grekland och Rom - filosofer, kejsare och tidiga kristendomen",
-    "order": 1
+    "order": 2
   },
   {
     "id": "filmcitat-1.json",
     "name": "Filmcitat 1",
     "description": "Blandade frågor om kända filmrepliker från olika filmer.",
-    "order": 2
+    "order": 3
   },
   {
     "id": "filmcitat-2.json",
     "name": "Filmcitat 2",
     "description": "Ikoniska repliker från filmhistorien",
-    "order": 3
+    "order": 4
   },
   {
     "id": "musik.json",
     "name": "Musik",
     "description": "Musikhistoria, artister och instrument genom tiderna",
-    "order": 4
+    "order": 6
   },
   {
     "id": "ordsprak-uttryck-1.json",
     "name": "Svenska ordspråk och uttryck 1",
     "description": "Idiom, talesätt och deras ursprung i det svenska språket",
-    "order": 5
+    "order": 7
   },
   {
     "id": "ordsprak-uttryck-2.json",
     "name": "Svenska ordspråk och uttryck 2",
     "description": "Svenska ordspråk, uttryck och idiom",
-    "order": 6
-  },
-  {
-    "id": "sport.json",
-    "name": "Sport",
-    "description": "Olympiska spel, idrottshistoria och legendariska atleter",
-    "order": 7
+    "order": 8
   },
   {
     "id": "blandat-1.json",

@@ -1,22 +1,7 @@
 {
-  "name": "Filmcitat 1",
-  "description": "Blandade frågor om kända filmrepliker från olika filmer.",
+  "name": "Filmcitat",
+  "description": "Ikoniska filmrepliker från filmhistorien",
   "questions": [
-    {
-      "typ": "vilken",
-      "svårighetsgrad": "lätt",
-      "fråga": "Vilken film innehåller citatet 'May the Force be with you'?",
-      "kategori": "Science Fiction",
-      "alternativ": [
-        "Stjärnornas krig (Star Wars)",
-        "Star Trek: The Motion Picture",
-        "E.T. the Extra-Terrestrial",
-        "The Matrix"
-      ],
-      "rätt_svar": "Stjärnornas krig (Star Wars)",
-      "förklaring": "'May the Force be with you' är en klassisk replik från *Stjärnornas krig* (1977), det vill säga den första *Star Wars*-filmen. Ingen av de andra filmerna använder den frasen – i *Star Trek* säger man till exempel 'Live long and prosper', inte 'May the Force...'.",
-      "id": "f9ba3552ecaf5ab7"
-    },
     {
       "typ": "vilken",
       "svårighetsgrad": "lätt",
@@ -34,18 +19,33 @@
     },
     {
       "typ": "vilken",
-      "svårighetsgrad": "medel",
-      "fråga": "I vilken film sägs den berömda repliken 'You talkin' to me?'?",
-      "kategori": "Filmklassiker",
+      "svårighetsgrad": "lätt",
+      "fråga": "Vilken film innehåller det berömda citatet: 'I'll be back'?",
+      "kategori": "Underhållning & Konst",
       "alternativ": [
-        "Taxi Driver",
-        "Scarface",
-        "Gudfadern del II",
-        "Raging Bull"
+        "Die Hard",
+        "The Terminator",
+        "Predator",
+        "Total Recall"
       ],
-      "rätt_svar": "Taxi Driver",
-      "förklaring": "Den ikoniska repliken 'You talkin' to me?' kommer från Martin Scorseses *Taxi Driver* (1976), där Robert De Niro i rollen som Travis Bickle improviserar fram den i en spegelscen. Den förekommer inte i *Scarface* (1983), där Al Pacino istället utbrister 'Say hello to my little friend!', och inte heller i de andra listade filmerna.",
-      "id": "8a69b272469250ef"
+      "rätt_svar": "The Terminator",
+      "förklaring": "Arnold Schwarzenegger säger 'I'll be back' som T-800 i The Terminator (1984), regisserad av James Cameron. Replikens blev så ikonisk att den placerade sig på plats #37 på AFI:s lista över filmhistoriens 100 bästa citat.",
+      "id": "aa01f336ba3e0fc8"
+    },
+    {
+      "typ": "vilken",
+      "svårighetsgrad": "lätt",
+      "fråga": "I vilken film från 1994 säger Tom Hanks: 'My mama always said life was like a box of chocolates'?",
+      "kategori": "Underhållning & Konst",
+      "alternativ": [
+        "Philadelphia",
+        "Forrest Gump",
+        "Apollo 13",
+        "The Green Mile"
+      ],
+      "rätt_svar": "Forrest Gump",
+      "förklaring": "Tom Hanks spelar titelrollen i Forrest Gump (1994) och säger 'My mama always said life WAS like a box of chocolates'. Många minns fel och tror han säger 'life IS like' - ett exempel på Mandela-effekten. Hanks vann Oscar för bästa manliga huvudroll.",
+      "id": "3159011a2d658e55"
     },
     {
       "typ": "vilken",
@@ -61,6 +61,36 @@
       "rätt_svar": "The Shining (1980)",
       "förklaring": "Repliken 'Here's Johnny!' kommer från skräckklassikern *The Shining* (1980), där Jack Nicholsons karaktär yxar sönder en dörr och ropar frasen. Alternativen *Exorcisten*, *Fredagen den 13:e* och *Poltergeist* innehåller inte den repliken.",
       "id": "6ea6bfb0edab3cee"
+    },
+    {
+      "typ": "vilken",
+      "svårighetsgrad": "medel",
+      "fråga": "Vilken är den KORREKTA versionen av det berömda Star Wars-citatet?",
+      "kategori": "Underhållning & Konst",
+      "alternativ": [
+        "Luke, I am your father",
+        "No, I am your father",
+        "Luke, you are my son",
+        "I am your father, Luke"
+      ],
+      "rätt_svar": "No, I am your father",
+      "förklaring": "I The Empire Strikes Back (1980) säger Darth Vader 'No, I am your father' - inte 'Luke, I am your father' som många tror. Studier visar att 63% av människor minns citatet fel, medan bara 17% kommer ihåg det korrekt.",
+      "id": "ad391cdd79c6639b"
+    },
+    {
+      "typ": "vilken",
+      "svårighetsgrad": "medel",
+      "fråga": "Vilken karaktär säger 'You can't handle the truth!' i A Few Good Men?",
+      "kategori": "Underhållning & Konst",
+      "alternativ": [
+        "Kapten Jack Ross",
+        "Löjtnant Daniel Kaffee",
+        "Överste Nathan Jessup",
+        "Korpral Harold Dawson"
+      ],
+      "rätt_svar": "Överste Nathan Jessup",
+      "förklaring": "Jack Nicholson spelar Överste Nathan Jessup som skriker denna replik till Tom Cruise karaktär i den klimatiska rättegångsscenen. Nicholson nominerades till Oscar för bästa manliga biroll - hans tionde Oscar-nominering.",
+      "id": "b0355dceb751d5d7"
     },
     {
       "typ": "vilken",
@@ -80,17 +110,32 @@
     {
       "typ": "vilken",
       "svårighetsgrad": "svår",
-      "fråga": "Vilken var den första James Bond-filmen där repliken 'Bond, James Bond' sägs?",
-      "kategori": "Filmhistoria",
+      "fråga": "Vilken skådespelare vann en postumt Oscar för en roll där karaktären säger 'Why so serious?'?",
+      "kategori": "Underhållning & Konst",
       "alternativ": [
-        "Dr. No (1962)",
-        "Goldfinger (1964)",
-        "Agent 007 ser rött (1963)",
-        "Casino Royale (2006)"
+        "Jack Nicholson",
+        "Heath Ledger",
+        "Jared Leto",
+        "Joaquin Phoenix"
       ],
-      "rätt_svar": "Dr. No (1962)",
-      "förklaring": "Den första Bond-filmen, *Dr. No* från 1962, är också första gången som Sean Connery introducerar sig med den klassiska repliken 'Bond... James Bond'. Varken *Agent 007 ser rött* (From Russia with Love) eller *Goldfinger* kommer före *Dr. No* och *Casino Royale* (2006) är en modern reboot.",
-      "id": "b185d0f30399073a"
+      "rätt_svar": "Heath Ledger",
+      "förklaring": "Heath Ledger vann postumt Oscar för bästa manliga biroll som Joker i The Dark Knight (2008). Han dog i januari 2008, filmen släpptes i juli samma år. Han var den första skådespelaren från en serietidningsfilm att vinna Oscar.",
+      "id": "b23bc223d4d53ccf"
+    },
+    {
+      "typ": "vilken",
+      "svårighetsgrad": "svår",
+      "fråga": "Vilken ikonisk filmreplik var HELT improviserad av skådespelaren framför spegeln?",
+      "kategori": "Underhållning & Konst",
+      "alternativ": [
+        "'I'll be back' i The Terminator",
+        "'You talkin' to me?' i Taxi Driver",
+        "'Here's looking at you, kid' i Casablanca",
+        "'Show me the money!' i Jerry Maguire"
+      ],
+      "rätt_svar": "'You talkin' to me?' i Taxi Driver",
+      "förklaring": "Robert De Niro improviserade helt spegelscenen där Travis Bickle säger 'You talkin' to me?' i Taxi Driver (1976). Regissören Martin Scorsese avslöjade att den ikoniska scenen nästan inte kom med i filmen på grund av tidsbrist. Citatet rankades #10 på AFI:s lista.",
+      "id": "3f1c25ddb254659d"
     },
     {
       "typ": "hör_till",
@@ -112,24 +157,6 @@
     },
     {
       "typ": "hör_till",
-      "svårighetsgrad": "lätt",
-      "fråga": "Vilka av följande citat kommer från *Star Wars*-filmerna?",
-      "kategori": "Hör till: citat från Star Wars",
-      "alternativ": [
-        "May the Force be with you.",
-        "No, I am your father.",
-        "Live long and prosper.",
-        "Beam me up, Scotty!"
-      ],
-      "tillhör_index": [
-        0,
-        1
-      ],
-      "förklaring": "Både 'May the Force be with you' och 'No, I am your father' (Darth Vaders avslöjande i *Rymdimperiet slår tillbaka*, 1980) hör till *Star Wars*-sagan. De andra två – 'Live long and prosper' och 'Beam me up, Scotty!' – är klassiska fraser från *Star Trek*, inte *Star Wars*.",
-      "id": "e59201a6663a8438"
-    },
-    {
-      "typ": "hör_till",
       "svårighetsgrad": "svår",
       "fråga": "Vilka av följande kända filmrepliker sägs ha improviserats av skådespelarna?",
       "kategori": "Hör till: improviserade filmcitat",
@@ -146,42 +173,6 @@
       ],
       "förklaring": "Tre av citaten – 'Here's looking at you, kid' (Humphrey Bogart i *Casablanca*, 1942), 'You're gonna need a bigger boat' (Roy Scheider i *Hajen*, 1975) och 'Here's Johnny!' (Jack Nicholson i *The Shining*, 1980) – uppstod genom skådespelarnas improvisation. Det fjärde citatet, 'May the Force be with you', var däremot ett planerat inslag i manus för *Star Wars* och inte någon spontan improvisation.",
       "id": "a6e8ec753a4d4b6e"
-    },
-    {
-      "typ": "hör_till",
-      "svårighetsgrad": "medel",
-      "fråga": "Vilka av följande repliker kommer från filmen *The Matrix* (1999)?",
-      "kategori": "Hör till: citat från The Matrix",
-      "alternativ": [
-        "There is no spoon.",
-        "I'll be back.",
-        "You talkin' to me?",
-        "Why so serious?"
-      ],
-      "tillhör_index": [
-        0
-      ],
-      "förklaring": "Av dessa är det endast 'There is no spoon' som förekommer i *The Matrix* (1999) – det är repliken från barnet ('Spoon Boy') som lär Neo att förstå att verkligheten är illusorisk. De övriga citaten kommer från andra filmer: 'I'll be back' sägs av Terminator (Arnold Schwarzenegger), 'You talkin' to me?' är från *Taxi Driver*, och 'Why so serious?' yttras av Jokern i *The Dark Knight* (2008).",
-      "id": "229d0534fc938733"
-    },
-    {
-      "typ": "ordna",
-      "svårighetsgrad": "medel",
-      "fråga": "Ordna dessa filmcitat efter filmens premiärår, från äldst till nyast.",
-      "alternativ": [
-        "I'm gonna make him an offer he can't refuse.",
-        "I'm the king of the world!",
-        "Here's looking at you, kid.",
-        "Frankly, my dear, I don't give a damn."
-      ],
-      "rätt_ordning": [
-        "Frankly, my dear, I don't give a damn.",
-        "Here's looking at you, kid.",
-        "I'm gonna make him an offer he can't refuse.",
-        "I'm the king of the world!"
-      ],
-      "förklaring": "Kronologiskt sett kom dessa filmklassiker i följande ordning: *Borta med vinden* (1939) med repliken 'Frankly, my dear, I don't give a damn', därefter *Casablanca* (1942) – 'Here's looking at you, kid' –, sedan *Gudfadern* (1972) med 'I'm gonna make him an offer he can't refuse', och sist *Titanic* (1997) med 'I'm the king of the world!'.",
-      "id": "a61cc265fbcb8328"
     },
     {
       "typ": "ordna",

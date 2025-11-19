@@ -20,7 +20,7 @@
       ],
       "förklaring": "Vitruvius-mannen c.1490, Dame med hermelin 1489-1491, Nattvarden 1495-1498, Mona Lisa 1503-1506 (möjligen till 1517).",
       "kategori": "Konst & Litteratur",
-      "id": "92b6c168-8218-4f19-8d08-805a59b1f5ec"
+      "id": "05fe3d531fc1e100"
     },
     {
       "typ": "hör_till",
@@ -38,7 +38,7 @@
         1
       ],
       "förklaring": "Van Gogh sålde bara 'The Red Vineyard' 1888 och målade Starry Night juni 1889 vid 36 års ålder. Han skapade faktiskt över 2100 verk (inte bara 900), och han dog av skottskada men sköt sig själv - han sköts inte av polis.",
-      "id": "ba31d64b-ad28-4240-ba90-5a053bf55114"
+      "id": "905e598678243744"
     },
     {
       "typ": "ordna",
@@ -58,7 +58,7 @@
       ],
       "förklaring": "David skapades 1501-1504, Mona Lisa 1503-1506, Starry Night juni 1889, Guernica 1937.",
       "kategori": "Konst & Litteratur",
-      "id": "57c997e0-66f4-4eab-b3a6-e1c57ed8c293"
+      "id": "2058567be1646988"
     },
     {
       "typ": "ordna",
@@ -78,7 +78,7 @@
       ],
       "förklaring": "Sputnik 1 sköts upp 4 oktober 1957, Yuri Gagarin blev första människan i rymden 12 april 1961, första rymdpromenaden gjordes av Aleksei Leonov 18 mars 1965, och Apollo 11 landade på månen 20 juli 1969.",
       "kategori": "Vetenskap & Natur",
-      "id": "e7da1e4a-2861-461e-bab8-7de35c8038a1"
+      "id": "9edb7b746c81ebc3"
     },
     {
       "typ": "hör_till",
@@ -97,7 +97,7 @@
         2
       ],
       "förklaring": "Impressionistutställningen 1874 på Nadars fotostudio startade rörelsen, Les Demoiselles d'Avignon 1907 grundade kubismen, Impression Sunrise 1872 gav namn åt impressionismen. Men Pop Art startades av Richard Hamilton 1956, inte Warhol.",
-      "id": "f80a1323-23e5-4bff-bca7-5ac43e6aa6ab"
+      "id": "a3987374ac9c7c65"
     },
     {
       "typ": "hör_till",
@@ -114,7 +114,7 @@
         0
       ],
       "förklaring": "Rembrandt skapade cirka 100 självporträtt totalt. Han använde sig själv som modell av konstnärliga skäl, inte för att spara pengar. Hans självporträtt spänner faktiskt från 22 till 63 års ålder. Han målade självporträtt genom hela sin karriär, inte bara som ung.",
-      "id": "4d60a4a0-f9a3-425f-b478-dc826861a086"
+      "id": "ae6a93d99b1b0c72"
     },
     {
       "typ": "hör_till",
@@ -133,7 +133,7 @@
         2
       ],
       "förklaring": "Leif Eriksson nådde Amerika ca 1000, vikingarna namngav de tre länderna, och Erik den röde grundade grönlandskolonierna 985. Men vikingarna grundade inga permanenta städer i Amerika - deras bosättningar var tillfälliga och övergavs.",
-      "id": "ada26e51-a2fa-4183-b5ce-ce2d3a88d307"
+      "id": "daccbeeb2bded4ef"
     },
     {
       "typ": "hör_till",
@@ -151,7 +151,7 @@
         1
       ],
       "förklaring": "Kubrick vann Oscar för specialeffekter för 2001 och använde f/0.7 Zeiss-linser från NASA för Barry Lyndon. Han uppfann inte Steadicam (Garrett Brown gjorde det), och 2001 använde praktiska effekter och slit-scan, inte datoranimering.",
-      "id": "d4cb58c3-ef9a-440d-ab91-ecf32145affc"
+      "id": "d590563a2d250717"
     },
     {
       "typ": "hör_till",
@@ -171,7 +171,7 @@
         3
       ],
       "förklaring": "Alla påståenden är sanna. Peruggia var italiensk patriot och glasmästare som arbetat på Louvren, stöld skedde 21 augusti 1911, Picasso misstänktes initialt pga tidigare inblandning i konststölder, och stölden gjorde målningen globalt känd utanför konstkretsar.",
-      "id": "9f183ce6-a6ca-4b14-bbd4-f6434f206907"
+      "id": "dec69de4292596e9"
     },
     {
       "typ": "ordna",
@@ -191,7 +191,7 @@
       ],
       "förklaring": "Sengångare rör sig omkring 0,2 km/h; en elefant kan springa ca 40 km/h; en struts upp till 70 km/h; en gepard runt 120 km/h på korta sträckor.",
       "kategori": "Vetenskap & Natur",
-      "id": "1642f3e8-edee-46fc-a0af-65a4e0a82530"
+      "id": "d58361b36d182b04"
     },
     {
       "typ": "ordna",
@@ -211,7 +211,7 @@
       ],
       "förklaring": "Van Gogh dog vid 37 år (1853-1890), Kahlo vid 47 år (1907-1954), Picasso vid 91 år (1881-1973), Monet vid 86 år (1840-1926).",
       "kategori": "Konst & Litteratur",
-      "id": "d3612256-3af7-412a-ae33-442031b09e01"
+      "id": "208e123f6ffe1ecc"
     },
     {
       "typ": "ordna",
@@ -231,7 +231,7 @@
       ],
       "förklaring": "Renässans 1400-1600, Barock 1600-1750, Impressionism 1860s-1886, Kubism 1907-1921.",
       "kategori": "Konst & Litteratur",
-      "id": "899b30c7-3122-43ce-a2e3-8665ab1300f7"
+      "id": "777f8b231593f99c"
     }
   ]
 }
