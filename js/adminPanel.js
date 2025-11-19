@@ -1249,6 +1249,457 @@ class AdminPanel {
             content.innerHTML = `<p style="color: red;">❌ Fel vid rensning: ${error.message}</p>`;
         }
     }
+
+    async loadQuestionRatings() {
+        const container = document.getElementById('ratingsContainer');
+        if (!container) return;
+
+        container.innerHTML = '<p style="color: #666;">Laddar betyg...</p>';
+
+        try {
+            // Fetch all ratings from Firebase
+            const ratings = await window.FirebaseAPI.getAllQuestionRatings();
+
+            if (ratings.length === 0) {
+                container.innerHTML = '<p style="color: #666;">Inga betyg hittades ännu.</p>';
+                return;
+            }
+
+            // Load all questions from JSON to match question data
+            const allQuestions = await this.loadAllQuestionsFromJSON();
+
+            // Match ratings with question data and add pack name
+            const matched = ratings.map(rating => {
+                const question = allQuestions.find(q => q.id === rating.questionId);
+                if (question) {
+                    // Find pack name from packs.json
+                    const packFileName = this.getPackFileName(question);
+                    const packName = this.getPackName(packFileName);
+                    return { ...rating, ...question, packFileName, packName };
+                }
+                return { ...rating, exists: false };
+            });
+
+            // Group by pack
+            const groupedByPack = this.groupRatingsByPack(matched);
+
+            // Render grouped tables
+            this.renderQuestionRatingsGrouped(groupedByPack, container);
+
+        } catch (error) {
+            console.error('Failed to load question ratings:', error);
+            container.innerHTML = `<p style="color: red;">❌ Fel: ${error.message}</p>`;
+        }
+    }
+
+    async loadAllQuestionsFromJSON() {
+        // Load questions from all pack files
+        const allQuestions = [];
+
+        try {
+            // Load from packs.json which is an array of pack objects
+            const packsResponse = await fetch('data/packs.json');
+            this.packsMetadata = await packsResponse.json(); // Store for later use
+
+            // packsMetadata is an array of pack objects with 'id' field containing the filename
+            for (const pack of this.packsMetadata) {
+                if (pack.id) {
+                    try {
+                        const response = await fetch(`data/${pack.id}`);
+                        const data = await response.json();
+                        // Tag questions with their pack file for easier lookup
+                        const questionsWithPack = (data.questions || []).map(q => ({
+                            ...q,
+                            _packFile: pack.id
+                        }));
+                        allQuestions.push(...questionsWithPack);
+                    } catch (err) {
+                        console.warn(`Could not load pack ${pack.id}:`, err);
+                    }
+                }
+            }
+        } catch (err) {
+            console.error('Could not load packs.json:', err);
+        }
+
+        return allQuestions;
+    }
+
+    getPackFileName(question) {
+        // Question was tagged with _packFile during loading
+        return question._packFile || 'unknown';
+    }
+
+    getPackName(packFileName) {
+        // Look up pack name from metadata
+        if (!this.packsMetadata) return packFileName;
+        const pack = this.packsMetadata.find(p => p.id === packFileName);
+        return pack ? pack.name : packFileName;
+    }
+
+    groupRatingsByPack(ratings) {
+        const grouped = {};
+
+        for (const rating of ratings) {
+            const packName = rating.packName || 'Okänt paket';
+            if (!grouped[packName]) {
+                grouped[packName] = [];
+            }
+            grouped[packName].push(rating);
+        }
+
+        // Sort each pack's ratings by lowest rating first
+        for (const packName in grouped) {
+            grouped[packName].sort((a, b) => a.averageRating - b.averageRating);
+        }
+
+        return grouped;
+    }
+
+    renderQuestionRatingsGrouped(groupedRatings, container) {
+        let html = '';
+        let totalQuestions = 0;
+
+        // Store for clipboard export
+        this.currentRatingsData = groupedRatings;
+
+        // Populate pack selector
+        this.populatePackSelector(groupedRatings);
+
+        // Sort packs by name
+        const packNames = Object.keys(groupedRatings).sort();
+
+        for (const packName of packNames) {
+            const ratings = groupedRatings[packName];
+            totalQuestions += ratings.length;
+
+            // Calculate pack average
+            const packAvg = ratings.reduce((sum, r) => sum + r.averageRating, 0) / ratings.length;
+            const packColor = packAvg >= 7 ? '#90EE90' : packAvg >= 4 ? '#FFD700' : '#FF6B6B';
+
+            html += `
+                <div style="margin-bottom: 30px;">
+                    <h3 style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; padding: 10px 15px; border-radius: 8px; margin-bottom: 10px;">
+                        ${packName}
+                        <span style="float: right; font-size: 0.9rem;">
+                            Genomsnitt: <strong style="color: ${packColor};">${packAvg.toFixed(1)}</strong> ⭐
+                            (${ratings.length} frågor)
+                        </span>
+                    </h3>
+                    <table class="data-table">
+                        <thead>
+                            <tr>
+                                <th>Betyg</th>
+                                <th>Fråga</th>
+                                <th>ID</th>
+                                <th>Typ</th>
+                                <th>Svårighet</th>
+                                <th>Kategori</th>
+                                <th>Röster</th>
+                                <th>Distribution</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+            `;
+
+            for (const item of ratings) {
+                const avgRating = item.averageRating?.toFixed(1) || 'N/A';
+                const ratingColor = item.averageRating >= 7 ? 'green' : item.averageRating >= 4 ? 'orange' : 'red';
+
+                // Type emoji
+                const typeEmoji = item.typ === 'ordna' ? '📊' : item.typ === 'hör_till' ? '✓/✗' : '❓';
+
+                // Difficulty emoji
+                const difficultyEmoji = item.svårighetsgrad === 'lätt' ? '😊' :
+                                       item.svårighetsgrad === 'medel' ? '🤔' :
+                                       item.svårighetsgrad === 'svår' ? '😰' : '❓';
+
+                // Distribution string
+                const dist = item.ratingDistribution || {};
+                const distStr = Object.entries(dist)
+                    .filter(([, count]) => count > 0)
+                    .map(([r, count]) => `${r}★: ${count}`)
+                    .join(', ') || 'Ingen data';
+
+                // Check if question still exists
+                const questionText = item.exists === false ?
+                    `⚠️ BORTTAGEN (ID: ${item.questionId.substring(0, 8)}...)` :
+                    item.fråga || 'Okänd fråga';
+
+                const rowOpacity = item.exists === false ? 'style="opacity: 0.5;"' : '';
+
+                // Format question ID (show first 8 characters)
+                const shortId = item.questionId ? item.questionId.substring(0, 8) : 'N/A';
+
+                html += `
+                    <tr ${rowOpacity}>
+                        <td><strong style="color: ${ratingColor}; font-size: 1.2rem;">${avgRating}</strong></td>
+                        <td>${questionText}</td>
+                        <td style="font-family: monospace; font-size: 0.85rem; color: #666;">${shortId}</td>
+                        <td>${typeEmoji} ${item.typ || '-'}</td>
+                        <td>${difficultyEmoji} ${item.svårighetsgrad || '-'}</td>
+                        <td>${item.kategori || '-'}</td>
+                        <td>${item.totalRatings || 0}</td>
+                        <td style="font-size: 0.85rem;">${distStr}</td>
+                    </tr>
+                `;
+            }
+
+            html += `
+                        </tbody>
+                    </table>
+                </div>
+            `;
+        }
+
+        html += `
+            <p style="margin-top: 15px; color: #666; font-size: 0.9rem;">
+                📊 Totalt: ${totalQuestions} frågor från ${packNames.length} paket har betygsatts
+            </p>
+        `;
+
+        container.innerHTML = html;
+    }
+
+    populatePackSelector(groupedRatings) {
+        const selector = document.getElementById('packSelector');
+        const copyBtn = document.getElementById('copyRatingsBtn');
+
+        if (!selector) return;
+
+        // Clear existing options (except first)
+        selector.innerHTML = '<option value="">Välj frågepaket...</option>';
+
+        // Add pack options
+        const packNames = Object.keys(groupedRatings).sort();
+        packNames.forEach(packName => {
+            const option = document.createElement('option');
+            option.value = packName;
+            option.textContent = packName;
+            selector.appendChild(option);
+        });
+
+        // Show selector and copy button if we have packs
+        if (packNames.length > 0) {
+            selector.style.display = 'inline-block';
+            if (copyBtn) copyBtn.style.display = 'inline-block';
+        }
+    }
+
+    async deleteAllRatings() {
+        // First confirmation
+        if (!confirm('⚠️ VARNING: Detta kommer radera ALLA frågebetyg från databasen!\n\nÄr du säker?')) {
+            return;
+        }
+
+        // Second confirmation with exact text to type
+        const confirmText = prompt(
+            'För att bekräfta, skriv "RADERA ALLT" (stora bokstäver):\n\n' +
+            'Detta kommer permanent radera alla betyg från Firebase.'
+        );
+
+        if (confirmText !== 'RADERA ALLT') {
+            alert('Avbruten. Ingen data har raderats.');
+            return;
+        }
+
+        try {
+            const container = document.getElementById('ratingsContainer');
+            if (container) {
+                container.innerHTML = '<p style="color: #666;">Raderar alla betyg...</p>';
+            }
+
+            const result = await window.FirebaseAPI.deleteAllQuestionRatings();
+
+            if (result.success) {
+                alert(`✅ ${result.deletedCount} betyg har raderats från databasen.`);
+
+                // Clear UI
+                if (container) {
+                    container.innerHTML = '<p style="color: #666;">Inga betyg hittades ännu.</p>';
+                }
+
+                // Hide selector and copy button
+                const selector = document.getElementById('packSelector');
+                const copyBtn = document.getElementById('copyRatingsBtn');
+                if (selector) selector.style.display = 'none';
+                if (copyBtn) copyBtn.style.display = 'none';
+
+                // Clear cached data
+                this.currentRatingsData = null;
+            }
+        } catch (error) {
+            console.error('Failed to delete ratings:', error);
+            alert(`❌ Fel vid radering: ${error.message}`);
+        }
+    }
+
+    async copyPackRatingsToClipboard() {
+        const selector = document.getElementById('packSelector');
+        const selectedPack = selector?.value;
+
+        if (!selectedPack) {
+            alert('Välj ett frågepaket först');
+            return;
+        }
+
+        if (!this.currentRatingsData || !this.currentRatingsData[selectedPack]) {
+            alert('Ingen data tillgänglig för valt paket');
+            return;
+        }
+
+        const ratings = this.currentRatingsData[selectedPack];
+
+        // Create formatted text
+        let text = `FRÅGEBETYG - ${selectedPack}\n`;
+        text += `${'='.repeat(selectedPack.length + 16)}\n\n`;
+
+        // Calculate pack average
+        const packAvg = ratings.reduce((sum, r) => sum + r.averageRating, 0) / ratings.length;
+        text += `Genomsnitt: ${packAvg.toFixed(1)} ⭐ (${ratings.length} frågor)\n\n`;
+
+        // Add individual question ratings
+        text += 'FRÅGOR (sorterade efter lägst betyg först):\n';
+        text += '-'.repeat(80) + '\n\n';
+
+        ratings.forEach((item, index) => {
+            const avgRating = item.averageRating?.toFixed(1) || 'N/A';
+            const questionText = item.fråga || 'Okänd fråga';
+            const typeEmoji = item.typ === 'ordna' ? '📊' : item.typ === 'hör_till' ? '✓/✗' : '❓';
+            const difficultyEmoji = item.svårighetsgrad === 'lätt' ? '😊' :
+                                   item.svårighetsgrad === 'medel' ? '🤔' :
+                                   item.svårighetsgrad === 'svår' ? '😰' : '❓';
+
+            // Distribution
+            const dist = item.ratingDistribution || {};
+            const distStr = Object.entries(dist)
+                .filter(([, count]) => count > 0)
+                .map(([r, count]) => `${r}★: ${count}`)
+                .join(', ') || 'Ingen data';
+
+            text += `${index + 1}. BETYG: ${avgRating}/10 (${item.totalRatings || 0} röster)\n`;
+            text += `   Fråga: ${questionText}\n`;
+            text += `   Typ: ${typeEmoji} ${item.typ || '-'}  |  Svårighet: ${difficultyEmoji} ${item.svårighetsgrad || '-'}  |  Kategori: ${item.kategori || '-'}\n`;
+            text += `   Distribution: ${distStr}\n`;
+            text += `   ID: ${item.questionId}\n\n`;
+        });
+
+        // Add summary statistics
+        text += '\n' + '='.repeat(80) + '\n';
+        text += 'SAMMANFATTNING\n';
+        text += '='.repeat(80) + '\n\n';
+
+        // Rating distribution for whole pack
+        const allDist = {};
+        for (let i = 1; i <= 10; i++) allDist[i] = 0;
+
+        ratings.forEach(r => {
+            const dist = r.ratingDistribution || {};
+            for (let i = 1; i <= 10; i++) {
+                allDist[i] += dist[i] || 0;
+            }
+        });
+
+        text += 'Fördelning av alla röster:\n';
+        for (let i = 1; i <= 10; i++) {
+            if (allDist[i] > 0) {
+                text += `  ${i}★: ${allDist[i]} röster\n`;
+            }
+        }
+
+        text += `\nTotalt antal röster: ${ratings.reduce((sum, r) => sum + (r.totalRatings || 0), 0)}\n`;
+        text += `Antal frågor: ${ratings.length}\n`;
+        text += `Genomsnittsbetyg: ${packAvg.toFixed(2)}/10\n`;
+
+        // Copy to clipboard
+        try {
+            await navigator.clipboard.writeText(text);
+
+            // Show success feedback
+            const copyBtn = document.getElementById('copyRatingsBtn');
+            if (copyBtn) {
+                const originalText = copyBtn.textContent;
+                copyBtn.textContent = '✅ Kopierat!';
+                copyBtn.style.background = '#4CAF50';
+                setTimeout(() => {
+                    copyBtn.textContent = originalText;
+                    copyBtn.style.background = '';
+                }, 2000);
+            }
+        } catch (error) {
+            console.error('Failed to copy to clipboard:', error);
+            alert('Kunde inte kopiera till clipboard. Se konsolen för detaljer.');
+        }
+    }
+
+    renderQuestionRatingsTable(ratings, container) {
+        let html = `
+            <table class="data-table">
+                <thead>
+                    <tr>
+                        <th>Betyg</th>
+                        <th>Fråga</th>
+                        <th>Pack</th>
+                        <th>Typ</th>
+                        <th>Svårighet</th>
+                        <th>Kategori</th>
+                        <th>Röster</th>
+                        <th>Distribution</th>
+                    </tr>
+                </thead>
+                <tbody>
+        `;
+
+        for (const item of ratings) {
+            const avgRating = item.averageRating?.toFixed(1) || 'N/A';
+            const ratingColor = item.averageRating >= 7 ? 'green' : item.averageRating >= 4 ? 'orange' : 'red';
+
+            // Type emoji
+            const typeEmoji = item.typ === 'ordna' ? '📊' : item.typ === 'hör_till' ? '✓/✗' : '❓';
+
+            // Difficulty emoji
+            const difficultyEmoji = item.svårighetsgrad === 'lätt' ? '😊' :
+                                   item.svårighetsgrad === 'medel' ? '🤔' :
+                                   item.svårighetsgrad === 'svår' ? '😰' : '❓';
+
+            // Distribution string
+            const dist = item.ratingDistribution || {};
+            const distStr = Object.entries(dist)
+                .filter(([, count]) => count > 0)
+                .map(([r, count]) => `${r}★: ${count}`)
+                .join(', ') || 'Ingen data';
+
+            // Check if question still exists
+            const questionText = item.exists === false ?
+                `⚠️ BORTTAGEN (ID: ${item.questionId.substring(0, 8)}...)` :
+                item.fråga || 'Okänd fråga';
+
+            const rowOpacity = item.exists === false ? 'style="opacity: 0.5;"' : '';
+
+            html += `
+                <tr ${rowOpacity}>
+                    <td><strong style="color: ${ratingColor}; font-size: 1.2rem;">${avgRating}</strong></td>
+                    <td>${questionText}</td>
+                    <td>${item.pack || '-'}</td>
+                    <td>${typeEmoji} ${item.typ || '-'}</td>
+                    <td>${difficultyEmoji} ${item.svårighetsgrad || '-'}</td>
+                    <td>${item.kategori || '-'}</td>
+                    <td>${item.totalRatings || 0}</td>
+                    <td style="font-size: 0.85rem;">${distStr}</td>
+                </tr>
+            `;
+        }
+
+        html += `
+                </tbody>
+            </table>
+            <p style="margin-top: 15px; color: #666; font-size: 0.9rem;">
+                📊 Totalt: ${ratings.length} frågor har betygsatts
+            </p>
+        `;
+
+        container.innerHTML = html;
+    }
 }
 
 // Initialize admin panel when DOM is ready

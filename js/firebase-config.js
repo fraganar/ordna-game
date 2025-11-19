@@ -541,6 +541,152 @@ function getAuthProvider() {
     return 'unknown';
 }
 
+// Question Rating API
+FirebaseAPI.rateQuestion = async function(questionId, playerId, rating) {
+    if (!firebaseInitialized) {
+        console.log('Demo mode: Would rate question', questionId, rating);
+        return { averageRating: rating, totalRatings: 1 };
+    }
+
+    if (!questionId || !playerId || rating < 1 || rating > 10) {
+        throw new Error('Invalid rating parameters');
+    }
+
+    try {
+        const ratingRef = db.collection('questionRatings').doc(questionId);
+        const doc = await ratingRef.get();
+
+        // Use new Date() instead of serverTimestamp() since it's inside an array
+        const timestamp = new Date();
+        const newRating = { playerId, rating, timestamp };
+
+        if (doc.exists) {
+            const data = doc.data();
+
+            // Check if user already rated (spam protection)
+            const existingRating = data.ratings?.find(r => r.playerId === playerId);
+            if (existingRating) {
+                throw new Error('Du har redan betygsatt denna fråga');
+            }
+
+            // Add new rating
+            const updatedRatings = [...(data.ratings || []), newRating];
+            const totalRatings = updatedRatings.length;
+            const sumRatings = updatedRatings.reduce((sum, r) => sum + r.rating, 0);
+            const averageRating = sumRatings / totalRatings;
+
+            // Update distribution
+            const ratingDistribution = data.ratingDistribution || {};
+            ratingDistribution[rating] = (ratingDistribution[rating] || 0) + 1;
+
+            await ratingRef.update({
+                ratings: updatedRatings,
+                averageRating,
+                totalRatings,
+                ratingDistribution,
+                lastUpdated: firebase.firestore.FieldValue.serverTimestamp()
+            });
+
+            return { averageRating, totalRatings };
+        } else {
+            // First rating for this question
+            const ratingDistribution = {};
+            for (let i = 1; i <= 10; i++) ratingDistribution[i] = 0;
+            ratingDistribution[rating] = 1;
+
+            await ratingRef.set({
+                ratings: [newRating],
+                averageRating: rating,
+                totalRatings: 1,
+                ratingDistribution,
+                lastUpdated: firebase.firestore.FieldValue.serverTimestamp()
+            });
+
+            return { averageRating: rating, totalRatings: 1 };
+        }
+    } catch (error) {
+        console.error('Error rating question:', error);
+        throw error;
+    }
+};
+
+FirebaseAPI.hasUserRatedQuestion = async function(questionId, playerId) {
+    if (!firebaseInitialized) {
+        return { hasRated: false, rating: null };
+    }
+
+    try {
+        const ratingRef = db.collection('questionRatings').doc(questionId);
+        const doc = await ratingRef.get();
+
+        if (!doc.exists) {
+            return { hasRated: false, rating: null };
+        }
+
+        const data = doc.data();
+        const userRating = data.ratings?.find(r => r.playerId === playerId);
+
+        if (userRating) {
+            return { hasRated: true, rating: userRating.rating };
+        }
+
+        return { hasRated: false, rating: null };
+    } catch (error) {
+        console.error('Error checking user rating:', error);
+        return { hasRated: false, rating: null };
+    }
+};
+
+FirebaseAPI.getAllQuestionRatings = async function() {
+    if (!firebaseInitialized) {
+        console.log('Demo mode: No ratings available');
+        return [];
+    }
+
+    try {
+        const snapshot = await db.collection('questionRatings').get();
+        const ratings = [];
+
+        snapshot.forEach(doc => {
+            ratings.push({
+                questionId: doc.id,
+                ...doc.data()
+            });
+        });
+
+        return ratings;
+    } catch (error) {
+        console.error('Error getting all ratings:', error);
+        return [];
+    }
+};
+
+FirebaseAPI.deleteAllQuestionRatings = async function() {
+    if (!firebaseInitialized) {
+        console.log('Demo mode: Would delete all ratings');
+        return { success: true, deletedCount: 0 };
+    }
+
+    try {
+        const snapshot = await db.collection('questionRatings').get();
+        const batch = db.batch();
+        let deleteCount = 0;
+
+        snapshot.forEach(doc => {
+            batch.delete(doc.ref);
+            deleteCount++;
+        });
+
+        await batch.commit();
+        console.log(`✅ Deleted ${deleteCount} question ratings`);
+
+        return { success: true, deletedCount: deleteCount };
+    } catch (error) {
+        console.error('Error deleting all ratings:', error);
+        throw error;
+    }
+};
+
 // Export FirebaseAPI to window for global access
 window.FirebaseAPI = FirebaseAPI;
 

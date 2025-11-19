@@ -102,6 +102,9 @@
     <!-- Toast Notification System -->
     <script src="js/toastNotification.js" defer></script>
 
+    <!-- Question Rating System -->
+    <script src="js/questionRating.js" defer></script>
+
     <!-- Auth UI Module -->
     <script src="js/authUI.js" defer></script>
 
@@ -664,7 +667,7 @@
                 <p id="question-text" class="text-lg sm:text-xl md:text-2xl font-semibold text-slate-900 leading-tight"></p>
                 <p id="question-instruction" class="text-sm text-slate-500 mt-2"></p>
             </div>
-            
+
             <!-- Single Player Current Question Score (REMOVED - now handled by decision button) -->
             
             <!-- Options -->
@@ -682,7 +685,7 @@
                     <button id="next-question-btn" class="hidden w-full max-w-xs bg-gradient-to-r from-magic to-primary text-white font-bold py-3 px-6 rounded-lg text-lg hover:from-primary hover:to-magic-dark transition-colors shadow-md">
                         Nästa fråga
                     </button>
-                    
+
                     <!-- New two-part decision button -->
                     <div id="decision-button" class="hidden decision-button">
                         <button id="stop-side" class="stop-side">
@@ -699,13 +702,16 @@
                             </span>
                         </button>
                     </div>
-                    
+
                     <!-- Large next question button for multiplayer -->
                     <button id="large-next-question-btn" class="hidden large-next-question-btn">
                         Nästa fråga
                     </button>
                 </div>
             </div>
+
+            <!-- Question Rating (single-player only) -->
+            <div id="question-rating" class="hidden mt-4"></div>
         </div>
 
         <!-- End Screen (Hidden by default) -->

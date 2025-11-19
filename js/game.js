@@ -1106,9 +1106,14 @@ function loadQuestion() {
     
     // Clear options and hide buttons
     const optionsGrid = UI.get('optionsGrid');
-    
+
     UI?.clearOptionsGrid();
     UI?.hideAllGameButtons();
+
+    // Hide rating from previous question
+    if (window.QuestionRating) {
+        window.QuestionRating.hide();
+    }
     
     // Always show decision button - it will be configured per player/mode
     UI?.showDecisionButton();
@@ -1188,6 +1193,11 @@ function loadQuestion() {
             }, index * 150); // 150ms delay between each option
         });
     }, 100); // Small delay to ensure DOM is ready
+
+    // Show question rating (single-player only)
+    if (window.PlayerManager?.isSinglePlayerMode() && window.QuestionRating) {
+        window.QuestionRating.showRating(question);
+    }
 }
 
 // REMOVED: setAllOptionsDisabled - moved to UIRenderer.setAllOptionsDisabled()

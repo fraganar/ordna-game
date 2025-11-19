@@ -1248,4 +1248,55 @@ body::before {
     }
 }
 
+/* Question Rating Stars */
+#question-rating {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.25rem;
+}
+
+.rating-star {
+    font-size: 1.5rem;
+    cursor: pointer;
+    transition: transform 0.15s ease;
+    user-select: none;
+    filter: grayscale(100%);
+    opacity: 0.4;
+}
+
+.rating-star:hover {
+    transform: scale(1.15);
+}
+
+.rating-star.filled {
+    filter: grayscale(0%);
+    opacity: 1;
+}
+
+.rating-star.rated {
+    cursor: default;
+    filter: grayscale(0%);
+    opacity: 1;
+}
+
+/* Hover effect: highlight all stars up to hovered star */
+#question-rating:not(.rated) .rating-star:hover ~ .rating-star {
+    filter: grayscale(100%);
+    opacity: 0.4;
+}
+
+#question-rating:not(.rated) .rating-star:hover,
+#question-rating:not(.rated) .rating-star.hover-highlight {
+    filter: grayscale(0%);
+    opacity: 1;
+}
+
+/* Mobile: smaller stars */
+@media (max-width: 640px) {
+    .rating-star {
+        font-size: 1.25rem;
+    }
+}
+
 /* FirebaseUI - Use default styling */

@@ -534,6 +534,31 @@
             </div>
             </div>
         </div>
+
+        <!-- Question Ratings Section -->
+        <div class="admin-section">
+            <h2 class="section-title" onclick="window.adminPanel.toggleSection(this)">
+                <span>⭐ Frågebetyg</span>
+                <span class="toggle-icon">▼</span>
+            </h2>
+            <div class="section-content">
+                <div class="admin-actions">
+                    <button onclick="window.adminPanel.loadQuestionRatings()" class="admin-btn btn-primary">
+                        🔄 Ladda betyg
+                    </button>
+                    <select id="packSelector" style="padding: 8px; border: 1px solid #ddd; border-radius: 4px; display: none;">
+                        <option value="">Välj frågepaket...</option>
+                    </select>
+                    <button id="copyRatingsBtn" onclick="window.adminPanel.copyPackRatingsToClipboard()" class="admin-btn btn-success" style="display: none;">
+                        📋 Kopiera betyg för valt paket
+                    </button>
+                    <button onclick="window.adminPanel.deleteAllRatings()" class="admin-btn btn-clear">
+                        🗑️ Radera ALLA betyg
+                    </button>
+                </div>
+                <div id="ratingsContainer" style="margin-top: 20px; max-height: 600px; overflow-y: auto;"></div>
+            </div>
+        </div>
     </div>
 
     <!-- Firebase Scripts -->
