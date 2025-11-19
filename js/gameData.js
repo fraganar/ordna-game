@@ -145,6 +145,9 @@ class GameData {
             // Load packs from packs.json
             let packs = await this.loadAvailablePacks();
 
+            // Filter out hidden packs
+            packs = packs.filter(p => !p.hide);
+
             // Load played packs from Firebase
             let playedPackIds = [];
             try {
@@ -204,7 +207,7 @@ class GameData {
                 const isPlayed = playedPackIds.includes(pack.id);
                 const isSelected = pack.id === selectedPackId;
 
-                // Add separator before first played pack
+                // Add separator before first played pack (packs are already grouped: unplayed first, then played)
                 if (isPlayed && !separatorAdded && playedCount > 0 && unplayedCount > 0) {
                     const separator = this.createPackSeparator();
                     if (packSelect) packSelect.appendChild(separator);
@@ -331,7 +334,7 @@ class GameData {
 
     /**
      * Sort packs by played status: unplayed first, then played
-     * Within each group, packs are sorted by their order field
+     * Within each group, packs are sorted by their order field (preserves packs.json order within groups)
      * @param {Array} packs - Array of pack objects
      * @param {Array} playedPackIds - Array of played pack IDs from Firebase
      * @returns {Array} Sorted array of packs
@@ -340,7 +343,7 @@ class GameData {
         const unplayed = packs.filter(p => !playedPackIds.includes(p.id));
         const played = packs.filter(p => playedPackIds.includes(p.id));
 
-        // Sort each group by order field
+        // Sort each group by order field (preserves packs.json order)
         unplayed.sort((a, b) => (a.order || 0) - (b.order || 0));
         played.sort((a, b) => (a.order || 0) - (b.order || 0));
 

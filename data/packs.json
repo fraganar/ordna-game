@@ -3,132 +3,154 @@
     "id": "filmcitat.json",
     "name": "Filmcitat",
     "description": "Ikoniska filmrepliker från filmhistorien",
-    "order": 5
+    "order": 1,
+    "hide": false
   },
   {
     "id": "ordsprak-uttryck.json",
     "name": "Ordspråk och uttryck",
     "description": "Svenska idiom, talesätt och deras ursprung",
-    "order": 9
+    "order": 2,
+    "hide": false
   },
   {
     "id": "sport-1.json",
-    "name": "Sport",
+    "name": "Sport 1",
     "description": "Olympiska spel, idrottshistoria och legendariska atleter",
-    "order": 10
+    "order": 3,
+    "hide": false
   },
   {
     "id": "sport-2.json",
-    "name": "Sportquiz 2",
+    "name": "Sport 2",
     "description": "Ett blandat frågepaket om sport, med fokus på svensk idrottshistoria och några globala inslag.",
-    "order": 11
+    "order": 4,
+    "hide": false
   },
   {
     "id": "antiken-1.json",
-    "name": "Antiken",
+    "name": "Antiken 1",
     "description": "Ett blandat frågepaket om antikens mest fascinerande personer, idéer och imperier.",
-    "order": 1
+    "order": 5,
+    "hide": false
   },
   {
     "id": "antiken-2.json",
-    "name": "Antiken",
+    "name": "Antiken 2",
     "description": "Antikens Grekland och Rom - filosofer, kejsare och tidiga kristendomen",
-    "order": 2
+    "order": 6,
+    "hide": false
   },
   {
     "id": "filmcitat-1.json",
     "name": "Filmcitat 1",
     "description": "Blandade frågor om kända filmrepliker från olika filmer.",
-    "order": 3
+    "order": 7,
+    "hide": true
   },
   {
     "id": "filmcitat-2.json",
     "name": "Filmcitat 2",
     "description": "Ikoniska repliker från filmhistorien",
-    "order": 4
+    "order": 8,
+    "hide": true
   },
   {
     "id": "musik.json",
     "name": "Musik",
     "description": "Musikhistoria, artister och instrument genom tiderna",
-    "order": 6
+    "order": 9,
+    "hide": false
   },
   {
     "id": "ordsprak-uttryck-1.json",
     "name": "Svenska ordspråk och uttryck 1",
     "description": "Idiom, talesätt och deras ursprung i det svenska språket",
-    "order": 7
+    "order": 10,
+    "hide": true
   },
   {
     "id": "ordsprak-uttryck-2.json",
     "name": "Svenska ordspråk och uttryck 2",
     "description": "Svenska ordspråk, uttryck och idiom",
-    "order": 8
+    "order": 11,
+    "hide": true
   },
   {
     "id": "blandat-1.json",
     "name": "Blandat #1",
     "description": "Teknik, historia, språk, musik, byggnader och samhälle",
-    "order": 101
+    "order": 101,
+    "hide": false
   },
   {
     "id": "blandat-2.json",
     "name": "Blandat #2",
     "description": "Kuriosa, populärkultur och litteratur genom tiderna",
-    "order": 102
+    "order": 102,
+    "hide": false
   },
   {
     "id": "blandat-3.json",
     "name": "Blandat #3",
     "description": "Planeter, städer, djur och naturvetenskapliga fakta",
-    "order": 103
+    "order": 103,
+    "hide": false
   },
   {
     "id": "blandat-4.json",
     "name": "Blandat #4",
     "description": "Språk, krig, religion och kultur genom tiderna",
-    "order": 104
+    "order": 104,
+    "hide": false
   },
   {
     "id": "blandat-5.json",
     "name": "Blandat #5",
     "description": "Konstnärer, uppfinningar och vetenskapliga genombrott",
-    "order": 105
+    "order": 105,
+    "hide": false
   },
   {
     "id": "blandat-6.json",
     "name": "Blandat #6",
     "description": "Sport, medicinska upptäckter, tekniska uppfinningar och svenska fakta",
-    "order": 106
+    "order": 106,
+    "hide": false
   },
   {
     "id": "blandat-7.json",
     "name": "Blandat #7",
     "description": "Världshistoria, geografiska fakta och livets stadier",
-    "order": 107
+    "order": 107,
+    "hide": false
   },
   {
     "id": "blandat-8.json",
     "name": "Blandat #8",
     "description": "Historia, arkitektur, konst, sport, kultur, musik och uppfinningar",
-    "order": 108
+    "order": 108,
+    "hide": false
   },
   {
     "id": "blandat-9.json",
     "name": "Blandat #9",
     "description": "Historia, film, litteratur, språk, idrott, arkitektur och kultur",
-    "order": 109
+    "order": 109,
+    "hide": false
   },
   {
     "id": "blandat-10.json",
     "name": "Blandat #10",
     "description": "Vetenskapens giganter och banbrytande upptäckter",
-    "order": 110
+    "order": 110,
+    "hide": false
   },
   {
     "id": "blandat-11.json",
     "name": "Blandat #11",
     "description": "Vetenskapens giganter och historiska upptäckter",
-    "order": 111
+    "order": 111,
+    "hide": false
   }
 ]
