@@ -1161,7 +1161,7 @@ class ChallengeSystem {
         const endScreen = UI?.get('endScreen');
         if (endScreen) {
             // Clear any existing share container first
-            const existingShare = endScreen.querySelector('.mb-6');
+            const existingShare = endScreen.querySelector('.challenge-share-container');
             if (existingShare) {
                 existingShare.remove();
             }
@@ -1171,9 +1171,15 @@ class ChallengeSystem {
             const singlePlayerFinal = endScreen.querySelector('#single-player-final');
             const finalScore = endScreen.querySelector('#single-final-score');
             const finalScoreboard = endScreen.querySelector('#final-scoreboard');
-            
-            if (title) title.textContent = 'Bra kämpat!';
-            if (subtitle) subtitle.textContent = '';
+
+            if (title) {
+                title.textContent = 'Bra kämpat!';
+                title.dataset.challengeModified = 'true';  // Mark for cleanup
+            }
+            if (subtitle) {
+                subtitle.textContent = '';
+                subtitle.dataset.challengeModified = 'true';
+            }
 
             // Show single player result instead of multiplayer scoreboard
             if (singlePlayerFinal && finalScore) {
@@ -1186,10 +1192,11 @@ class ChallengeSystem {
             const restartBtn = endScreen.querySelector('#restart-btn');
             if (restartBtn) {
                 restartBtn.textContent = 'Tillbaka till start';
+                restartBtn.dataset.challengeModified = 'true';
 
                 // Add sharing elements before restart button
                 const shareContainer = document.createElement('div');
-                shareContainer.className = 'mb-6';
+                shareContainer.className = 'mb-6 challenge-share-container';
                 shareContainer.innerHTML = `
                     <div class="border-t border-slate-200 pt-6 mb-4">
                         <h3 class="text-xl font-bold text-slate-800 mb-2">🏆 Utmana någon!</h3>
@@ -1208,9 +1215,40 @@ class ChallengeSystem {
                 restartBtn.parentNode?.insertBefore(shareContainer, restartBtn);
             }
         }
-        
+
         // Add simplified event listeners - NO POLLING FUNCTIONALITY
         this.setupChallengeCreatedListeners(challengeId, challengeUrl, playerName);
+    }
+
+    // Clean up challenge-specific UI modifications from endScreen
+    cleanupWaitingView() {
+        const endScreen = UI?.get('endScreen');
+        if (!endScreen) return;
+
+        // Remove challenge-specific share container
+        const shareContainer = endScreen.querySelector('.challenge-share-container');
+        if (shareContainer) {
+            shareContainer.remove();
+        }
+
+        // Reset modified text content to defaults
+        const title = endScreen.querySelector('h2');
+        if (title && title.dataset.challengeModified) {
+            title.textContent = 'Spelet är slut!';
+            delete title.dataset.challengeModified;
+        }
+
+        const subtitle = endScreen.querySelector('#end-screen-subtitle');
+        if (subtitle && subtitle.dataset.challengeModified) {
+            subtitle.textContent = 'Bra kämpat allihopa!';
+            delete subtitle.dataset.challengeModified;
+        }
+
+        const restartBtn = endScreen.querySelector('#restart-btn');
+        if (restartBtn && restartBtn.dataset.challengeModified) {
+            restartBtn.textContent = 'Spela igen';
+            delete restartBtn.dataset.challengeModified;
+        }
     }
     
     // Setup simplified event listeners for challenge created view - NO POLLING

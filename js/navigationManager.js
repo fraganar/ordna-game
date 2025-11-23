@@ -23,7 +23,8 @@ class NavigationManager {
             'playerSetup',
             'challengeForm',
             'challengeAccept',
-            'challengeBlocked'
+            'challengeBlocked',
+            'postGameShare'  // Post-game share screen (anonymous user flow)
         ];
 
         screensToHide.forEach(screenId => {

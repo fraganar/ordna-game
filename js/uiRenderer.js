@@ -44,6 +44,7 @@ class UIRenderer {
             // Game screen elements
             gameScreen: document.getElementById('game-screen'),
             endScreen: document.getElementById('end-screen'),
+            postGameShare: document.getElementById('post-game-share'),  // Post-game share screen (anonymous flow)
             restartBtn: document.getElementById('restart-btn'),
             packSelect: document.getElementById('pack-select'),
             challengePackSelect: document.getElementById('challenge-pack-select'),

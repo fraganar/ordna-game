@@ -13,6 +13,19 @@ let challengeQuestions = [];
 let challengeQuestionScores = [];
 let pendingChallengeCreation = false;
 
+// Timeout Cleanup Registry - prevents orphaned timeouts when loading new questions
+let pendingTimeouts = [];
+
+function clearAllPendingTimeouts() {
+    pendingTimeouts.forEach(id => clearTimeout(id));
+    pendingTimeouts = [];
+}
+
+function registerTimeout(timeoutId) {
+    pendingTimeouts.push(timeoutId);
+    return timeoutId;
+}
+
 // Challenge system functions now handled by ChallengeSystem module
 
 // Load metadata for all available packs from their JSON files
@@ -298,20 +311,20 @@ function determineNextAction() {
         if (currentPlayer && currentPlayer.completedRound) {
             // Player has stopped - show facit and enable next button
             showCorrectAnswers();
-            setTimeout(() => {
+            registerTimeout(setTimeout(() => {
                 updateGameControls();
-            }, 2000); // Wait for secure animation
+            }, 2000)); // Wait for secure animation
         }
         return;
     }
     
     // 3. MULTIPLAYER: Continue to next player
-    setTimeout(() => {
+    registerTimeout(setTimeout(() => {
         // Double-check state hasn't changed during timeout
         if (window.PlayerManager.hasActivePlayersInRound() && !isCurrentQuestionFullyAnswered()) {
             if (window.PlayerManager) {
                 window.PlayerManager.nextTurn();
-                
+
                 // Clear incorrect markings from previous players' wrong attempts (ordna questions only)
                 const question = getCurrentQuestion();
                 if (question && question.typ === 'ordna') {
@@ -324,14 +337,14 @@ function determineNextAction() {
                         }
                     });
                 }
-                
+
                 // Re-enable options for new player
                 UI?.setAllOptionsDisabled(false);
             }
         } else {
             determineNextAction(); // Re-evaluate
         }
-    }, 500);
+    }, 500));
 }
 
 
@@ -383,19 +396,19 @@ function secureCurrentPoints() {
     }
     
     // Update player state after animation starts
-    setTimeout(() => {
+    registerTimeout(setTimeout(() => {
         // Use centralized function to complete round
         completePlayerRound(currentPlayer, 'stopped', pointsToSecure);
-        
+
         // Update display immediately after score change
         if (window.PlayerManager) {
             UI?.updatePlayerDisplay();
         }
-        
+
         // Use the ROBUST determineNextAction to handle ALL cases correctly
         // This will handle: showing facit, enabling next button, or moving to next player
         determineNextAction();
-    }, 600);
+    }, 600));
 }
 
 // Unified player display update
@@ -428,6 +441,11 @@ function resetChallengeState() {
     // Stop any challenge polling if exists
     if (typeof stopChallengePolling === 'function') {
         stopChallengePolling();
+    }
+
+    // Clean up any challenge-specific UI modifications
+    if (window.ChallengeSystem && typeof window.ChallengeSystem.cleanupWaitingView === 'function') {
+        window.ChallengeSystem.cleanupWaitingView();
     }
 }
 
@@ -484,11 +502,11 @@ function showNotifications(results) {
         });
         notificationsArea.appendChild(notification);
     });
-    
+
     // Auto-hide after 10 seconds
-    setTimeout(() => {
+    registerTimeout(setTimeout(() => {
         notificationsArea.classList.add('hidden');
-    }, 10000);
+    }, 10000));
 }
 
 // Utility functions
@@ -500,9 +518,9 @@ function showError(message) {
         challengeError.textContent = message;
         challengeError.classList.remove('hidden');
     }
-    setTimeout(() => {
+    registerTimeout(setTimeout(() => {
         challengeError.classList.add('hidden');
-    }, 5000);
+    }, 5000));
 }
 
 
@@ -1005,7 +1023,7 @@ function updateGameControls() {
     // CRITICAL FIX for BL-002: Check UI availability (race condition protection)
     if (!window.UI) {
         console.warn('🚨 BL-002 FIX: UI not available, retrying in 100ms');
-        setTimeout(updateGameControls, 100);
+        registerTimeout(setTimeout(updateGameControls, 100));
         return;
     }
     
@@ -1065,9 +1083,12 @@ function updateGameControls() {
 }
 
 function loadQuestion() {
+    // CRITICAL: Clear all pending timeouts from previous question to prevent race conditions
+    clearAllPendingTimeouts();
+
     userOrder = [];
     // Reset all players' active state for new question
-    
+
     // Synka globala variabler för kompatibilitet (när anropad från challenges)
     if (window.PlayerManager && ischallengeMode) {
         players = window.PlayerManager.getPlayers();
@@ -1180,19 +1201,19 @@ function loadQuestion() {
     }
     
     // Add cascading shimmer effect to new options
-    setTimeout(() => {
+    registerTimeout(setTimeout(() => {
         const optionsGrid = UI.get('optionsGrid');
         const options = optionsGrid?.querySelectorAll('.option-btn, .belongs-option-container') || [];
         options.forEach((option, index) => {
-            setTimeout(() => {
+            registerTimeout(setTimeout(() => {
                 option.classList.add('option-shimmer');
                 // Remove class after animation completes
-                setTimeout(() => {
+                registerTimeout(setTimeout(() => {
                     option.classList.remove('option-shimmer');
-                }, 800);
-            }, index * 150); // 150ms delay between each option
+                }, 800));
+            }, index * 150)); // 150ms delay between each option
         });
-    }, 100); // Small delay to ensure DOM is ready
+    }, 100)); // Small delay to ensure DOM is ready
 
     // Show question rating (single-player only)
     if (window.PlayerManager?.isSinglePlayerMode() && window.QuestionRating) {
@@ -1256,10 +1277,10 @@ function handleOrderClick(button, optionText) {
 
     if (isCorrectStep) {
         userOrder.push(optionText);
-        
+
         // Add point using unified system
         window.PlayerManager.addPointToCurrentPlayer(button, currentQuestionIndex);
-        
+
         // Update button appearance
         button.className = 'option-btn w-full text-left p-4 rounded-lg border-2 correct-step';
         button.innerHTML = `<span class="inline-flex items-center justify-center w-6 h-6 mr-3 bg-white text-teal-600 rounded-full font-bold">${userOrder.length}</span> ${optionText}`;
@@ -1271,14 +1292,14 @@ function handleOrderClick(button, optionText) {
             if (window.GameController) {
                 window.GameController.handleQuestionFullyCompleted();
             }
-            setTimeout(() => {
+            registerTimeout(setTimeout(() => {
                 showCorrectAnswers();
                 // Show challenger hint immediately with correct answers
                 if (window.ChallengeSystem && typeof window.ChallengeSystem.showHint === 'function') {
                     window.ChallengeSystem.showHint(currentQuestionIndex);
                 }
                 updateGameControls();
-            }, 2000);
+            }, 2000));
         } else {
             // More alternatives remain
             determineNextAction();
@@ -1295,21 +1316,21 @@ function handleOrderClick(button, optionText) {
         
         // Eliminate current player FIRST
         eliminateCurrentPlayer();
-        
+
         // THEN check if question is complete (might be last alternative)
         if (isCurrentQuestionFullyAnswered()) {
             // Last alternative answered wrong - auto-secure remaining active players
             if (window.GameController) {
                 window.GameController.handleQuestionFullyCompleted();
             }
-            setTimeout(() => {
+            registerTimeout(setTimeout(() => {
                 showCorrectAnswers();
                 // Show challenger hint immediately with correct answers
                 if (window.ChallengeSystem && typeof window.ChallengeSystem.showHint === 'function') {
                     window.ChallengeSystem.showHint(currentQuestionIndex);
                 }
                 updateGameControls();
-            }, 2000);
+            }, 2000));
         }
         // Note: eliminateCurrentPlayer already calls determineNextAction()
     }
@@ -1348,25 +1369,25 @@ function handleBelongsDecision(userDecision, container, yesBtn, noBtn) {
     if (isCorrect) {
         // Add point using unified system
         window.PlayerManager.addPointToCurrentPlayer(container, currentQuestionIndex);
-        
+
         container.classList.add('choice-made');
         container.classList.add('correct-choice'); // Add green background to entire container
         clickedBtn.classList.add('correct-selection');
-        
+
         // Check if this was the LAST alternative
         if (isCurrentQuestionFullyAnswered()) {
             // Question physically complete - auto-secure ALL active players
             if (window.GameController) {
                 window.GameController.handleQuestionFullyCompleted();
             }
-            setTimeout(() => {
+            registerTimeout(setTimeout(() => {
                 showCorrectAnswers();
                 // Show challenger hint immediately with correct answers
                 if (window.ChallengeSystem && typeof window.ChallengeSystem.showHint === 'function') {
                     window.ChallengeSystem.showHint(currentQuestionIndex);
                 }
                 updateGameControls();
-            }, 2000);
+            }, 2000));
         } else {
             // More alternatives remain
             determineNextAction();
@@ -1375,24 +1396,24 @@ function handleBelongsDecision(userDecision, container, yesBtn, noBtn) {
         // Wrong answer
         clickedBtn.classList.add('selected');
         container.classList.add('incorrect-choice');
-        
+
         // Eliminate current player FIRST
         eliminateCurrentPlayer();
-        
+
         // THEN check if question is complete (might be last alternative)
         if (isCurrentQuestionFullyAnswered()) {
             // Last alternative answered wrong - auto-secure remaining active players
             if (window.GameController) {
                 window.GameController.handleQuestionFullyCompleted();
             }
-            setTimeout(() => {
+            registerTimeout(setTimeout(() => {
                 showCorrectAnswers();
                 // Show challenger hint immediately with correct answers
                 if (window.ChallengeSystem && typeof window.ChallengeSystem.showHint === 'function') {
                     window.ChallengeSystem.showHint(currentQuestionIndex);
                 }
                 updateGameControls();
-            }, 2000);
+            }, 2000));
         }
         // Note: eliminateCurrentPlayer already calls determineNextAction()
     }
@@ -1759,19 +1780,19 @@ function handleVilkenClick(button, optionText) {
         window.PlayerManager.addPointToCurrentPlayer(button, currentQuestionIndex);
 
         // Auto-secure och visa facit efter kort delay
-        setTimeout(() => {
+        registerTimeout(setTimeout(() => {
             if (window.GameController) {
                 window.GameController.handleQuestionFullyCompleted();
             }
-            setTimeout(() => {
+            registerTimeout(setTimeout(() => {
                 showCorrectAnswers();
                 // Show challenger hint immediately with correct answers
                 if (window.ChallengeSystem && typeof window.ChallengeSystem.showHint === 'function') {
                     window.ChallengeSystem.showHint(currentQuestionIndex);
                 }
                 updateGameControls();
-            }, 2000);
-        }, 100);
+            }, 2000));
+        }, 100));
 
     } else {
         // Fel svar
@@ -1783,13 +1804,13 @@ function handleVilkenClick(button, optionText) {
 
         // Visa facit efter animation (eliminateCurrentPlayer har redan callback)
         // Men vi behöver också visa facit explicit för vilken-frågor
-        setTimeout(() => {
+        registerTimeout(setTimeout(() => {
             showCorrectAnswers();
             // Show challenger hint immediately with correct answers
             if (window.ChallengeSystem && typeof window.ChallengeSystem.showHint === 'function') {
                 window.ChallengeSystem.showHint(currentQuestionIndex);
             }
-        }, 2000);
+        }, 2000));
     }
 }
 

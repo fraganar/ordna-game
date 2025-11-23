@@ -435,20 +435,12 @@ async function saveAndShowChallengeLink(playerId = null, playerName = null) {
 }
 
 // NEW: Handle "Play Again" button in post-game screen
-function handlePostGamePlayAgain() {
+async function handlePostGamePlayAgain() {
     console.log('🔄 User chose to play again without sharing');
 
-    // Reset game state
-    if (window.ChallengeSystem) {
-        window.ChallengeSystem.reset();
-    }
-
-    // Go back to start screen
-    const postGameShare = document.getElementById('post-game-share');
-    const startMain = UI.get('startMain');
-
-    if (postGameShare) postGameShare.classList.add('hidden');
-    if (startMain) startMain.classList.remove('hidden');
+    // Use NavigationManager for consistent screen reset
+    // This ensures ALL screens (including post-game-share) are hidden properly
+    await window.NavigationManager.resetToStartScreen();
 }
 
 // Initialize when DOM is ready
