@@ -1,0 +1,241 @@
+{
+  "name": "Blandat III",
+  "description": "Historia, konst och kultur genom tiderna",
+  "questions": [
+    {
+      "typ": "ordna",
+      "svårighetsgrad": "medel",
+      "fråga": "Ordna dessa historiska personer efter födelseår (yngst till äldst).",
+      "alternativ": [
+        "Martin Luther King",
+        "Mahatma Gandhi",
+        "Jeanne d'Arc",
+        "Kleopatra"
+      ],
+      "rätt_ordning": [
+        "Martin Luther King",
+        "Mahatma Gandhi",
+        "Jeanne d'Arc",
+        "Kleopatra"
+      ],
+      "förklaring": "Martin Luther King (född 1929) är yngst, Mahatma Gandhi (1869) äldre, Jeanne d'Arc levde på 1400-talet och Kleopatra levde för över 2000 år sedan, vilket gör henne äldst i gruppen.",
+      "kategori": "Historia",
+      "id": "6e1a944c870e38bc"
+    },
+    {
+      "typ": "ordna",
+      "svårighetsgrad": "lätt",
+      "fråga": "Ordna dessa musikgenrer efter när de blev populära i större delen av världen, från tidigast till senast.",
+      "alternativ": [
+        "Hip-hop",
+        "Rock'n'roll",
+        "Disco",
+        "Grunge"
+      ],
+      "rätt_ordning": [
+        "Rock'n'roll",
+        "Disco",
+        "Hip-hop",
+        "Grunge"
+      ],
+      "förklaring": "Rock'n'roll slog igenom på 1950-talet, disco på 1970-talet, hip-hop på 1980-talet, grunge på 1990-talet.",
+      "kategori": "Underhållning",
+      "id": "b646d92238b80746"
+    },
+    {
+      "typ": "ordna",
+      "svårighetsgrad": "lätt",
+      "fråga": "Ordna dessa uppfinningar efter när de först introducerades (äldst först).",
+      "alternativ": [
+        "Televisionen",
+        "Telegrafen",
+        "Radion",
+        "Telefonen"
+      ],
+      "rätt_ordning": [
+        "Telegrafen",
+        "Telefonen",
+        "Radion",
+        "Televisionen"
+      ],
+      "förklaring": "Telegrafen utvecklades redan på 1830-talet, Telefonen kom 1876, Radion på 1890-talet och Televisionen slog igenom under 1920–30-talen.",
+      "kategori": "Vetenskap & Natur",
+      "id": "54540a0c23c1593c"
+    },
+    {
+      "typ": "ordna",
+      "svårighetsgrad": "svår",
+      "fråga": "Ordna dessa berömda byggnadsverk efter när de stod färdiga (äldst först).",
+      "alternativ": [
+        "Burj Khalifa",
+        "Stonehenge",
+        "Notre Dame i Paris",
+        "Parthenon"
+      ],
+      "rätt_ordning": [
+        "Stonehenge",
+        "Parthenon",
+        "Notre Dame i Paris",
+        "Burj Khalifa"
+      ],
+      "förklaring": "Stonehenge byggdes cirka 2500 f.Kr., Parthenon stod klart 432 f.Kr., Notre Dame invigdes 1345 e.Kr., och Burj Khalifa 2010 – i den ordningen.",
+      "kategori": "Historia",
+      "id": "3963822193621630"
+    },
+    {
+      "typ": "ordna",
+      "svårighetsgrad": "lätt",
+      "fråga": "Ordna dessa TV-serier efter premiärår, från äldst till nyast.",
+      "alternativ": [
+        "Vänner",
+        "Game of Thrones",
+        "M*A*S*H",
+        "The Simpsons"
+      ],
+      "rätt_ordning": [
+        "M*A*S*H",
+        "The Simpsons",
+        "Vänner",
+        "Game of Thrones"
+      ],
+      "förklaring": "M*A*S*H 1972, The Simpsons 1989, Vänner 1994, Game of Thrones 2011.",
+      "kategori": "Underhållning",
+      "id": "966102b369949fea"
+    },
+    {
+      "typ": "ordna",
+      "svårighetsgrad": "lätt",
+      "fråga": "Ordna dessa krig efter längd (kortast till längst).",
+      "alternativ": [
+        "Sexdagarskriget",
+        "Andra världskriget",
+        "Trettioåriga kriget",
+        "Hundraårskriget"
+      ],
+      "rätt_ordning": [
+        "Sexdagarskriget",
+        "Andra världskriget",
+        "Trettioåriga kriget",
+        "Hundraårskriget"
+      ],
+      "förklaring": "Sexdagarskriget 1967 varade bara några dagar. Andra världskriget 1939–45 varade ~6 år. Trettioåriga kriget 1618–48 varade ~30 år, och Hundraårskriget 1337–1453 pågick i över 100 år.",
+      "kategori": "Historia",
+      "id": "4ed763d45f22b91b"
+    },
+    {
+      "typ": "ordna",
+      "svårighetsgrad": "medel",
+      "fråga": "Ordna dessa språk efter antal modersmålstalare (färre till fler).",
+      "alternativ": [
+        "Svenska",
+        "Japanska",
+        "Engelska",
+        "Mandarin"
+      ],
+      "rätt_ordning": [
+        "Svenska",
+        "Japanska",
+        "Engelska",
+        "Mandarin"
+      ],
+      "förklaring": "Svenska har omkring 10 miljoner modersmålstalare, japanska ca 125 miljoner, engelska runt 400 miljoner och mandarin-kinesiska nära 1 miljard – alltså flest talare.",
+      "kategori": "Geografi",
+      "id": "20ec414950af3f8a"
+    },
+    {
+      "typ": "hör_till",
+      "svårighetsgrad": "lätt",
+      "fråga": "Vilka av dessa sporter är olympiska sommargrenar?",
+      "kategori": "Sport & Nöje",
+      "alternativ": [
+        "Tennis",
+        "Cricket",
+        "Schack",
+        "Basket"
+      ],
+      "tillhör_index": [
+        0,
+        3
+      ],
+      "förklaring": "Basket och tennis är sporter som ingår i sommar-OS program. Cricket och schack är däremot inte olympiska sportgrenar.",
+      "id": "5e3bd2c8cd46c08c"
+    },
+    {
+      "typ": "ordna",
+      "svårighetsgrad": "lätt",
+      "fråga": "Ordna dessa städer efter geografisk latitud, från nordligast till sydligast.",
+      "alternativ": [
+        "Kairo",
+        "Stockholm",
+        "Kapstaden",
+        "London"
+      ],
+      "rätt_ordning": [
+        "Stockholm",
+        "London",
+        "Kairo",
+        "Kapstaden"
+      ],
+      "förklaring": "Stockholm ligger ca 59°N, London ca 51°N, Kairo ca 30°N, och Kapstaden ca 34°S (söder om ekvatorn).",
+      "kategori": "Geografi",
+      "id": "e9e4e5aa890c9d13"
+    },
+    {
+      "typ": "ordna",
+      "svårighetsgrad": "svår",
+      "fråga": "Ordna dessa litterära verk efter publiceringsår, från tidigast till senast.",
+      "alternativ": [
+        "1984 (George Orwell)",
+        "Moby Dick (Herman Melville)",
+        "Sagan om Ringen (J.R.R. Tolkien)",
+        "Don Quijote (Miguel de Cervantes)"
+      ],
+      "rätt_ordning": [
+        "Don Quijote (Miguel de Cervantes)",
+        "Moby Dick (Herman Melville)",
+        "1984 (George Orwell)",
+        "Sagan om Ringen (J.R.R. Tolkien)"
+      ],
+      "förklaring": "Don Quijote 1605, Moby Dick 1851, 1984 år 1949, Sagan om Ringen 1954–55.",
+      "kategori": "Konst & Litteratur",
+      "id": "05e47d11b772ec3f"
+    },
+    {
+      "typ": "hör_till",
+      "svårighetsgrad": "medel",
+      "fråga": "Vilka av följande påståenden om vikingarnas upptäckter är sanna?",
+      "kategori": "Historia",
+      "alternativ": [
+        "Leif Eriksson upptäckte Amerika omkring år 1000",
+        "Vikingarna kallade Amerika för Vinland, Markland och Helluland",
+        "Erik den röde grundade kolonier på Grönland 985 e.Kr.",
+        "Vikingarna grundade permanenta städer i Amerika som finns kvar idag"
+      ],
+      "tillhör_index": [
+        0,
+        1,
+        2
+      ],
+      "förklaring": "Leif Eriksson nådde Amerika ca 1000, vikingarna namngav de tre länderna, och Erik den röde grundade grönlandskolonierna 985. Men vikingarna grundade inga permanenta städer i Amerika - deras bosättningar var tillfälliga och övergavs.",
+      "id": "daccbeeb2bded4ef"
+    },
+    {
+      "typ": "hör_till",
+      "svårighetsgrad": "medel",
+      "fråga": "Vilka av dessa djur är däggdjur?",
+      "kategori": "Vetenskap & Natur",
+      "alternativ": [
+        "Haj",
+        "Blåval",
+        "Pingvin",
+        "Fladdermus"
+      ],
+      "tillhör_index": [
+        1,
+        3
+      ],
+      "förklaring": "Blåvalen och fladdermusen är däggdjur (de diar sina ungar och andas luft). En pingvin är en fågel och en haj är en fisk – inga däggdjur.",
+      "id": "84d16900443d82b8"
+    }
+  ]
+}

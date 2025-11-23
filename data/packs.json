@@ -18,28 +18,28 @@
     "name": "Sport 1",
     "description": "Olympiska spel, idrottshistoria och legendariska atleter",
     "order": 3,
-    "hide": false
+    "hide": true
   },
   {
     "id": "sport-2.json",
     "name": "Sport 2",
     "description": "Ett blandat frågepaket om sport, med fokus på svensk idrottshistoria och några globala inslag.",
     "order": 4,
-    "hide": false
+    "hide": true
   },
   {
     "id": "antiken-1.json",
     "name": "Antiken 1",
     "description": "Ett blandat frågepaket om antikens mest fascinerande personer, idéer och imperier.",
     "order": 5,
-    "hide": false
+    "hide": true
   },
   {
     "id": "antiken-2.json",
     "name": "Antiken 2",
     "description": "Antikens Grekland och Rom - filosofer, kejsare och tidiga kristendomen",
     "order": 6,
-    "hide": false
+    "hide": true
   },
   {
     "id": "filmcitat-1.json",
@@ -60,7 +60,7 @@
     "name": "Musik",
     "description": "Musikhistoria, artister och instrument genom tiderna",
     "order": 9,
-    "hide": false
+    "hide": true
   },
   {
     "id": "ordsprak-uttryck-1.json",
@@ -77,80 +77,108 @@
     "hide": true
   },
   {
+    "id": "sport.json",
+    "name": "Sport",
+    "description": "Svenska och internationella idrottslegender, rekord och minnesrika ögonblick",
+    "order": 12,
+    "hide": false
+  },
+  {
     "id": "blandat-1.json",
     "name": "Blandat #1",
     "description": "Teknik, historia, språk, musik, byggnader och samhälle",
     "order": 101,
-    "hide": false
+    "hide": true
   },
   {
     "id": "blandat-2.json",
     "name": "Blandat #2",
     "description": "Kuriosa, populärkultur och litteratur genom tiderna",
     "order": 102,
-    "hide": false
+    "hide": true
   },
   {
     "id": "blandat-3.json",
     "name": "Blandat #3",
     "description": "Planeter, städer, djur och naturvetenskapliga fakta",
     "order": 103,
-    "hide": false
+    "hide": true
   },
   {
     "id": "blandat-4.json",
     "name": "Blandat #4",
     "description": "Språk, krig, religion och kultur genom tiderna",
     "order": 104,
-    "hide": false
+    "hide": true
   },
   {
     "id": "blandat-5.json",
     "name": "Blandat #5",
     "description": "Konstnärer, uppfinningar och vetenskapliga genombrott",
     "order": 105,
-    "hide": false
+    "hide": true
   },
   {
     "id": "blandat-6.json",
     "name": "Blandat #6",
     "description": "Sport, medicinska upptäckter, tekniska uppfinningar och svenska fakta",
     "order": 106,
-    "hide": false
+    "hide": true
   },
   {
     "id": "blandat-7.json",
     "name": "Blandat #7",
     "description": "Världshistoria, geografiska fakta och livets stadier",
     "order": 107,
-    "hide": false
+    "hide": true
   },
   {
     "id": "blandat-8.json",
     "name": "Blandat #8",
     "description": "Historia, arkitektur, konst, sport, kultur, musik och uppfinningar",
     "order": 108,
-    "hide": false
+    "hide": true
   },
   {
     "id": "blandat-9.json",
     "name": "Blandat #9",
     "description": "Historia, film, litteratur, språk, idrott, arkitektur och kultur",
     "order": 109,
-    "hide": false
+    "hide": true
   },
   {
     "id": "blandat-10.json",
     "name": "Blandat #10",
     "description": "Vetenskapens giganter och banbrytande upptäckter",
     "order": 110,
-    "hide": false
+    "hide": true
   },
   {
     "id": "blandat-11.json",
     "name": "Blandat #11",
     "description": "Vetenskapens giganter och historiska upptäckter",
     "order": 111,
+    "hide": true
+  },
+  {
+    "id": "blandat-i.json",
+    "name": "Blandat I",
+    "description": "Spännande blandning från OS och internetfenomen till konsthistoria och dödssynder",
+    "order": 999,
+    "hide": false
+  },
+  {
+    "id": "blandat-ii.json",
+    "name": "Blandat II",
+    "description": "Underhållning, vetenskap och popkultur genom tiderna",
+    "order": 999,
+    "hide": false
+  },
+  {
+    "id": "blandat-iii.json",
+    "name": "Blandat III",
+    "description": "Historia, konst och kultur genom tiderna",
+    "order": 999,
     "hide": false
   }
 ]

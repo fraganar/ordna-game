@@ -1,146 +1,155 @@
 {
   "name": "Sport",
-  "description": "Olympiska spel, idrottshistoria och legendariska atleter",
+  "description": "Svenska och internationella idrottslegender, rekord och minnesrika ögonblick",
   "questions": [
     {
       "typ": "hör_till",
-      "svårighetsgrad": "lätt",
-      "fråga": "Vilka av följande påståenden om de olympiska spelen är sanna?",
-      "kategori": "Hör till: sanna påståenden om olympiska spelen",
-      "alternativ": [
-        "De första moderna olympiska spelen hölls i Paris 1900",
-        "De olympiska ringarna presenterades för första gången 1914",
-        "Antikens olympiska spel pågick i över 1000 år",
-        "Vinterspelen startade innan sommarspelen"
-      ],
-      "tillhör_index": [
-        1,
-        2
-      ],
-      "förklaring": "De olympiska ringarna togs fram av Pierre de Coubertin och presenterades officiellt 15 juni 1914. Antikens olympiska spel pågick från 776 f.Kr. till 394 e.Kr., alltså i över 1000 år. De första moderna olympiska spelen hölls däremot i Aten 1896, inte Paris 1900 (även om Paris också var värd 1900). Vinterspelen startade 1924 i Chamonix, långt efter att sommarspelen återupptagits 1896.",
-      "id": "eebcdee6-936c-4ce2-8d04-715e99a2ff57"
-    },
-    {
-      "typ": "hör_till",
       "svårighetsgrad": "medel",
-      "fråga": "Vilka av följande påståenden om svenska idrottare är sanna?",
-      "kategori": "Hör till: sanna påståenden om svenska idrottare",
+      "fråga": "Vilka av följande påståenden om Tre Kronor (Sveriges herrlandslag i ishockey) är sanna?",
+      "kategori": "Hör till: sanna påståenden om Tre Kronor",
       "alternativ": [
-        "Greta Johansson blev Sveriges första kvinnliga OS-guldmedaljör 1912",
-        "Oscar Swahn vann OS-guld vid 72 års ålder 1920",
-        "Carolina Klüft vann OS-guld i sjukamp 2004",
-        "Patrik Sjöbergs svenska rekord i höjdhopp från 1987 står än idag"
+        "Sverige har vunnit herrarnas ishockey-VM 11 gånger.",
+        "Sverige har vunnit två OS-guld i ishockey.",
+        "Sverige är det landslag som tagit flest VM-guld i ishockey.",
+        "Sverige blev 2006 första nation att vinna OS- och VM-guld i ishockey samma år."
       ],
       "tillhör_index": [
         0,
-        2,
+        1,
         3
       ],
-      "förklaring": "Greta Johansson vann guld i svikthopp 1912 vid endast 17 års ålder och blev Sveriges första kvinnliga OS-guldmedaljör. Carolina Klüft dominerade sjukamp och vann OS-guld i Aten 2004 med 6952 poäng. Patrik Sjöbergs svenska och europeiska rekord på 2,42 meter från 1987 står fortfarande. Oscar Swahn vann däremot inte OS-guld vid 72 års ålder - han vann guld vid 64 år 1912, men tog silver vid 72 år 1920 då han blev den äldste olympiska medaljören någonsin.",
-      "id": "1703a606-1748-41c9-a194-1c4a23e9a72b"
-    },
-    {
-      "typ": "vilken",
-      "svårighetsgrad": "medel",
-      "fråga": "Vilken idrottare vann fyra guldmedaljer vid OS i Berlin 1936 och motbevisade nazisternas rasideologier?",
-      "kategori": "Historia",
-      "alternativ": [
-        "Paavo Nurmi",
-        "Jesse Owens",
-        "Bob Beamon",
-        "Usain Bolt"
-      ],
-      "rätt_svar": "Jesse Owens",
-      "förklaring": "Jesse Owens från USA vann fyra guldmedaljer vid OS 1936 i Berlin (100m, 200m, längdhopp och 4x100m stafett). Hans framgångar var särskilt betydelsefulla eftersom de motbevisade nazisternas propaganda om arisk överlägsenhet. Owens hade också redan gjort sig känd 1935 när han satte fem världsrekord på 45 minuter i Ann Arbor, Michigan.",
-      "id": "bac3c540-2275-47d6-b0a7-94f45d81003b"
+      "förklaring": "Tre Kronor (herrlandslaget) har vunnit VM-guld 11 gånger (senast 2018) och dessutom OS-guld 1994 och 2006. År 2006 blev Sverige första land att ta guld i båda turneringarna under samma säsong. Sverige har dock inte rekordet i VM-guld – Kanada toppar med 28 VM-titlar, följt av Sovjetunionens 22. Sveriges 11 VM-guld räcker till en delad tredjeplats genom tiderna.",
+      "id": "a5a77cb5f857b12f"
     },
     {
       "typ": "ordna",
-      "svårighetsgrad": "medel",
-      "fråga": "Ordna dessa svenska fotbollsframgångar efter vilket år de inträffade, från äldst till nyast.",
+      "svårighetsgrad": "svår",
+      "fråga": "Ordna dessa svenska tennisspelare efter antal vunna Grand Slam-titlar i herrsingel, från minst till flest.",
       "alternativ": [
-        "VM-brons 1950",
-        "OS-guld 1948",
-        "VM-silver 1958",
-        "EM-guld dam 1984"
+        "Stefan Edberg",
+        "Thomas Johansson",
+        "Björn Borg",
+        "Mats Wilander"
       ],
       "rätt_ordning": [
-        "OS-guld 1948",
-        "VM-brons 1950",
-        "VM-silver 1958",
-        "EM-guld dam 1984"
+        "Thomas Johansson",
+        "Stefan Edberg",
+        "Mats Wilander",
+        "Björn Borg"
       ],
-      "förklaring": "Sverige vann OS-guld i fotboll 1948 i London genom att besegra Jugoslavien 3-1. VM-bronset kom 1950 i Brasilien. VM-silvret kom 1958 på hemmaplan när Sverige förlorade finalen mot Brasilien med 5-2. Sveriges damlandslag vann sitt första EM-guld 1984.",
-      "id": "71d32df9-38ca-4013-b5a8-aa2e3b667f54"
+      "förklaring": "Thomas Johansson vann 1 Grand Slam-titel (Australian Open 2002). Stefan Edberg tog 6 titlar (bl.a. två Wimbledon). Mats Wilander vann 7 Grand Slam (inklusive tre olika turneringar: Australian Open, Franska öppna och US Open). Björn Borg toppar med 11 titlar (5 Wimbledon och 6 Franska öppna). Ordningen från minst till flest blir alltså: Johansson (1) < Edberg (6) < Wilander (7) < Borg (11).",
+      "id": "8cb5897eab45dbb3"
+    },
+    {
+      "typ": "vilken",
+      "svårighetsgrad": "lätt",
+      "fråga": "Vilken svensk friidrottare innehar världsrekordet i stavhopp (6,23 m)?",
+      "kategori": "Friidrott",
+      "alternativ": [
+        "Armand \"Mondo\" Duplantis",
+        "Patrik Sjöberg",
+        "Stefan Holm",
+        "Christian Olsson"
+      ],
+      "rätt_svar": "Armand \"Mondo\" Duplantis",
+      "förklaring": "Armand Duplantis är nuvarande världsrekordhållare i stavhopp. Han har höjt rekordet flera gånger, senast till 6,23 m (2023). Patrik Sjöberg och Stefan Holm var höjdhoppare (Sjöberg satte världsrekord i höjd 1987 på 2,42 m), och Christian Olsson tävlade i tresteg. Ingen av dem hoppade stav eller har haft världsrekordet där – det gör Duplantis.",
+      "id": "c340e03618fa6298"
+    },
+    {
+      "typ": "vilken",
+      "svårighetsgrad": "lätt",
+      "fråga": "Vilken fotbollsklubb har vunnit flest SM-guld i herrfotboll?",
+      "kategori": "Fotboll (Allsvenskan)",
+      "alternativ": [
+        "Malmö FF",
+        "IFK Göteborg",
+        "IFK Norrköping",
+        "AIK"
+      ],
+      "rätt_svar": "Malmö FF",
+      "förklaring": "Malmö FF är det herrlag som har flest SM-guld (svenska mästerskap) i fotboll. Malmö har vunnit Allsvenskan 24 gånger, vilket är rekord. IFK Göteborg kommer därefter med 18 SM-guld, följt av IFK Norrköping (13 titlar). AIK från Stockholm har 12 SM-guld. Malmös dominans började på 1940-talet och klubben har även varit framgångsrik i modern tid.",
+      "id": "cd4aa95d719a6408"
+    },
+    {
+      "typ": "vilken",
+      "svårighetsgrad": "lätt",
+      "fråga": "Vilket land har vunnit flest VM-guld i ishockey för herrar?",
+      "kategori": "Ishockey",
+      "alternativ": [
+        "Kanada",
+        "Sovjetunionen",
+        "Sverige",
+        "Tjeckien"
+      ],
+      "rätt_svar": "Kanada",
+      "förklaring": "Herrhockeyns dominant historiskt är Kanada, som har vunnit VM-guld 28 gånger (rekord). Sovjetunionen vann 22 VM-guld under sin tid. Sverige har, som jämförelse, 11 VM-guld och Tjeckien (inklusive tiden som Tjeckoslovakien) står på totalt 12. Kanada tog sitt första VM-guld redan 1920 och är alltjämt nationen med flest titlar.",
+      "id": "5f5f111bae27c2d5"
     },
     {
       "typ": "hör_till",
       "svårighetsgrad": "svår",
-      "fråga": "Vilka av följande påståenden om världsrekord i friidrott är sanna?",
-      "kategori": "Hör till: sanna påståenden om världsrekord",
+      "fråga": "Vilka av följande påståenden om Björn Borg är sanna?",
+      "kategori": "Hör till: sanna påståenden om Björn Borg",
       "alternativ": [
-        "Bob Beamons längdhopp 8,90m slog tidigare rekord med 55 cm",
-        "Jesse Owens längdhoppsrekord 8,13m stod i över 30 år",
-        "Florence Griffith-Joyners 100m-rekord har stått i över 35 år",
-        "Mike Powells längdhoppsrekord 8,95m sattes på 1980-talet"
-      ],
-      "tillhör_index": [
-        0
-      ],
-      "förklaring": "Bob Beamons fantastiska längdhopp på 8,90m vid OS 1968 i Mexico City slog verkligen tidigare rekord med hela 55 cm - en aldrig tidigare skådad marginal. Jesse Owens rekord 8,13m från 1935 stod i 25 år (inte över 30). Florence Griffith-Joyners 100m-rekord 10,49s från 1988 har stått i över 35 år, men rekordet sattes 1988, så det har stått i cirka 37 år (inte över 35 år från dagens datum 2025). Mike Powells nuvarande världsrekord 8,95m sattes 1991, inte på 1980-talet.",
-      "id": "08caa360-a718-4f4c-b28f-d6d0ec048cb3"
-    },
-    {
-      "typ": "vilken",
-      "svårighetsgrad": "lätt",
-      "fråga": "Vilken stad var värd för de första moderna olympiska spelen 1896?",
-      "kategori": "Historia",
-      "alternativ": [
-        "Paris",
-        "London",
-        "Aten",
-        "Stockholm"
-      ],
-      "rätt_svar": "Aten",
-      "förklaring": "Aten i Grekland var värd för de första moderna olympiska spelen 1896. Det var passande att välja Aten eftersom de antika olympiska spelen ursprungligen hölls i Grekland. De moderna spelen grundades av den franske baronen Pierre de Coubertin som ville återuppliva den antika traditionen.",
-      "id": "3a1d86ba-84c3-48bd-867f-2d6552cdd6ad"
-    },
-    {
-      "typ": "ordna",
-      "svårighetsgrad": "medel",
-      "fråga": "Ordna dessa olympiska värdstäder efter vilket år de först var värdar för sommar-OS, från äldst till nyast.",
-      "alternativ": [
-        "Paris",
-        "Stockholm",
-        "London",
-        "Los Angeles"
-      ],
-      "rätt_ordning": [
-        "Paris",
-        "London",
-        "Stockholm",
-        "Los Angeles"
-      ],
-      "förklaring": "Paris var värd för sommar-OS första gången 1900. London följde som värd 1908. Stockholm var värd för de berömda 'solskens-OS' 1912. Los Angeles var värd för första gången 1932. Intressant nog har alla dessa städer varit värdar för OS flera gånger: Paris (1900, 1924, 2024), London (1908, 1948, 2012), och Los Angeles (1932, 1984, 2028).",
-      "id": "77fc333a-5847-4654-81dc-863d53e71422"
-    },
-    {
-      "typ": "hör_till",
-      "svårighetsgrad": "medel",
-      "fråga": "Vilka av följande påståenden om svensk fotboll är sanna?",
-      "kategori": "Hör till: sanna påståenden om svensk fotboll",
-      "alternativ": [
-        "Sverige vann OS-guld i fotboll 1948 i London",
-        "Sverige kom tvåa i VM 1958 på hemmaplan",
-        "Gre-No-Li spelade tillsammans i Inter Milan på 1940-talet",
-        "Sverige vann VM-guld i fotboll 1950"
+        "Björn Borg vann 11 Grand Slam-titlar i singel under sin tenniskarriär.",
+        "Björn Borg vann aldrig US Open trots att han nådde finalen flera gånger.",
+        "Björn Borg tog en olympisk medalj i tennis.",
+        "Björn Borg spelade tävlingstennis tills han var över 35 år gammal."
       ],
       "tillhör_index": [
         0,
         1
       ],
-      "förklaring": "Sverige vann OS-guld i fotboll 1948 i London genom att besegra Jugoslavien 3-1 i finalen. Sverige kom tvåa i VM 1958 som spelades på hemmaplan, och förlorade finalen mot Brasilien med 5-2. Gre-No-Li (Gunnar Gren, Gunnar Nordahl och Nils Liedholm) spelade däremot i AC Milan 1949-1953, inte Inter Milan och inte på 1940-talet (det var 1949-1953). Sverige vann aldrig VM-guld - bästa placeringen är silvermedaljen från 1958.",
-      "id": "0cf02b5f-5441-4725-8f70-8d54a9ed05f5"
+      "förklaring": "Björn Borg dominerade tennis på 1970-talet och vann 11 Grand Slam-titlar i singel (5 Wimbledon och 6 Franska öppna). Han nådde US Open-finalen fyra gånger men vann aldrig turneringen. Han tog ingen OS-medalj – tennis var inte en ordinarie OS-idrott under hans storhetstid (det återkom först 1988). Inte heller spelade han till 35 års ålder – Borg chockade världen genom att avsluta karriären redan som 26-åring (1983).",
+      "id": "8d616c740f2f61d0"
+    },
+    {
+      "typ": "hör_till",
+      "svårighetsgrad": "lätt",
+      "fråga": "Vilka av följande påståenden om Zlatan Ibrahimović är sanna?",
+      "kategori": "Hör till: sanna påståenden om Zlatan Ibrahimović",
+      "alternativ": [
+        "Zlatan har aldrig vunnit UEFA Champions League.",
+        "Zlatan är den som gjort flest mål i det svenska herrlandslaget i fotboll.",
+        "Zlatan har spelat över 150 landskamper för Sverige.",
+        "Zlatan har vunnit ligatitlar i fem olika länder."
+      ],
+      "tillhör_index": [
+        0,
+        1
+      ],
+      "förklaring": "Zlatan Ibrahimović vann aldrig Champions League under sin långa klubbkarriär, trots spel i flera toppklubbar. Han gjorde 62 mål för Sveriges herrlandslag, flest genom tiderna. Däremot spelade han 122 landskamper (inte över 150), och han har vunnit ligatitlar i fyra länder (Nederländerna, Italien, Spanien och Frankrike) – inte fem.",
+      "id": "c0b7ce79720f99a0"
+    },
+    {
+      "typ": "vilken",
+      "svårighetsgrad": "medel",
+      "fråga": "Vilken svensk längdskidåkare har vunnit totalt nio OS-medaljer under sin karriär (delat svenskt rekord)?",
+      "kategori": "Längdskidåkning",
+      "alternativ": [
+        "Charlotte Kalla",
+        "Gunde Svan",
+        "Anja Pärson",
+        "Thomas Wassberg"
+      ],
+      "rätt_svar": "Charlotte Kalla",
+      "förklaring": "Charlotte Kalla tog 9 OS-medaljer i längdskidåkning (3 guld och 6 silver) under 2010–2018, vilket är flest av alla svenska idrottare tillsammans med Sixten Jernberg (även han 9 medaljer, dock på 1950-talet). Gunde Svan vann 7 OS-medaljer, Anja Pärson 6 (i alpint) och Thomas Wassberg 4. Kallas medaljskörd (bl.a. guld i stafett och skiathlon) gör henne till en av Sveriges mest framgångsrika olympier någonsin.",
+      "id": "21a822b5feabd7c3"
+    },
+    {
+      "typ": "vilken",
+      "svårighetsgrad": "medel",
+      "fråga": "Vilken jamaicansk sprinter kallas ofta för den snabbaste människan genom tiderna och vann 'triple-triple' (tre guldmedaljer vid tre olika OS)?",
+      "kategori": "Sport",
+      "alternativ": [
+        "Asafa Powell",
+        "Yohan Blake",
+        "Usain Bolt",
+        "Jim Hines"
+      ],
+      "rätt_svar": "Usain Bolt",
+      "förklaring": "Usain Bolt från Jamaica är känd som den snabbaste människan genom tiderna med världsrekord på 100m (9,58s) och 200m (19,19s) från VM i Berlin 2009. Han åstadkom den unika 'triple-triple' genom att vinna guld i 100m, 200m och 4x100m vid tre raka olympiska spel: Beijing 2008, London 2012 och Rio 2016.",
+      "id": "1c67821907a01523"
     },
     {
       "typ": "ordna",
@@ -159,55 +168,37 @@
         "Usain Bolt 100m 9,58s"
       ],
       "förklaring": "Jesse Owens satte världsrekord i längdhopp 8,13m den 25 maj 1935, ett rekord som stod i 25 år. Jim Hines blev 1968 den första att springa 100m under 10 sekunder med elektronisk tidtagning (9,95s). Florence Griffith-Joyner satte sitt världsrekord 10,49s 1988, ett rekord som fortfarande står. Usain Bolt satte det nuvarande världsrekordet 9,58s vid VM i Berlin 2009.",
-      "id": "d12bb7a0-7904-419b-aac2-1f94e5c2db4c"
-    },
-    {
-      "typ": "hör_till",
-      "svårighetsgrad": "lätt",
-      "fråga": "Vilka av följande påståenden om de antika olympiska spelen är sanna?",
-      "kategori": "Hör till: sanna påståenden om antika OS",
-      "alternativ": [
-        "De tidigast dokumenterade olympiska spelen genomfördes 776 f.Kr.",
-        "De antika spelen pågick i 500 år innan de förbjöds",
-        "Spelen hölls i antikens Olympia i Grekland",
-        "De antika spelen var öppna för både män och kvinnor"
-      ],
-      "tillhör_index": [
-        0,
-        2
-      ],
-      "förklaring": "De tidigast dokumenterade olympiska spelen genomfördes 776 f.Kr. i det antika Greklands Olympia där de hölls i nästan 1200 år vart fjärde år. De antika spelen pågick alltså inte bara i 500 år - de förbjöds 394 e.Kr. av den romerske kejsaren Theodosius I, vilket innebär nästan 1200 år. Under antiken tilläts endast män att tävla - kvinnor fick inte delta förrän de moderna olympiska spelens intåg 1896.",
-      "id": "e39bd835-ab54-4780-953f-86beda6473ca"
-    },
-    {
-      "typ": "vilken",
-      "svårighetsgrad": "svår",
-      "fråga": "Vilken kvinna blev först i världen att tända den olympiska elden vid en OS-ceremoni?",
-      "kategori": "Historia",
-      "alternativ": [
-        "Florence Griffith-Joyner",
-        "Enriqueta Basilio",
-        "Greta Johansson",
-        "Carolina Klüft"
-      ],
-      "rätt_svar": "Enriqueta Basilio",
-      "förklaring": "Enriqueta Basilio från Mexico blev den första kvinnan att tända den olympiska elden vid invigningsceremonin, vilket skedde 12 oktober 1968 vid OS i Mexico City. Detta var ett historiskt ögonblick och en viktig milstolpe för jämställdhet i olympiska sammanhang. Basilio var friidrottare och tävlade i häcklöpning.",
-      "id": "cf9142c3-d470-4e3d-bbe3-c9646737c89c"
+      "id": "6e3c9552e16e573a"
     },
     {
       "typ": "vilken",
       "svårighetsgrad": "medel",
-      "fråga": "Vilken jamaicansk sprinter kallas ofta för den snabbaste människan genom tiderna och vann 'triple-triple' (tre guldmedaljer vid tre olika OS)?",
-      "kategori": "Sport",
+      "fråga": "Vilken idrottare vann fyra guldmedaljer vid OS i Berlin 1936 och motbevisade nazisternas rasideologier?",
+      "kategori": "Historia",
       "alternativ": [
-        "Asafa Powell",
-        "Yohan Blake",
-        "Usain Bolt",
-        "Jim Hines"
+        "Paavo Nurmi",
+        "Jesse Owens",
+        "Bob Beamon",
+        "Usain Bolt"
       ],
-      "rätt_svar": "Usain Bolt",
-      "förklaring": "Usain Bolt från Jamaica är känd som den snabbaste människan genom tiderna med världsrekord på 100m (9,58s) och 200m (19,19s) från VM i Berlin 2009. Han åstadkom den unika 'triple-triple' genom att vinna guld i 100m, 200m och 4x100m vid tre raka olympiska spel: Beijing 2008, London 2012 och Rio 2016.",
-      "id": "6a152fcc-ae31-4207-8b31-6d99eca901e4"
+      "rätt_svar": "Jesse Owens",
+      "förklaring": "Jesse Owens från USA vann fyra guldmedaljer vid OS 1936 i Berlin (100m, 200m, längdhopp och 4x100m stafett). Hans framgångar var särskilt betydelsefulla eftersom de motbevisade nazisternas propaganda om arisk överlägsenhet. Owens hade också redan gjort sig känd 1935 när han satte fem världsrekord på 45 minuter i Ann Arbor, Michigan.",
+      "id": "8c8585a5f6967cd7"
+    },
+    {
+      "typ": "vilken",
+      "svårighetsgrad": "lätt",
+      "fråga": "Vilken stad var värd för de första moderna olympiska spelen 1896?",
+      "kategori": "Historia",
+      "alternativ": [
+        "Paris",
+        "London",
+        "Aten",
+        "Stockholm"
+      ],
+      "rätt_svar": "Aten",
+      "förklaring": "Aten i Grekland var värd för de första moderna olympiska spelen 1896. Det var passande att välja Aten eftersom de antika olympiska spelen ursprungligen hölls i Grekland. De moderna spelen grundades av den franske baronen Pierre de Coubertin som ville återuppliva den antika traditionen.",
+      "id": "79c8ebf7cb5db7d4"
     }
   ]
 }
