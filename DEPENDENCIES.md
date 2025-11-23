@@ -148,6 +148,28 @@ function eliminateCurrentPlayer() {
 - `callback` → `determineNextAction()` → `PlayerManager.nextTurn()` → `updateGameControls()`
 - **Kritiskt**: UI state changes måste vänta på animation completion
 
+## Timeout Management Pattern
+*Utvecklad för att lösa orphaned timeout race conditions (BL-018, 2025-11-23)*
+
+### Problem
+setTimeout callbacks från gamla questions fortsatte köra på nya questions, vilket skapade race conditions:
+- Facit visades innan spelaren svarat
+- Alternativ var pre-markerade vid laddning
+- Intermittent beteende på olika frågetyper
+
+### Lösning: Timeout Registry (game.js)
+Alla setTimeout i game.js wrappas med `registerTimeout()` och rensas i `loadQuestion()`.
+
+### Scope Decision
+**ENDAST game.js använder detta pattern**
+
+Varför INTE andra moduler:
+- **animationEngine.js**: Timeouts är för UI-animationer (slutförs innan loadQuestion() kan anropas)
+- **playerManager.js**: Timeouts är state transitions som MÅSTE slutföras (nextTurn, concludeQuestion)
+- Att rensa dessa skulle skapa buggar, inte förhindra dem
+
+Se [game.js:16-32](js/game.js) för implementation och detaljerad kommentar.
+
 ## Underhåll
 
 ### När du lägger till ny funktionalitet:
@@ -170,4 +192,4 @@ function eliminateCurrentPlayer() {
 
 ---
 
-*Senast uppdaterad: 2025-08-22 (efter BL-002 slutgiltig fix och UX-förbättringar)*
+*Senast uppdaterad: 2025-11-23 (efter Timeout Management Pattern tillägg)*

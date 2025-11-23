@@ -13,7 +13,23 @@ let challengeQuestions = [];
 let challengeQuestionScores = [];
 let pendingChallengeCreation = false;
 
-// Timeout Cleanup Registry - prevents orphaned timeouts when loading new questions
+/**
+ * Timeout Registry Pattern - Prevents orphaned callbacks from previous questions
+ *
+ * Problem: setTimeout callbacks from old questions continued running on new questions,
+ * causing race conditions (facit shown before user answered, options pre-marked, etc.)
+ *
+ * Solution: Register all game.js timeouts and clear them in loadQuestion()
+ *
+ * RULE: All setTimeout calls in game.js MUST be wrapped:
+ *   registerTimeout(setTimeout(() => { ... }, delay))
+ *
+ * Scope: ONLY game.js uses this pattern
+ * - animationEngine/playerManager timeouts manage state transitions (must complete)
+ * - Clearing those would create bugs, not prevent them
+ *
+ * Cleanup trigger: clearAllPendingTimeouts() called in loadQuestion()
+ */
 let pendingTimeouts = [];
 
 function clearAllPendingTimeouts() {

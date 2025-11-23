@@ -83,6 +83,12 @@ Detta dokument innehåller historisk information om slutförda och kasserade bac
 - **Problem:** Challenge skapades med 0 poäng och hoppade direkt till resultat
 - **Lösning:** resetChallengeState() rensar nu pendingChallenge från localStorage
 
+### BL-018: Race condition - Frågor visar facit för tidigt
+- **Status:** SLUTFÖRD (2025-11-23)
+- **Problem:** Intermittent bug där setTimeout callbacks från gamla frågor körde på nya frågor
+- **Lösning:** Timeout Registry Pattern i game.js (clearAllPendingTimeouts)
+- **Scope:** Endast game.js - andra moduler hanterar state transitions som ska slutföras
+
 ## ❌ Kasserade Items
 
 ### BL-001: GameLogger System
