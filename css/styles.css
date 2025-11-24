@@ -1,58 +1,75 @@
 :root {
-    /* Mango Sunshine Color Palette - Tropical Quiz Theme */
-    --color-primary: #FF9800;        /* Deep Mango Orange */
-    --color-primary-dark: #F57C00;   /* Rich Mango */
-    --color-primary-text: #E65100;   /* Extra Dark Mango - for text contrast */
-    --color-success: #14B8A6;        /* Success Teal */
-    --color-success-dark: #0D9488;   /* Success Teal Dark */
-    --color-danger: #F87171;         /* Danger Coral */
-    --color-danger-dark: #EF4444;    /* Danger Coral Dark */
+    /* Tropical Energy Color Palette - Enhanced tropical vibes with better contrast */
+    --color-primary: #FF8C00;        /* Mango Gold - warmer and more vibrant */
+    --color-primary-dark: #E67300;   /* Deep Mango - richer depth */
+    --color-primary-light: #FFB84D;  /* Soft Mango - lighter accent */
+    --color-primary-text: #CC5E00;   /* Extra Dark Mango - for text contrast */
+
+    --color-success: #00D084;        /* Tropical Green - warmer and more joyful */
+    --color-success-dark: #00A86B;   /* Jade Green - deeper satisfaction */
+    --color-success-glow: #7FFF00;   /* Lime Glow - for celebration animations */
+
+    --color-danger: #FF5722;         /* Hot Coral - more energetic and dramatic */
+    --color-danger-dark: #E64A19;    /* Deep Coral - stronger emphasis */
+
     --color-info: #3B82F6;           /* Info Blue */
     --color-info-dark: #2563EB;      /* Info Blue Dark */
     --color-info-light: #DBEAFE;     /* Info Blue Light (50) */
     --color-info-border: #BFDBFE;    /* Info Blue Border (200) */
-    --color-magic: #FFB74D;          /* Warm Mango */
-    --color-magic-dark: #FF9800;     /* Deep Mango */
 
-    /* Mango-inspired accent colors */
-    --color-mango: #FB923C;          /* Energy Orange */
+    --color-magic: #FFB84D;          /* Warm Mango Glow */
+    --color-magic-dark: #FF8C00;     /* Deep Mango Glow */
+
+    /* Enhanced tropical accent colors */
+    --color-mango: #FF9F40;          /* Energy Orange - more vibrant */
     --color-mango-light: #FFE0B2;    /* Light Mango */
-    --color-mango-dark: #EA580C;     /* Energy Orange Dark */
-    --color-tropical-green: #66BB6A; /* Tropical Leaf Green */
-    
+    --color-mango-dark: #F57C00;     /* Energy Orange Dark */
+    --color-tropical-green: #00D084; /* Tropical Leaf Green - matches success */
+    --color-tropical-blue: #00B4D8;  /* Tropical Ocean - new complementary color */
+    --color-tropical-blue-dark: #0096C7; /* Deep Ocean */
+    --color-sunset-pink: #FF6B9D;    /* Tropical Sunset - warm accent */
+    --color-lime: #C6FF00;           /* Energetic Lime - for highlights */
+    --color-coconut: #F5F5DC;        /* Soft Coconut Cream */
+
     /* Backgrounds & Neutrals */
     --color-deep-space: #0F172A;     /* Deep Space */
     --color-soft-cloud: #F8FAFC;     /* Soft Cloud */
     --color-pearl: #FFFFFF;          /* Pearl White */
-    
+
     /* Gray scale colors */
     --color-gray-100: #f3f4f6;
     --color-gray-200: #e5e7eb;
     --color-gray-300: #d1d5db;
     --color-gray-400: #9ca3af;
     --color-gray-500: #6b7280;
-    
+
     /* Additional accent colors */
     --color-amber: #fcd34d;
     --color-sky: #7dd3fc;
     --color-slate: #f1f5f9;
 
-    /* Animation colors */
-    --color-animation-success: #10b981;      /* +1 points green */
-    --color-animation-success-dark: #15803d; /* Auto-save darker green */
-    --color-animation-danger: #ef4444;       /* -1 penalty red */
+    /* Animation colors - more vibrant */
+    --color-animation-success: #00D084;      /* +1 points green (tropical) */
+    --color-animation-success-dark: #00A86B; /* Auto-save darker green */
+    --color-animation-danger: #FF5722;       /* -1 penalty red (hot coral) */
 
     /* UI Neutrals */
     --color-icon-gray: #8E99A5;       /* Custom gray for icons */
     --color-disabled-bg: #f9fafb;     /* Disabled button background */
 
-    /* Body gradient */
-    --color-body-gradient-start: #F8FAFC;  /* Soft Cloud */
-    --color-body-gradient-end: #F0F4FF;    /* Light Lavender */
+    /* Body gradient - Tropical sky instead of gray */
+    --color-body-gradient-start: #E0F7FA;  /* Mint Sky */
+    --color-body-gradient-mid: #FFF9E6;    /* Cream */
+    --color-body-gradient-end: #FFE4E8;    /* Soft Pink */
+
+    /* Glow effects for enhanced animations */
+    --color-glow-warm: rgba(255, 140, 0, 0.4);   /* Mango glow */
+    --color-glow-cool: rgba(0, 180, 216, 0.3);   /* Ocean glow */
+    --color-glow-success: rgba(0, 208, 132, 0.5); /* Success glow */
 
     /* PWA colors (documented for reference - used in manifest.json and meta tags) */
-    --color-theme: #F8FAFC;           /* Mobile browser chrome */
-    --color-splash-bg: #FEF3C7;       /* PWA splash screen */
+    --color-theme: #E0F7FA;           /* Mobile browser chrome - tropical mint */
+    --color-splash-bg: #FFE0B2;       /* PWA splash screen - mango cream */
 
     /* Legacy colors - removed as they are no longer used */
     /* --color-legacy-blue: #3b82f6; */
@@ -62,7 +79,7 @@
 
 body {
     font-family: 'Inter', sans-serif;
-    background: linear-gradient(135deg, var(--color-body-gradient-start) 0%, var(--color-body-gradient-end) 100%);
+    background: linear-gradient(135deg, var(--color-body-gradient-start) 0%, var(--color-body-gradient-mid) 50%, var(--color-body-gradient-end) 100%);
 }
 
 #game-container {
@@ -98,18 +115,18 @@ body {
 /* Star system removed - points now shown in decision button */
 
 .correct-step, .correct-choice {
-    background-color: rgba(20, 184, 166, 0.1) !important; /* Teal with transparency */
+    background-color: rgba(0, 208, 132, 0.12) !important; /* Tropical green with transparency */
     border-color: var(--color-success) !important;
     color: var(--color-success-dark) !important;
-    box-shadow: 0 0 20px rgba(20, 184, 166, 0.2);
+    box-shadow: 0 0 20px var(--color-glow-success);
 }
 
 .incorrect-step, .incorrect-choice {
-    background-color: rgba(248, 113, 113, 0.1) !important; /* Coral with transparency */
+    background-color: rgba(255, 87, 34, 0.12) !important; /* Hot coral with transparency */
     border-color: var(--color-danger) !important;
     color: var(--color-danger-dark) !important;
     animation: shake 0.5s;
-    box-shadow: 0 0 20px rgba(248, 113, 113, 0.2);
+    box-shadow: 0 0 20px rgba(255, 87, 34, 0.3);
 }
 
 .order-selected {
@@ -148,32 +165,32 @@ body {
 }
 
 .decision-button .stop-side {
-    background: linear-gradient(135deg, var(--color-mango-light) 0%, var(--color-mango) 50%, var(--color-mango-dark) 100%);
-    border: 1px solid rgba(255, 183, 77, 0.3);
+    background: linear-gradient(135deg, var(--color-tropical-blue) 0%, var(--color-tropical-blue-dark) 100%);
+    border: 1px solid rgba(0, 180, 216, 0.4);
     color: white;
-    box-shadow: 0 4px 15px rgba(255, 183, 77, 0.3), 0 2px 8px rgba(0, 0, 0, 0.1);
+    box-shadow: 0 4px 15px var(--color-glow-cool), 0 2px 8px rgba(0, 0, 0, 0.1);
     border-radius: 16px;
     font-weight: 600;
 }
 
 .decision-button .stop-side:hover {
-    background: linear-gradient(135deg, var(--color-mango-dark) 0%, var(--color-mango) 100%);
-    border-color: var(--color-mango-dark);
-    box-shadow: 0 6px 20px rgba(255, 183, 77, 0.4), 0 3px 10px rgba(0, 0, 0, 0.15);
+    background: linear-gradient(135deg, var(--color-tropical-blue-dark) 0%, var(--color-tropical-blue) 100%);
+    border-color: var(--color-tropical-blue-dark);
+    box-shadow: 0 6px 20px var(--color-glow-cool), 0 3px 10px rgba(0, 0, 0, 0.15);
     transform: translateX(-2px) translateY(-2px);
 }
 
 .decision-button .next-side {
-    background: linear-gradient(135deg, var(--color-magic) 0%, var(--color-primary) 100%);
+    background: linear-gradient(135deg, var(--color-primary) 0%, var(--color-sunset-pink) 50%, var(--color-primary) 100%);
     border-radius: 16px;
-    box-shadow: 0 4px 15px rgba(236, 72, 153, 0.3);
+    box-shadow: 0 4px 15px var(--color-glow-warm);
     font-weight: 600;
 }
 
 .decision-button .next-side:hover:not(:disabled) {
-    background: linear-gradient(135deg, var(--color-primary) 0%, var(--color-magic-dark) 100%);
+    background: linear-gradient(135deg, var(--color-primary-dark) 0%, var(--color-sunset-pink) 50%, var(--color-primary-dark) 100%);
     transform: translateX(2px) translateY(-2px);
-    box-shadow: 0 6px 20px rgba(236, 72, 153, 0.4);
+    box-shadow: 0 6px 20px var(--color-glow-warm), 0 0 30px rgba(255, 107, 157, 0.3);
 }
 
 
@@ -282,7 +299,7 @@ body {
     color: var(--color-success);
     z-index: 1000;
     pointer-events: none;
-    text-shadow: 0 2px 6px rgba(20, 184, 166, 0.5), 0 1px 3px rgba(0, 0, 0, 0.3);
+    text-shadow: 0 2px 6px var(--color-glow-success), 0 1px 3px rgba(0, 0, 0, 0.3);
 }
 
 /* Flying points to total score animation */
@@ -293,7 +310,7 @@ body {
     color: var(--color-success-dark);
     z-index: 1000;
     pointer-events: none;
-    text-shadow: 0 2px 6px rgba(20, 184, 166, 0.5), 0 1px 3px rgba(0, 0, 0, 0.3);
+    text-shadow: 0 2px 6px var(--color-glow-success), 0 1px 3px rgba(0, 0, 0, 0.3);
     transition: opacity 0.3s ease, transform 0.3s ease;
 }
 
@@ -331,14 +348,14 @@ body {
 
 /* Enhanced stop button glow based on points */
 .decision-button .stop-side.has-points {
-    background: linear-gradient(135deg, var(--color-mango) 0%, var(--color-mango-dark) 100%);
-    border-color: var(--color-mango-dark);
-    box-shadow: 0 4px 15px rgba(251, 146, 60, 0.4), 0 2px 8px rgba(0, 0, 0, 0.1), 0 0 0 2px rgba(251, 146, 60, 0.2);
+    background: linear-gradient(135deg, var(--color-tropical-blue) 0%, var(--color-tropical-blue-dark) 100%);
+    border-color: var(--color-tropical-blue-dark);
+    box-shadow: 0 4px 15px var(--color-glow-cool), 0 2px 8px rgba(0, 0, 0, 0.1), 0 0 0 2px var(--color-glow-cool);
     animation: subtleGlow 2s ease-in-out infinite;
 }
 
 .decision-button .stop-side.has-points:hover {
-    box-shadow: 0 6px 20px rgba(251, 146, 60, 0.5), 0 3px 10px rgba(0, 0, 0, 0.15), 0 0 0 3px rgba(251, 146, 60, 0.3);
+    box-shadow: 0 6px 20px var(--color-glow-cool), 0 3px 10px rgba(0, 0, 0, 0.15), 0 0 0 3px rgba(0, 180, 216, 0.5);
 }
 
 /* Disabled state for stop button */
@@ -364,17 +381,17 @@ body {
 
 /* Completed/Secured state for stop button */
 .decision-button .stop-side.completed {
-    background: linear-gradient(135deg, rgba(20, 184, 166, 0.2) 0%, rgba(20, 184, 166, 0.3) 100%);
+    background: linear-gradient(135deg, rgba(0, 208, 132, 0.2) 0%, rgba(0, 208, 132, 0.3) 100%);
     border: 2px solid var(--color-success);
-    box-shadow: 0 4px 12px rgba(20, 184, 166, 0.3), 0 2px 6px rgba(0, 0, 0, 0.1);
+    box-shadow: 0 4px 12px var(--color-glow-success), 0 2px 6px rgba(0, 0, 0, 0.1);
     cursor: default; /* Not clickable anymore */
     color: var(--color-success-dark);
 }
 
 .decision-button .stop-side.completed:hover {
-    background: linear-gradient(135deg, rgba(20, 184, 166, 0.2) 0%, rgba(20, 184, 166, 0.3) 100%);
+    background: linear-gradient(135deg, rgba(0, 208, 132, 0.2) 0%, rgba(0, 208, 132, 0.3) 100%);
     border: 2px solid var(--color-success);
-    box-shadow: 0 4px 12px rgba(20, 184, 166, 0.3), 0 2px 6px rgba(0, 0, 0, 0.1);
+    box-shadow: 0 4px 12px var(--color-glow-success), 0 2px 6px rgba(0, 0, 0, 0.1);
     transform: none; /* No hover transform */
 }
 
@@ -410,7 +427,7 @@ body {
     transform: none;
 }
 
-/* Large blue next question button for multiplayer */
+/* Large next question button for multiplayer */
 .large-next-question-btn {
     display: flex;
     align-items: center;
@@ -422,18 +439,18 @@ body {
     border: none;
     cursor: pointer;
     border-radius: 16px;
-    background: linear-gradient(135deg, var(--color-magic) 0%, var(--color-primary) 100%);
+    background: linear-gradient(135deg, var(--color-primary) 0%, var(--color-sunset-pink) 50%, var(--color-primary) 100%);
     color: white;
     font-size: 20px;
     font-weight: 600;
-    box-shadow: 0 6px 20px rgba(236, 72, 153, 0.3), 0 2px 8px rgba(0, 0, 0, 0.1);
+    box-shadow: 0 6px 20px var(--color-glow-warm), 0 2px 8px rgba(0, 0, 0, 0.1);
     transition: all 0.3s ease;
 }
 
 .large-next-question-btn:hover {
-    background: linear-gradient(135deg, var(--color-primary) 0%, var(--color-magic-dark) 100%);
+    background: linear-gradient(135deg, var(--color-primary-dark) 0%, var(--color-sunset-pink) 50%, var(--color-primary-dark) 100%);
     transform: translateY(-2px);
-    box-shadow: 0 8px 25px rgba(236, 72, 153, 0.4), 0 4px 12px rgba(0, 0, 0, 0.15);
+    box-shadow: 0 8px 25px var(--color-glow-warm), 0 4px 12px rgba(0, 0, 0, 0.15), 0 0 30px rgba(255, 107, 157, 0.3);
 }
 
 @media (max-width: 640px) {
@@ -769,12 +786,12 @@ body {
     color: var(--color-success);
     pointer-events: none;
     animation: float-up 1s ease-out forwards;
-    text-shadow: 0 2px 6px rgba(20, 184, 166, 0.6), 0 1px 3px rgba(0,0,0,0.2);
+    text-shadow: 0 2px 6px var(--color-glow-success), 0 1px 3px rgba(0,0,0,0.2);
 }
 
 .point-float.banked {
-     color: var(--color-mango-dark);
-     text-shadow: 0 2px 6px rgba(251, 146, 60, 0.6), 0 1px 3px rgba(0,0,0,0.2);
+     color: var(--color-tropical-blue);
+     text-shadow: 0 2px 6px var(--color-glow-cool), 0 1px 3px rgba(0,0,0,0.2);
 }
 
 /* Decision button states */
@@ -811,10 +828,10 @@ body {
 
 @keyframes subtleGlow {
     0%, 100% {
-        box-shadow: 0 0 0 rgba(251, 146, 60, 0);
+        box-shadow: 0 0 0 rgba(0, 180, 216, 0);
     }
     50% {
-        box-shadow: 0 0 30px rgba(251, 146, 60, 0.6), 0 0 50px rgba(251, 146, 60, 0.3);
+        box-shadow: 0 0 30px var(--color-glow-cool), 0 0 50px rgba(0, 180, 216, 0.4);
     }
 }
 
@@ -1035,7 +1052,7 @@ body {
 }
 
 
-/* Subtle tropical pattern in background */
+/* Enhanced tropical pattern in background */
 body::before {
     content: '';
     position: fixed;
@@ -1044,10 +1061,11 @@ body::before {
     right: 0;
     bottom: 0;
     background-image:
-        radial-gradient(circle at 20% 80%, var(--color-mango-light) 0%, transparent 50%),
-        radial-gradient(circle at 80% 20%, var(--color-tropical-green) 0%, transparent 50%),
-        radial-gradient(circle at 50% 10%, var(--color-mango) 0%, transparent 40%);
-    opacity: 0.08;
+        radial-gradient(circle at 20% 80%, var(--color-tropical-blue) 0%, transparent 50%),
+        radial-gradient(circle at 80% 20%, var(--color-sunset-pink) 0%, transparent 50%),
+        radial-gradient(circle at 50% 10%, var(--color-mango-light) 0%, transparent 40%),
+        radial-gradient(circle at 70% 60%, var(--color-coconut) 0%, transparent 35%);
+    opacity: 0.12;
     pointer-events: none;
     z-index: -1;
 }
