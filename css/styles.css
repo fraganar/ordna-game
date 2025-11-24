@@ -86,7 +86,7 @@ body {
     background: rgba(255, 255, 255, 0.95);
     backdrop-filter: blur(10px);
     border: 1px solid rgba(255, 255, 255, 0.3);
-    box-shadow: 0 8px 32px rgba(124, 58, 237, 0.08);
+    box-shadow: 0 8px 32px var(--color-glow-warm);
     position: relative; /* För absolute-positionering av hamburger-btn */
 }
 
@@ -108,8 +108,8 @@ body {
 
 .option-btn:hover {
     transform: translateY(-2px);
-    box-shadow: 0 6px 20px rgba(124, 58, 237, 0.15);
-    border-color: rgba(124, 58, 237, 0.3);
+    box-shadow: 0 6px 20px var(--color-glow-warm);
+    border-color: rgba(255, 140, 0, 0.3);
 }
 
 /* Star system removed - points now shown in decision button */
@@ -134,7 +134,7 @@ body {
     color: white;
     border-color: var(--color-primary-dark);
     transform: scale(0.95);
-    box-shadow: 0 4px 15px rgba(124, 58, 237, 0.3);
+    box-shadow: 0 4px 15px var(--color-glow-warm);
 }
 
 /* Two-part decision button styles */
@@ -226,15 +226,15 @@ body {
 
 /* Challenger hint box styles */
 .challenger-hint-box {
-    background: linear-gradient(135deg, rgba(124, 58, 237, 0.05) 0%, rgba(236, 72, 153, 0.05) 100%);
+    background: linear-gradient(135deg, rgba(0, 180, 216, 0.08) 0%, rgba(0, 208, 132, 0.08) 100%);
     backdrop-filter: blur(10px);
-    border: 1px solid rgba(124, 58, 237, 0.2);
+    border: 1px solid rgba(0, 180, 216, 0.3);
     border-radius: 12px;
     padding: 14px 18px;
     margin-bottom: 16px;
     font-size: 14px;
     color: var(--color-primary-dark);
-    box-shadow: 0 4px 12px rgba(124, 58, 237, 0.1);
+    box-shadow: 0 4px 12px var(--color-glow-cool);
     animation: slideDown 0.3s ease-out;
 }
 
@@ -251,12 +251,12 @@ body {
 
 /* Attention animation */
 @keyframes pulse-glow {
-    0%, 100% { 
-        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15), 0 0 25px rgba(236, 72, 153, 0.5);
+    0%, 100% {
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15), 0 0 25px var(--color-glow-warm);
         transform: scale(1);
     }
-    50% { 
-        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15), 0 0 45px rgba(236, 72, 153, 0.9), 0 0 60px rgba(124, 58, 237, 0.4);
+    50% {
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15), 0 0 45px var(--color-glow-warm), 0 0 60px rgba(255, 107, 157, 0.5);
         transform: scale(1.03);
     }
 }
@@ -522,7 +522,7 @@ body {
 
 .decision-buttons button.selected {
     background: linear-gradient(135deg, var(--color-primary) 0%, var(--color-primary-dark) 100%);
-    box-shadow: 0 2px 10px rgba(124, 58, 237, 0.3);
+    box-shadow: 0 2px 10px var(--color-glow-warm);
 }
 
 .decision-buttons button.selected .icon {
@@ -550,9 +550,9 @@ body {
 }
 
 .decision-buttons button.correct-selection {
-    background: linear-gradient(135deg, rgba(20, 184, 166, 0.2) 0%, rgba(20, 184, 166, 0.3) 100%);
+    background: linear-gradient(135deg, rgba(0, 208, 132, 0.2) 0%, rgba(0, 208, 132, 0.3) 100%);
     border-color: var(--color-success);
-    box-shadow: 0 0 15px rgba(20, 184, 166, 0.4);
+    box-shadow: 0 0 15px var(--color-glow-success);
 }
 
 .decision-buttons button.correct-selection .icon {
@@ -566,10 +566,10 @@ body {
 }
 
 .correct-answer-highlight {
-    background: linear-gradient(135deg, rgba(20, 184, 166, 0.15) 0%, rgba(20, 184, 166, 0.25) 100%) !important;
+    background: linear-gradient(135deg, rgba(0, 208, 132, 0.15) 0%, rgba(0, 208, 132, 0.25) 100%) !important;
     opacity: 1 !important;
     transform: scale(1) !important;
-    box-shadow: 0 0 20px rgba(20, 184, 166, 0.3) !important;
+    box-shadow: 0 0 20px var(--color-glow-success) !important;
 }
 
 .decision-buttons button:first-child {
@@ -752,10 +752,10 @@ body {
 }
 
 .player-score-card.active-player {
-    background: linear-gradient(135deg, rgba(124, 58, 237, 0.15) 0%, rgba(236, 72, 153, 0.15) 100%);
+    background: linear-gradient(135deg, rgba(255, 140, 0, 0.12) 0%, rgba(255, 159, 64, 0.12) 100%);
     border: 2px solid var(--color-primary);
     transform: scale(1.05);
-    box-shadow: 0 8px 30px rgba(124, 58, 237, 0.3), 0 0 40px rgba(124, 58, 237, 0.15);
+    box-shadow: 0 8px 30px var(--color-glow-warm), 0 0 40px rgba(255, 140, 0, 0.2);
 }
 
 .player-score-card.completed {
@@ -867,14 +867,14 @@ body {
 /* Shimmer effect for new options */
 @keyframes optionShimmer {
     0% {
-        box-shadow: 0 0 0 0 rgba(20, 184, 166, 0);
+        box-shadow: 0 0 0 0 rgba(0, 208, 132, 0);
     }
     50% {
-        box-shadow: 0 0 30px 3px rgba(20, 184, 166, 0.7), 
-                    0 0 20px 1px rgba(13, 148, 136, 0.4);
+        box-shadow: 0 0 30px 3px var(--color-glow-success),
+                    0 0 20px 1px rgba(0, 168, 107, 0.5);
     }
     100% {
-        box-shadow: 0 0 0 0 rgba(20, 184, 166, 0);
+        box-shadow: 0 0 0 0 rgba(0, 208, 132, 0);
     }
 }
 

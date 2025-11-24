@@ -4,8 +4,8 @@
   "description": "Ett klurigt frågespel där ni tävlar om vem som vågar chansa mest",
   "start_url": "/",
   "display": "standalone",
-  "background_color": "#FEF3C7",
-  "theme_color": "#F8FAFC",
+  "background_color": "#FFE0B2",
+  "theme_color": "#E0F7FA",
   "orientation": "portrait-primary",
   "icons": [
     {

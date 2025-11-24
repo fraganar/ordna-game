@@ -8,28 +8,37 @@ Detta dokument kartlägger all styling i Tres Mangos-spelet. Styling sätts på 
 
 ---
 
-## 🎨 Färgschema - "Mango Sunshine" Tropical Quiz Theme (Uppdaterad 2025-10-02)
+## 🎨 Färgschema - "Tropical Energy" Theme (Uppdaterad 2025-11-24)
 
 ### AKTUELLA Primära färger (CSS Variables - Single Source of Truth)
 ```css
-/* Mango Sunshine - Huvudfärger */
---color-primary: #FF9800;        /* Deep Mango Orange */
---color-primary-dark: #F57C00;   /* Rich Mango */
---color-primary-text: #E65100;   /* Extra Dark Mango - för text kontrast */
---color-magic: #FFB74D;          /* Warm Mango */
---color-magic-dark: #FF9800;     /* Deep Mango */
+/* Tropical Energy - Enhanced tropical vibes with better contrast */
+--color-primary: #FF8C00;        /* Mango Gold - warmer and more vibrant */
+--color-primary-dark: #E67300;   /* Deep Mango - richer depth */
+--color-primary-light: #FFB84D;  /* Soft Mango - lighter accent */
+--color-primary-text: #CC5E00;   /* Extra Dark Mango - for text contrast */
 
 /* Semantic colors */
---color-success: #14B8A6;        /* Success Teal */
---color-success-dark: #0D9488;   /* Success Teal Dark */
---color-danger: #F87171;         /* Danger Coral */
---color-danger-dark: #EF4444;    /* Danger Coral Dark */
+--color-success: #00D084;        /* Tropical Green - warmer and more joyful */
+--color-success-dark: #00A86B;   /* Jade Green - deeper satisfaction */
+--color-success-glow: #7FFF00;   /* Lime Glow - for celebration animations */
+--color-danger: #FF5722;         /* Hot Coral - more energetic and dramatic */
+--color-danger-dark: #E64A19;    /* Deep Coral - stronger emphasis */
 
 /* Mango-inspired accent colors */
---color-mango: #FB923C;          /* Energy Orange */
+--color-magic: #FFB84D;          /* Warm Mango Glow */
+--color-magic-dark: #FF8C00;     /* Deep Mango Glow */
+--color-mango: #FF9F40;          /* Energy Orange - more vibrant */
 --color-mango-light: #FFE0B2;    /* Light Mango */
---color-mango-dark: #EA580C;     /* Energy Orange Dark */
---color-tropical-green: #66BB6A; /* Tropical Leaf Green */
+--color-mango-dark: #F57C00;     /* Energy Orange Dark */
+
+/* Enhanced tropical accent colors */
+--color-tropical-green: #00D084; /* Tropical Leaf Green - matches success */
+--color-tropical-blue: #00B4D8;  /* Tropical Ocean - complementary color */
+--color-tropical-blue-dark: #0096C7; /* Deep Ocean */
+--color-sunset-pink: #FF6B9D;    /* Tropical Sunset - warm accent */
+--color-lime: #C6FF00;           /* Energetic Lime - for highlights */
+--color-coconut: #F5F5DC;        /* Soft Coconut Cream */
 
 /* Bakgrunder & Neutrala */
 --color-deep-space: #0F172A;     /* Deep Space */
@@ -48,45 +57,57 @@ Detta dokument kartlägger all styling i Tres Mangos-spelet. Styling sätts på 
 --color-sky: #7dd3fc;
 --color-slate: #f1f5f9;
 
-/* Animation colors (2025-10-02: Centraliserade från JS) */
---color-animation-success: #10b981;      /* +1 points grön */
---color-animation-success-dark: #15803d; /* Auto-save mörkare grön */
---color-animation-danger: #ef4444;       /* -1 penalty röd */
+/* Animation colors - more vibrant */
+--color-animation-success: #00D084;      /* +1 points green (tropical) */
+--color-animation-success-dark: #00A86B; /* Auto-save darker green */
+--color-animation-danger: #FF5722;       /* -1 penalty red (hot coral) */
 
-/* UI Neutrals (2025-10-02: Centraliserade från CSS/JS) */
+/* UI Neutrals */
 --color-icon-gray: #8E99A5;       /* Custom gray för ikoner */
 --color-disabled-bg: #f9fafb;     /* Disabled button bakgrund */
 
-/* Body gradient (2025-10-02: Centraliserade) */
---color-body-gradient-start: #F8FAFC;  /* Soft Cloud */
---color-body-gradient-end: #F0F4FF;    /* Light Lavender */
+/* Body gradient - Tropical sky instead of gray */
+--color-body-gradient-start: #E0F7FA;  /* Mint Sky */
+--color-body-gradient-mid: #FFF9E6;    /* Cream */
+--color-body-gradient-end: #FFE4E8;    /* Soft Pink */
+
+/* Glow effects for enhanced animations */
+--color-glow-warm: rgba(255, 140, 0, 0.4);   /* Mango glow */
+--color-glow-cool: rgba(0, 180, 216, 0.3);   /* Ocean glow */
+--color-glow-success: rgba(0, 208, 132, 0.5); /* Success glow */
 
 /* PWA colors (referens - används i manifest.json och meta tags) */
---color-theme: #F8FAFC;           /* Mobile browser chrome */
---color-splash-bg: #FEF3C7;       /* PWA splash screen */
+--color-theme: #E0F7FA;           /* Mobile browser chrome - tropical mint */
+--color-splash-bg: #FFE0B2;       /* PWA splash screen - mango cream */
 ```
 
 ### GAMLA färger (tidigare versioner)
 ```css
+/* 2025-10-02: Mango Sunshine (ersatt 2025-11-24) */
+#FF9800 - Deep Mango Orange (tidigare primary)
+#14B8A6 - Success Teal (tidigare success)
+
 /* 2025-08-27: Purple theme (ersatt 2025-10-01) */
-#7C3AED - Hero Purple (tidigare primary)
-#EC4899 - Magic Pink (tidigare magic)
+#7C3AED - Hero Purple
+#EC4899 - Magic Pink
 
 /* 2025-08-05: Blue theme (ersatt 2025-08-27) */
-#3b82f6 - blue-500 (första primary)
-#22c55e - green-500 (första success)
+#3b82f6 - blue-500
+#22c55e - green-500
 ```
 
-### Färganvändning per kontext (MANGO SUNSHINE)
-- **Huvudfärg/Primärknapp**: Deep Mango Orange (--color-primary: #FF9800)
-- **Gradients/Accenter**: Warm Mango (--color-magic: #FFB74D)
-- **Rätt svar/Poäng**: Tropical Teal (--color-success, --color-success-dark)
-- **Fel svar**: Coral (--color-danger, --color-danger-dark)
-- **Fortsätt/Nästa fråga**: Mango gradient (--color-magic → --color-primary)
-- **Glassmorfism**: rgba(255, 255, 255, 0.9) med backdrop-filter: blur()
-- **Inaktiv/disabled**: Gråskala (behålls från tidigare)
+### Färganvändning per kontext (TROPICAL ENERGY)
+- **Huvudfärg/Primärknapp**: Mango Gold (--color-primary: #FF8C00)
+- **Gradients/Accenter**: Mango + Sunset Pink för varma toner
+- **Rätt svar/Poäng**: Tropical Green (#00D084) - mer levande än gamla teal
+- **Fel svar**: Hot Coral (#FF5722) - mer dramatisk än gamla coral
+- **Stanna-knapp**: Tropical Blue gradient - psykologiskt mer "säker" än orange
+- **Fortsätt/Nästa fråga**: Mango → Sunset Pink → Mango gradient
+- **Bakgrund**: 3-färgs gradient (Mint → Cream → Pink) - tropisk himmel
+- **Glassmorfism**: rgba(255, 255, 255, 0.95) med backdrop-filter: blur()
+- **Inaktiv/disabled**: Gråskala (oförändrat)
 
-**Design-filosofi:** Varmt, tropiskt, energiskt - direkt koppling till "Tres Mangos" namnet och frukt-temat.
+**Design-filosofi:** Balanserad tropisk energi - varma mango-toner kombinerat med svala ocean-färger. Skapar visuell harmoni mellan energi (orange/pink) och lugn (blue/green). Stanna-knappen är nu blå för att signalera säkerhet psykologiskt, medan Fortsätt-knappen behåller den energiska mango-tonen för att uppmuntra risktagande.
 
 ---
 
