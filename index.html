@@ -494,7 +494,7 @@
                  
                  <!-- Pack Selection -->
                  <div class="mb-6">
-                    <label class="block text-base sm:text-lg font-medium text-slate-700 mb-3">Välj frågepaket</label>
+                    <label class="block text-base sm:text-lg font-semibold text-slate-800 mb-3">Välj frågepaket</label>
                     <div id="pack-select" class="pack-selector-grid">
                         <!-- Pack cards populated by JavaScript -->
                     </div>
@@ -536,17 +536,13 @@
 
             <!-- Challenge a Friend Form (Hidden by default) -->
             <div id="challenge-form" class="hidden">
-                <h2 class="text-2xl sm:text-3xl font-bold text-slate-900 mb-6 text-center">Spela 12 frågor</h2>
-                <div class="bg-slate-50 border border-slate-200 rounded-lg p-4 mb-4">
-                    <p class="text-sm text-slate-600">Spelare: <strong id="challenger-name-display">Ej angivet</strong></p>
+                <h2 class="text-2xl sm:text-3xl font-bold text-slate-900 mb-6 text-center">Välj frågepaket</h2>
+                <div class="challenge-invite-banner bg-white p-3 rounded-lg shadow-sm mb-6">
+                    <p class="text-base text-slate-600">🔗 <strong>Utmana en vän!</strong> Efter spelet får du en länk att dela</p>
                 </div>
-                <div class="border-l-4 border-primary-light bg-amber-50/60 p-3 rounded-r-lg mb-6">
-                    <p class="text-sm text-slate-600">🔗 <strong>Utmana en vän!</strong> Efter spelet får du en länk att dela</p>
-                </div>
-                
+
                 <!-- Pack Selection for Challenge -->
                 <div class="mb-6">
-                    <label class="block text-base sm:text-lg font-medium text-slate-700 mb-3">Välj frågepaket</label>
                     <div id="challenge-pack-select" class="pack-selector-grid">
                         <!-- Pack cards populated by JavaScript -->
                     </div>
@@ -560,6 +556,7 @@
                         Tillbaka
                     </button>
                 </div>
+                <p class="text-sm text-slate-500 text-center mt-4">Spelare: <strong id="challenger-name-display">Ej angivet</strong></p>
                 <div id="challenge-success" class="hidden mt-8 pt-6 border-t border-slate-200">
                     <p class="text-slate-800 font-semibold mb-3">✅ Utmaning skapad!</p>
                     <p class="text-sm text-slate-600 mb-4">Dela denna länk med din vän:</p>
