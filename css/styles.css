@@ -1364,4 +1364,35 @@ body::before {
     left: 100%;
 }
 
+/* Score circle badge for result screen - neutral to let share buttons stand out */
+.score-circle-badge {
+    width: 120px;
+    height: 120px;
+    border-radius: 50%;
+    background: white;
+    border: 3px solid #e2e8f0; /* slate-200 */
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+}
+
+@media (min-width: 640px) {
+    .score-circle-badge {
+        width: 130px;
+        height: 130px;
+    }
+}
+
+/* Tropical blue button utilities */
+.bg-tropical-blue {
+    background-color: var(--color-tropical-blue);
+}
+.bg-tropical-blue-dark {
+    background-color: var(--color-tropical-blue-dark);
+}
+.hover\:bg-tropical-blue-dark:hover {
+    background-color: var(--color-tropical-blue-dark);
+}
+
 /* FirebaseUI - Use default styling */
