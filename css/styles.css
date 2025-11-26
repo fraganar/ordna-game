@@ -620,17 +620,18 @@ body {
 .pack-card {
     position: relative;
     background: white;
-    border: 2px solid var(--color-gray-200);
-    border-radius: 12px;
+    border: 1px solid var(--color-gray-200);
+    border-left: 3px solid var(--color-primary-light);
+    border-radius: 10px;
     padding: 16px;
     cursor: pointer;
     transition: all 0.25s ease;
 }
 
 .pack-card:hover {
-    transform: translateY(-2px);
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
-    border-color: var(--color-primary);
+    transform: translateY(-1px);
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
+    border-left-color: var(--color-primary);
 }
 
 .pack-card:active {
@@ -647,12 +648,14 @@ body {
 
 .pack-card.played {
     background: var(--color-gray-100);
-    border-color: var(--color-gray-300);
-    opacity: 0.8;
+    border-color: var(--color-gray-200);
+    border-left-color: var(--color-gray-300);
+    opacity: 0.85;
 }
 
 .pack-card.played:hover {
     opacity: 1;
+    border-left-color: var(--color-gray-400);
 }
 
 .pack-card.played.selected {
@@ -679,13 +682,14 @@ body {
     display: inline-flex;
     align-items: center;
     justify-content: center;
-    width: 24px;
-    height: 24px;
+    width: 20px;
+    height: 20px;
     background: var(--color-success);
     color: white;
     border-radius: 50%;
-    font-size: 14px;
+    font-size: 12px;
     font-weight: bold;
+    opacity: 0.85;
 }
 
 .pack-card-description {
