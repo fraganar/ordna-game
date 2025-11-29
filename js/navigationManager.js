@@ -22,9 +22,8 @@ class NavigationManager {
             'endScreen',
             'playerSetup',
             'challengeForm',
-            'challengeAccept',
-            'challengeBlocked',
-            'postGameShare'  // Post-game share screen (anonymous user flow)
+            'challengeAccept'
+            // Note: challengeBlocked and postGameShare removed - no longer in UI element mapping
         ];
 
         screensToHide.forEach(screenId => {
