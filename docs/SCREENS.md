@@ -15,7 +15,7 @@
 |----|------|-----|--------|-----------|
 | #1 | Challenge Waiting | Resultat | AKTIV | Singelspel avslutas (inloggad) |
 | #2 | Post-Game Share | Resultat | AKTIV | Singelspel avslutas (anonym) |
-| #3 | Challenge Result | Resultat | AKTIV | Opponent avslutar utmaning |
+| #3 | Challenge Result | Resultat | AKTIV | Avslutad challenge visas |
 | #4 | Single Player Result | Resultat | LEGACY | Ej nåbar via UI |
 | #5 | Multiplayer Result | Resultat | AKTIV | Multiplayer-spel (2-4 spelare) |
 
@@ -79,7 +79,12 @@
 
 **Status:** AKTIV
 
-**Visas när:** Opponent avslutar en utmaning (via delad länk)
+**Visas när:** Resultat för en avslutad challenge visas
+
+**Triggas av:**
+- Opponent spelar klart en utmaning (via delad länk)
+- Challenger klickar på sin egen challenge-länk efter att opponent spelat ("Visa resultat")
+- Klick på notifikation om avslutad challenge
 
 **Syfte:** Visa jämförelse mellan challenger och opponent
 
