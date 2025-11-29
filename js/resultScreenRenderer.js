@@ -29,11 +29,11 @@ window.ResultScreenRenderer = {
 
     /**
      * Genererar singelspel-resultat (Skärm #1 och #2)
-     * @param {object} data - { score, isLoggedIn, challengeUrl, playerName }
+     * @param {object} data - { score, isLoggedIn, challengeUrl }
      * @returns {string} HTML-sträng
      */
     renderSinglePlayerResult(data) {
-        const { score, isLoggedIn, challengeUrl = '', playerName = '' } = data;
+        const { score, isLoggedIn, challengeUrl = '' } = data;
 
         const scoreHTML = this.renderScoreDisplay(score);
 
@@ -95,7 +95,6 @@ window.ResultScreenRenderer = {
         return `
             <div class="text-center p-6 sm:p-8 lg:p-12">
                 <h2 class="text-3xl sm:text-4xl font-bold text-slate-900 mb-2">Bra jobbat!</h2>
-                <p class="text-slate-600 mb-6 text-base sm:text-lg">Du klarade alla 12 frågor</p>
 
                 ${scoreHTML}
 
