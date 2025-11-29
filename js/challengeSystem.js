@@ -1225,7 +1225,10 @@ class ChallengeSystem {
                 
                 // Reset challenge state
                 this.reset();
-                
+
+                // Invalidate cache to ensure fresh data (the new challenge we just created)
+                this.invalidateCache();
+
                 // Reload challenges if function exists
                 this.loadMyChallenges();
             });
