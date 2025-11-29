@@ -67,7 +67,7 @@ const FirebaseAPI = {
 
             const challengeId = 'challenge_' + Date.now() + '_' + Math.random().toString(36).substr(2, 9);
             const created = new Date();
-            const expires = new Date(created.getTime() + 7 * 24 * 60 * 60 * 1000); // 7 days
+            const expires = new Date(created.getTime() + 2 * 365 * 24 * 60 * 60 * 1000); // 2 years
 
             const challengeData = {
                 id: challengeId,

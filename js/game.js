@@ -552,19 +552,13 @@ async function startChallengeGame() {
         
         // Get challenge data
         challengeData = await FirebaseAPI.getChallenge(window.challengeId);
-        
+
         if (!challengeData) {
             throw new Error('Challenge not found');
         }
-        
-        // Check if challenge is expired
-        const expiresDate = challengeData.expires.toDate ? challengeData.expires.toDate() : new Date(challengeData.expires);
-        if (expiresDate < new Date()) {
-            throw new Error('Challenge has expired');
-        }
-        
-        // Double-play protection is now handled in app.js showChallengeAcceptScreen()
-        // via Firebase playerId instead of localStorage
+
+        // Note: Expiry check is now handled in app.js showChallengeAcceptScreen()
+        // along with other validation (completed, own challenge)
         
         // Set selected pack from challenge (for display purposes)
         window.GameController.selectedPack = challengeData.packName || null;
@@ -613,19 +607,22 @@ async function startChallengeGame() {
         }
         
         questionsToPlay = challengeQuestions;
-        
+        window.questionsToPlay = questionsToPlay; // Sync for loadQuestion() compatibility
+
         // Hide all screens and show game
         const startScreen = UI?.get('startScreen');
         const playerSetup = UI?.get('playerSetup');
         const endScreen = UI?.get('endScreen');
+        const challengeAccept = UI?.get('challengeAccept');
         const gameScreen = UI?.get('gameScreen');
         const singlePlayerScore = UI?.get('singlePlayerScore');
         const singlePlayerProgress = UI?.get('singlePlayerProgress');
         const scoreboard = UI?.get('scoreboard');
-        
+
         if (startScreen) startScreen.classList.add('hidden');
         if (playerSetup) playerSetup.classList.add('hidden');
         if (endScreen) endScreen.classList.add('hidden');
+        if (challengeAccept) challengeAccept.classList.add('hidden');
         if (gameScreen) gameScreen.classList.remove('hidden');
         
         // Setup UI for single player
@@ -641,7 +638,10 @@ async function startChallengeGame() {
         
     } catch (error) {
         console.error('Failed to start challenge:', error);
-        UI?.showError(error.message || 'Kunde inte starta utmaning');
+        // Show error to user via toast notification
+        if (window.showToast) {
+            window.showToast(error.message || 'Kunde inte starta utmaning', 'error', 5000);
+        }
         const challengeAccept = UI?.get('challengeAccept');
         const startMain = UI?.get('startMain');
         if (challengeAccept) challengeAccept.classList.add('hidden');

@@ -103,14 +103,14 @@ window.ResultScreenRenderer = {
                         <strong>🎯 Vill du utmana en vän?</strong>
                     </p>
                     <p class="text-sm text-slate-600">
-                        För att dela din utmaning och se vem som får högst poäng behöver du logga in.
+                        Skapa ett konto för att utmana vänner, se dina resultat och få tillgång till fler spelfunktioner!
                     </p>
                 </div>
 
                 <div class="space-y-4">
                     <button id="share-challenge-btn"
                             class="w-full bg-gradient-to-r from-magic to-primary text-white font-bold py-4 px-6 rounded-lg text-lg sm:text-xl hover:from-primary hover:to-magic-dark transition-colors shadow-md">
-                        🎯 Dela utmaning och utmana vän
+                        Skapa konto / logga in
                     </button>
 
                     <button id="post-game-play-again-btn"

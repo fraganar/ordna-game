@@ -157,6 +157,11 @@ function initializeAllEventListeners() {
         backFromCompletedBtn.addEventListener('click', handleBackFromBlocked);
     }
 
+    const backFromExpiredBtn = document.getElementById('back-from-expired-btn');
+    if (backFromExpiredBtn) {
+        backFromExpiredBtn.addEventListener('click', handleBackFromBlocked);
+    }
+
     // Post-game share screen buttons (NEW)
     const shareChallengeBtn = document.getElementById('share-challenge-btn');
     if (shareChallengeBtn) {
@@ -211,7 +216,7 @@ async function handleSavePlayerName() {
     else if (window.pendingChallengeAccept) {
         window.pendingChallengeAccept = false;
         // Start the challenge with opponent's name now set
-        startChallengeGame();
+        await startChallengeGame();
     }
     // Check if there's a pending challenge to accept
     else if (localStorage.getItem('pendingChallenge')) {

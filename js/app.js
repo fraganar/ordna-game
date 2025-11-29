@@ -371,6 +371,15 @@ class App {
                 return;
             }
 
+            // Check if challenge is expired
+            if (challenge.expires) {
+                const expiresDate = challenge.expires.toDate ? challenge.expires.toDate() : new Date(challenge.expires);
+                if (expiresDate < new Date()) {
+                    this.showChallengeBlocked('expired', challenge);
+                    return;
+                }
+            }
+
             // Check if I am the challenger (can't play my own challenge)
             const myPlayerId = window.getCurrentPlayerId ? window.getCurrentPlayerId() : null;
             if (challenge.challenger?.playerId === myPlayerId) {
@@ -468,9 +477,11 @@ class App {
             return;
         }
 
-        // Hide both sub-dialogs first
+        // Hide all sub-dialogs first
+        const blockedExpired = document.getElementById('challenge-blocked-expired');
         if (blockedOwn) blockedOwn.classList.add('hidden');
         if (blockedCompleted) blockedCompleted.classList.add('hidden');
+        if (blockedExpired) blockedExpired.classList.add('hidden');
 
         // Show the appropriate sub-dialog
         if (type === 'own' && blockedOwn) {
@@ -494,6 +505,8 @@ class App {
                     viewResultBtn.classList.add('hidden');
                 }
             }
+        } else if (type === 'expired' && blockedExpired) {
+            blockedExpired.classList.remove('hidden');
         }
 
         // Show the main dialog
