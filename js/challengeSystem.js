@@ -801,66 +801,12 @@ class ChallengeSystem {
             const myData = isChallenger ? challenge.challenger : challenge.opponent;
             const opponentData = isChallenger ? challenge.opponent : challenge.challenger;
 
-            // Determine winner message
-            let winnerText;
-            if (myData.totalScore > opponentData.totalScore) {
-                winnerText = '<p class="text-xl font-bold text-green-600">🎉 Du vann!</p>';
-            } else if (myData.totalScore < opponentData.totalScore) {
-                winnerText = '<p class="text-xl font-bold text-red-600">Du förlorade!</p>';
-            } else {
-                winnerText = '<p class="text-xl font-bold text-blue-600">Oavgjort!</p>';
-            }
-
-            // Show login buttons if opponent is anonymous
-            const buttonsHTML = isAnonymousOpponent ? `
-                <div class="space-y-3">
-                    <button id="opponent-result-login-btn" class="w-full bg-gradient-to-r from-magic to-primary text-white font-bold py-4 px-6 rounded-lg text-lg hover:from-primary hover:to-magic-dark transition-colors shadow-md">
-                        🔐 Logga in och spara resultat
-                    </button>
-
-                    <button id="opponent-result-back-btn" class="w-full bg-slate-200 text-slate-800 font-bold py-3 px-6 rounded-lg text-lg hover:bg-slate-300 transition-colors">
-                        Tillbaka till start
-                    </button>
-                </div>
-
-                <p class="text-xs text-slate-500 mt-4">
-                    ⚠️ Logga in nu för att spara ditt resultat - annars går det förlorat
-                </p>
-            ` : `
-                <button id="back-to-start-result" class="w-full bg-blue-600 text-white font-bold py-3 px-6 rounded-lg text-lg hover:bg-blue-700 transition-colors">
-                    Tillbaka till start
-                </button>
-            `;
-
-            // Create result view HTML
-            const resultHTML = `
-                <div class="p-6 sm:p-8 lg:p-12">
-                    <h2 class="text-2xl sm:text-3xl font-bold text-slate-900 mb-6 text-center">Utmaning avslutad!</h2>
-
-                    <div class="grid grid-cols-2 gap-4 mb-6">
-                        <div class="text-center">
-                            <h3 class="font-bold text-lg mb-2">${myData.name}</h3>
-                            <p class="text-3xl font-bold ${myData.totalScore > opponentData.totalScore ? 'text-green-600' : 'text-slate-600'}">${myData.totalScore} p</p>
-                            <div class="mt-2 text-sm text-slate-500">
-                                ${myData.questionScores.map((score, i) => `F${i+1}: ${score}p`).join(' | ')}
-                            </div>
-                        </div>
-                        <div class="text-center">
-                            <h3 class="font-bold text-lg mb-2">${opponentData.name}</h3>
-                            <p class="text-3xl font-bold ${opponentData.totalScore > myData.totalScore ? 'text-green-600' : 'text-slate-600'}">${opponentData.totalScore} p</p>
-                            <div class="mt-2 text-sm text-slate-500">
-                                ${opponentData.questionScores.map((score, i) => `F${i+1}: ${score}p`).join(' | ')}
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="bg-slate-100 rounded-lg p-4 mb-6 text-center">
-                        ${winnerText}
-                    </div>
-
-                    ${buttonsHTML}
-                </div>
-            `;
+            // Generate result HTML using ResultScreenRenderer (see docs/RESULT_SCREENS.md)
+            const resultHTML = window.ResultScreenRenderer.renderChallengeResult({
+                myData,
+                opponentData,
+                isAnonymous: isAnonymousOpponent
+            });
 
             // This function is only used for fullscreen challenge results
             // (not for inline expansion in challenge list)
@@ -1145,6 +1091,7 @@ class ChallengeSystem {
     }
 
     // Show waiting for opponent view (moved from uiController.js)
+    // Uses ResultScreenRenderer for centralized HTML generation (see docs/RESULT_SCREENS.md)
     showWaitingForOpponentView(challengeId) {
         const challengeUrl = window.location.origin + window.location.pathname +
             '?challenge=' + challengeId;
@@ -1155,100 +1102,32 @@ class ChallengeSystem {
         const playerName = window.PlayerManager ?
             window.PlayerManager.getPlayerName() : 'Spelare';
 
-        // ✅ PROPER FIX: Use standard endScreen structure, just modify content
-        UI?.showEndScreen();
+        // Generate result HTML using ResultScreenRenderer
+        const resultHTML = window.ResultScreenRenderer.renderSinglePlayerResult({
+            score: playerScore,
+            isLoggedIn: true,
+            challengeUrl: challengeUrl,
+            playerName: playerName
+        });
 
+        // Replace entire endScreen content
         const endScreen = UI?.get('endScreen');
         if (endScreen) {
-            // Clear any existing share container first
-            const existingShare = endScreen.querySelector('.challenge-share-container');
-            if (existingShare) {
-                existingShare.remove();
-            }
-            // Use standard endScreen but adapt title and show single-player result
-            const title = endScreen.querySelector('h2');
-            const subtitle = endScreen.querySelector('#end-screen-subtitle');
-            const singlePlayerFinal = endScreen.querySelector('#single-player-final');
-            const finalScore = endScreen.querySelector('#single-final-score');
-            const finalScoreboard = endScreen.querySelector('#final-scoreboard');
-
-            if (title) {
-                title.textContent = 'Bra kämpat!';
-                title.dataset.challengeModified = 'true';  // Mark for cleanup
-            }
-            if (subtitle) {
-                subtitle.textContent = '';
-                subtitle.dataset.challengeModified = 'true';
-            }
-
-            // Show single player result instead of multiplayer scoreboard
-            if (singlePlayerFinal && finalScore) {
-                singlePlayerFinal.classList.remove('hidden');
-                finalScore.textContent = playerScore;
-            }
-            if (finalScoreboard) finalScoreboard.classList.add('hidden');
-
-            // Add challenge-specific sharing buttons after standard restart button
-            const restartBtn = endScreen.querySelector('#restart-btn');
-            if (restartBtn) {
-                restartBtn.textContent = 'Tillbaka till start';
-                restartBtn.dataset.challengeModified = 'true';
-
-                // Add sharing elements before restart button
-                const shareContainer = document.createElement('div');
-                shareContainer.className = 'mb-6 challenge-share-container';
-                shareContainer.innerHTML = `
-                    <div class="border-t border-slate-200 pt-6 mb-4">
-                        <h3 class="text-xl font-bold text-slate-800 mb-2">🏆 Utmana någon!</h3>
-                        <p class="text-slate-600 mb-3">Vågar någon slå ditt resultat? Dela länken:</p>
-                    </div>
-                    <div class="bg-white border border-slate-300 rounded p-2 mb-3">
-                        <input type="text" id="challenge-link-created" value="${challengeUrl}" readonly
-                               class="w-full text-xs text-gray-600 bg-transparent border-none outline-none">
-                    </div>
-                    <div class="flex space-x-2 mb-4">
-                        <button id="copy-link-created" class="flex-1 bg-blue-600 text-white py-2 px-3 rounded text-sm hover:bg-blue-700">Kopiera länk</button>
-                        <button id="share-created" class="flex-1 bg-slate-600 text-white py-2 px-3 rounded text-sm hover:bg-slate-700">Dela</button>
-                    </div>
-                `;
-
-                restartBtn.parentNode?.insertBefore(shareContainer, restartBtn);
-            }
+            endScreen.innerHTML = resultHTML;
         }
+        UI?.showEndScreen();
 
         // Add simplified event listeners - NO POLLING FUNCTIONALITY
+        // IMPORTANT: Must be called AFTER innerHTML is set so elements exist
         this.setupChallengeCreatedListeners(challengeId, challengeUrl, playerName);
     }
 
     // Clean up challenge-specific UI modifications from endScreen
+    // Note: With ResultScreenRenderer architecture, cleanup is handled by restartGame()
+    // which replaces entire innerHTML with renderDefaultEndScreen()
     cleanupWaitingView() {
-        const endScreen = UI?.get('endScreen');
-        if (!endScreen) return;
-
-        // Remove challenge-specific share container
-        const shareContainer = endScreen.querySelector('.challenge-share-container');
-        if (shareContainer) {
-            shareContainer.remove();
-        }
-
-        // Reset modified text content to defaults
-        const title = endScreen.querySelector('h2');
-        if (title && title.dataset.challengeModified) {
-            title.textContent = 'Spelet är slut!';
-            delete title.dataset.challengeModified;
-        }
-
-        const subtitle = endScreen.querySelector('#end-screen-subtitle');
-        if (subtitle && subtitle.dataset.challengeModified) {
-            subtitle.textContent = 'Bra kämpat allihopa!';
-            delete subtitle.dataset.challengeModified;
-        }
-
-        const restartBtn = endScreen.querySelector('#restart-btn');
-        if (restartBtn && restartBtn.dataset.challengeModified) {
-            restartBtn.textContent = 'Spela igen';
-            delete restartBtn.dataset.challengeModified;
-        }
+        // No-op: innerHTML replacement in restartGame() handles all cleanup
+        // Kept for backwards compatibility in case other code calls this
     }
     
     // Setup simplified event listeners for challenge created view - NO POLLING
@@ -1256,7 +1135,7 @@ class ChallengeSystem {
         const copyBtn = document.getElementById('copy-link-created');
         const shareBtn = document.getElementById('share-created');
         const newChallengeBtn = document.getElementById('new-challenge-btn');
-        const backBtn = document.getElementById('back-to-start-created');
+        const backBtn = document.getElementById('restart-btn');
         
         // Copy link functionality
         if (copyBtn) {

@@ -46,7 +46,13 @@ class NavigationManager {
             await window.ChallengeSystem.loadMyChallenges();
         }
 
-        // 7. Re-populate pack selectors to reflect updated played status from Firebase
+        // 7. Reset pack selection state
+        // This prevents pack from previous game persisting into new game
+        if (window.GameController) {
+            window.GameController.selectedPack = null;
+        }
+
+        // 8. Re-populate pack selectors to reflect updated played status from Firebase
         // This ensures that if the user just played a challenge pack, it shows as played
         if (window.GameData && typeof window.GameData.populatePackSelectors === 'function') {
             await window.GameData.populatePackSelectors();

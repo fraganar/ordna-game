@@ -652,61 +652,11 @@ async function startChallengeGame() {
 // Polling mechanism
 
 // Show result screen for single player games (pack and standard)
-function showSinglePlayerResultScreen(score, gameType, totalQuestions) {
-    
-    const gameTypeName = gameType || 'Allmänna frågor';
-    
-    // Create result screen HTML
-    const resultHTML = `
-        <div class="text-center p-6 sm:p-8 lg:p-12">
-            <h2 class="text-3xl sm:text-4xl font-bold text-slate-900 mb-2">Spelet är slut!</h2>
-            <p class="text-slate-600 mb-6 text-base sm:text-lg">Bra kämpat!</p>
-            
-            <!-- Game Result -->
-            <div class="bg-purple-100 text-purple-800 rounded-lg p-6 mb-8">
-                <h3 class="text-xl font-semibold mb-2">${gameTypeName}</h3>
-                <p class="text-sm text-purple-600 mb-3">${totalQuestions} frågor</p>
-                <p class="text-6xl font-bold">${score}</p>
-                <p class="text-lg">poäng</p>
-            </div>
-            
-            <button id="back-to-start-final" class="w-full bg-gradient-to-r from-magic to-primary text-white font-bold py-3 px-6 rounded-lg text-lg sm:text-xl hover:from-primary hover:to-magic-dark transition-colors shadow-md">
-                Tillbaka till start
-            </button>
-        </div>
-    `;
-    
-    UI?.setEndScreenContent(resultHTML);
-    UI?.showEndScreen();
-    
-    // Add event listener for back button
-    const backButton = document.getElementById('back-to-start-final');
-    if (backButton) {
-        backButton.addEventListener('click', () => {
-            
-            // Go back to start screen
-            const endScreen = UI?.get('endScreen');
-            const startScreen = UI?.get('startScreen');
-            const startMain = UI?.get('startMain');
-            const playerSetup = UI?.get('playerSetup');
-            const challengeForm = UI?.get('challengeForm');
-            
-            if (endScreen) endScreen.classList.add('hidden');
-            if (startScreen) startScreen.classList.remove('hidden');
-            if (startMain) startMain.classList.remove('hidden');
-            if (playerSetup) playerSetup.classList.add('hidden');
-            if (challengeForm) challengeForm.classList.add('hidden');
-        
-            // Reset game state
-            window.GameController.selectedPack = null;
-            
-            // Reload my challenges
-            if (window.ChallengeSystem) {
-                window.ChallengeSystem.loadMyChallenges();
-            }
-        });
-    }
-}
+// LEGACY: showSinglePlayerResultScreen() REMOVED
+// This function was not reachable via UI (see docs/RESULT_SCREENS.md)
+// Single player results now go through:
+// - showPostGameShareScreen() for anonymous users (Skärm #2)
+// - ChallengeSystem.showWaitingForOpponentView() for logged-in users (Skärm #1)
 
 // --- Functions ---
 
@@ -858,32 +808,30 @@ async function endSinglePlayerGame() {
 function showPostGameShareScreen(finalScore) {
     console.log('📊 Showing post-game share screen with score:', finalScore);
 
-    // Hide all other screens
-    const gameScreen = document.getElementById('game-screen');
-    const endScreen = document.getElementById('end-screen');
-    const startScreen = document.getElementById('start-screen');
+    // Generate result HTML using ResultScreenRenderer (see docs/RESULT_SCREENS.md)
+    const resultHTML = window.ResultScreenRenderer.renderSinglePlayerResult({
+        score: finalScore,
+        isLoggedIn: false
+    });
 
-    if (gameScreen) gameScreen.classList.add('hidden');
-    if (endScreen) endScreen.classList.add('hidden');
-    if (startScreen) startScreen.classList.add('hidden');
+    // Replace endScreen content and show it
+    const endScreen = UI?.get('endScreen');
+    if (endScreen) {
+        endScreen.innerHTML = resultHTML;
+    }
+    UI?.showEndScreen();
 
-    // Show post-game share screen
-    const postGameShare = document.getElementById('post-game-share');
-    if (!postGameShare) {
-        console.error('post-game-share element not found');
-        // Fallback to normal end screen
-        UI?.showEndScreen();
-        return;
+    // Re-attach event listeners since we replaced innerHTML
+    // These handlers are defined in eventHandlers.js
+    const shareChallengeBtn = document.getElementById('share-challenge-btn');
+    if (shareChallengeBtn && window.handleShareChallenge) {
+        shareChallengeBtn.addEventListener('click', window.handleShareChallenge);
     }
 
-    // Set the final score
-    const postGameFinalScore = document.getElementById('post-game-final-score');
-    if (postGameFinalScore) {
-        postGameFinalScore.textContent = finalScore;
+    const postGamePlayAgainBtn = document.getElementById('post-game-play-again-btn');
+    if (postGamePlayAgainBtn && window.handlePostGamePlayAgain) {
+        postGamePlayAgainBtn.addEventListener('click', window.handlePostGamePlayAgain);
     }
-
-    // Show the screen
-    postGameShare.classList.remove('hidden');
 }
 
 // Populate pack selection dropdown
@@ -1017,6 +965,7 @@ async function initializeGame() {
     currentPlayerIndex = 0;
     questionStarterIndex = 0;
     questionsToPlay = window.GameData.shuffleArray(questionsToPlay);
+    window.questionsToPlay = questionsToPlay; // Sync for loadQuestion() compatibility
     
     // Setup unified UI
     if (window.PlayerManager) {
@@ -1552,54 +1501,10 @@ function endMultiplayerGame() {
     // Get players from PlayerManager and sort by score
     const currentPlayers = window.PlayerManager?.getPlayers() || [];
     currentPlayers.sort((a, b) => b.score - a.score);
-    
-    // Generate scoreboard HTML
-    let scoreboardHTML = '';
-    currentPlayers.forEach((player, index) => {
-        if (index === 0) {
-            scoreboardHTML += `
-                <div class="flex items-center gap-4 p-3 sm:p-4 bg-slate-100 rounded-lg border-2 border-amber-400">
-                    <div class="text-2xl sm:text-3xl">🥇</div>
-                    <h3 class="text-lg sm:text-xl font-bold text-amber-600">${player.name}</h3>
-                    <p class="ml-auto text-lg sm:text-xl font-bold text-amber-600">${player.score} poäng</p>
-                </div>`;
-        } else if (index === 1) {
-            scoreboardHTML += `
-                <div class="flex items-center gap-4 p-3 sm:p-4 bg-slate-100 rounded-lg border-2 border-slate-300">
-                    <div class="text-2xl sm:text-3xl">🥈</div>
-                    <h3 class="text-base sm:text-lg font-semibold text-slate-500">${player.name}</h3>
-                    <p class="ml-auto text-base sm:text-lg font-semibold text-slate-500">${player.score} poäng</p>
-                </div>`;
-        } else if (index === 2) {
-            scoreboardHTML += `
-                <div class="flex items-center gap-4 p-3 sm:p-4 bg-slate-100 rounded-lg border-2 border-amber-700">
-                    <div class="text-2xl sm:text-3xl">🥉</div>
-                    <h3 class="text-base sm:text-lg font-medium text-amber-800">${player.name}</h3>
-                    <p class="ml-auto text-base sm:text-lg font-medium text-amber-800">${player.score} poäng</p>
-                </div>`;
-        } else {
-            scoreboardHTML += `
-                <div class="flex items-center gap-4 p-3 sm:p-4 bg-slate-100 rounded-lg">
-                    <span class="font-bold w-6 text-center">${index + 1}.</span>
-                    <span class="text-slate-700">${player.name}</span>
-                    <span class="ml-auto text-slate-700">${player.score} poäng</span>
-                </div>`;
-        }
-    });
-    
-    // Generate complete end screen HTML
-    const resultHTML = `
-        <h2 class="text-3xl sm:text-4xl font-bold text-slate-900 mb-2">Spelet är slut!</h2>
-        <p class="text-slate-600 mb-6 text-base sm:text-lg">Bra kämpat allihopa!</p>
-        
-        <div class="space-y-3 sm:space-y-4 mb-8">
-            ${scoreboardHTML}
-        </div>
-        
-        <button id="back-to-start-final" class="w-full bg-gradient-to-r from-magic to-primary text-white font-bold py-3 px-6 rounded-lg text-lg sm:text-xl hover:from-primary hover:to-magic-dark transition-colors shadow-md">
-            Tillbaka till start
-        </button>
-    `;
+
+    // Generate complete end screen HTML using ResultScreenRenderer (see docs/RESULT_SCREENS.md)
+    const sortedPlayers = currentPlayers.map(p => ({ name: p.name, score: p.score }));
+    const resultHTML = window.ResultScreenRenderer.renderMultiplayerResult(sortedPlayers);
     
     // Use same mechanism as singleplayer to replace entire innerHTML
     UI?.setEndScreenContent(resultHTML);
@@ -1637,27 +1542,10 @@ async function restartGame() {
     }
 
     // Restore endScreen HTML to default (non-challenge) state
+    // Uses ResultScreenRenderer for centralized HTML generation (see docs/RESULT_SCREENS.md)
     const endScreen = document.getElementById('end-screen');
     if (endScreen) {
-        endScreen.innerHTML = `
-        <h2 class="text-3xl sm:text-4xl font-bold text-slate-900 mb-2">Spelet är slut!</h2>
-        <p id="end-screen-subtitle" class="text-slate-600 mb-6 text-base sm:text-lg">Bra kämpat allihopa!</p>
-
-        <!-- Single Player Final Score -->
-        <div id="single-player-final" class="hidden bg-purple-100 text-purple-800 rounded-lg p-6 mb-8">
-            <p class="text-xl">Din slutpoäng:</p>
-            <p id="single-final-score" class="text-6xl font-bold"></p>
-        </div>
-
-        <!-- Multiplayer Final Scoreboard -->
-        <div id="final-scoreboard" class="space-y-3 sm:space-y-4 mb-8">
-            <!-- Final player scores will be listed here -->
-        </div>
-
-        <button id="restart-btn" class="w-full bg-gradient-to-r from-magic to-primary text-white font-bold py-3 px-6 rounded-lg text-lg sm:text-xl hover:from-primary hover:to-magic-dark transition-colors shadow-md">
-            Spela igen
-        </button>
-    `;
+        endScreen.innerHTML = window.ResultScreenRenderer.renderDefaultEndScreen();
 
         // Re-attach restart button listener
         const restartBtn = document.getElementById('restart-btn');
@@ -1666,15 +1554,8 @@ async function restartGame() {
         }
     }
 
-    // Update element references
-    endScreenSubtitle = document.getElementById('end-screen-subtitle');
-    singlePlayerFinal = document.getElementById('single-player-final');
-    singleFinalScore = document.getElementById('single-final-score');
-    finalScoreboard = document.getElementById('final-scoreboard');
-
-    // Reset single player display elements
-    if (singlePlayerFinal) singlePlayerFinal.classList.add('hidden');
-    if (finalScoreboard) finalScoreboard.classList.remove('hidden');
+    // Note: Element references (endScreenSubtitle, singlePlayerFinal, etc.) no longer needed
+    // since ResultScreenRenderer.renderDefaultEndScreen() generates fresh HTML each time
 
     // Use NavigationManager for all navigation/screen transitions
     // Note: NavigationManager.resetToStartScreen() now handles populatePackSelectors()

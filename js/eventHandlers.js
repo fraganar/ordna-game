@@ -443,6 +443,11 @@ async function handlePostGamePlayAgain() {
     await window.NavigationManager.resetToStartScreen();
 }
 
+// Export handlers to window for dynamic attachment in showPostGameShareScreen
+// (needed when innerHTML replaces static elements)
+window.handleShareChallenge = handleShareChallenge;
+window.handlePostGamePlayAgain = handlePostGamePlayAgain;
+
 // Initialize when DOM is ready
 if (document.readyState === 'loading') {
     document.addEventListener('DOMContentLoaded', initializeAllEventListeners);
