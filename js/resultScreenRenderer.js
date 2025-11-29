@@ -69,11 +69,13 @@ window.ResultScreenRenderer = {
 
                 <div class="flex space-x-2 mb-4">
                     <button id="copy-link-created"
-                            class="flex-1 bg-blue-600 text-white py-2 px-3 rounded text-sm hover:bg-blue-700 transition-colors">
+                            class="flex-1 text-white py-3 px-4 rounded-lg font-semibold transition-colors"
+                            style="background: linear-gradient(135deg, var(--color-tropical-blue) 0%, var(--color-tropical-blue-dark) 100%);">
                         Kopiera länk
                     </button>
                     <button id="share-created"
-                            class="flex-1 bg-slate-600 text-white py-2 px-3 rounded text-sm hover:bg-slate-700 transition-colors">
+                            class="flex-1 text-white py-3 px-4 rounded-lg font-semibold transition-colors"
+                            style="background: linear-gradient(135deg, var(--color-primary) 0%, var(--color-primary-dark) 100%);">
                         Dela
                     </button>
                 </div>
