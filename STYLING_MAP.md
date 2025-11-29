@@ -308,7 +308,6 @@ ordna-game/
 ├── css/
 │   └── styles.css          # All custom CSS, animations, overrides
 ├── index.html              # Tailwind classes inline
-├── hur-det-fungerar.html   # Tailwind classes inline
 └── js/
     ├── game.js             # Dynamic class manipulation
     ├── animationEngine.js  # Direct style manipulation
@@ -374,10 +373,9 @@ Extensiv användning av linear gradients:
 
 #### 2. Komplett centralisering av ALLA färger (2025-10-02)
 **Problem som löstes:**
-- Hårdkodade hex-värden fanns i css/styles.css, js/animationEngine.js, och hur-det-fungerar.html
+- Hårdkodade hex-värden fanns i css/styles.css och js/animationEngine.js
 - Gradient i `.mango-title` duplicerade värden från CSS variables
 - Animationer i JS hade hårdkodade färger (#10b981, #15803d, #ef4444)
-- hur-det-fungerar.html hade fel färgschema (lila istället för orange!)
 
 **Lösning:**
 - Nya CSS variables: `--color-animation-success`, `--color-animation-success-dark`, `--color-animation-danger`
@@ -385,12 +383,10 @@ Extensiv användning av linear gradients:
 - PWA färger dokumenterade i CSS för referens (måste vara hårdkodade i manifest.json)
 - Alla gradients använder nu `var(--color-primary)` och `var(--color-magic)`
 - js/animationEngine.js använder CSS variables via `var(--color-animation-*)`
-- hur-det-fungerar.html synkad med index.html (orange tema)
 
 **Filer som uppdaterades:**
 1. `css/styles.css` - Nya variables + ersatt alla hårdkodade värden
 2. `js/animationEngine.js` - Alla animationsfärger använder CSS variables
-3. `hur-det-fungerar.html` - Tailwind config synkad + SVG färger fixade
 
 **Undantag (måste vara hårdkodade):**
 - `manifest.json` - JSON stödjer inte CSS variables

@@ -197,7 +197,6 @@ Fallbacks döljer problem och leder till svårhittade buggar. Istället:
 
 ## Project Structure
 - `index.html`: Main entry point
-- `hur-det-fungerar.html`: Detailed help page explaining game mechanics
 - `js/game.js`: Core game logic and question loading
 - `css/styles.css`: All styling including responsive design
 - `data/questions-grund.json`: Game questions with pack assignments

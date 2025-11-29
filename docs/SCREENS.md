@@ -316,17 +316,24 @@
 
 **Status:** AKTIV
 
-**Visas när:** Användare klickar "Hur det fungerar"
+**Visas när:**
+- Användare klickar "Hur det fungerar" i hamburgermenyn
+- Användare klickar "Läs mer om hur spelet fungerar" på startskärmen
 
 **Syfte:** Förklara spelregler detaljerat
 
 **Implementation:**
 - **Element:** `#help-modal`
 - **Fil:** [index.html](../index.html)
+- **Event listeners:** [hamburgerNav.js](../js/hamburgerNav.js)
+
+**Trigger IDs:**
+- `#how-it-works` - Länk i hamburgermenyn (`#menu-overlay`)
+- `#open-help-from-start` - Knapp på startskärmen
 
 **UI-element:**
 - Detaljerade spelregler
-- Frågetypsförklaringar
+- Frågetypsförklaringar (Ordna, Hör till, Vilken)
 - Stäng-knapp
 
 ---

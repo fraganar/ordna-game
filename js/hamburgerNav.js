@@ -71,6 +71,12 @@ class HamburgerNav {
             }
         });
 
+        // Help link from start screen
+        const openHelpFromStart = document.getElementById('open-help-from-start');
+        if (openHelpFromStart) {
+            openHelpFromStart.addEventListener('click', () => this.openHelpModal());
+        }
+
         // Change name modal
         this.saveChangeNameBtn.addEventListener('click', () => this.saveNewName());
         this.cancelChangeNameBtn.addEventListener('click', () => this.closeChangeNameModal());
