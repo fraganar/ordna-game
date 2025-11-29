@@ -98,14 +98,9 @@ window.ResultScreenRenderer = {
 
                 ${scoreHTML}
 
-                <div class="bg-info-light border-l-4 border-info rounded-lg p-4 mb-6 text-left">
-                    <p class="text-base text-slate-700 mb-2">
-                        <strong>🎯 Vill du utmana en vän?</strong>
-                    </p>
-                    <p class="text-sm text-slate-600">
-                        Skapa ett konto för att utmana vänner, se dina resultat och få tillgång till fler spelfunktioner!
-                    </p>
-                </div>
+                <p class="text-slate-600 mb-6">
+                    🔗 <strong>Vill du utmana en vän?</strong> Skapa ett konto för att utmana vänner och få tillgång till fler spelfunktioner!
+                </p>
 
                 <div class="space-y-4">
                     <button id="share-challenge-btn"
@@ -181,6 +176,10 @@ window.ResultScreenRenderer = {
 
     _renderAnonymousButtons() {
         return `
+            <p class="text-slate-600 mb-6">
+                🔗 <strong>Logga in för att spara ditt resultat</strong> - annars går det förlorat!
+            </p>
+
             <div class="space-y-3">
                 <button id="opponent-result-login-btn"
                         class="w-full bg-gradient-to-r from-magic to-primary text-white font-bold py-4 px-6 rounded-lg text-lg hover:from-primary hover:to-magic-dark transition-colors shadow-md">
@@ -191,10 +190,6 @@ window.ResultScreenRenderer = {
                     Tillbaka till start
                 </button>
             </div>
-
-            <p class="text-xs text-slate-500 mt-4">
-                ⚠️ Logga in nu för att spara ditt resultat - annars går det förlorat
-            </p>
         `;
     },
 
