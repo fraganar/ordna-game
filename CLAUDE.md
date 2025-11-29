@@ -302,3 +302,5 @@ Snabbtest multiplayer: Kan spelare 2 fortsätta efter att spelare 1 eliminerats?
 - **Spelspecifikation**: För djup teknisk specifikation av spelmekanik, UI-flöden och datastrukturer, se `GAME_SPECIFICATION.md`
 - **Styling & Design**: För komplett styling-dokumentation, färgschema och CSS-arkitektur, se `STYLING_MAP.md`
 - **Skärmdokumentation**: För katalog över alla skärmar med permanenta ID:n (#1, #2, etc), se `docs/SCREENS.md`
+  - **VIKTIGT:** Uppdatera detta dokument när skärmar läggs till, tas bort eller ändrar status
+  - Använd nästa lediga ID (se dokumentet), återanvänd aldrig gamla ID:n

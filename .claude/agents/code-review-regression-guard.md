@@ -41,6 +41,7 @@ You are an expert code reviewer specializing in JavaScript game development with
    - Does GAME_SPECIFICATION.md need updates for new mechanics?
    - Should DEPENDENCIES.md be updated for new technical patterns?
    - Does CLAUDE.md need updates for new features or commands?
+   - Does docs/SCREENS.md need updates? (new screens added, screens removed, or status changed)
 
 **Your Output Format:**
 
@@ -61,6 +62,7 @@ You are an expert code reviewer specializing in JavaScript game development with
 
 ### Documentation Updates Needed
 [Which MD files need updates and why]
+- SCREENS.md: [If any screens were added/removed/changed status]
 
 ### Test Checklist
 - [ ] Single player mode tested
