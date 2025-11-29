@@ -148,6 +148,16 @@
   5. Verifiera att "Skapade/Spelade" fortfarande visas korrekt
 - **Tidsuppskattning:** 10-15 minuter
 
+### BL-040: Ta bort obsoleta element från navigationManager
+- **Kategori:** REFACTOR
+- **Stackrank:** 5
+- **Beskrivning:** `navigationManager.js` försöker dölja element som inte längre finns i UI-mappningen, vilket ger console warnings:
+  - `Element 'challengeBlocked' not found`
+  - `Element 'postGameShare' not found`
+- **Åtgärd:** Ta bort `challengeBlocked` och `postGameShare` från `screensToHide`-listan i `resetToStartScreen()`
+- **Impact:** Endast console-varningar, ingen funktionell påverkan
+- **Tidsuppskattning:** 2 minuter
+
 ### BL-039: Tangentbordsnavigering för desktop-användare
 - **Kategori:** ENHANCEMENT
 - **Stackrank:** 18
