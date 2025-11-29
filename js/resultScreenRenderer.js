@@ -96,7 +96,7 @@ window.ResultScreenRenderer = {
     _renderPostGameShare(scoreHTML) {
         return `
             <div class="text-center p-6 sm:p-8 lg:p-12">
-                <h2 class="text-3xl sm:text-4xl font-bold text-slate-900 mb-2">Bra jobbat!</h2>
+                <h2 class="text-3xl sm:text-4xl font-bold text-slate-900 mb-2">Bra kämpat!</h2>
 
                 ${scoreHTML}
 
