@@ -310,16 +310,15 @@ const FirebaseAPI = {
         }
 
         try {
-            // Get challenges where user is challenger (without orderBy to avoid index requirement)
+            // Get challenges where user is challenger
+            // Note: No limit - we fetch all and sort in client to ensure newest are included
             const asChallenger = await db.collection('challenges')
                 .where('challenger.playerId', '==', playerId)
-                .limit(20)
                 .get();
 
-            // Get challenges where user is opponent (without orderBy to avoid index requirement)
+            // Get challenges where user is opponent
             const asOpponent = await db.collection('challenges')
                 .where('opponent.playerId', '==', playerId)
-                .limit(20)
                 .get();
 
             const challenges = [
