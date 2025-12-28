@@ -195,7 +195,7 @@
     {
       "typ": "ordna",
       "svårighetsgrad": "lätt",
-      "fråga": "Ordna dessa uppfinningar efter när de först introducerades (äldst först).",
+      "fråga": "Ordna dessa uppfinningar efter när de först introducerades (äldst till senast).",
       "alternativ": [
         "Televisionen",
         "Telegrafen",
