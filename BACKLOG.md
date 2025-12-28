@@ -18,6 +18,7 @@
 7. **BL-032** (15) - Admin-panel visar inga challenges
 8. **BL-022** (12) - Lägg till browser fallbacks för moderna CSS-effekter
 9. **BL-024** (10) - Redesigna "Hör till"-knappar enligt ny mockup
+10. **BL-041** (8) - Granska och merga feature/vilken-fragor-design
 
 ---
 
@@ -201,6 +202,23 @@
   - Dokumentation: +15 min
   - Total: ~45 minuter
 - **Referens:** Se conversation med code review för full analys
+
+### BL-041: Granska och merga feature/vilken-fragor-design
+- **Kategori:** FEATURE
+- **Stackrank:** 8
+- **Beskrivning:** Återbesök branch feature/vilken-fragor-design och utvärdera om ändringarna kan göras klara för merge
+- **Branch:** `feature/vilken-fragor-design`
+- **Ändringar i branchen:**
+  - Cirkel-symbol (▶) före varje alternativ i vilken-frågor
+  - Förenklad instruktionstext: "Ett av alternativen är rätt - välj det!"
+  - Ny CSS-klass `.vilken-option` med styling
+- **Commit:** `88f7e6d` - feat: Add visual distinction for vilken questions with circle prefix
+- **Åtgärder:**
+  1. Granska ändringarna visuellt (mobile + desktop)
+  2. Testa användarupplevelse för vilken-frågor
+  3. Validera att cirkel-symbolen fungerar på olika enheter
+  4. Beslut: Merga, förbättra eller kassera
+- **Tidsuppskattning:** 15-20 minuter
 
 ---
 
