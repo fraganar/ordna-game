@@ -1,0 +1,1228 @@
+<!DOCTYPE html>
+<html lang="sv">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tres Mangos - Game Screen Redesign</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@400;500;600;700&family=DM+Sans:wght@400;500;600&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            /* Tropical Theme */
+            --mango-gold: #FF8C00;
+            --mango-light: #FFB84D;
+            --mango-dark: #E67300;
+            --tropical-green: #00D084;
+            --tropical-green-dark: #00A868;
+            --hot-coral: #FF5722;
+            --hot-coral-dark: #E64A19;
+            --tropical-blue: #00B4D8;
+            --sunset-pink: #FF6B9D;
+
+            /* Backgrounds */
+            --bg-cream: #FFF8F0;
+            --bg-mint: #E8FFF5;
+            --card-bg: rgba(255, 255, 255, 0.95);
+
+            /* Text */
+            --text-dark: #2D3436;
+            --text-muted: #636E72;
+
+            /* Shadows */
+            --shadow-sm: 0 2px 8px rgba(0,0,0,0.08);
+            --shadow-md: 0 4px 20px rgba(0,0,0,0.12);
+            --shadow-lg: 0 8px 40px rgba(0,0,0,0.16);
+            --shadow-glow-green: 0 0 30px rgba(0, 208, 132, 0.4);
+            --shadow-glow-coral: 0 0 30px rgba(255, 87, 34, 0.4);
+            --shadow-glow-blue: 0 0 30px rgba(0, 180, 216, 0.4);
+            --shadow-glow-mango: 0 0 30px rgba(255, 140, 0, 0.4);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'DM Sans', sans-serif;
+            background: linear-gradient(135deg, var(--bg-mint) 0%, var(--bg-cream) 50%, #FFE4EC 100%);
+            min-height: 100vh;
+            color: var(--text-dark);
+            overflow-x: hidden;
+        }
+
+        /* Floating background shapes */
+        .bg-shapes {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 0;
+            overflow: hidden;
+        }
+
+        .bg-shape {
+            position: absolute;
+            border-radius: 50%;
+            opacity: 0.15;
+            animation: float 20s ease-in-out infinite;
+        }
+
+        .bg-shape-1 {
+            width: 300px;
+            height: 300px;
+            background: var(--mango-gold);
+            top: -100px;
+            right: -100px;
+            animation-delay: 0s;
+        }
+
+        .bg-shape-2 {
+            width: 200px;
+            height: 200px;
+            background: var(--tropical-green);
+            bottom: 10%;
+            left: -50px;
+            animation-delay: -5s;
+        }
+
+        .bg-shape-3 {
+            width: 150px;
+            height: 150px;
+            background: var(--sunset-pink);
+            top: 40%;
+            right: -30px;
+            animation-delay: -10s;
+        }
+
+        @keyframes float {
+            0%, 100% { transform: translateY(0) rotate(0deg); }
+            50% { transform: translateY(-30px) rotate(10deg); }
+        }
+
+        /* Type Selector (for prototype) */
+        .type-selector {
+            position: relative;
+            z-index: 10;
+            display: flex;
+            justify-content: center;
+            gap: 8px;
+            padding: 16px;
+            background: rgba(255,255,255,0.8);
+            backdrop-filter: blur(10px);
+            border-bottom: 1px solid rgba(0,0,0,0.05);
+        }
+
+        .type-btn {
+            font-family: 'Fredoka', sans-serif;
+            font-weight: 500;
+            font-size: 14px;
+            padding: 10px 20px;
+            border: 2px solid transparent;
+            border-radius: 100px;
+            cursor: pointer;
+            transition: all 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+            background: white;
+            color: var(--text-muted);
+        }
+
+        .type-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: var(--shadow-md);
+        }
+
+        .type-btn.active {
+            color: white;
+            transform: scale(1.05);
+        }
+
+        .type-btn[data-type="ordna"].active {
+            background: linear-gradient(135deg, var(--mango-gold), var(--mango-light));
+            border-color: var(--mango-dark);
+        }
+
+        .type-btn[data-type="hortill"].active {
+            background: linear-gradient(135deg, var(--tropical-green), #2EE59D);
+            border-color: var(--tropical-green-dark);
+        }
+
+        .type-btn[data-type="vilken"].active {
+            background: linear-gradient(135deg, var(--tropical-blue), #48CAE4);
+            border-color: #0096C7;
+        }
+
+        /* Main Container */
+        .game-container {
+            position: relative;
+            z-index: 1;
+            max-width: 480px;
+            margin: 0 auto;
+            padding: 16px;
+            padding-bottom: 100px;
+        }
+
+        /* Header */
+        .game-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 16px;
+        }
+
+        .question-type-badge {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            padding: 8px 16px;
+            border-radius: 100px;
+            font-family: 'Fredoka', sans-serif;
+            font-weight: 600;
+            font-size: 14px;
+            color: white;
+            animation: slideInLeft 0.5s cubic-bezier(0.34, 1.56, 0.64, 1);
+        }
+
+        .badge-ordna {
+            background: linear-gradient(135deg, var(--mango-gold), var(--mango-light));
+            box-shadow: 0 4px 15px rgba(255, 140, 0, 0.3);
+        }
+
+        .badge-hortill {
+            background: linear-gradient(135deg, var(--tropical-green), #2EE59D);
+            box-shadow: 0 4px 15px rgba(0, 208, 132, 0.3);
+        }
+
+        .badge-vilken {
+            background: linear-gradient(135deg, var(--tropical-blue), #48CAE4);
+            box-shadow: 0 4px 15px rgba(0, 180, 216, 0.3);
+        }
+
+        .badge-icon {
+            font-size: 18px;
+            animation: wiggle 2s ease-in-out infinite;
+        }
+
+        @keyframes wiggle {
+            0%, 100% { transform: rotate(-5deg); }
+            50% { transform: rotate(5deg); }
+        }
+
+        @keyframes slideInLeft {
+            from { opacity: 0; transform: translateX(-30px); }
+            to { opacity: 1; transform: translateX(0); }
+        }
+
+        .score-display {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+        }
+
+        .progress-pill {
+            background: white;
+            padding: 6px 14px;
+            border-radius: 100px;
+            font-size: 13px;
+            font-weight: 500;
+            color: var(--text-muted);
+            box-shadow: var(--shadow-sm);
+        }
+
+        .total-score {
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            color: white;
+            padding: 8px 16px;
+            border-radius: 100px;
+            font-family: 'Fredoka', sans-serif;
+            font-weight: 600;
+            font-size: 15px;
+            box-shadow: 0 4px 15px rgba(102, 126, 234, 0.3);
+        }
+
+        /* Question Card */
+        .question-card {
+            background: var(--card-bg);
+            border-radius: 24px;
+            padding: 24px;
+            margin-bottom: 20px;
+            box-shadow: var(--shadow-md);
+            animation: fadeInUp 0.5s ease-out;
+        }
+
+        @keyframes fadeInUp {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .question-text {
+            font-family: 'Fredoka', sans-serif;
+            font-size: 22px;
+            font-weight: 600;
+            line-height: 1.4;
+            text-align: center;
+            margin-bottom: 12px;
+            color: var(--text-dark);
+        }
+
+        .question-instruction {
+            font-size: 14px;
+            color: var(--text-muted);
+            text-align: center;
+        }
+
+        /* ===================
+           ORDNA QUESTION TYPE
+           =================== */
+        .ordna-container {
+            display: none;
+        }
+
+        .ordna-container.active {
+            display: block;
+        }
+
+        .ordna-options {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+
+        .ordna-option {
+            position: relative;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            background: white;
+            padding: 16px 20px;
+            border-radius: 16px;
+            border: 2px solid #E8E8E8;
+            cursor: pointer;
+            transition: all 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+            animation: optionSlideIn 0.4s ease-out backwards;
+            box-shadow: var(--shadow-sm);
+        }
+
+        .ordna-option:nth-child(1) { animation-delay: 0.1s; }
+        .ordna-option:nth-child(2) { animation-delay: 0.2s; }
+        .ordna-option:nth-child(3) { animation-delay: 0.3s; }
+        .ordna-option:nth-child(4) { animation-delay: 0.4s; }
+
+        @keyframes optionSlideIn {
+            from { opacity: 0; transform: translateX(-30px); }
+            to { opacity: 1; transform: translateX(0); }
+        }
+
+        .ordna-option:hover:not(.selected):not(.locked) {
+            transform: translateY(-3px) scale(1.02);
+            border-color: var(--mango-gold);
+            box-shadow: var(--shadow-md), 0 0 0 3px rgba(255, 140, 0, 0.1);
+        }
+
+        .ordna-option.selected {
+            background: linear-gradient(135deg, var(--mango-gold), var(--mango-light));
+            border-color: var(--mango-dark);
+            color: white;
+            transform: scale(0.98);
+            box-shadow: var(--shadow-glow-mango);
+        }
+
+        .ordna-option.correct {
+            background: linear-gradient(135deg, var(--tropical-green), #2EE59D);
+            border-color: var(--tropical-green-dark);
+            color: white;
+            box-shadow: var(--shadow-glow-green);
+        }
+
+        .ordna-option.wrong {
+            background: linear-gradient(135deg, var(--hot-coral), #FF7043);
+            border-color: var(--hot-coral-dark);
+            color: white;
+            animation: shake 0.5s ease-in-out;
+            box-shadow: var(--shadow-glow-coral);
+        }
+
+        @keyframes shake {
+            0%, 100% { transform: translateX(0); }
+            20% { transform: translateX(-10px) rotate(-2deg); }
+            40% { transform: translateX(10px) rotate(2deg); }
+            60% { transform: translateX(-10px) rotate(-2deg); }
+            80% { transform: translateX(10px) rotate(2deg); }
+        }
+
+        .ordna-option.locked {
+            opacity: 0.6;
+            cursor: default;
+            transform: scale(0.95);
+        }
+
+        .order-badge {
+            position: absolute;
+            left: -12px;
+            top: 50%;
+            transform: translateY(-50%) scale(0);
+            width: 36px;
+            height: 36px;
+            background: linear-gradient(135deg, var(--mango-dark), var(--mango-gold));
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-family: 'Fredoka', sans-serif;
+            font-weight: 700;
+            font-size: 18px;
+            color: white;
+            box-shadow: 0 4px 15px rgba(255, 140, 0, 0.4);
+            transition: transform 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
+        }
+
+        .ordna-option.selected .order-badge,
+        .ordna-option.correct .order-badge {
+            transform: translateY(-50%) scale(1);
+            animation: badgePop 0.5s cubic-bezier(0.34, 1.56, 0.64, 1);
+        }
+
+        @keyframes badgePop {
+            0% { transform: translateY(-50%) scale(0) rotate(-180deg); }
+            50% { transform: translateY(-50%) scale(1.3) rotate(10deg); }
+            100% { transform: translateY(-50%) scale(1) rotate(0deg); }
+        }
+
+        .option-text {
+            font-family: 'Fredoka', sans-serif;
+            font-weight: 500;
+            font-size: 17px;
+            flex: 1;
+            padding-left: 16px;
+        }
+
+        /* ===================
+           HOR TILL QUESTION TYPE
+           =================== */
+        .hortill-container {
+            display: none;
+        }
+
+        .hortill-container.active {
+            display: block;
+        }
+
+        /* Sorting Zones */
+        .sorting-zones {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 12px;
+            margin-bottom: 20px;
+            min-height: 120px;
+        }
+
+        .sorting-zone {
+            background: rgba(255,255,255,0.7);
+            border-radius: 20px;
+            padding: 12px;
+            border: 3px dashed;
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+            transition: all 0.3s ease;
+        }
+
+        .zone-ja {
+            border-color: rgba(0, 208, 132, 0.4);
+            background: linear-gradient(180deg, rgba(0, 208, 132, 0.08) 0%, rgba(255,255,255,0.7) 100%);
+        }
+
+        .zone-nej {
+            border-color: rgba(255, 87, 34, 0.4);
+            background: linear-gradient(180deg, rgba(255, 87, 34, 0.08) 0%, rgba(255,255,255,0.7) 100%);
+        }
+
+        .zone-label {
+            font-family: 'Fredoka', sans-serif;
+            font-weight: 600;
+            font-size: 14px;
+            text-align: center;
+            padding: 6px;
+            border-radius: 100px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 6px;
+        }
+
+        .zone-ja .zone-label {
+            background: var(--tropical-green);
+            color: white;
+        }
+
+        .zone-nej .zone-label {
+            background: var(--hot-coral);
+            color: white;
+        }
+
+        .zone-items {
+            display: flex;
+            flex-direction: column;
+            gap: 6px;
+            flex: 1;
+        }
+
+        .sorted-item {
+            background: white;
+            padding: 10px 14px;
+            border-radius: 12px;
+            font-size: 14px;
+            font-weight: 500;
+            text-align: center;
+            box-shadow: var(--shadow-sm);
+            animation: itemPlop 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
+        }
+
+        @keyframes itemPlop {
+            0% { transform: scale(0) translateY(-20px); opacity: 0; }
+            50% { transform: scale(1.1) translateY(5px); }
+            100% { transform: scale(1) translateY(0); opacity: 1; }
+        }
+
+        /* Hör Till Options */
+        .hortill-options {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+
+        .hortill-option {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            background: white;
+            padding: 14px 16px;
+            border-radius: 16px;
+            border: 2px solid #E8E8E8;
+            box-shadow: var(--shadow-sm);
+            animation: optionSlideIn 0.4s ease-out backwards;
+            transition: all 0.5s cubic-bezier(0.34, 1.56, 0.64, 1);
+        }
+
+        .hortill-option:nth-child(1) { animation-delay: 0.1s; }
+        .hortill-option:nth-child(2) { animation-delay: 0.2s; }
+        .hortill-option:nth-child(3) { animation-delay: 0.3s; }
+        .hortill-option:nth-child(4) { animation-delay: 0.4s; }
+
+        .hortill-option.sorting-out {
+            opacity: 0;
+            transform: translateY(-50px) scale(0.8);
+        }
+
+        .hortill-option-text {
+            font-family: 'Fredoka', sans-serif;
+            font-weight: 500;
+            font-size: 16px;
+        }
+
+        .decision-buttons {
+            display: flex;
+            gap: 8px;
+        }
+
+        .decision-btn {
+            width: 44px;
+            height: 44px;
+            border-radius: 12px;
+            border: 2px solid;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 20px;
+            transition: all 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+        }
+
+        .btn-ja {
+            background: rgba(0, 208, 132, 0.1);
+            border-color: var(--tropical-green);
+            color: var(--tropical-green);
+        }
+
+        .btn-ja:hover {
+            background: var(--tropical-green);
+            color: white;
+            transform: scale(1.15) rotate(-5deg);
+            box-shadow: var(--shadow-glow-green);
+        }
+
+        .btn-nej {
+            background: rgba(255, 87, 34, 0.1);
+            border-color: var(--hot-coral);
+            color: var(--hot-coral);
+        }
+
+        .btn-nej:hover {
+            background: var(--hot-coral);
+            color: white;
+            transform: scale(1.15) rotate(5deg);
+            box-shadow: var(--shadow-glow-coral);
+        }
+
+        /* ===================
+           VILKEN QUESTION TYPE
+           =================== */
+        .vilken-container {
+            display: none;
+        }
+
+        .vilken-container.active {
+            display: block;
+        }
+
+        .vilken-options {
+            display: flex;
+            flex-direction: column;
+            gap: 14px;
+        }
+
+        .vilken-option {
+            position: relative;
+            background: white;
+            padding: 20px 24px;
+            border-radius: 20px;
+            border: 3px solid #E8E8E8;
+            cursor: pointer;
+            transition: all 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
+            animation: optionSlideIn 0.4s ease-out backwards;
+            box-shadow: var(--shadow-sm);
+            overflow: hidden;
+        }
+
+        .vilken-option:nth-child(1) { animation-delay: 0.1s; }
+        .vilken-option:nth-child(2) { animation-delay: 0.2s; }
+        .vilken-option:nth-child(3) { animation-delay: 0.3s; }
+        .vilken-option:nth-child(4) { animation-delay: 0.4s; }
+
+        .vilken-option::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: radial-gradient(circle at center, rgba(0, 180, 216, 0.15) 0%, transparent 70%);
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+
+        .vilken-option:hover:not(.selected):not(.faded) {
+            transform: translateY(-4px) scale(1.02);
+            border-color: var(--tropical-blue);
+            box-shadow: var(--shadow-lg), 0 0 0 4px rgba(0, 180, 216, 0.1);
+        }
+
+        .vilken-option:hover:not(.selected):not(.faded)::before {
+            opacity: 1;
+        }
+
+        .vilken-option.selected {
+            background: linear-gradient(135deg, var(--tropical-blue), #48CAE4);
+            border-color: #0096C7;
+            color: white;
+            transform: scale(1.05);
+            box-shadow: var(--shadow-glow-blue), 0 10px 40px rgba(0, 180, 216, 0.3);
+            z-index: 2;
+        }
+
+        .vilken-option.selected::after {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: radial-gradient(circle, rgba(255,255,255,0.3) 0%, transparent 50%);
+            animation: spotlight 2s ease-in-out infinite;
+        }
+
+        @keyframes spotlight {
+            0%, 100% { transform: scale(0.8); opacity: 0.5; }
+            50% { transform: scale(1.2); opacity: 1; }
+        }
+
+        .vilken-option.correct {
+            background: linear-gradient(135deg, var(--tropical-green), #2EE59D);
+            border-color: var(--tropical-green-dark);
+            color: white;
+            transform: scale(1.05);
+            box-shadow: var(--shadow-glow-green);
+        }
+
+        .vilken-option.wrong {
+            background: linear-gradient(135deg, var(--hot-coral), #FF7043);
+            border-color: var(--hot-coral-dark);
+            color: white;
+            animation: shake 0.5s ease-in-out;
+        }
+
+        .vilken-option.faded {
+            opacity: 0.4;
+            transform: scale(0.95);
+            filter: grayscale(30%);
+        }
+
+        .vilken-option-text {
+            font-family: 'Fredoka', sans-serif;
+            font-weight: 600;
+            font-size: 18px;
+            text-align: center;
+            position: relative;
+            z-index: 1;
+        }
+
+        .spotlight-icon {
+            position: absolute;
+            right: 16px;
+            top: 50%;
+            transform: translateY(-50%) scale(0);
+            font-size: 24px;
+            transition: transform 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
+        }
+
+        .vilken-option.selected .spotlight-icon {
+            transform: translateY(-50%) scale(1);
+            animation: iconBounce 0.6s ease-out;
+        }
+
+        @keyframes iconBounce {
+            0% { transform: translateY(-50%) scale(0) rotate(-180deg); }
+            50% { transform: translateY(-50%) scale(1.4) rotate(20deg); }
+            100% { transform: translateY(-50%) scale(1) rotate(0deg); }
+        }
+
+        /* ===================
+           DECISION FOOTER
+           =================== */
+        .decision-footer {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(20px);
+            padding: 16px;
+            box-shadow: 0 -4px 30px rgba(0,0,0,0.1);
+            z-index: 100;
+        }
+
+        .decision-button-container {
+            max-width: 480px;
+            margin: 0 auto;
+            display: flex;
+            gap: 0;
+            border-radius: 20px;
+            overflow: hidden;
+            box-shadow: var(--shadow-lg);
+        }
+
+        .stop-button, .next-button {
+            flex: 1;
+            padding: 18px 24px;
+            border: none;
+            cursor: pointer;
+            font-family: 'Fredoka', sans-serif;
+            font-weight: 600;
+            font-size: 17px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            transition: all 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+        }
+
+        .stop-button {
+            background: linear-gradient(135deg, var(--tropical-blue), #48CAE4);
+            color: white;
+        }
+
+        .stop-button:hover {
+            filter: brightness(1.1);
+            transform: scale(1.02);
+        }
+
+        .stop-button .points {
+            background: rgba(255,255,255,0.3);
+            padding: 4px 12px;
+            border-radius: 100px;
+            font-size: 14px;
+        }
+
+        .next-button {
+            background: linear-gradient(135deg, var(--mango-gold), var(--sunset-pink));
+            color: white;
+        }
+
+        .next-button:hover {
+            filter: brightness(1.1);
+            transform: scale(1.02);
+        }
+
+        .next-button:disabled {
+            background: #E0E0E0;
+            color: #999;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        .button-icon {
+            font-size: 20px;
+        }
+
+        /* ===================
+           CONFETTI & EFFECTS
+           =================== */
+        .confetti-container {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 1000;
+            overflow: hidden;
+        }
+
+        .confetti {
+            position: absolute;
+            width: 10px;
+            height: 10px;
+            opacity: 0;
+        }
+
+        @keyframes confettiFall {
+            0% {
+                transform: translateY(-100px) rotate(0deg);
+                opacity: 1;
+            }
+            100% {
+                transform: translateY(100vh) rotate(720deg);
+                opacity: 0;
+            }
+        }
+
+        .floating-points {
+            position: fixed;
+            font-family: 'Fredoka', sans-serif;
+            font-weight: 700;
+            font-size: 32px;
+            color: var(--tropical-green);
+            pointer-events: none;
+            z-index: 1000;
+            text-shadow: 0 2px 10px rgba(0, 208, 132, 0.5);
+            animation: floatUp 1s ease-out forwards;
+        }
+
+        @keyframes floatUp {
+            0% {
+                opacity: 1;
+                transform: translateY(0) scale(1);
+            }
+            100% {
+                opacity: 0;
+                transform: translateY(-100px) scale(1.5);
+            }
+        }
+
+        /* ===================
+           RESPONSIVE
+           =================== */
+        @media (max-width: 400px) {
+            .game-header {
+                flex-wrap: wrap;
+                gap: 8px;
+            }
+
+            .question-type-badge {
+                font-size: 12px;
+                padding: 6px 12px;
+            }
+
+            .question-text {
+                font-size: 18px;
+            }
+
+            .vilken-option {
+                padding: 16px 20px;
+            }
+
+            .vilken-option-text {
+                font-size: 16px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Background Shapes -->
+    <div class="bg-shapes">
+        <div class="bg-shape bg-shape-1"></div>
+        <div class="bg-shape bg-shape-2"></div>
+        <div class="bg-shape bg-shape-3"></div>
+    </div>
+
+    <!-- Confetti Container -->
+    <div class="confetti-container" id="confettiContainer"></div>
+
+    <!-- Type Selector (Prototype Navigation) -->
+    <div class="type-selector">
+        <button class="type-btn active" data-type="ordna">Ordna</button>
+        <button class="type-btn" data-type="hortill">Hor Till</button>
+        <button class="type-btn" data-type="vilken">Vilken</button>
+    </div>
+
+    <!-- Main Game Container -->
+    <div class="game-container">
+        <!-- Header -->
+        <div class="game-header">
+            <div class="question-type-badge badge-ordna" id="typeBadge">
+                <span class="badge-icon">📊</span>
+                <span>ORDNA</span>
+            </div>
+            <div class="score-display">
+                <span class="progress-pill">Fraga 3/12</span>
+                <span class="total-score">42 p</span>
+            </div>
+        </div>
+
+        <!-- Question Card -->
+        <div class="question-card">
+            <p class="question-text" id="questionText">Ordna dessa lander efter befolkning (minst till storst)</p>
+            <p class="question-instruction" id="questionInstruction">Klicka pa alternativen i ratt ordning</p>
+        </div>
+
+        <!-- ORDNA Container -->
+        <div class="ordna-container active" id="ordnaContainer">
+            <div class="ordna-options">
+                <div class="ordna-option" data-order="3" onclick="handleOrdnaClick(this, 1)">
+                    <div class="order-badge">1</div>
+                    <span class="option-text">Sverige</span>
+                </div>
+                <div class="ordna-option" data-order="2" onclick="handleOrdnaClick(this, 2)">
+                    <div class="order-badge">2</div>
+                    <span class="option-text">Norge</span>
+                </div>
+                <div class="ordna-option" data-order="1" onclick="handleOrdnaClick(this, 3)">
+                    <div class="order-badge">3</div>
+                    <span class="option-text">Danmark</span>
+                </div>
+                <div class="ordna-option" data-order="4" onclick="handleOrdnaClick(this, 4)">
+                    <div class="order-badge">4</div>
+                    <span class="option-text">Island</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- HOR TILL Container -->
+        <div class="hortill-container" id="hortillContainer">
+            <!-- Sorting Zones -->
+            <div class="sorting-zones">
+                <div class="sorting-zone zone-ja">
+                    <div class="zone-label">
+                        <span>✓</span>
+                        <span>JA</span>
+                    </div>
+                    <div class="zone-items" id="jaZone"></div>
+                </div>
+                <div class="sorting-zone zone-nej">
+                    <div class="zone-label">
+                        <span>✗</span>
+                        <span>NEJ</span>
+                    </div>
+                    <div class="zone-items" id="nejZone"></div>
+                </div>
+            </div>
+
+            <!-- Options -->
+            <div class="hortill-options" id="hortillOptions">
+                <div class="hortill-option" data-belongs="true">
+                    <span class="hortill-option-text">Paris</span>
+                    <div class="decision-buttons">
+                        <button class="decision-btn btn-ja" onclick="handleHortillClick(this.parentElement.parentElement, true)">✓</button>
+                        <button class="decision-btn btn-nej" onclick="handleHortillClick(this.parentElement.parentElement, false)">✗</button>
+                    </div>
+                </div>
+                <div class="hortill-option" data-belongs="false">
+                    <span class="hortill-option-text">Barcelona</span>
+                    <div class="decision-buttons">
+                        <button class="decision-btn btn-ja" onclick="handleHortillClick(this.parentElement.parentElement, true)">✓</button>
+                        <button class="decision-btn btn-nej" onclick="handleHortillClick(this.parentElement.parentElement, false)">✗</button>
+                    </div>
+                </div>
+                <div class="hortill-option" data-belongs="true">
+                    <span class="hortill-option-text">Rom</span>
+                    <div class="decision-buttons">
+                        <button class="decision-btn btn-ja" onclick="handleHortillClick(this.parentElement.parentElement, true)">✓</button>
+                        <button class="decision-btn btn-nej" onclick="handleHortillClick(this.parentElement.parentElement, false)">✗</button>
+                    </div>
+                </div>
+                <div class="hortill-option" data-belongs="true">
+                    <span class="hortill-option-text">Madrid</span>
+                    <div class="decision-buttons">
+                        <button class="decision-btn btn-ja" onclick="handleHortillClick(this.parentElement.parentElement, true)">✓</button>
+                        <button class="decision-btn btn-nej" onclick="handleHortillClick(this.parentElement.parentElement, false)">✗</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- VILKEN Container -->
+        <div class="vilken-container" id="vilkenContainer">
+            <div class="vilken-options">
+                <div class="vilken-option" onclick="handleVilkenClick(this, false)">
+                    <span class="vilken-option-text">Goteborg</span>
+                    <span class="spotlight-icon">🎯</span>
+                </div>
+                <div class="vilken-option" onclick="handleVilkenClick(this, true)">
+                    <span class="vilken-option-text">Stockholm</span>
+                    <span class="spotlight-icon">🎯</span>
+                </div>
+                <div class="vilken-option" onclick="handleVilkenClick(this, false)">
+                    <span class="vilken-option-text">Malmo</span>
+                    <span class="spotlight-icon">🎯</span>
+                </div>
+                <div class="vilken-option" onclick="handleVilkenClick(this, false)">
+                    <span class="vilken-option-text">Uppsala</span>
+                    <span class="spotlight-icon">🎯</span>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Decision Footer -->
+    <div class="decision-footer">
+        <div class="decision-button-container">
+            <button class="stop-button" onclick="handleStop()">
+                <span class="button-icon">🛡️</span>
+                <span>Stanna</span>
+                <span class="points" id="currentPoints">+3 p</span>
+            </button>
+            <button class="next-button" id="nextButton" disabled>
+                <span>Nasta fraga</span>
+                <span class="button-icon">➡️</span>
+            </button>
+        </div>
+    </div>
+
+    <script>
+        // State
+        let currentType = 'ordna';
+        let ordnaClickCount = 0;
+        let points = 3;
+
+        // Type switching
+        document.querySelectorAll('.type-btn').forEach(btn => {
+            btn.addEventListener('click', () => {
+                const type = btn.dataset.type;
+                switchType(type);
+            });
+        });
+
+        function switchType(type) {
+            currentType = type;
+
+            // Update buttons
+            document.querySelectorAll('.type-btn').forEach(b => b.classList.remove('active'));
+            document.querySelector(`[data-type="${type}"]`).classList.add('active');
+
+            // Update containers
+            document.querySelectorAll('.ordna-container, .hortill-container, .vilken-container')
+                .forEach(c => c.classList.remove('active'));
+            document.getElementById(`${type}Container`).classList.add('active');
+
+            // Update badge
+            const badge = document.getElementById('typeBadge');
+            badge.className = 'question-type-badge';
+
+            const questionText = document.getElementById('questionText');
+            const instruction = document.getElementById('questionInstruction');
+
+            if (type === 'ordna') {
+                badge.classList.add('badge-ordna');
+                badge.innerHTML = '<span class="badge-icon">📊</span><span>ORDNA</span>';
+                questionText.textContent = 'Ordna dessa lander efter befolkning (minst till storst)';
+                instruction.textContent = 'Klicka pa alternativen i ratt ordning';
+            } else if (type === 'hortill') {
+                badge.classList.add('badge-hortill');
+                badge.innerHTML = '<span class="badge-icon">🗂️</span><span>HOR TILL</span>';
+                questionText.textContent = 'Vilka av dessa ar huvudstader?';
+                instruction.textContent = 'Bedom varje alternativ - tillhor det kategorin?';
+            } else if (type === 'vilken') {
+                badge.classList.add('badge-vilken');
+                badge.innerHTML = '<span class="badge-icon">🎯</span><span>VILKEN</span>';
+                questionText.textContent = 'Vad ar Sveriges huvudstad?';
+                instruction.textContent = 'Valj det ratta svaret';
+            }
+
+            // Reset states
+            resetQuestions();
+        }
+
+        function resetQuestions() {
+            ordnaClickCount = 0;
+            points = 3;
+            document.getElementById('currentPoints').textContent = '+3 p';
+            document.getElementById('nextButton').disabled = true;
+
+            // Reset ordna
+            document.querySelectorAll('.ordna-option').forEach(opt => {
+                opt.classList.remove('selected', 'correct', 'wrong', 'locked');
+            });
+
+            // Reset hortill
+            document.getElementById('jaZone').innerHTML = '';
+            document.getElementById('nejZone').innerHTML = '';
+            document.querySelectorAll('.hortill-option').forEach(opt => {
+                opt.classList.remove('sorting-out');
+                opt.style.display = 'flex';
+            });
+
+            // Reset vilken
+            document.querySelectorAll('.vilken-option').forEach(opt => {
+                opt.classList.remove('selected', 'correct', 'wrong', 'faded');
+            });
+        }
+
+        // ORDNA handlers
+        function handleOrdnaClick(element, expectedOrder) {
+            if (element.classList.contains('locked')) return;
+
+            ordnaClickCount++;
+            const correctOrder = parseInt(element.dataset.order);
+
+            if (ordnaClickCount === correctOrder) {
+                // Correct!
+                element.classList.add('selected');
+                element.classList.add('locked');
+                element.querySelector('.order-badge').textContent = ordnaClickCount;
+
+                points++;
+                document.getElementById('currentPoints').textContent = `+${points} p`;
+
+                createFloatingPoints(element);
+
+                if (ordnaClickCount === 4) {
+                    setTimeout(() => {
+                        element.classList.remove('selected');
+                        element.classList.add('correct');
+                        launchConfetti();
+                        document.getElementById('nextButton').disabled = false;
+                    }, 300);
+                }
+            } else {
+                // Wrong!
+                element.classList.add('wrong');
+                document.getElementById('nextButton').disabled = false;
+            }
+        }
+
+        // HOR TILL handlers
+        function handleHortillClick(element, userSaidJa) {
+            const belongs = element.dataset.belongs === 'true';
+            const isCorrect = (userSaidJa === belongs);
+            const text = element.querySelector('.hortill-option-text').textContent;
+
+            element.classList.add('sorting-out');
+
+            setTimeout(() => {
+                element.style.display = 'none';
+
+                const zone = userSaidJa ? 'jaZone' : 'nejZone';
+                const sortedItem = document.createElement('div');
+                sortedItem.className = 'sorted-item';
+                sortedItem.textContent = text;
+                sortedItem.style.background = isCorrect ?
+                    'linear-gradient(135deg, rgba(0,208,132,0.2), rgba(0,208,132,0.1))' :
+                    'linear-gradient(135deg, rgba(255,87,34,0.2), rgba(255,87,34,0.1))';
+
+                document.getElementById(zone).appendChild(sortedItem);
+
+                if (isCorrect) {
+                    points++;
+                    document.getElementById('currentPoints').textContent = `+${points} p`;
+                    createFloatingPoints(sortedItem);
+                }
+
+                // Check if all answered
+                const remaining = document.querySelectorAll('.hortill-option:not([style*="display: none"])');
+                if (remaining.length === 0) {
+                    launchConfetti();
+                    document.getElementById('nextButton').disabled = false;
+                }
+            }, 500);
+        }
+
+        // VILKEN handlers
+        function handleVilkenClick(element, isCorrect) {
+            if (element.classList.contains('selected')) return;
+
+            document.querySelectorAll('.vilken-option').forEach(opt => {
+                if (opt !== element) {
+                    opt.classList.add('faded');
+                }
+            });
+
+            element.classList.add('selected');
+
+            setTimeout(() => {
+                if (isCorrect) {
+                    element.classList.remove('selected');
+                    element.classList.add('correct');
+                    points++;
+                    document.getElementById('currentPoints').textContent = `+${points} p`;
+                    createFloatingPoints(element);
+                    launchConfetti();
+                } else {
+                    element.classList.remove('selected');
+                    element.classList.add('wrong');
+                }
+                document.getElementById('nextButton').disabled = false;
+            }, 600);
+        }
+
+        function handleStop() {
+            alert(`Poang sakrade: ${points}p`);
+        }
+
+        // Effects
+        function createFloatingPoints(element) {
+            const rect = element.getBoundingClientRect();
+            const floating = document.createElement('div');
+            floating.className = 'floating-points';
+            floating.textContent = '+1';
+            floating.style.left = `${rect.left + rect.width / 2 - 20}px`;
+            floating.style.top = `${rect.top}px`;
+            document.body.appendChild(floating);
+
+            setTimeout(() => floating.remove(), 1000);
+        }
+
+        function launchConfetti() {
+            const container = document.getElementById('confettiContainer');
+            const colors = ['#FF8C00', '#00D084', '#FF5722', '#00B4D8', '#FF6B9D', '#FFB84D'];
+
+            for (let i = 0; i < 50; i++) {
+                const confetti = document.createElement('div');
+                confetti.className = 'confetti';
+                confetti.style.left = `${Math.random() * 100}%`;
+                confetti.style.background = colors[Math.floor(Math.random() * colors.length)];
+                confetti.style.borderRadius = Math.random() > 0.5 ? '50%' : '0';
+                confetti.style.width = `${Math.random() * 10 + 5}px`;
+                confetti.style.height = confetti.style.width;
+                confetti.style.animation = `confettiFall ${Math.random() * 2 + 1}s ease-out forwards`;
+                confetti.style.animationDelay = `${Math.random() * 0.5}s`;
+                container.appendChild(confetti);
+
+                setTimeout(() => confetti.remove(), 3000);
+            }
+        }
+    </script>
+</body>
+</html>
