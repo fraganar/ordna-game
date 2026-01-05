@@ -48,3 +48,6 @@ temp/
 Screen shots/
 *.Identifier
 data/frågor_arkiv/
+
+# Claude Code
+.claude/
